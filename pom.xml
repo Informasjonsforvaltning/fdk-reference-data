@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>no.fdk</groupId>
+    <artifactId>fdk</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <name>FDK Reference data</name>
+    <description>Reference-data is a service that provides metadata for the various applications in this ecosystem</description>
+    <organization>
+        <name>Brønnøysundregistrene</name>
+        <url>http://brreg.no</url>
+    </organization>
+
+    <modules>
+        <module>applications/reference-data</module>
+    </modules>
+
+</project>
