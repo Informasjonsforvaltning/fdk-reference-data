@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class LOSService {
+public class LosService {
 
-    static private final Logger logger = LoggerFactory.getLogger(LOSService.class);
+    static private final Logger logger = LoggerFactory.getLogger(LosService.class);
     private static List<LosNode> allLosNodes;
     private static HashMap<String, LosNode> allLosNodesByURI;
     @Autowired
