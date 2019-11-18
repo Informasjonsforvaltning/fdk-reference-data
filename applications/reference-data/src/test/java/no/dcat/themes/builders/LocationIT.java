@@ -38,7 +38,7 @@ public class LocationIT {
     @Rule
     public TemporaryFolder testFolder = new TemporaryFolder();
 
-    CodesService codesService;
+    private CodesService codesService;
 
 
     @Before
@@ -67,75 +67,4 @@ public class LocationIT {
         assertEquals("Oslo", code.getPrefLabel().get("no"));
     }
 
-    @Test
-    @Ignore
-    public void testGeonorgeFylke() throws IOException {
-        SkosCode code = codesService.addLocation("http://data.geonorge.no/administrativeEnheter/fylke/id/173150");
-
-        assertEquals("Sogn og Fjordane", code.getPrefLabel().get("no"));
-    }
-
-    @Test
-    @Ignore
-    public void testGeonorgeKommune() throws IOException {
-        SkosCode code = codesService.addLocation("http://data.geonorge.no/administrativeEnheter/kommune/id/172778");
-
-        assertEquals("Bergen", code.getPrefLabel().get("no"));
-    }
-
-    @Test
-    @Ignore
-    public void testGeonorgeNasjon() throws IOException {
-        SkosCode code = codesService.addLocation("http://data.geonorge.no/administrativeEnheter/nasjon/id/173163");
-
-        assertEquals("Norge", code.getPrefLabel().get("no"));
-    }
-
-    @Test
-    @Ignore
-    public void testExtractionFromLocation() throws Throwable {
-        testOsloFromGeonames2();
-        testGeonorgeFylke();
-        testGeonorgeKommune();
-        testGeonorgeNasjon();
-
-        List<SkosCode> actual = codesService.getCodes(Types.location);
-
-        assertThat(actual.size(), Matchers.is(4));
-    }
-
-    @Ignore
-    @Test
-    public void debugModel() throws Throwable {
-        URL testURL = new URL("http://sws.geonames.org/3143242/");
-        Model model = RdfModelLoader.loadModel(testURL);
-
-        List<RDFNode> rdfNodesFromObjects = new ArrayList<>();
-        List<RDFNode> rdfNodesFromSubjects = new ArrayList<>();
-        List<Statement> statementsFromTheModel = new ArrayList<>();
-
-        NodeIterator allObjects = model.listObjects();
-        ResIterator allSubjects = model.listSubjects();
-        StmtIterator allStatements = model.listStatements();
-
-        allObjects.forEachRemaining(e -> {
-            if (e instanceof RDFNode) {
-                rdfNodesFromObjects.add(e);
-            }
-        });
-
-        allSubjects.forEachRemaining(s -> {
-            if (s instanceof RDFNode) {
-                rdfNodesFromSubjects.add(s);
-            }
-        });
-
-        allStatements.forEachRemaining(st -> {
-            if (st instanceof StatementImpl) {
-                statementsFromTheModel.add(st);
-            }
-        });
-
-        logger.info("Statements: " + statementsFromTheModel + "Objects " + allObjects + allSubjects);
-    }
 }
