@@ -142,7 +142,7 @@ public class LosRDFImporter {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
-    void importFromLosSource(List<LosNode> allLosNodes, HashMap<String, LosNode> allLosNodesByURI) {
+    void importFromLosSource(List<LosNode> allLosNodes) {
 
         final Model model = ModelFactory.createDefaultModel();
 
@@ -157,7 +157,6 @@ public class LosRDFImporter {
                 Resource conceptResource = losIterator.nextResource();
                 LosNode node = extractLosItemFromModel(conceptResource);
                 allLosNodes.add(node);
-                allLosNodesByURI.put(node.getUri(), node);
 
             }
 

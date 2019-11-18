@@ -20,11 +20,8 @@ public class LosService {
 
     static private final Logger logger = LoggerFactory.getLogger(LosService.class);
     private static List<LosNode> allLosNodes;
-    private static HashMap<String, LosNode> allLosNodesByURI;
     @Autowired
     public LosRDFImporter losRDFImporter;
-
-    private Boolean losTemaHasBeenHarvested = false;
 
     public static LosNode getByURI(URI keyword) {
         String uriAsString = keyword.toString();
@@ -182,23 +179,10 @@ public class LosService {
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void loadLOSTemaAfterStartup() {
-
-        List<LosNode> allLosNodesTMP = new ArrayList<>();
-        HashMap<String, LosNode> allLosNodesByURITMP = new HashMap<>();
-
-        if (!losTemaHasBeenHarvested) {
-            losRDFImporter.importFromLosSource(allLosNodesTMP, allLosNodesByURITMP);
-        }
-        allLosNodes = allLosNodesTMP;
-        allLosNodesByURI = allLosNodesByURITMP;
-    }
-
     public void fillDatastructure() {
         List<LosNode> allLosNodesTMP = new ArrayList<>();
-        HashMap<String, LosNode> allLosNodesByURITMP = new HashMap<>();
 
-        losRDFImporter.importFromLosSource(allLosNodesTMP, allLosNodesByURITMP);
+        losRDFImporter.importFromLosSource(allLosNodesTMP);
         allLosNodes = allLosNodesTMP;
     }
 
