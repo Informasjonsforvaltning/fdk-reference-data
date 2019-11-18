@@ -36,10 +36,6 @@ public enum Types {
        return sourceUrl;
    }
 
-   public void setSourceUrl(String sourceUrl) {
-       this.sourceUrl = sourceUrl;
-   }
-
 
     @Override
     public String toString() {
