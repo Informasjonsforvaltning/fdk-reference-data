@@ -1,8 +1,6 @@
 package no.dcat.themes.service;
 
 import com.google.gson.Gson;
-import no.dcat.datastore.domain.dcat.builders.DatasetBuilder;
-import no.dcat.datastore.domain.dcat.client.LoadLocations;
 import no.dcat.datastore.domain.dcat.vocabulary.AdmEnhet;
 import no.dcat.datastore.domain.dcat.vocabulary.GeoNames;
 import no.dcat.shared.SkosCode;
@@ -12,11 +10,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.ReadWrite;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ResIterator;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.vocabulary.RDFS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
@@ -27,8 +22,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 @Scope("thread")
@@ -40,7 +38,7 @@ public class CodesService extends BaseServiceWithFraming {
 
     static {
         try {
-            frame = IOUtils.toString(BaseServiceWithFraming.class.getClassLoader().getResourceAsStream("frames/skosCode.json"), "utf-8");
+            frame = IOUtils.toString(BaseServiceWithFraming.class.getClassLoader().getResourceAsStream("frames/skosCode.json"), UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -51,6 +49,51 @@ public class CodesService extends BaseServiceWithFraming {
         super(tdbConnection);
     }
 
+    private static SkosCode extractLocation(Resource locationResource) {
+        if (locationResource != null && locationResource.isURIResource()) {
+            SkosCode location = new SkosCode();
+
+            location.setUri(locationResource.getURI());
+            location.setCode(locationResource.getURI());
+
+            final Property[] locationNameProperties = {AdmEnhet.fylkesnavn, AdmEnhet.kommunenavn, AdmEnhet.nasjonnavn, GeoNames.officialName};
+
+            Statement nameStatement = null;
+            Property nameProperty = null;
+
+            for (Property property : locationNameProperties) {
+                nameStatement = locationResource.getProperty(property);
+                if (nameStatement != null) {
+                    nameProperty = property;
+                    break;
+                }
+            }
+
+            if (nameStatement != null && nameProperty != null) {
+
+                StmtIterator nameStatementIterator = locationResource.listProperties(nameProperty);
+                location.setPrefLabel(new HashMap<>());
+
+                while (nameStatementIterator.hasNext()) {
+                    Statement stmt = nameStatementIterator.next();
+
+                    String language = stmt.getLanguage();
+                    Literal literal = stmt.getObject().asLiteral();
+                    String name = literal.getString();
+                    if (language.isEmpty()) {
+                        location.getPrefLabel().put("no", name);
+                    } else {
+                        if (!location.getPrefLabel().containsKey(language)) {
+                            location.getPrefLabel().put(language, name);
+                        }
+                    }
+                }
+            }
+            return location;
+        }
+        return null;
+    }
+
     public List<String> listCodes() {
         return Arrays
                 .stream(Types.values())
@@ -58,7 +101,6 @@ public class CodesService extends BaseServiceWithFraming {
                 .collect(Collectors.toList());
 
     }
-
 
     @Cacheable("codes")
     public List<SkosCode> getCodes(Types type) {
@@ -85,7 +127,7 @@ public class CodesService extends BaseServiceWithFraming {
 
     }
 
-    List<SkosCode> extractLocationCodes(Model model, ResIterator resourceIterator) {
+    private List<SkosCode> extractLocationCodes(Model model, ResIterator resourceIterator) {
         if (model == null || resourceIterator == null) {
             return null;
         }
@@ -95,12 +137,11 @@ public class CodesService extends BaseServiceWithFraming {
 
         while (resourceIterator.hasNext()) {
             Resource resource = resourceIterator.next();
-            result.add(DatasetBuilder.extractLocation(resource));
+            result.add(extractLocation(resource));
         }
 
         return result;
     }
-
 
     public SkosCode addLocation(String locationUri) throws MalformedURLException {
 
@@ -115,11 +156,11 @@ public class CodesService extends BaseServiceWithFraming {
 
     }
 
-    public SkosCode getLocationCode(String uri){
+    private SkosCode getLocationCode(String uri) {
         return tdbConnection.inTransaction(ReadWrite.READ, connection -> {
             Dataset dataset = DatasetFactory.create(connection.describeWithInference(uri));
 
-            SkosCode locationCode = DatasetBuilder.extractLocation(dataset.getDefaultModel().getResource(uri));
+            SkosCode locationCode = extractLocation(dataset.getDefaultModel().getResource(uri));
 
             dataset.close();
 
