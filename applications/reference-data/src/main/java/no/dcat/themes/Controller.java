@@ -37,9 +37,6 @@ public class Controller {
     private ThemesService themesService;
 
     @Autowired
-    private SubjectsService subjectsService;
-
-    @Autowired
     private LosService losService;
 
     static private final Logger logger = LoggerFactory.getLogger(Controller.class);
@@ -138,21 +135,5 @@ public class Controller {
             throw e;
         }
     }
-
-    @PreAuthorize("hasAuthority('INTERNAL_CALL')")
-    @CrossOrigin
-    @RequestMapping(value = "/subjects",  method = RequestMethod.GET)
-    public Subject getRemoteResourceForSubject(@RequestParam String uri) throws MalformedURLException {
-        logger.info("Request for subject with uri <{}>", uri);
-        try {
-            Subject subject = subjectsService.addSubject(uri);
-            logger.info("Return subject: {}", subject);
-            return subject;
-        }catch (Exception e){
-            logger.error("Unable to find subject with URI <{}>. Reason {}",uri, e.getLocalizedMessage());
-            throw e;
-        }
-    }
-
 
 }

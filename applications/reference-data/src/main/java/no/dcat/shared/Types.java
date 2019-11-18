@@ -15,8 +15,7 @@ public enum Types {
     apistatus("rdf/api-status-skos.ttl", "apistatus"),
     apiservicetype("rdf/api-service-type-skos.ttl", "apiservicetype"),
 
-    location(null, "location"),
-    subject(null, "subject");
+    location(null, "location");
 
    private String sourceUrl;
    private String type;
