@@ -20,8 +20,8 @@ import java.util.Map;
 @Service
 public class LosRDFImporter {
 
-    public static final String defaultLanguage = "nb";
-    public static final String LOS_HOME_ADRESS = "http://psi.norge.no/los/all.rdf";
+    private static final String defaultLanguage = "nb";
+    private static final String LOS_HOME_ADRESS = "http://psi.norge.no/los/all.rdf";
     static private final Logger logger = LoggerFactory.getLogger(LosRDFImporter.class);
 
     private static LosNode extractLosItemFromModel(Resource losResource) {
@@ -37,7 +37,7 @@ public class LosRDFImporter {
         return node;
     }
 
-    public static Map<String, String> extractLanguageLiteral(Resource resource, Property property) {
+    private static Map<String, String> extractLanguageLiteral(Resource resource, Property property) {
         Map<String, String> map = new HashMap<>();
 
         StmtIterator iterator = resource.listProperties(property);
@@ -60,7 +60,7 @@ public class LosRDFImporter {
         return null;
     }
 
-    public static List<String> extractLanguageLiteralsOnlyValues(Resource resource, Property property) {
+    private static List<String> extractLanguageLiteralsOnlyValues(Resource resource, Property property) {
         Map<String, String> map = new HashMap<>();
 
         StmtIterator iterator = resource.listProperties(property);
@@ -78,7 +78,7 @@ public class LosRDFImporter {
         return new ArrayList<>(map.keySet());
     }
 
-    public static List<URI> extractLiterals(Resource resource, Property property) {
+    private static List<URI> extractLiterals(Resource resource, Property property) {
         List<URI> list = new ArrayList<>();
         Statement stmt = resource.getProperty(property);
         if (stmt == null) {
@@ -99,7 +99,7 @@ public class LosRDFImporter {
         return list;
     }
 
-    public static URI extractLiteral(Resource resource, Property property) {
+    private static URI extractLiteral(Resource resource, Property property) {
 
         Statement stmt = resource.getProperty(property);
         if (stmt == null) {
@@ -142,7 +142,7 @@ public class LosRDFImporter {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
-    public void importFromLosSource(List<LosNode> allLosNodes, HashMap<String, LosNode> allLosNodesByURI) {
+    void importFromLosSource(List<LosNode> allLosNodes, HashMap<String, LosNode> allLosNodesByURI) {
 
         final Model model = ModelFactory.createDefaultModel();
 
@@ -172,7 +172,7 @@ public class LosRDFImporter {
         }
     }
 
-    public List<String> generateLosPath(LosNode node, List<LosNode> allLosNodes) {
+    private List<String> generateLosPath(LosNode node, List<LosNode> allLosNodes) {
         List<String> generatedPaths = new ArrayList<>();
 
         //Hovedkategori - /<keyword>
@@ -184,12 +184,11 @@ public class LosRDFImporter {
         //Underkategori - /<hovedkategori>/<underkategori>
         if (node.getChildren() != null && !node.getChildren().isEmpty()) {
 
-            LosNode currentNode = node;
-            List<URI> hovedKategoriURIs = currentNode.getParents();
+            List<URI> hovedKategoriURIs = node.getParents();
             List<String> hovedKategoriPaths = new ArrayList<>();
 
             for (URI u : hovedKategoriURIs) {
-                String subCategory = getKeywordFromURI(currentNode.getUri());
+                String subCategory = getKeywordFromURI(node.getUri());
                 hovedKategoriPaths.add((getKeywordFromURI(u) + "/" + subCategory).toLowerCase());
             }
             return hovedKategoriPaths;
@@ -209,7 +208,7 @@ public class LosRDFImporter {
         return allPaths;
     }
 
-    public LosNode getByURI(URI keyword, List<LosNode> allLosNodes) {
+    private LosNode getByURI(URI keyword, List<LosNode> allLosNodes) {
         String uriAsString = keyword.toString();
         for (LosNode node : allLosNodes) {
             if (node.getUri().equals(uriAsString)) {
