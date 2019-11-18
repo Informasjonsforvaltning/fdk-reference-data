@@ -1,6 +1,6 @@
 package no.dcat.themes.builders;
 
-import no.dcat.themes.service.LOSService;
+import no.dcat.themes.service.LosService;
 import no.dcat.themes.service.LosNode;
 import no.dcat.themes.service.LosRDFImporter;
 import no.fdk.test.testcategories.UnitTest;
@@ -16,18 +16,18 @@ import static org.junit.Assert.*;
 @Category(UnitTest.class)
 public class ReferenceTest {
 
-    private LOSService losService;
+    private LosService losService;
 
     @Before
     public void doBefore () {
-        losService = new LOSService();
+        losService = new LosService();
         losService.losRDFImporter = new LosRDFImporter();
         losService.fillDatastructure();
     }
 
     @Test
     public void SpesificLosTermExists() throws Throwable {
-        LosNode sykeTransport = LOSService.getByURIString("http://psi.norge.no/los/ord/syketransport");
+        LosNode sykeTransport = LosService.getByURIString("http://psi.norge.no/los/ord/syketransport");
         assertNotNull(sykeTransport);
         assertEquals("Forventet at LOS tema skulle eksistere og hete syketransport på norsk bokmål", "Syketransport",sykeTransport.getName().get("nb"));
         assertEquals("Forventet at LOS tema skulle eksistere og hete Sjuketransport på nynorsk", "Sjuketransport",sykeTransport.getName().get("nn"));
@@ -36,7 +36,7 @@ public class ReferenceTest {
 
     @Test
     public void LosTermHasExpectedChildren() throws Throwable {
-        LosNode arbeid = LOSService.getByURIString("http://psi.norge.no/los/tema/arbeid");
+        LosNode arbeid = LosService.getByURIString("http://psi.norge.no/los/tema/arbeid");
         assertNotNull(arbeid);
         assertEquals(4, arbeid.children.size());
     }
@@ -44,7 +44,7 @@ public class ReferenceTest {
     //path for hoved-nivå
     @Test
     public void TopLevelTermHasCorrectPath() throws Throwable {
-        LosNode helse = LOSService.getByURIString("http://psi.norge.no/los/tema/helse");
+        LosNode helse = LosService.getByURIString("http://psi.norge.no/los/tema/helse");
         assertNotNull(helse);
         assertEquals("helse",helse.losPaths.get(0));
     }
@@ -52,7 +52,7 @@ public class ReferenceTest {
     //path for mellom nivå
     @Test
     public void MidLevelTermHasCorrectPath() throws Throwable {
-        LosNode folkehelse = LOSService.getByURIString("http://psi.norge.no/los/tema/folkehelse");
+        LosNode folkehelse = LosService.getByURIString("http://psi.norge.no/los/tema/folkehelse");
         assertNotNull(folkehelse);
         assertEquals("helse/folkehelse",folkehelse.losPaths.get(0));
     }
@@ -60,7 +60,7 @@ public class ReferenceTest {
     //path for emneord
     @Test
     public void LowLevelTermHasCorrectPath() throws Throwable {
-        LosNode stoey = LOSService.getByURIString("http://psi.norge.no/los/ord/stoey");
+        LosNode stoey = LosService.getByURIString("http://psi.norge.no/los/ord/stoey");
         assertNotNull(stoey);
         assertEquals("helse/folkehelse/støy",stoey.losPaths.get(0));
     }
