@@ -148,15 +148,7 @@ public class LosRDFImporter {
 
         final Model model = ModelFactory.createDefaultModel();
 
-        URL losSourceURL;
-        try {
-            losSourceURL = new URL(LOS_HOME_ADRESS);
-        } catch (MalformedURLException mue) {
-            logger.error("Malformed LOS url: {}", LOS_HOME_ADRESS);
-            return new ArrayList<>();
-        }
-        URLReader ur = new URLReader(losSourceURL);
-        model.read(ur, losSourceURL.toString());
+        model.read(LOS_HOME_ADRESS);
 
         ResIterator losIterator = model.listResourcesWithProperty(RDF.type, SKOS.Concept);
 
