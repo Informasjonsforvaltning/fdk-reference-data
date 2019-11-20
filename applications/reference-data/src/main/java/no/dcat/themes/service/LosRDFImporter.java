@@ -1,6 +1,5 @@
 package no.dcat.themes.service;
 
-import jdk.nashorn.api.scripting.URLReader;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
@@ -8,10 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,8 +18,8 @@ import java.util.Map;
 public class LosRDFImporter {
 
     private static final String defaultLanguage = "nb";
-    private static final String LOS_HOME_ADRESS = "http://psi.norge.no/los/all.rdf";
     static private final Logger logger = LoggerFactory.getLogger(LosRDFImporter.class);
+    static private final String LOS_URL = LosRDFImporter.class.getClassLoader().getResource("rdf/los.rdf").toString();
 
     private static LosNode extractLosItemFromModel(Resource losResource) {
         LosNode node = new LosNode();
@@ -148,7 +145,7 @@ public class LosRDFImporter {
 
         final Model model = ModelFactory.createDefaultModel();
 
-        model.read(LOS_HOME_ADRESS);
+        model.read(LOS_URL);
 
         ResIterator losIterator = model.listResourcesWithProperty(RDF.type, SKOS.Concept);
 
