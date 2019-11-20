@@ -142,33 +142,40 @@ public class LosRDFImporter {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
-    void importFromLosSource(List<LosNode> allLosNodes) {
+    List<LosNode> importFromLosSource() {
+        List<LosNode> allLosNodes = new ArrayList<>();
+
 
         final Model model = ModelFactory.createDefaultModel();
 
+        URL losSourceURL;
         try {
-            URL losSourceURL = new URL(LOS_HOME_ADRESS);
-            URLReader ur = new URLReader(losSourceURL);
-            model.read(ur, losSourceURL.toString());
-
-            ResIterator losIterator = model.listResourcesWithProperty(RDF.type, SKOS.Concept);
-
-            while (losIterator.hasNext()) {
-                Resource conceptResource = losIterator.nextResource();
-                LosNode node = extractLosItemFromModel(conceptResource);
-                allLosNodes.add(node);
-
-            }
-
-            //Secound pass - generate the paths.
-            for (LosNode node : allLosNodes) {
-                node.setLosPaths(generateLosPath(node, allLosNodes));
-            }
-
-            logger.debug("Got {} LOSes", allLosNodes.size());
+            losSourceURL = new URL(LOS_HOME_ADRESS);
         } catch (MalformedURLException mue) {
-            logger.error("Error while harvesting LOS ");
+            logger.error("Malformed LOS url: {}", LOS_HOME_ADRESS);
+            return new ArrayList<>();
         }
+        URLReader ur = new URLReader(losSourceURL);
+        model.read(ur, losSourceURL.toString());
+
+        ResIterator losIterator = model.listResourcesWithProperty(RDF.type, SKOS.Concept);
+
+        while (losIterator.hasNext()) {
+            Resource conceptResource = losIterator.nextResource();
+            LosNode node = extractLosItemFromModel(conceptResource);
+            allLosNodes.add(node);
+
+        }
+
+        //Secound pass - generate the paths.
+        for (LosNode node : allLosNodes) {
+            node.setLosPaths(generateLosPath(node, allLosNodes));
+        }
+
+        logger.debug("Got {} LOSes", allLosNodes.size());
+
+        return allLosNodes;
+
     }
 
     private List<String> generateLosPath(LosNode node, List<LosNode> allLosNodes) {
