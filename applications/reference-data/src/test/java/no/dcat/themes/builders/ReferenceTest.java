@@ -38,15 +38,15 @@ public class ReferenceTest {
     public void LosTermHasExpectedChildren() throws Throwable {
         LosNode arbeid = LosService.getByURIString("http://psi.norge.no/los/tema/arbeid");
         assertNotNull(arbeid);
-        assertEquals(4, arbeid.children.size());
+        assertEquals(5, arbeid.children.size());
     }
 
     //path for hoved-nivå
     @Test
     public void TopLevelTermHasCorrectPath() throws Throwable {
-        LosNode helse = LosService.getByURIString("http://psi.norge.no/los/tema/helse");
+        LosNode helse = LosService.getByURIString("http://psi.norge.no/los/tema/helse-og-omsorg");
         assertNotNull(helse);
-        assertEquals("helse",helse.losPaths.get(0));
+        assertEquals("helse-og-omsorg",helse.losPaths.get(0));
     }
 
     //path for mellom nivå
@@ -54,23 +54,23 @@ public class ReferenceTest {
     public void MidLevelTermHasCorrectPath() throws Throwable {
         LosNode folkehelse = LosService.getByURIString("http://psi.norge.no/los/tema/folkehelse");
         assertNotNull(folkehelse);
-        assertEquals("helse/folkehelse",folkehelse.losPaths.get(0));
+        assertEquals("helse-og-omsorg/folkehelse",folkehelse.losPaths.get(0));
     }
 
     //path for emneord
     @Test
     public void LowLevelTermHasCorrectPath() throws Throwable {
-        LosNode stoey = LosService.getByURIString("http://psi.norge.no/los/ord/stoey");
+        LosNode stoey = LosService.getByURIString("http://psi.norge.no/los/ord/stoy");
         assertNotNull(stoey);
-        assertEquals("helse/folkehelse/stoey",stoey.losPaths.get(0));
+        assertEquals("helse-og-omsorg/folkehelse/stoy",stoey.losPaths.get(0));
     }
 
     //test for ekspansjon - toplevel(brittle? telle og forvente f.eks 62) ?
     @Test
     public void TopLevelTermExpansion() throws Throwable {
-        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/tema/helse");}} );
+        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/tema/helse-og-omsorg");}} );
         assertNotNull(expandedTheme);
-        assertEquals(156, expandedTheme.size()); //Intentionally brittle
+        assertEquals(276, expandedTheme.size()); //Intentionally brittle
         assertTrue(expandedTheme.contains("Helsetjenester"));
         assertTrue(expandedTheme.contains("Spilleavhengighet"));
         assertTrue(expandedTheme.contains("Gift"));
@@ -81,9 +81,9 @@ public class ReferenceTest {
     public void MidLevelTermExpansion() throws Throwable {
         List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/tema/folkehelse");}} );
         assertNotNull(expandedTheme);
-        assertEquals(48, expandedTheme.size()); //Intentionally brittle
+        assertEquals(54, expandedTheme.size()); //Intentionally brittle
         assertTrue(expandedTheme.contains("Folkehelse"));
-        assertTrue(expandedTheme.contains("Helse"));
+        assertTrue(expandedTheme.contains("Helse og omsorg"));
         assertTrue(expandedTheme.contains("Gift"));
         assertTrue(expandedTheme.contains("Skadedyr"));
         assertTrue(expandedTheme.contains("Infection prevention and control"));
@@ -92,13 +92,13 @@ public class ReferenceTest {
     //test for ekspansjon - lowlevel (emne)
     @Test
     public void LowLevelTermExpansion() throws Throwable {
-        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/ord/stoey");}} );
+        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/ord/stoy");}} );
         assertNotNull(expandedTheme);
         assertEquals(18, expandedTheme.size()); //Intentionally brittle
         assertTrue(expandedTheme.contains("Folkehelse"));
-        assertTrue(expandedTheme.contains("Helse"));
+        assertTrue(expandedTheme.contains("Helse og omsorg"));
         assertTrue(expandedTheme.contains("Støy"));
-        assertTrue(expandedTheme.contains("Health"));
+        assertTrue(expandedTheme.contains("Health and care"));
         assertTrue(expandedTheme.contains("Støyskjerming"));
     }
 }
