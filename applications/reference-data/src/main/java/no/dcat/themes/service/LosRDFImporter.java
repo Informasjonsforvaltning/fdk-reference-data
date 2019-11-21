@@ -158,7 +158,7 @@ public class LosRDFImporter {
 
         //Secound pass - generate the paths.
         for (LosNode node : allLosNodes) {
-            node.setLosPaths(generateLosPath(node, allLosNodes));
+            node.setLosPaths(generateLosPaths(node, allLosNodes));
         }
 
         logger.debug("Got {} LOSes", allLosNodes.size());
@@ -167,7 +167,7 @@ public class LosRDFImporter {
 
     }
 
-    private List<String> generateLosPath(LosNode node, List<LosNode> allLosNodes) {
+    private List<String> generateLosPaths(LosNode node, List<LosNode> allLosNodes) {
         List<String> generatedPaths = new ArrayList<>();
 
         //Hovedkategori - /<keyword>
