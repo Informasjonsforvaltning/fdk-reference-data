@@ -62,7 +62,7 @@ public class ReferenceTest {
     public void LowLevelTermHasCorrectPath() throws Throwable {
         LosNode stoey = LosService.getByURIString("http://psi.norge.no/los/ord/stoey");
         assertNotNull(stoey);
-        assertEquals("helse/folkehelse/støy",stoey.losPaths.get(0));
+        assertEquals("helse/folkehelse/stoey",stoey.losPaths.get(0));
     }
 
     //test for ekspansjon - toplevel(brittle? telle og forvente f.eks 62) ?
