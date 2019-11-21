@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class LosRDFImporter {
@@ -167,46 +165,22 @@ public class LosRDFImporter {
     }
 
     private List<String> generateLosPaths(LosNode node, List<LosNode> allLosNodes) {
-        List<String> generatedPaths = new ArrayList<>();
+        List<URI> parentURIs = node.getParents();
+        String myKeyword = getKeywordFromURI(node.getUri());
 
-        //Hovedkategori - /<keyword>
-        if (node.getParents() == null || node.getParents().isEmpty()) {
-            generatedPaths.add(getKeywordFromURI(node.getUri()).toLowerCase());
-            return generatedPaths;
+        // no parents - root node has only self as the only element in the only path
+        if (parentURIs == null || parentURIs.size() == 0) {
+            return Arrays.asList(myKeyword);
         }
 
-        //Underkategori - /<hovedkategori>/<underkategori>
-        if (node.getChildren() != null && !node.getChildren().isEmpty()) {
-
-            List<URI> hovedKategoriURIs = node.getParents();
-            List<String> hovedKategoriPaths = new ArrayList<>();
-
-            for (URI u : hovedKategoriURIs) {
-                String subCategory = getKeywordFromURI(node.getUri());
-                hovedKategoriPaths.add((getKeywordFromURI(u) + "/" + subCategory).toLowerCase());
-            }
-            return hovedKategoriPaths;
-        }
-
-        //Emneord - /<hovedkategori>/<underkatagori>/<emneord>
-        List<String> allPaths = new ArrayList<>();
-
-        List<URI> subCategoryURIs = node.getParents();
-        for (URI subCategory : subCategoryURIs) {
-            LosNode subCategoryLosnode = getByURI(subCategory, allLosNodes);
-            List<URI> hovedCategories = subCategoryLosnode.getParents();
-            if (hovedCategories != null) {
-                for (URI hovedCategory : hovedCategories) {
-                    allPaths.add(getKeywordFromURI(hovedCategory) + "/" + getKeywordFromURI(subCategory) + "/" + getKeywordFromURI(node.getUri()));
-                    if (!getKeywordFromURI(node.getUri()).equals(getMostSaneName(node).toLowerCase())) {
-                        logger.warn("diff in uri and label: {} {}", getKeywordFromURI(node.getUri()), getMostSaneName(node).toLowerCase());
-                    }
-                }
-            } else {
-                logger.warn("Only two levels: {} - {}", node.getUri(), subCategoryLosnode.getUri());
-            }
-        }
-        return allPaths;
+        // add self to all parent paths
+        return parentURIs.stream()
+                .map(parentURI -> Optional.ofNullable(getByURI(parentURI, allLosNodes)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(parentNode -> generateLosPaths(parentNode, allLosNodes).stream())
+                .map(parentPath -> parentPath + "/" + myKeyword)
+                .collect(Collectors.toList());
     }
 
     private LosNode getByURI(URI keyword, List<LosNode> allLosNodes) {
