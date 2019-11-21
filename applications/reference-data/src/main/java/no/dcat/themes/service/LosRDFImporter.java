@@ -196,8 +196,12 @@ public class LosRDFImporter {
         for (URI subCategory : subCategoryURIs) {
             LosNode subCategoryLosnode = getByURI(subCategory, allLosNodes);
             List<URI> hovedCategories = subCategoryLosnode.getParents();
-            for (URI hovedCategory : hovedCategories) {
-                allPaths.add((getKeywordFromURI(hovedCategory) + "/" + getKeywordFromURI(subCategory) + "/" + getMostSaneName(node)).toLowerCase());
+            if (hovedCategories != null) {
+                for (URI hovedCategory : hovedCategories) {
+                    allPaths.add((getKeywordFromURI(hovedCategory) + "/" + getKeywordFromURI(subCategory) + "/" + getMostSaneName(node)).toLowerCase());
+                }
+            } else {
+                logger.warn("Only two levels: {} - {}", node.getUri(), subCategoryLosnode.getUri());
             }
         }
         return allPaths;
