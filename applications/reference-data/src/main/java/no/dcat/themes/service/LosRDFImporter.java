@@ -135,8 +135,7 @@ public class LosRDFImporter {
     }
 
     private static String getKeywordFromURI(URI uri) {
-        String path = uri.getPath();
-        return path.substring(path.lastIndexOf('/') + 1);
+        return getKeywordFromURI(uri.getPath());
     }
 
     List<LosNode> importFromLosSource() {
