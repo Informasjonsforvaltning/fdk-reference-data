@@ -19,6 +19,10 @@ public class LosRDFImporter {
     static private final Logger logger = LoggerFactory.getLogger(LosRDFImporter.class);
     static private final String LOS_URL = LosRDFImporter.class.getClassLoader().getResource("rdf/los.rdf").toString();
 
+    private static boolean isInScheme(Resource resource, Resource scheme) {
+        return resource.hasProperty(SKOS.inScheme, scheme);
+    }
+
     private static LosNode extractLosItemFromModel(Resource losResource) {
         LosNode node = new LosNode();
         node.setName(extractLanguageLiteral(losResource, SKOS.prefLabel));
@@ -172,11 +176,13 @@ public class LosRDFImporter {
 
         List<Resource> concepts = model.listResourcesWithProperty(RDF.type, SKOS.Concept).toList();
 
+        // Extract the theme tree with words.
         List<LosNode> allLosNodes = concepts.stream()
+                .filter(r -> isInScheme(r, LOS_ONTOLOGY.WORD) || isInScheme(r, LOS_ONTOLOGY.THEME))
                 .map(LosRDFImporter::extractLosItemFromModel)
                 .collect(Collectors.toList());
 
-        //Secound pass - generate the paths.
+        // Generate the paths.
         for (LosNode node : allLosNodes) {
             node.setLosPaths(generateLosPaths(node, allLosNodes));
         }
@@ -185,5 +191,10 @@ public class LosRDFImporter {
 
         return allLosNodes;
 
+    }
+
+    private static class LOS_ONTOLOGY {
+        static private final Resource WORD = ResourceFactory.createResource("http://psi.norge.no/los/ontologi/ord");
+        static private final Resource THEME = ResourceFactory.createResource("http://psi.norge.no/los/ontologi/tema");
     }
 }
