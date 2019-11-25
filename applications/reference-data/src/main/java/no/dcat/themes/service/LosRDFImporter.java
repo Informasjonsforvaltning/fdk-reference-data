@@ -166,21 +166,15 @@ public class LosRDFImporter {
     }
 
     List<LosNode> importFromLosSource() {
-        List<LosNode> allLosNodes = new ArrayList<>();
-
-
         final Model model = ModelFactory.createDefaultModel();
 
         model.read(LOS_URL);
 
-        ResIterator losIterator = model.listResourcesWithProperty(RDF.type, SKOS.Concept);
+        List<Resource> concepts = model.listResourcesWithProperty(RDF.type, SKOS.Concept).toList();
 
-        while (losIterator.hasNext()) {
-            Resource conceptResource = losIterator.nextResource();
-            LosNode node = extractLosItemFromModel(conceptResource);
-            allLosNodes.add(node);
-
-        }
+        List<LosNode> allLosNodes = concepts.stream()
+                .map(LosRDFImporter::extractLosItemFromModel)
+                .collect(Collectors.toList());
 
         //Secound pass - generate the paths.
         for (LosNode node : allLosNodes) {
