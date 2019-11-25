@@ -136,6 +136,35 @@ public class LosRDFImporter {
         return getKeywordFromURI(uri.getPath());
     }
 
+    private static List<String> generateLosPaths(LosNode node, List<LosNode> allLosNodes) {
+        List<URI> parentURIs = node.getParents();
+        String myKeyword = getKeywordFromURI(node.getUri());
+
+        // no parents - root node has only self as the only element in the only path
+        if (parentURIs == null || parentURIs.size() == 0) {
+            return Arrays.asList(myKeyword);
+        }
+
+        // add self to all parent paths
+        return parentURIs.stream()
+                .map(parentURI -> Optional.ofNullable(getByURI(parentURI, allLosNodes)))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(parentNode -> generateLosPaths(parentNode, allLosNodes).stream())
+                .map(parentPath -> parentPath + "/" + myKeyword)
+                .collect(Collectors.toList());
+    }
+
+    private static LosNode getByURI(URI keyword, List<LosNode> allLosNodes) {
+        String uriAsString = keyword.toString();
+        for (LosNode node : allLosNodes) {
+            if (node.getUri().equals(uriAsString)) {
+                return node;
+            }
+        }
+        return null;
+    }
+
     List<LosNode> importFromLosSource() {
         List<LosNode> allLosNodes = new ArrayList<>();
 
@@ -162,34 +191,5 @@ public class LosRDFImporter {
 
         return allLosNodes;
 
-    }
-
-    private List<String> generateLosPaths(LosNode node, List<LosNode> allLosNodes) {
-        List<URI> parentURIs = node.getParents();
-        String myKeyword = getKeywordFromURI(node.getUri());
-
-        // no parents - root node has only self as the only element in the only path
-        if (parentURIs == null || parentURIs.size() == 0) {
-            return Arrays.asList(myKeyword);
-        }
-
-        // add self to all parent paths
-        return parentURIs.stream()
-                .map(parentURI -> Optional.ofNullable(getByURI(parentURI, allLosNodes)))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .flatMap(parentNode -> generateLosPaths(parentNode, allLosNodes).stream())
-                .map(parentPath -> parentPath + "/" + myKeyword)
-                .collect(Collectors.toList());
-    }
-
-    private LosNode getByURI(URI keyword, List<LosNode> allLosNodes) {
-        String uriAsString = keyword.toString();
-        for (LosNode node : allLosNodes) {
-            if (node.getUri().equals(uriAsString)) {
-                return node;
-            }
-        }
-        return null;
     }
 }
