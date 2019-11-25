@@ -142,7 +142,7 @@ public class LosRDFImporter {
 
         // no parents - root node has only self as the only element in the only path
         if (parentURIs == null || parentURIs.size() == 0) {
-            return Arrays.asList(myKeyword);
+            return Collections.singletonList(myKeyword);
         }
 
         // add self to all parent paths
