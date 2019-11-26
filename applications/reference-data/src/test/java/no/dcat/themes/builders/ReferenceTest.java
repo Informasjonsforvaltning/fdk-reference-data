@@ -70,7 +70,7 @@ public class ReferenceTest {
     public void TopLevelTermExpansion() throws Throwable {
         List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/tema/helse-og-omsorg");}} );
         assertNotNull(expandedTheme);
-        assertEquals(276, expandedTheme.size()); //Intentionally brittle
+        assertEquals(273, expandedTheme.size()); //Intentionally brittle
         assertTrue(expandedTheme.contains("Helsetjenester"));
         assertTrue(expandedTheme.contains("Spilleavhengighet"));
         assertTrue(expandedTheme.contains("Gift"));
