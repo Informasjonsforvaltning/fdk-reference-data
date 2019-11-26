@@ -329,18 +329,6 @@
       <skos:definition xml:lang="nn">Medisinske behandlingsmetodar som står utanfor etablert skulemedisin og ofte utanfor offentlege helsetilbod. Alternativ medisin vert ikkje dekt av folketrygda.</skos:definition>
       <skos:broader rdf:resource="http://psi.norge.no/los/tema/helsetjenester"/>
    </rdf:Description>
-   <rdf:Description rdf:about="http://psi.norge.no/los/ord/ambulerende-vaktmester">
-      <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
-      <skos:inScheme rdf:resource="http://psi.norge.no/los/ontologi/ord"/>
-      <skos:prefLabel xml:lang="nn">Ambulerande vaktmeister</skos:prefLabel>
-      <skos:prefLabel xml:lang="nb">Ambulerende vaktmester</skos:prefLabel>
-      <skos:prefLabel xml:lang="en">Caretaker services</skos:prefLabel>
-      <skos:hiddenLabel xml:lang="nn">Heimevaktmeister</skos:hiddenLabel>
-      <skos:hiddenLabel xml:lang="nb">Hjemmevaktmester</skos:hiddenLabel>
-      <skos:definition xml:lang="nb">**</skos:definition>
-      <skos:definition xml:lang="nn">Kommunalt tilbod om hjelp til enkle praktiske gjeremål, enkle reperasjonar og vedlikehaldsarbeid.</skos:definition>
-      <skos:broader rdf:resource="http://psi.norge.no/los/tema/omsorgstjenester"/>
-   </rdf:Description>
    <rdf:Description rdf:about="http://psi.norge.no/los/ord/anmeldelse">
       <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
       <skos:inScheme rdf:resource="http://psi.norge.no/los/ontologi/ord"/>
@@ -8605,7 +8593,6 @@
       <skos:prefLabel xml:lang="nn">Omsorgstenester</skos:prefLabel>
       <skos:prefLabel xml:lang="nb">Omsorgstjenester</skos:prefLabel>
       <skos:broader rdf:resource="http://psi.norge.no/los/tema/helse-og-omsorg"/>
-      <skos:narrower rdf:resource="http://psi.norge.no/los/ord/ambulerende-vaktmester"/>
       <skos:narrower rdf:resource="http://psi.norge.no/los/ord/bofellesskap"/>
       <skos:narrower rdf:resource="http://psi.norge.no/los/ord/dagtilbud"/>
       <skos:narrower rdf:resource="http://psi.norge.no/los/ord/egenbetaling"/>
@@ -9017,7 +9004,6 @@
       <skos:member rdf:resource="http://psi.norge.no/los/ord/akutt-forurensning"/>
       <skos:member rdf:resource="http://psi.norge.no/los/ord/akuttovernatting"/>
       <skos:member rdf:resource="http://psi.norge.no/los/ord/allemannsrett"/>
-      <skos:member rdf:resource="http://psi.norge.no/los/ord/ambulerende-vaktmester"/>
       <skos:member rdf:resource="http://psi.norge.no/los/ord/arbeidsgiveravgift"/>
       <skos:member rdf:resource="http://psi.norge.no/los/ord/arkiv"/>
       <skos:member rdf:resource="http://psi.norge.no/los/ord/avlosertilskudd"/>
