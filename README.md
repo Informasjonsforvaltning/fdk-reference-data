@@ -38,11 +38,9 @@ The code api provides REST service for:
 * `GET /themes`
     * Return the code list of European theme codes (AGRI, ENER, SOCI, ...)
     
-There are also two internal api's used by the registration application to add new subjects and location codes to the database.
+There are also internal api, used by the registration application to add location codes to the database.
 
 * `POST /locations` which add a location to the database. In order to fill the locations table, harvest https://data.norge.no/api/dcat2/data.jsonld
-* `GET /subjects` which asks for a subject-uri. If it is not already in the database the service tries to fetch the subjects definition from the uri and 
-stores the definition in the database for furter access.
     
 ## Known problems
 
