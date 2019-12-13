@@ -24,7 +24,7 @@ jobs:
       - run: gcloud auth configure-docker
 
       - name: Build Docker image
-        run: docker build --build-arg JAR_FILE=reference-data-2.0.0-SNAPSHOT.jar -t eu.gcr.io/fdk-infra/reference-data:latest .
+        run: docker build . -t eu.gcr.io/fdk-infra/reference-data:latest
 
       - name: Run tests
         run: mvn verify
