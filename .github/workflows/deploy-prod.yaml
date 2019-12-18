@@ -48,6 +48,17 @@ jobs:
             chmod o+w ./kubectlapply.yaml
             cat kubectlapply.yaml
 
+      - name: Create backup snapshot
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: '270.0.0'
+          service_account_email: ${{ secrets.FDK_PROD_EMAIL }}
+          service_account_key: ${{ secrets.FDK_PROD_AUTODEPLOY }}
+          run: |
+            gcloud compute --project fdk-prod disks snapshot "fdk-prod-reference-data" --snapshot-names "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --zone "europe-north1-a" &
+            wait
+            gcloud compute --project fdk-prod snapshots add-labels "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --labels="snapshotdays="14""
+
       - name: Get kubeconfig file from GKE
         uses: machine-learning-apps/gke-kubeconfig@master
         with:
