@@ -48,12 +48,6 @@ jobs:
             chmod o+w ./kubectlapply.yaml
             cat kubectlapply.yaml
 
-      - name: Create backup snapshot
-        run: |
-          gcloud compute --project fdk-prod disks snapshot "fdk-prod-reference-data" --snapshot-names "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --zone "europe-north1-a" &
-          wait
-          gcloud compute --project fdk-prod snapshots add-labels "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --labels="snapshotdays="14""
-
       - name: Get kubeconfig file from GKE
         uses: machine-learning-apps/gke-kubeconfig@master
         with:
@@ -61,6 +55,12 @@ jobs:
           project_id: fdk-prod
           location_zone: europe-north1-a
           cluster_name: fdk-prod
+
+      - name: Create backup snapshot
+        run: |
+          gcloud compute --project fdk-prod disks snapshot "fdk-prod-reference-data" --snapshot-names "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --zone "europe-north1-a" &
+          wait
+          gcloud compute --project fdk-prod snapshots add-labels "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --labels="snapshotdays="14""
 
       - name: Deploy to production
         uses: docker://bitnami/kubectl:latest
