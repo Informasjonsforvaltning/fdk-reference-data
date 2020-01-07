@@ -20,10 +20,11 @@ jobs:
             helm init --client-only
             helm repo add fdk https://informasjonsforvaltning.github.io/helm-chart/
             helm fetch --untar --untardir ./helm fdk/reference-data
-            helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/fdk-infra/reference-data:latest" -f ./helm/reference-data/values/demo.yaml ./helm/reference-data/ > ./kubectlapply.yaml
+            helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/fdk-infra/reference-data:${{ github.event.client_payload.sha }}" -f ./helm/reference-data/values/demo.yaml ./helm/reference-data/ > ./kubectlapply.yaml
             cat ./kubectlapply.yaml
             chmod o+w ./kubectlapply.yaml
             cat kubectlapply.yaml
+
       - name: Get kubeconfig file from GKE
         uses: machine-learning-apps/gke-kubeconfig@master
         with:
@@ -31,6 +32,7 @@ jobs:
           project_id: fdk-dev
           location_zone: europe-north1-a
           cluster_name: fdk-dev
+
       - name: Deploy to demo
         uses: docker://bitnami/kubectl:latest
         env:
