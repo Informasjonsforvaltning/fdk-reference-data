@@ -1,4 +1,4 @@
-name: Build and deploy to staging when pull request is created
+name: Build and deploy to staging (digdir) when pull request is created
 
 on:
   pull_request:
@@ -17,8 +17,8 @@ jobs:
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           version: '270.0.0'
-          service_account_email: ${{ secrets.GCP_SA_FDK_JENKINS_GCR_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SA_FDK_JENKINS_GCR }}
+          service_account_email: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_EMAIL }}
+          service_account_key: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
 
       # Configure docker to use the gcloud command-line tool as a credential helper
       - run: gcloud auth configure-docker
@@ -27,10 +27,10 @@ jobs:
         run: mvn clean package --no-transfer-progress
 
       - name: Build Docker image with GitHub commit sha tag
-        run: docker build -f Dockerfile.prod . -t eu.gcr.io/fdk-infra/reference-data:$GITHUB_SHA -t eu.gcr.io/fdk-infra/reference-data:staging_latest
+        run: docker build -f Dockerfile.prod . -t eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA -t eu.gcr.io/digdir-fdk-infra/reference-data:staging_latest
 
       - name: Publish docker image to Google Cloud
-        run: docker -- push eu.gcr.io/fdk-infra/reference-data
+        run: docker -- push eu.gcr.io/digdir-fdk-infra/reference-data
 
       - name: Apply Helm template
         uses: stefanprodan/kube-tools@v1
@@ -40,17 +40,17 @@ jobs:
             helm init --client-only
             helm repo add fdk https://informasjonsforvaltning.github.io/helm-chart/
             helm fetch --untar --untardir ./helm fdk/reference-data
-            helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/fdk-infra/reference-data:$GITHUB_SHA" -f ./helm/reference-data/values/staging.yaml ./helm/reference-data/ > ./kubectlapply.yaml
+            helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA" -f ./helm/reference-data/values/staging-digdir.yaml ./helm/reference-data/ > ./kubectlapply.yaml
             chmod o+w ./kubectlapply.yaml
             cat kubectlapply.yaml
 
       - name: Get kubeconfig file from GKE
         uses: machine-learning-apps/gke-kubeconfig@master
         with:
-          application_credentials: ${{ secrets.FDK_DEV_AUTODEPLOY }}
-          project_id: fdk-dev
+          application_credentials: ${{ secrets.DIGDIR_FDK_DEV_AUTODEPLOY }}
+          project_id: digdir-fdk-dev
           location_zone: europe-north1-a
-          cluster_name: fdk-dev
+          cluster_name: digdir-fdk-dev
 
       - name: Deploy to staging
         uses: docker://bitnami/kubectl:latest
@@ -64,4 +64,4 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         uses: pullreminders/slack-action@master
         with:
-          args: '{\"channel\":\"C7NTH118T\",\"text\":\"Application: fdk-reference-data deployed to staging\"}'
+          args: '{\"channel\":\"C7NTH118T\",\"text\":\"Application: fdk-reference-data deployed to digdir-staging\"}'
