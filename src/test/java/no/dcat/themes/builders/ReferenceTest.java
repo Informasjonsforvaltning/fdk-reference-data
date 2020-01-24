@@ -27,7 +27,7 @@ public class ReferenceTest {
 
     @Test
     public void SpesificLosTermExists() throws Throwable {
-        LosNode sykeTransport = LosService.getByURIString("http://psi.norge.no/los/ord/syketransport");
+        LosNode sykeTransport = LosService.getByURIString("https://psi.norge.no/los/ord/syketransport");
         assertNotNull(sykeTransport);
         assertEquals("Forventet at LOS tema skulle eksistere og hete syketransport på norsk bokmål", "Syketransport",sykeTransport.getName().get("nb"));
         assertEquals("Forventet at LOS tema skulle eksistere og hete Sjuketransport på nynorsk", "Sjuketransport",sykeTransport.getName().get("nn"));
@@ -36,7 +36,7 @@ public class ReferenceTest {
 
     @Test
     public void LosTermHasExpectedChildren() throws Throwable {
-        LosNode arbeid = LosService.getByURIString("http://psi.norge.no/los/tema/arbeid");
+        LosNode arbeid = LosService.getByURIString("https://psi.norge.no/los/tema/arbeid");
         assertNotNull(arbeid);
         assertEquals(5, arbeid.children.size());
     }
@@ -44,7 +44,7 @@ public class ReferenceTest {
     //path for hoved-nivå
     @Test
     public void TopLevelTermHasCorrectPath() throws Throwable {
-        LosNode helse = LosService.getByURIString("http://psi.norge.no/los/tema/helse-og-omsorg");
+        LosNode helse = LosService.getByURIString("https://psi.norge.no/los/tema/helse-og-omsorg");
         assertNotNull(helse);
         assertEquals("helse-og-omsorg",helse.losPaths.get(0));
     }
@@ -52,7 +52,7 @@ public class ReferenceTest {
     //path for mellom nivå
     @Test
     public void MidLevelTermHasCorrectPath() throws Throwable {
-        LosNode folkehelse = LosService.getByURIString("http://psi.norge.no/los/tema/folkehelse");
+        LosNode folkehelse = LosService.getByURIString("https://psi.norge.no/los/tema/folkehelse");
         assertNotNull(folkehelse);
         assertEquals("helse-og-omsorg/folkehelse",folkehelse.losPaths.get(0));
     }
@@ -60,15 +60,15 @@ public class ReferenceTest {
     //path for emneord
     @Test
     public void LowLevelTermHasCorrectPath() throws Throwable {
-        LosNode stoey = LosService.getByURIString("http://psi.norge.no/los/ord/stoy");
+        LosNode stoey = LosService.getByURIString("https://psi.norge.no/los/ord/stoy");
         assertNotNull(stoey);
-        assertEquals("helse-og-omsorg/folkehelse/stoy",stoey.losPaths.get(0));
+        assertEquals("natur-klima-og-miljo/forurensning-og-straling/stoy",stoey.losPaths.get(0));
     }
 
     //test for ekspansjon - toplevel(brittle? telle og forvente f.eks 62) ?
     @Test
     public void TopLevelTermExpansion() throws Throwable {
-        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/tema/helse-og-omsorg");}} );
+        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("https://psi.norge.no/los/tema/helse-og-omsorg");}} );
         assertNotNull(expandedTheme);
         assertEquals(273, expandedTheme.size()); //Intentionally brittle
         assertTrue(expandedTheme.contains("Helsetjenester"));
@@ -79,9 +79,9 @@ public class ReferenceTest {
     //test for ekspanjons -midlevel
     @Test
     public void MidLevelTermExpansion() throws Throwable {
-        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/tema/folkehelse");}} );
+        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("https://psi.norge.no/los/tema/folkehelse");}} );
         assertNotNull(expandedTheme);
-        assertEquals(54, expandedTheme.size()); //Intentionally brittle
+        assertEquals(51, expandedTheme.size()); //Intentionally brittle
         assertTrue(expandedTheme.contains("Folkehelse"));
         assertTrue(expandedTheme.contains("Helse og omsorg"));
         assertTrue(expandedTheme.contains("Gift"));
@@ -92,7 +92,7 @@ public class ReferenceTest {
     //test for ekspansjon - lowlevel (emne)
     @Test
     public void LowLevelTermExpansion() throws Throwable {
-        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("http://psi.norge.no/los/ord/stoy");}} );
+        List<String> expandedTheme = losService.expandLosThemes(new ArrayList<String>(){{add("https://psi.norge.no/los/ord/stoy");}} );
         assertNotNull(expandedTheme);
         assertEquals(18, expandedTheme.size()); //Intentionally brittle
         assertTrue(expandedTheme.contains("Folkehelse"));

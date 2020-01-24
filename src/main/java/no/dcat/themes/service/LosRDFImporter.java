@@ -194,7 +194,7 @@ public class LosRDFImporter {
     }
 
     private static class LOS_ONTOLOGY {
-        static private final Resource WORD = ResourceFactory.createResource("http://psi.norge.no/los/ontologi/ord");
-        static private final Resource THEME = ResourceFactory.createResource("http://psi.norge.no/los/ontologi/tema");
+        static private final Resource WORD = ResourceFactory.createResource("https://psi.norge.no/los/ontologi/ord");
+        static private final Resource THEME = ResourceFactory.createResource("https://psi.norge.no/los/ontologi/tema");
     }
 }
