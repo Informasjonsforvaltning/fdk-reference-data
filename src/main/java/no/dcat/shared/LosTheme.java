@@ -10,8 +10,8 @@ import java.util.Map;
 @Data
 public class LosTheme {
     static final String RDFS_URI = "http://www.w3.org/2000/01/rdf-schema#";
-    static final String NODE_IS_TEMA_OR_SUBTEMA = "http://psi.norge.no/los/ontologi/tema";
-    static final String NODE_IS_EMNE = "http://psi.norge.no/los/ontologi/ord";
+    static final String NODE_IS_TEMA_OR_SUBTEMA = "https://psi.norge.no/los/ontologi/tema";
+    static final String NODE_IS_EMNE = "https://psi.norge.no/los/ontologi/ord";
 
     @ApiModelProperty("Terms (underkategori or emneord) that are connected to this term")
     public List<URI> children;
