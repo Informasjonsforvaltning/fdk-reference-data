@@ -54,7 +54,7 @@ jobs:
           service_account_email: ${{ secrets.DIGDIR_FDK_PROD_EMAIL }}
           service_account_key: ${{ secrets.DIGDIR_FDK_PROD_AUTODEPLOY }}
       - run: |
-          gcloud compute --project digdir-fdk-prod disks snapshot "digdir-fdk-prod-reference-data" --snapshot-names "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --zone "europe-north1-a" &
+          gcloud compute --project digdir-fdk-prod disks snapshot "fdk-prod-reference-data" --snapshot-names "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --zone "europe-north1-a" &
           wait
           gcloud compute --project digdir-fdk-prod snapshots add-labels "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --labels="snapshotdays="14""
 
