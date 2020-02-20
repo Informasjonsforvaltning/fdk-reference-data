@@ -32,6 +32,10 @@ public class LosService {
         return null;
     }
 
+    public List<LosNode> getByURIs(List<String> uris) {
+        return allLosNodes.stream().filter(losNode -> uris.contains(losNode.getUri())).collect(Collectors.toList());
+    }
+
     public static LosNode getByURIString(String uri) throws URISyntaxException {
         URI actualURI = new URI(uri);
         return getByURI(actualURI);
