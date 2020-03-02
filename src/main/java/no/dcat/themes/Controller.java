@@ -1,5 +1,6 @@
 package no.dcat.themes;
 
+import lombok.RequiredArgsConstructor;
 import no.dcat.shared.DataTheme;
 import no.dcat.shared.LocationUri;
 import no.dcat.shared.SkosCode;
@@ -10,7 +11,6 @@ import no.dcat.themes.service.LosService;
 import no.dcat.themes.service.ThemesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,29 +19,24 @@ import org.springframework.web.bind.annotation.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @Scope("thread")
 public class Controller {
 
     static private final Logger logger = LoggerFactory.getLogger(Controller.class);
-    @Autowired
-    private CodesService codesService;
-    @Autowired
-    private ThemesService themesService;
-    @Autowired
-    private LosService losService;
+    private final CodesService codesService;
+    private final ThemesService themesService;
+    private final LosService losService;
 
     @CrossOrigin
     @RequestMapping(value = "/codes", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<String> codeTypes() {
-
         return codesService.listCodes();
-
     }
-
 
     @CrossOrigin
     @RequestMapping(value = "/codes/{type}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -60,7 +55,7 @@ public class Controller {
     public LosNode getLosNode(String id) {
         try {
             URI u = new URI(id);
-            return losService.getByURI(u);
+            return LosService.getByURI(u);
         } catch (URISyntaxException use) {
             logger.debug("Request for LOS by URI failed. URI " + id);
         }
@@ -73,10 +68,7 @@ public class Controller {
         if (themes == null || themes.length == 0) {
             return false;
         }
-        List<String> themesList = new ArrayList<>();
-        for (String str : themes) {
-            themesList.add(str);
-        }
+        List<String> themesList = Arrays.asList(themes);
         return losService.hasLosThemes(themesList);
     }
 
@@ -86,13 +78,9 @@ public class Controller {
         if (themes == null || themes.length == 0) {
             return null;
         }
-        List<String> themesList = new ArrayList<>();
-        for (String str : themes) {
-            themesList.add(str);
-        }
+        List<String> themesList = Arrays.asList(themes);
         List<String> expanded = losService.expandLosThemes(themesList);
-        String[] returnValues = expanded.toArray(new String[0]);
-        return returnValues;
+        return expanded.toArray(new String[0]);
     }
 
     @CrossOrigin
@@ -101,13 +89,9 @@ public class Controller {
         if (themes == null || themes.length == 0) {
             return null;
         }
-        List<String> themesList = new ArrayList<>();
-        for (String str : themes) {
-            themesList.add(str);
-        }
+        List<String> themesList = Arrays.asList(themes);
         List<String> expanded = losService.expandLosThemesByPaths(themesList);
-        String[] returnValues = expanded.toArray(new String[0]);
-        return returnValues;
+        return expanded.toArray(new String[0]);
     }
 
     @CrossOrigin
@@ -128,5 +112,4 @@ public class Controller {
             throw e;
         }
     }
-
 }
