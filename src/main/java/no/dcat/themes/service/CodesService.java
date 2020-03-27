@@ -1,5 +1,6 @@
 package no.dcat.themes.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import no.dcat.datastore.domain.dcat.vocabulary.AdmEnhet;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -39,6 +41,9 @@ public class CodesService extends BaseServiceWithFraming {
             throw new RuntimeException(e);
         }
     }
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     public CodesService(TDBConnection tdbConnection) {
@@ -100,6 +105,9 @@ public class CodesService extends BaseServiceWithFraming {
 
     @Cacheable("codes")
     public List<SkosCode> getCodes(Types type) {
+        if (type.equals(Types.mediatypes)) {
+            return readMediaTypeCodesFromFile();
+        }
 
         return tdbConnection.inTransaction(ReadWrite.READ, connection -> {
             Dataset dataset = DatasetFactory.create(connection.getModelWithInference(type.toString()));
@@ -163,5 +171,14 @@ public class CodesService extends BaseServiceWithFraming {
             return locationCode;
 
         });
+    }
+
+    private List<SkosCode> readMediaTypeCodesFromFile() {
+        try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("json/mediatypes.json")) {
+            return Arrays.asList(objectMapper.readValue(inputStream, SkosCode[].class));
+        } catch (IOException e) {
+            log.error("Failed to read JSON file with media types", e);
+        }
+        return Collections.emptyList();
     }
 }
