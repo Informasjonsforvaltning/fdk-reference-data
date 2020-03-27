@@ -1,6 +1,7 @@
 package no.dcat.themes;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import no.dcat.shared.DataTheme;
 import no.dcat.shared.LocationUri;
 import no.dcat.shared.SkosCode;
@@ -22,26 +23,25 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
-@RequiredArgsConstructor
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @Scope("thread")
 public class Controller {
-
-    static private final Logger logger = LoggerFactory.getLogger(Controller.class);
     private final CodesService codesService;
     private final ThemesService themesService;
     private final LosService losService;
 
     @CrossOrigin
-    @RequestMapping(value = "/codes", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = "/codes", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<String> codeTypes() {
         return codesService.listCodes();
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/codes/{type}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<SkosCode> codes(@PathVariable(name = "type") String type) {
-        return codesService.getCodes(Types.valueOf(type));
+    @GetMapping(value = "/codes/{type}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<SkosCode> codes(@PathVariable Types type) {
+        return codesService.getCodes(type);
     }
 
     @CrossOrigin
@@ -57,7 +57,7 @@ public class Controller {
             URI u = new URI(id);
             return LosService.getByURI(u);
         } catch (URISyntaxException use) {
-            logger.debug("Request for LOS by URI failed. URI " + id);
+            log.debug("Request for LOS by URI failed. URI " + id);
         }
         return null;
     }
@@ -104,11 +104,11 @@ public class Controller {
     @CrossOrigin
     @RequestMapping(value = "/locations", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, method = RequestMethod.POST)
     public SkosCode putLocation(@RequestBody LocationUri resource) throws MalformedURLException {
-        logger.info("register new location: {}", resource.getUri());
+        log.info("register new location: {}", resource.getUri());
         try {
             return codesService.addLocation(resource.getUri());
         } catch (Exception e) {
-            logger.error("Unable to find location with URI <{}>. Reason {}", resource.getUri(), e.getMessage());
+            log.error("Unable to find location with URI <{}>. Reason {}", resource.getUri(), e.getMessage());
             throw e;
         }
     }

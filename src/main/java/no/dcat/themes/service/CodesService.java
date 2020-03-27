@@ -1,6 +1,7 @@
 package no.dcat.themes.service;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import no.dcat.datastore.domain.dcat.vocabulary.AdmEnhet;
 import no.dcat.datastore.domain.dcat.vocabulary.GeoNames;
 import no.dcat.shared.SkosCode;
@@ -20,20 +21,15 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
+@Slf4j
 @Scope("thread")
-
 public class CodesService extends BaseServiceWithFraming {
-
-
     private static final String frame;
 
     static {
