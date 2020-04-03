@@ -43,9 +43,6 @@ public class CodesService extends BaseServiceWithFraming {
     }
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
     public CodesService(TDBConnection tdbConnection) {
         super(tdbConnection);
     }
@@ -174,8 +171,8 @@ public class CodesService extends BaseServiceWithFraming {
     }
 
     private List<SkosCode> readMediaTypeCodesFromFile() {
-        try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("json/mediatypes.json")) {
-            return Arrays.asList(objectMapper.readValue(inputStream, SkosCode[].class));
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("json/mediatypes.json")) {
+            return Arrays.asList(new ObjectMapper().readValue(inputStream, SkosCode[].class));
         } catch (IOException e) {
             log.error("Failed to read JSON file with media types", e);
         }
