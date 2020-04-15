@@ -120,10 +120,6 @@
     "code": "application/x.ualf"
   },
   {
-    "name": "ESRI FGDB",
-    "code": "application/zip"
-  },
-  {
     "name": "ZIP",
     "code": "application/zip"
   },
