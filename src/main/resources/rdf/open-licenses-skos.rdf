@@ -16,6 +16,14 @@
         <skos:prefLabel xml:lang="en">Norwegian Licence for Open Government Data</skos:prefLabel>
     </skos:Concept>
 
+    <skos:Concept rdf:about="http://data.norge.no/nlod/no/">
+        <skos:inScheme rdf:resource="http:/data.norge.no/opne-data-lisensar"/>
+        <dc:identifier>NLOD</dc:identifier>
+        <at:authority-code>NLOD</at:authority-code>
+        <skos:prefLabel xml:lang="no">Norsk lisens for offentlige data</skos:prefLabel>
+        <skos:prefLabel xml:lang="en">Norwegian Licence for Open Government Data</skos:prefLabel>
+    </skos:Concept>
+
     <skos:Concept rdf:about="http://data.norge.no/nlod/no/1.0">
         <skos:inScheme rdf:resource="http:/data.norge.no/opne-data-lisensar"/>
         <dc:identifier>NLOD10</dc:identifier>
