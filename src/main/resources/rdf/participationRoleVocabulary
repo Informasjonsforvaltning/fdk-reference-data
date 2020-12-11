@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:atold="http://publications.europa.eu/resource/authority/"
+         xmlns:at="http://publications.europa.eu/ontology/authority/">
+    <skos:ConceptScheme rdf:about="http://data.norge.no/datakatalog/role" at:table.id="role">
+        <owl:versionInfo>20170104-0</owl:versionInfo>
+        <rdfs:label xml:lang="en">Role</rdfs:label>
+        <at:prefLabel xml:lang="en">Role</at:prefLabel>
+        <at:prefLabel xml:lang="no">Rolle</at:prefLabel>
+        <at:prefLabel xml:lang="nn">Rolle</at:prefLabel>
+    </skos:ConceptScheme>
+    <skos:Concept rdf:about="http://data.norge.no/datakatalog/register" at:deprecated="false">
+        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/register"/>
+        <at:authority-code>REGISTER</at:authority-code>
+        <at:op-code>REGISTER</at:op-code>
+        <atold:op-code>REGISTER</atold:op-code>
+        <dc:identifier>REGISTER</dc:identifier>
+        <skos:prefLabel xml:lang="en">Tilknyttet register</skos:prefLabel>
+        <skos:prefLabel xml:lang="nb">Tilknyttet register</skos:prefLabel>
+        <skos:prefLabel xml:lang="nn">Tilknyttet register</skos:prefLabel>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://data.norge.no/datakatalog/provider" at:deprecated="false">
+        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/provider"/>
+        <at:authority-code>PROVIDER</at:authority-code>
+        <at:op-code>PROVIDER</at:op-code>
+        <atold:op-code>PROVIDER</atold:op-code>
+        <dc:identifier>PROVIDER</dc:identifier>
+        <skos:prefLabel xml:lang="en">Innholdsleverandør</skos:prefLabel>
+        <skos:prefLabel xml:lang="nb">Innholdsleverandør</skos:prefLabel>
+        <skos:prefLabel xml:lang="nn">Innholdsleverandør</skos:prefLabel>
+    </skos:Concept>
+    
+    
+    <skos:Concept rdf:about="http://data.norge.no/datakatalog/partner" at:deprecated="false">
+        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/partner"/>
+        <at:authority-code>PARTNER</at:authority-code>
+        <at:op-code>PARTNER</at:op-code>
+        <atold:op-code>PARTNER</atold:op-code>
+        <dc:identifier>PARTNER</dc:identifier>
+        <skos:prefLabel xml:lang="en">Samarbeidspartner</skos:prefLabel>
+        <skos:prefLabel xml:lang="nb">Samarbeidspartner</skos:prefLabel>
+        <skos:prefLabel xml:lang="nn">Samarbeidspartner</skos:prefLabel>
+    </skos:Concept>
+</rdf:RDF>
