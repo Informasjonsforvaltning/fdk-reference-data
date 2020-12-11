@@ -12,7 +12,7 @@
         <at:prefLabel xml:lang="nn">Type</at:prefLabel>
     </skos:ConceptScheme>
     <skos:Concept rdf:about="http://data.norge.no/datakatalog/verge" at:deprecated="false">
-        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/register"/>
+        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/verge"/>
         <at:authority-code>verge</at:authority-code>
         <at:op-code>REGISTER</at:op-code>
         <atold:op-code>verge</atold:op-code>
@@ -23,7 +23,7 @@
     </skos:Concept>
 
     <skos:Concept rdf:about="http://data.norge.no/datakatalog/myndig" at:deprecated="false">
-        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/provider"/>
+        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/myndig"/>
         <at:authority-code>MYNDIG</at:authority-code>
         <at:op-code>MYNDIG</at:op-code>
         <atold:op-code>MYNDIG</atold:op-code>
@@ -31,6 +31,17 @@
         <skos:prefLabel xml:lang="en">Legal</skos:prefLabel>
         <skos:prefLabel xml:lang="nb">Myndig</skos:prefLabel>
         <skos:prefLabel xml:lang="nn">Myndig</skos:prefLabel>
+    </skos:Concept>
+
+<skos:Concept rdf:about="http://data.norge.no/datakatalog/sertifisert" at:deprecated="false">
+        <skos:inScheme rdf:resource="http://data.norge.no/datakatalog/sertifisert"/>
+        <at:authority-code>MYNDIG</at:authority-code>
+        <at:op-code>SERTIFISERT</at:op-code>
+        <atold:op-code>SERTIFISERT</atold:op-code>
+        <dc:identifier>SERTIFISERT</dc:identifier>
+        <skos:prefLabel xml:lang="en">Certified</skos:prefLabel>
+        <skos:prefLabel xml:lang="nb">Sertifisert</skos:prefLabel>
+        <skos:prefLabel xml:lang="nn">Sertifisert</skos:prefLabel>
     </skos:Concept>
     
 </rdf:RDF>
