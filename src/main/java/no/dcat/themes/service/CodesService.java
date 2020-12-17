@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -172,7 +173,13 @@ public class CodesService extends BaseServiceWithFraming {
 
     private List<SkosCode> readMediaTypeCodesFromFile() {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("json/mediatypes.json")) {
-            return Arrays.asList(new ObjectMapper().readValue(inputStream, SkosCode[].class));
+            return Stream.of(new ObjectMapper().readValue(inputStream, SkosCode[].class))
+                .map(skosCode -> {
+                    skosCode.setUri(String.format("%s/%s", "https://www.iana.org/assignments/media-types", skosCode.getCode()));
+
+                    return skosCode;
+                })
+                .collect(Collectors.toList());
         } catch (IOException e) {
             log.error("Failed to read JSON file with media types", e);
         }
