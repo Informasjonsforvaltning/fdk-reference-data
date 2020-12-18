@@ -42,11 +42,13 @@ jobs:
           chmod o+w ./kubectlapply.yaml
           cat kubectlapply.yaml
 
-      - name: Create backup snapshot
+      - name: Setup gcloud CLI for backup snapshot
         uses: google-github-actions/setup-gcloud@master
         with:
           service_account_email: ${{ secrets.DIGDIR_FDK_PROD_EMAIL }}
           service_account_key: ${{ secrets.DIGDIR_FDK_PROD_AUTODEPLOY }}
+
+      - name: Create backup snapshot
         run: |
           gcloud compute --project digdir-fdk-prod disks snapshot "fdk-prod-reference-data" --snapshot-names "autogcs-autodeploy-prod-reference-data-${GITHUB_SHA::8}" --zone "europe-north1-a" &
           wait
