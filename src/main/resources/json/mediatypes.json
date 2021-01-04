@@ -44,6 +44,14 @@
     "code": "application/x-\u00adogc-sosi"
   },
   {
+    "name": "SOSI",
+    "code": "text/vnd.sosi"
+  },
+  {
+    "name": "FileGDB",
+    "code": "application/x-filegdb"
+  },
+  {
     "name": "TIFF",
     "code": "image/tiff"
   },
