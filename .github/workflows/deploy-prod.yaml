@@ -32,7 +32,7 @@ jobs:
         run: mvn verify --no-transfer-progress
 
       - name: Publish docker image to Google Cloud
-        run: docker -- push eu.gcr.io/digdir-fdk-infra/reference-data
+        run: docker -- push eu.gcr.io/digdir-fdk-infra/reference-data -a
 
       - name: Apply Helm template
         run: |
