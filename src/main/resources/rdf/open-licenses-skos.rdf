@@ -2,7 +2,8 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
          xmlns:at="http://publications.europa.eu/ontology/authority/"
          xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dct="http://purl.org/dc/terms/">
     <skos:ConceptScheme rdf:about="http:/data.norge.no/opne-data-lisensar">
         <owl:versionInfo>20160920-0</owl:versionInfo>
         <rdfs:label xml:lang="no">Åpne data lisenser</rdfs:label>
@@ -14,6 +15,7 @@
         <at:authority-code>NLOD</at:authority-code>
         <skos:prefLabel xml:lang="no">Norsk lisens for offentlige data</skos:prefLabel>
         <skos:prefLabel xml:lang="en">Norwegian Licence for Open Government Data</skos:prefLabel>
+        <dct:isReplacedBy>http://data.norge.no/nlod/no/2.0</dct:isReplacedBy>
     </skos:Concept>
 
     <skos:Concept rdf:about="http://data.norge.no/nlod/no/">
@@ -22,6 +24,7 @@
         <at:authority-code>NLOD</at:authority-code>
         <skos:prefLabel xml:lang="no">Norsk lisens for offentlige data</skos:prefLabel>
         <skos:prefLabel xml:lang="en">Norwegian Licence for Open Government Data</skos:prefLabel>
+        <dct:isReplacedBy>http://data.norge.no/nlod/no/2.0</dct:isReplacedBy>
     </skos:Concept>
 
     <skos:Concept rdf:about="http://data.norge.no/nlod/no/1.0">
@@ -30,6 +33,7 @@
         <at:authority-code>NLOD10</at:authority-code>
         <skos:prefLabel xml:lang="no">Norsk lisens for offentlige data</skos:prefLabel>
         <skos:prefLabel xml:lang="en">Norwegian Licence for Open Government Data</skos:prefLabel>
+        <dct:isReplacedBy>http://data.norge.no/nlod/no/2.0</dct:isReplacedBy>
     </skos:Concept>
 
     <skos:Concept rdf:about="http://data.norge.no/nlod/no/2.0">
@@ -54,6 +58,7 @@
         <at:authority-code>CC BY 4.0 DEED</at:authority-code>
         <skos:prefLabel xml:lang="no">Creative Commons Navngivelse 4.0 Internasjonal</skos:prefLabel>
         <skos:prefLabel xml:lang="en">Creative Commons Attribution 4.0 International</skos:prefLabel>
+        <dct:isReplacedBy>http://creativecommons.org/licenses/by/4.0/</dct:isReplacedBy>
     </skos:Concept>
 
     <skos:Concept rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
