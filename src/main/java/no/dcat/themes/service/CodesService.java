@@ -1,8 +1,8 @@
 package no.dcat.themes.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import no.dcat.datastore.domain.dcat.vocabulary.AT;
 import no.dcat.datastore.domain.dcat.vocabulary.AdmEnhet;
 import no.dcat.datastore.domain.dcat.vocabulary.GeoNames;
 import no.dcat.shared.SkosCode;
@@ -13,14 +13,19 @@ import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.ReadWrite;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.SKOS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -93,6 +98,43 @@ public class CodesService extends BaseServiceWithFraming {
         return null;
     }
 
+    private static SkosCode extractSkosCode(Resource resource) {
+        if (resource != null && resource.isURIResource()) {
+            SkosCode skosCode = new SkosCode();
+            skosCode.setUri(resource.getURI());
+
+            if (resource.getProperty(AT.authorityCode) != null) {
+                skosCode.setCode(resource.getProperty(AT.authorityCode).getString());
+            } else {
+                skosCode.setCode(resource.getURI());
+            }
+
+            if (resource.getProperty(DCTerms.isReplacedBy) != null) {
+                skosCode.setIsReplacedBy(resource.getProperty(DCTerms.isReplacedBy).getString());
+            }
+
+            StmtIterator prefLabels = resource.listProperties(SKOS.prefLabel);
+            skosCode.setPrefLabel(new HashMap<>());
+
+            while (prefLabels.hasNext()) {
+                Statement stmt = prefLabels.next();
+
+                String language = stmt.getLanguage();
+                Literal literal = stmt.getObject().asLiteral();
+                String label = literal.getString();
+                if (language.isEmpty()) {
+                    skosCode.getPrefLabel().put("no", label);
+                } else {
+                    if (!skosCode.getPrefLabel().containsKey(language)) {
+                        skosCode.getPrefLabel().put(language, label);
+                    }
+                }
+            }
+            return skosCode;
+        }
+        return null;
+    }
+
     public List<String> listCodes() {
         return Arrays
                 .stream(Types.values())
@@ -118,10 +160,15 @@ public class CodesService extends BaseServiceWithFraming {
                 result.addAll(extractLocationCodes(model, model.listResourcesWithProperty(RDF.type, AdmEnhet.NamedIndividual)));
 
             } else {
-                String json = frame(dataset, frame);
-                dataset.close();
+                try {
+                    ResourceLoader resourceLoader = new DefaultResourceLoader();
+                    Model model = ModelFactory.createDefaultModel();
+                    model.read(new InputStreamReader(resourceLoader.getResource(type.getSourceUrl()).getInputStream(), UTF_8), "", "RDFXML");
+                    result.addAll(extractSkosCodes(model, model.listResourcesWithProperty(RDF.type, SKOS.Concept)));
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
 
-                result = new Gson().fromJson(json, FramedSkosCode.class).getGraph();
             }
 
             return result;
@@ -185,4 +232,19 @@ public class CodesService extends BaseServiceWithFraming {
         }
         return Collections.emptyList();
     }
+
+    private List<SkosCode> extractSkosCodes(Model model, ResIterator resourceIterator) {
+            if (model == null || resourceIterator == null) {
+                return null;
+            }
+
+            List<SkosCode> result = new ArrayList<>();
+
+            while (resourceIterator.hasNext()) {
+                Resource resource = resourceIterator.next();
+                result.add(extractSkosCode(resource));
+            }
+
+            return result;
+        }
 }
