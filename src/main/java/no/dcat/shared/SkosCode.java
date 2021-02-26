@@ -16,4 +16,5 @@ public class SkosCode {
     private String code;
     private String name;
     private Map<String, String> prefLabel;
+    private String isReplacedBy;
 }
