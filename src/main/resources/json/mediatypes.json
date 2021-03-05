@@ -36,8 +36,12 @@
     "code": "application/rdf+xml"
   },
   {
-    "name": "RSS",
+    "name": "XML",
     "code": "text/xml"
+  },
+  {
+    "name": "RSS",
+    "code": "application/rss+xml"
   },
   {
     "name": "SOSI",
