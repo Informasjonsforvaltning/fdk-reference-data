@@ -163,7 +163,7 @@ public class CodesService extends BaseServiceWithFraming {
                 try {
                     ResourceLoader resourceLoader = new DefaultResourceLoader();
                     Model model = ModelFactory.createDefaultModel();
-                    model.read(new InputStreamReader(resourceLoader.getResource(type.getSourceUrl()).getInputStream(), UTF_8), "", "RDFXML");
+                    model.read(type.getSourceUrl());
                     result.addAll(extractSkosCodes(model, model.listResourcesWithProperty(RDF.type, SKOS.Concept)));
                 } catch (Exception e) {
                     System.out.println(e);
