@@ -71,7 +71,7 @@
     a skos:Concept ;
     skos:inScheme   <reference-types> ;
     at:authority-code "source";
-    skos:prefLabel "Er avledet fra"@nb , "Er avleda frå"@nn , "Source"@en .
+    skos:prefLabel "Er avledet fra (kilde)"@nb , "Er avleda frå (kjelde)"@nn , "Source"@en .
 
 <http://purl.org/dc/terms/relation>
     a skos:Concept ;
