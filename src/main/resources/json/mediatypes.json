@@ -24,6 +24,10 @@
     "code": "application/vnd.geo+json"
   },
   {
+    "name": "geoJSON",
+    "code": "application/geo+json"
+  },
+  {
     "name": "KML",
     "code": "application/vnd.google-earth.kml+xml"
   },
