@@ -21,6 +21,19 @@ The service provides REST API for:
     * Returns all IANA media types.
 * `GET /file-types`
     * Returns all EU file types.    
-    
+  
+
+## Environment variables
+```
+REDIS_HOST=localhost
+REDIS_PORT=6379
+```
+
+## Run locally
+```
+docker-compose up -d
+
+Start application in IDE of choice.
+```    
         
  

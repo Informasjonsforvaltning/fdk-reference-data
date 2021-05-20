@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-@SpringBootTest
+@SpringBootTest(properties = { "scheduling.enabled=false" })
 public class MediaTypeServiceIntegrationTest extends AbstractRedisContainerTest {
 
     @Autowired
