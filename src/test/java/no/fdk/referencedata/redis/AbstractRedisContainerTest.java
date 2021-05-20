@@ -30,8 +30,6 @@ public class AbstractRedisContainerTest {
             String redisContainerIP = "spring.redis.host=" + redis.getContainerIpAddress();
             String redisContainerPort = "spring.redis.port=" + redis.getMappedPort(REDIS_PORT); // <- This is how you get the random port.
 
-            System.out.println(redisContainerIP);
-            System.out.println(redisContainerPort);
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(context,  redisContainerIP, redisContainerPort); // <- This is how you override the configuration in runtime.
         }
     }
