@@ -13,7 +13,7 @@ import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@SpringBootTest(properties = { "scheduling.enabled=false" })
 public class FileTypeServiceIntegrationTest extends AbstractRedisContainerTest {
 
     @Autowired
