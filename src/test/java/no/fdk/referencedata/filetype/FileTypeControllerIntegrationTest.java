@@ -13,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = { "scheduling.enabled=false" })
 public class FileTypeControllerIntegrationTest extends AbstractRedisContainerTest {
 
     @LocalServerPort
