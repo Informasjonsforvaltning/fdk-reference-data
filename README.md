@@ -1,50 +1,26 @@
-# Reference-data
+# FDK reference-data
 
-Docker image: [dcatno/reference-data-api](https://hub.docker.com/r/dcatno/registration-api/)
-Base image: [frolvlad/alpine-oraclejdk8:slim](https://hub.docker.com/r/frolvlad/alpine-oraclejdk8/)
-Source: [Dockerfile](https://github.com/Informasjonsforvaltning/fdk/develop/applications/reference-data/src/main/docker/Dockerfile)
+Base image: [openjdk:15-slim](https://hub.docker.com/layers/openjdk/library/openjdk/15-slim/images/sha256-82fc670b1757068d299fb3f860201c5c97625b5ca351f903a6de33857398eb82?context=explore)
+Source: [Dockerfile](https://github.com/Informasjonsforvaltning/fdk-reference-data/blob/master/Dockerfile)
 
 ##  Overview
-Reference-data is a service that provides metadata for the various applications in this ecosystem. It provides code-lists, concepts and helptexts. 
+FDK reference-data is a service that provides metadata for the various applications in this ecosystem. It provides code-lists, concepts and helptexts. 
 
 # Technologies/frameworks
-* Java
-* Spring Boot v1.5.9
-* Apache Jena v.3.3.0
-* JSON-LD framing
-* Apache Jena TDB: To store the codes as RDF.
+* Java 15
+* Spring Boot v2.4.5
+* Redis
 
 ## API
 
-The code api provides REST service for:
+API documentation provided by Swagger 2.0 and is available on "/api-docs/reference-data".
 
-* `GET /codes`
-    * Returns all code-lists that can be used.
+The service provides REST API for:
+
+* `GET /media-types`
+    * Returns all IANA media types.
+* `GET /file-types`
+    * Returns all EU file types.    
     
-* `GET /codes/codeType`
-    * Returns the codes of a specific code type. The following code types are supported:
-        1. `provenancestatement`: codes that specify the provenance (origin) of the dataset (VEDTAK, BRUKER, TREDJEPART)
-        2. `rightsstatement`: codes to indicate the access rights of a dataset (PUBLIC, NON_PUBLIC, RESTRICTED)
-        3. `frequency`: codes to tell the update frequency of a dataset (ANNUAL, BIMONTHLY, CONT, ...)
-        3. `linguisticsystem`: codes to specify the language used in the data (NOR, ENG, SAM, ...)
-        3. `referencetypes`: codes to specify the semantic of relations (versionOf, isPartOf, Requires, ...)
-        1. `location`: codes used to specify the spatial/geographic extent of a dataset
-        1. `subject`: concepts used to describe a dataset sematically
         
-
-* `GET /helptexts`
-    * Return the helptexts used by the registration application
-    
-* `GET /themes`
-    * Return the code list of European theme codes (AGRI, ENER, SOCI, ...)
-    
-There are also internal api, used by the registration application to add location codes to the database.
-
-* `POST /locations` which add a location to the database. In order to fill the locations table, harvest https://data.norge.no/api/dcat2/data.jsonld
-    
-## Known problems
-
-We have had some problem with the TDB database. Sometimes it fails to restart due to a lock file. In those cases we have had to delete the lock file.
-
-The framing to parse the JSON-LD metadata description is very brittle and difficult to debug. Thus we should replace the framing code with java code to parse the RDF. This is done for the subject service.
  
