@@ -41,7 +41,7 @@ jobs:
       - name: Apply Helm template
         run: |
           helm repo add fdk https://informasjonsforvaltning.github.io/helm-chart/
-          helm fetch --untar --untardir ./helm fdk/reference-data
+          helm fetch --untar --untardir ./helm fdk/new-reference-data
           helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA" \
           -f ./helm/reference-data/values/staging.yaml \
           ./helm/reference-data/ > ./kubectlapply.yaml
@@ -63,7 +63,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          author_name: 'Application: fdk-reference-data | Environment: staging'
+          author_name: 'Application: New fdk-reference-data | Environment: staging'
           fields: commit,author,workflow
         env:
           GITHUB_TOKEN: ${{ github.token }}
