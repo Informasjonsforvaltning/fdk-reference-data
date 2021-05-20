@@ -15,6 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Setup java jdk
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '15'
+
       - name: Setup gcloud CLI for image-store
         uses: google-github-actions/setup-gcloud@master
         with:
@@ -24,11 +29,11 @@ jobs:
       - name: Configure docker to use the gcloud command-line tool as a credential helper
         run: gcloud auth configure-docker eu.gcr.io
 
-      - name: Package with maven
-        run: mvn clean package --no-transfer-progress
-
       - name: Build Docker image with GitHub commit sha tag
         run: docker build -f Dockerfile.prod . -t eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA -t eu.gcr.io/digdir-fdk-infra/reference-data:staging_latest
+
+      - name: Run tests with maven
+        run: mvn verify --no-transfer-progress
 
       - name: Publish docker image to Google Cloud
         run: docker -- push eu.gcr.io/digdir-fdk-infra/reference-data -a
