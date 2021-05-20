@@ -8,15 +8,19 @@ logging:
 server:
   compression:
     enabled: true
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/ld+json
+    mime-types: application/json
     tomcat:
         compression: on
-application:
-  httpUsername: ${themesHttpUsername:user}
-  httpPassword: ${themesHttpPassword:password}
 
 management:
   endpoints.web.exposure.include: health, readiness
+
+redis:
+  database: 0
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+  password:
+  timeout: 60000
 
 ---
 
