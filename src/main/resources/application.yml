@@ -1,11 +1,19 @@
 spring:
-logging:
-  level.root: WARN
-  level.no: ${LOG_LEVEL:DEBUG}
-  level.org.springframework: WARN
-  level.org.springframework.web: WARN
-  level.org.apache.jena: ERROR
+  logging:
+    level.root: WARN
+    level.no: ${LOG_LEVEL:DEBUG}
+    level.org.springframework: WARN
+    level.org.springframework.web: WARN
+    level.org.apache.jena: ERROR
+  redis:
+    database: 0
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    timeout: 60000
+
 server:
+  port: 8081
   compression:
     enabled: true
     mime-types: application/json
@@ -13,14 +21,13 @@ server:
         compression: on
 
 management:
-  endpoints.web.exposure.include: health, readiness
-
-redis:
-  database: 0
-  host: ${REDIS_HOST:localhost}
-  port: ${REDIS_PORT:6379}
-  password: ${REDIS_PASSWORD:}
-  timeout: 60000
+  endpoints:
+    web:
+      base-path: /
+      path-mapping:
+        info: ping
+      exposure:
+        include: health, info
 
 ---
 
