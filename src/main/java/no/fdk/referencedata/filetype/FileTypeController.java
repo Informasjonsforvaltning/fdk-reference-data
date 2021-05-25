@@ -20,10 +20,17 @@ import java.util.stream.StreamSupport;
 public class FileTypeController {
 
     @Autowired
+    private FileTypeService fileTypeService;
+
+    @Autowired
     private FileTypeRepository fileTypeRepository;
 
     @GetMapping
     public ResponseEntity<FileTypes> getFileTypes() {
+        if(fileTypeRepository.count() == 0) {
+            fileTypeService.harvestAndSaveFileTypes();
+        }
+
         return ResponseEntity.ok(FileTypes.builder().fileTypes(
                 StreamSupport.stream(fileTypeRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(FileType::getUri))

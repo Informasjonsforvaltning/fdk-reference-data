@@ -18,7 +18,7 @@ server:
     enabled: true
     mime-types: application/json
     tomcat:
-        compression: on
+      compression: on
 
 management:
   endpoints:
