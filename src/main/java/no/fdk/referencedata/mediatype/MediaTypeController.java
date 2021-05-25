@@ -28,10 +28,6 @@ public class MediaTypeController {
 
     @GetMapping
     public ResponseEntity<MediaTypes> getMediaTypes() {
-        if(mediaTypeRepository.count() == 0) {
-            mediaTypeService.harvestAndSaveMediaTypes();
-        }
-
         return ResponseEntity.ok(MediaTypes.builder().mediaTypes(
                             StreamSupport.stream(mediaTypeRepository.findAll().spliterator(), false)
                                 .sorted(Comparator.comparing(MediaType::getUri))

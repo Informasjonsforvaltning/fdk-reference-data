@@ -27,10 +27,6 @@ public class FileTypeController {
 
     @GetMapping
     public ResponseEntity<FileTypes> getFileTypes() {
-        if(fileTypeRepository.count() == 0) {
-            fileTypeService.harvestAndSaveFileTypes();
-        }
-
         return ResponseEntity.ok(FileTypes.builder().fileTypes(
                 StreamSupport.stream(fileTypeRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(FileType::getUri))

@@ -8,6 +8,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -57,7 +58,7 @@ public class IANAMediaTypeHarvester implements MediaTypeHarvester {
                 .map(s -> {
                     String url = format("%s/%s.csv", BASE_URI, s);
                     try {
-                        return new FileUrlResource(url);
+                        return new UrlResource(url);
                     } catch (MalformedURLException e) {
                         log.error("Invalid IANA media type registry URL: {}", url, e);
                         return null;
@@ -88,9 +89,8 @@ public class IANAMediaTypeHarvester implements MediaTypeHarvester {
                 .filter(Predicate.not(pair -> pair.getFirst().isEmpty() || pair.getSecond().isEmpty()));
         } catch (IOException e) {
             log.error("Failed to extract media type registry records from: {}", resource.getFilename(), e);
+            return Flux.error(e);
         }
-
-        return Flux.empty();
     }
 
     private MediaType buildMediaType(String name, String mediaType) {
