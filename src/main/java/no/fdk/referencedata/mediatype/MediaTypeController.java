@@ -1,6 +1,7 @@
 package no.fdk.referencedata.mediatype;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.filetype.FileTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +21,17 @@ import java.util.stream.StreamSupport;
 public class MediaTypeController {
 
     @Autowired
+    private MediaTypeService mediaTypeService;
+
+    @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
     @GetMapping
     public ResponseEntity<MediaTypes> getMediaTypes() {
+        if(mediaTypeRepository.count() == 0) {
+            mediaTypeService.harvestAndSaveMediaTypes();
+        }
+
         return ResponseEntity.ok(MediaTypes.builder().mediaTypes(
                             StreamSupport.stream(mediaTypeRepository.findAll().spliterator(), false)
                                 .sorted(Comparator.comparing(MediaType::getUri))
