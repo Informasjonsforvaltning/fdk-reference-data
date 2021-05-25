@@ -44,7 +44,7 @@ jobs:
           helm fetch --untar --untardir ./helm fdk/new-reference-data
           helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA" \
           -f ./helm/new-reference-data/values/staging.yaml \
-          ./helm/reference-data/ > ./kubectlapply.yaml
+          ./helm/new-reference-data/ > ./kubectlapply.yaml
           chmod o+w ./kubectlapply.yaml
           cat kubectlapply.yaml
 
