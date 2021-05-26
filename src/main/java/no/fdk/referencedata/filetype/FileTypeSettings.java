@@ -7,13 +7,13 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-@RedisHash("FileTypeSettings")
+@Document
 public class FileTypeSettings {
 
     public static final String SETTINGS = "fileTypeSettings";

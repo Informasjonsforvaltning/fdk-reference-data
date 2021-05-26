@@ -1,6 +1,6 @@
 package no.fdk.referencedata.mediatype;
 
-import no.fdk.referencedata.redis.AbstractRedisContainerTest;
+import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = { "scheduling.enabled=false" })
-public class MediaTypeControllerIntegrationTest extends AbstractRedisContainerTest {
+public class MediaTypeControllerIntegrationTest extends AbstractMongoDbContainerTest {
 
     @LocalServerPort
     private int port;
@@ -40,7 +40,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractRedisContainerTe
         MediaTypes mediaTypes =
                 this.restTemplate.getForObject("http://localhost:" + port + "/media-types", MediaTypes.class);
 
-        assertEquals(1440, mediaTypes.getMediaTypes().size());
+        assertEquals(1441, mediaTypes.getMediaTypes().size());
 
         MediaType first = mediaTypes.getMediaTypes().get(0);
         assertEquals("https://www.iana.org/assignments/media-types/application/1d-interleaved-parityfec", first.getUri());
@@ -50,9 +50,23 @@ public class MediaTypeControllerIntegrationTest extends AbstractRedisContainerTe
     }
 
     @Test
-    public void test_if_get_single_mediatype_returns_valid_response() {
+    public void test_if_get_mediatypes_by_type_returns_valid_response() {
+        MediaTypes mediaTypes =
+                this.restTemplate.getForObject("http://localhost:" + port + "/media-types/text", MediaTypes.class);
+
+        assertEquals(1, mediaTypes.getMediaTypes().size());
+
+        MediaType first = mediaTypes.getMediaTypes().get(0);
+        assertEquals("https://www.iana.org/assignments/media-types/text/plain", first.getUri());
+        assertEquals("plain", first.getName());
+        assertEquals("text", first.getType());
+        assertEquals("plain", first.getSubType());
+    }
+
+    @Test
+    public void test_if_get_mediatype_by_type_and_subtype_returns_valid_response() {
         MediaType mediaType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/media-types/https%3A%2F%2Fwww.iana.org%2Fassignments%2Fmedia-types%2Fapplication%2F1d-interleaved-parityfec", MediaType.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/media-types/application/1d-interleaved-parityfec", MediaType.class);
 
         assertNotNull(mediaType);
         assertEquals("https://www.iana.org/assignments/media-types/application/1d-interleaved-parityfec", mediaType.getUri());

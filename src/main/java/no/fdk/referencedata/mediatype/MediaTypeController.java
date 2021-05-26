@@ -21,23 +21,27 @@ import java.util.stream.StreamSupport;
 public class MediaTypeController {
 
     @Autowired
-    private MediaTypeService mediaTypeService;
-
-    @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
     @GetMapping
     public ResponseEntity<MediaTypes> getMediaTypes() {
         return ResponseEntity.ok(MediaTypes.builder().mediaTypes(
-                            StreamSupport.stream(mediaTypeRepository.findAll().spliterator(), false)
-                                .sorted(Comparator.comparing(MediaType::getUri))
-                                .collect(Collectors.toList())).build());
+                StreamSupport.stream(mediaTypeRepository.findAll().spliterator(), false)
+                    .sorted(Comparator.comparing(MediaType::getUri))
+                    .collect(Collectors.toList())).build());
     }
 
-    @GetMapping(path = "/{uri}")
-    public ResponseEntity<MediaType> getMediaType(@PathVariable("uri") final String uri) {
-        final String decodedUri = URLDecoder.decode(uri, StandardCharsets.UTF_8);
-        log.debug("Find mediaType for uri: " + decodedUri);
-        return ResponseEntity.of(mediaTypeRepository.findById(decodedUri));
+    @GetMapping(path = "/{type}")
+    public ResponseEntity<MediaTypes> getMediaType(@PathVariable("type") final String type) {
+        return ResponseEntity.ok(MediaTypes.builder().mediaTypes(
+                StreamSupport.stream(mediaTypeRepository.findByType(type).spliterator(), false)
+                    .sorted(Comparator.comparing(MediaType::getUri))
+                    .collect(Collectors.toList())).build());
+}
+
+    @GetMapping(path = "/{type}/{subType}")
+    public ResponseEntity<MediaType> getMediaType(@PathVariable("type") final String type,
+                                                  @PathVariable("subType") final String subType) {
+        return ResponseEntity.of(mediaTypeRepository.findByTypeAndSubType(type, subType));
     }
 }

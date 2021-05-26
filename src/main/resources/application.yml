@@ -5,12 +5,14 @@ spring:
     level.org.springframework: WARN
     level.org.springframework.web: WARN
     level.org.apache.jena: ERROR
-  redis:
-    database: 0
-    host: ${REDIS_HOST:localhost}
-    port: ${REDIS_PORT:6379}
-    password: ${REDIS_PASSWORD:}
-    timeout: 60000
+  data:
+    mongodb:
+      authentication-database: ${MONGODB_AUTH_DATABASE:admin}
+      username: ${MONGODB_USERNAME:root}
+      password: ${MONGODB_PASSWORD:password}
+      database: ${MONGODB_DATABASE:reference-data}
+      port: ${MONGODB_PORT:27017}
+      host: ${MONGODB_HOST:localhost}
 
 server:
   port: 8080

@@ -54,7 +54,7 @@ public class EUFileTypeHarvester implements FileTypeHarvester {
                 .filter(Resource::isURIResource)
                 .map(this::mapFileType)
                 .doOnNext(fileType -> count.getAndIncrement())
-                .doFinally(signal -> log.info("Successfully harvested {} EU media types", count.get()));
+                .doFinally(signal -> log.info("Successfully harvested {} EU file types", count.get()));
     }
 
     public String getVersion() throws Exception {
