@@ -16,11 +16,11 @@ public class MediaTypeHarvesterTest {
 
         Resource firstResource = mediaTypeHarvester.getMediaTypesSources().blockFirst();
         assertNotNull(firstResource);
-        assertEquals("mediatypes-application.csv", firstResource.getFilename());
+        assertEquals("mediatypes-test.csv", firstResource.getFilename());
 
         List<MediaType> mediaTypes = mediaTypeHarvester.harvestMediaTypes().collectList().block();
         assertNotNull(mediaTypes);
-        assertEquals(1440, mediaTypes.size());
+        assertEquals(1441, mediaTypes.size());
 
         MediaType first = mediaTypes.get(0);
         assertEquals("https://www.iana.org/assignments/media-types/application/1d-interleaved-parityfec", first.getUri());

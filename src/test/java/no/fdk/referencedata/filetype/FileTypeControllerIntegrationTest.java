@@ -1,6 +1,6 @@
 package no.fdk.referencedata.filetype;
 
-import no.fdk.referencedata.redis.AbstractRedisContainerTest;
+import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = { "scheduling.enabled=false" })
-public class FileTypeControllerIntegrationTest extends AbstractRedisContainerTest {
+public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerTest {
 
     @LocalServerPort
     private int port;
@@ -53,9 +53,9 @@ public class FileTypeControllerIntegrationTest extends AbstractRedisContainerTes
     }
 
     @Test
-    public void test_if_get_single_filetype_returns_valid_response() {
+    public void test_if_get_filetype_by_code_returns_valid_response() {
         FileType fileType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/file-types/http%3A%2F%2Fpublications.europa.eu%2Fresource%2Fauthority%2Ffile-type%2F7Z", FileType.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/file-types/7Z", FileType.class);
 
         assertNotNull(fileType);
         assertEquals("http://publications.europa.eu/resource/authority/file-type/7Z", fileType.getUri());

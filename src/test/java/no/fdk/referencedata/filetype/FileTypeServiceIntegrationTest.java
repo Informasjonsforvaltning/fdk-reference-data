@@ -1,6 +1,6 @@
 package no.fdk.referencedata.filetype;
 
-import no.fdk.referencedata.redis.AbstractRedisContainerTest;
+import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(properties = { "scheduling.enabled=false" })
-public class FileTypeServiceIntegrationTest extends AbstractRedisContainerTest {
+public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Autowired
     private FileTypeRepository fileTypeRepository;
@@ -93,17 +93,18 @@ public class FileTypeServiceIntegrationTest extends AbstractRedisContainerTest {
 
     @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
-        fileTypeRepository.save(FileType.builder()
-            .uri("http://uri.no")
-            .code("FIL")
-            .mediaType("text/fil")
-            .build());
+        FileTypeRepository fileTypeRepositorySpy = spy(fileTypeRepository);
+
+        fileTypeRepositorySpy.save(FileType.builder()
+                .uri("http://uri.no")
+                .code("FIL")
+                .mediaType("text/fil")
+                .build());
 
 
-        long count = fileTypeRepository.count();
+        long count = fileTypeRepositorySpy.count();
         assertTrue(count > 0);
 
-        FileTypeRepository fileTypeRepositorySpy = spy(fileTypeRepository);
         when(fileTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         FileTypeService fileTypeService = new FileTypeService(
@@ -111,6 +112,6 @@ public class FileTypeServiceIntegrationTest extends AbstractRedisContainerTest {
                 fileTypeRepositorySpy,
                 fileTypeSettingsRepository);
 
-        assertEquals(count, fileTypeRepository.count());
+        assertEquals(count, fileTypeRepositorySpy.count());
     }
 }
