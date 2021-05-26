@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -18,9 +16,6 @@ import java.util.stream.StreamSupport;
 @RequestMapping("file-types")
 @Slf4j
 public class FileTypeController {
-
-    @Autowired
-    private FileTypeService fileTypeService;
 
     @Autowired
     private FileTypeRepository fileTypeRepository;
@@ -33,10 +28,8 @@ public class FileTypeController {
                         .collect(Collectors.toList())).build());
     }
 
-    @GetMapping(path = "/{uri}")
-    public ResponseEntity<FileType> getFileType(@PathVariable("uri") String uri) {
-        final String decodedUri = URLDecoder.decode(uri, StandardCharsets.UTF_8);
-        log.debug("Find fileType for uri: " + decodedUri);
-        return ResponseEntity.of(fileTypeRepository.findById(decodedUri));
+    @GetMapping(path = "/{code}")
+    public ResponseEntity<FileType> getFileType(@PathVariable("code") String code) {
+        return ResponseEntity.of(fileTypeRepository.findByCode(code));
     }
 }

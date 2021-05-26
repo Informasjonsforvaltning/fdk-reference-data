@@ -8,6 +8,6 @@ import reactor.core.publisher.Flux;
 public class LocalMediaTypeHarvester extends IANAMediaTypeHarvester {
     @Override
     public Flux<Resource> getMediaTypesSources() {
-        return Flux.just(new ClassPathResource("mediatypes-application.csv"));
+        return Flux.just(new ClassPathResource("mediatypes-test.csv"));
     }
 }
