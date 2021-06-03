@@ -27,14 +27,11 @@ jobs:
       - name: Configure docker to use the gcloud command-line tool as a credential helper
         run: gcloud auth configure-docker eu.gcr.io
 
-      - name: Package with maven
-        run: mvn clean package --no-transfer-progress
+      - name: Run tests
+        run: mvn verify --no-transfer-progress
 
       - name: Build Docker image
         run: docker build -f Dockerfile . -t eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA -t eu.gcr.io/digdir-fdk-infra/reference-data:latest
-
-      - name: Run tests
-        run: mvn verify --no-transfer-progress
 
       - name: Publish docker image to Google Cloud
         run: docker -- push eu.gcr.io/digdir-fdk-infra/reference-data -a
