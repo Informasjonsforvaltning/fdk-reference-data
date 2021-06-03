@@ -20,10 +20,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
@@ -39,18 +40,10 @@ public class EUFileTypeHarvester implements FileTypeHarvester {
             return Flux.error(new Exception("Unable to fetch file-types distribution"));
         }
 
-        final Model model;
-        try {
-            model = RDFDataMgr.loadModel(fileTypesRdfSource.getURI().toString(), Lang.RDFXML);
-        } catch (IOException e) {
-            log.error("Unable to load model", e);
-            return Flux.error(new Exception("Unable to load model"));
-        }
-        final List<Resource> fileTypeResources = model.listSubjectsWithProperty(RDF.type, EUVOC.FileType).toList();
-
         final AtomicInteger count = new AtomicInteger();
 
-        return Flux.fromIterable(fileTypeResources)
+        return Mono.justOrEmpty(getModel(fileTypesRdfSource))
+                .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, EUVOC.FileType).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapFileType)
                 .doOnNext(fileType -> count.getAndIncrement())
@@ -96,18 +89,30 @@ public class EUFileTypeHarvester implements FileTypeHarvester {
         return null;
     }
 
+    private Optional<Model> getModel(org.springframework.core.io.Resource resource) {
+        try {
+            return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.RDFXML));
+        } catch (IOException e) {
+            log.error("Unable to load model", e);
+            return Optional.empty();
+        }
+    }
+
     private FileType mapFileType(Resource fileType) {
-        final String ianaMediaType = Flux.fromIterable(fileType.listProperties(EUVOC.xlNotation).toList())
-                .map(stmt -> stmt.getObject().asResource())
-                .filter(resource -> resource.hasProperty(DCTerms.type, EUNotationType.IanaMT))
-                .map(resource -> resource.getProperty(EUVOC.xlCodification).getString())
-                .blockFirst();
+        final StringBuilder ianaMediaType = new StringBuilder();
+
+        Flux.fromIterable(fileType.listProperties(EUVOC.xlNotation).toList())
+            .map(stmt -> stmt.getObject().asResource())
+            .filter(resource -> resource.hasProperty(DCTerms.type, EUNotationType.IanaMT))
+            .map(resource -> resource.getProperty(EUVOC.xlCodification).getString())
+            .take(1)
+            .doOnNext(ianaMediaType::append)
+            .subscribe();
 
         return FileType.builder()
                 .uri(fileType.getURI())
                 .code(fileType.getProperty(DC.identifier).getObject().toString())
-                .mediaType(ianaMediaType)
+                .mediaType(ianaMediaType.toString())
                 .build();
     }
-
 }
