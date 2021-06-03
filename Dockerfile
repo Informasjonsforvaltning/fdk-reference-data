@@ -1,18 +1,18 @@
-FROM maven:3.6.3-ibmjava-8-alpine AS MAVEN_BUILD_ENVIRONMENT
+FROM maven:3-openjdk-15-slim AS build
+WORKDIR /app
+COPY pom.xml ./
+COPY src ./src
+RUN mvn clean package --no-transfer-progress -DskipTests
+RUN mvn versions:display-dependency-updates --no-transfer-progress
 
-COPY pom.xml /tmp/
-COPY src /tmp/src/
-WORKDIR /tmp/
-
-RUN mvn clean package --no-transfer-progress
-
-FROM openjdk:8-jre
-
+FROM openjdk:15-slim
 ENV TZ=Europe/Oslo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-VOLUME /tmp
-COPY --from=MAVEN_BUILD_ENVIRONMENT /tmp/target/reference-data.jar app.jar
-
-RUN sh -c 'touch /app.jar'
-CMD java -jar app.jar
+WORKDIR /app
+RUN addgroup --gid 1001 --system app && \
+  adduser --uid 1001 --system app --gid 1001 && \
+  chown -R app:app /app && \
+  chmod 770 /app
+USER app:app
+COPY --chown=app:app --from=build /app/target/fdk-reference-data.jar ./
+CMD java -Xss10m -jar fdk-reference-data.jar

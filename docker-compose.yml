@@ -1,0 +1,26 @@
+version: "3"
+services:
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      - LOG_LEVEL=DEBUG
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_USERNAME=root
+      - MONGODB_PASSWORD=password
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+
+networks:
+  fdk:
+    name: fdk
+
