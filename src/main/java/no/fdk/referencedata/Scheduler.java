@@ -1,5 +1,7 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.datatheme.DataThemeRepository;
+import no.fdk.referencedata.datatheme.DataThemeService;
 import no.fdk.referencedata.filetype.FileTypeRepository;
 import no.fdk.referencedata.filetype.FileTypeService;
 import no.fdk.referencedata.mediatype.MediaTypeRepository;
@@ -11,8 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import javax.annotation.PostConstruct;
 
 @Configuration
 @EnableScheduling
@@ -26,10 +26,16 @@ public class Scheduler {
     private FileTypeRepository fileTypeRepository;
 
     @Autowired
+    private DataThemeRepository dataThemeRepository;
+
+    @Autowired
     private MediaTypeService mediaTypeService;
 
     @Autowired
     private FileTypeService fileTypeService;
+
+    @Autowired
+    private DataThemeService dataThemeService;
 
     /**
      * Run every day 02:00 (at night)
@@ -40,11 +46,19 @@ public class Scheduler {
     }
 
     /**
+     * Run every day 02:30 (at night)
+     */
+    @Scheduled(cron = "0 30 2 * * ?")
+    public void updateFileTypes() {
+        fileTypeService.harvestAndSaveFileTypes();
+    }
+
+    /**
      * Run every day 03:00 (at night)
      */
     @Scheduled(cron = "0 0 3 * * ?")
-    public void updateFileTypes() {
-        fileTypeService.harvestAndSaveFileTypes();
+    public void updateDataThemes() {
+        dataThemeService.harvestAndSaveDataThemes();
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -55,6 +69,10 @@ public class Scheduler {
 
         if(mediaTypeRepository.count() == 0) {
             mediaTypeService.harvestAndSaveMediaTypes();
+        }
+
+        if(dataThemeRepository.count() == 0) {
+            dataThemeService.harvestAndSaveDataThemes();
         }
     }
 }
