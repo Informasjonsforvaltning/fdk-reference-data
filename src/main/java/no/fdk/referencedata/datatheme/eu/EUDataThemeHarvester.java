@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.datatheme.DataTheme;
 import no.fdk.referencedata.datatheme.DataThemeHarvester;
+import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.vocabulary.EUDataTheme;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
@@ -22,11 +23,9 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -34,7 +33,10 @@ public class EUDataThemeHarvester implements DataThemeHarvester {
 
     private static final String SEARCH_API = "https://data.europa.eu/api/hub/search";
 
-    private static final String[] SUPPORTED_LANGUAGES = new String[]{"en", "no", "nb", "nn"};
+    private static final List<String> SUPPORTED_LANGUAGES =
+            Arrays.stream(Language.values())
+                    .map(Language::code)
+                    .collect(Collectors.toList());
 
     public Flux<DataTheme> harvestDataThemes() {
         log.info("Starting harvest of EU data themes");
@@ -106,7 +108,7 @@ public class EUDataThemeHarvester implements DataThemeHarvester {
         final Map<String, String> label = new HashMap<>();
         Flux.fromIterable(dataTheme.listProperties(SKOS.prefLabel).toList())
                 .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> Arrays.asList(SUPPORTED_LANGUAGES).contains(literal.getLanguage()))
+                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
                 .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
                 .subscribe();
 
