@@ -1,11 +1,11 @@
 package no.fdk.referencedata;
 
-import no.fdk.referencedata.datatheme.DataThemeRepository;
-import no.fdk.referencedata.datatheme.DataThemeService;
-import no.fdk.referencedata.filetype.FileTypeRepository;
-import no.fdk.referencedata.filetype.FileTypeService;
-import no.fdk.referencedata.mediatype.MediaTypeRepository;
-import no.fdk.referencedata.mediatype.MediaTypeService;
+import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
+import no.fdk.referencedata.eu.datatheme.DataThemeService;
+import no.fdk.referencedata.eu.filetype.FileTypeRepository;
+import no.fdk.referencedata.eu.filetype.FileTypeService;
+import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
+import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
