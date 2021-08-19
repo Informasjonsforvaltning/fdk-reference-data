@@ -46,7 +46,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
 
         try {
             final File destDir = Files.createTempDirectory("").toFile();
-            ZipUtils.extractZip(source.getFile(), destDir);
+            ZipUtils.extractZip(source.getInputStream(), destDir);
             final org.springframework.core.io.Resource rdf =
                     new FileUrlResource(destDir.getAbsolutePath() + "/eurovoc_in_skos_core_concepts.rdf");
 

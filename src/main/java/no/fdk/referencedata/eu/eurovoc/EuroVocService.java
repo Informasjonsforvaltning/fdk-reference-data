@@ -33,7 +33,7 @@ public class EuroVocService {
     public void harvestAndSaveEuroVoc() {
         try {
             final String version = euroVocHarvester.getVersion();
-            final int versionIntValue = Integer.parseInt(euroVocHarvester.getVersion().replace("-", ""));
+            final Double versionDoubleValue = Double.parseDouble(euroVocHarvester.getVersion().replace("-", ""));
 
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EURO_VOC.name())
                     .orElse(HarvestSettings.builder()
@@ -41,9 +41,9 @@ public class EuroVocService {
                             .latestVersion("0")
                             .build());
 
-            final int currentVersion = Integer.parseInt(settings.getLatestVersion().replace("-", ""));
+            final Double currentVersion = Double.parseDouble(settings.getLatestVersion().replace("-", ""));
 
-            if(currentVersion < versionIntValue) {
+            if(currentVersion < versionDoubleValue) {
                 euroVocRepository.deleteAll();
                 euroVocRepository.saveAll(euroVocHarvester.harvest().toIterable());
 
