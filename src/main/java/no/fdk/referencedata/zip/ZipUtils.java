@@ -1,17 +1,18 @@
 package no.fdk.referencedata.zip;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class ZipUtils {
 
     public static void extractZip(final File fileZip, final File destDir) throws IOException {
+        extractZip(new FileInputStream(fileZip), destDir);
+    }
+
+    public static void extractZip(final InputStream is, final File destDir) throws IOException {
         byte[] buffer = new byte[1024];
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
+        ZipInputStream zis = new ZipInputStream(is);
         ZipEntry zipEntry = zis.getNextEntry();
         while (zipEntry != null) {
             File newFile = newFile(destDir, zipEntry);
