@@ -46,7 +46,7 @@ public class FileTypeService {
 
             if(currentVersion < versionIntValue) {
                 fileTypeRepository.deleteAll();
-                fileTypeRepository.saveAll(fileTypeHarvester.harvestFileTypes().toIterable());
+                fileTypeRepository.saveAll(fileTypeHarvester.harvest().toIterable());
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);

@@ -13,11 +13,11 @@ public class FileTypeHarvesterTest {
     public void test_fetch_filetypes() throws Exception {
         FileTypeHarvester fileTypeHarvester = new LocalFileTypeHarvester("20210512-0");
 
-        assertNotNull(fileTypeHarvester.getFileTypesSource());
-        assertEquals("filetypes-skos-ap-act.rdf", fileTypeHarvester.getFileTypesSource().getFilename());
+        assertNotNull(fileTypeHarvester.getSource());
+        assertEquals("filetypes-skos-ap-act.rdf", fileTypeHarvester.getSource().getFilename());
         assertEquals("20210512-0", fileTypeHarvester.getVersion());
 
-        List<FileType> fileTypes = fileTypeHarvester.harvestFileTypes().collectList().block();
+        List<FileType> fileTypes = fileTypeHarvester.harvest().collectList().block();
         assertNotNull(fileTypes);
         assertEquals(15, fileTypes.size());
 
