@@ -1,7 +1,6 @@
 package no.fdk.referencedata.eu.eurovoc;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -13,40 +12,40 @@ import java.time.LocalDateTime;
 
 @Service
 @Slf4j
-public class EurovocService {
+public class EuroVocService {
 
-    private final EurovocHarvester eurovocHarvester;
+    private final EuroVocHarvester euroVocHarvester;
 
-    private final EurovocRepository eurovocRepository;
+    private final EuroVocRepository euroVocRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
-    public EurovocService(EurovocHarvester eurovocHarvester,
-                          EurovocRepository eurovocRepository,
+    public EuroVocService(EuroVocHarvester euroVocHarvester,
+                          EuroVocRepository euroVocRepository,
                           HarvestSettingsRepository harvestSettingsRepository) {
-        this.eurovocHarvester = eurovocHarvester;
-        this.eurovocRepository = eurovocRepository;
+        this.euroVocHarvester = euroVocHarvester;
+        this.euroVocRepository = euroVocRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
     @Transactional
-    public void harvestAndSaveEurovoc() {
+    public void harvestAndSaveEuroVoc() {
         try {
-            final String version = eurovocHarvester.getVersion();
-            final int versionIntValue = Integer.parseInt(eurovocHarvester.getVersion().replace("-", ""));
+            final String version = euroVocHarvester.getVersion();
+            final int versionIntValue = Integer.parseInt(euroVocHarvester.getVersion().replace("-", ""));
 
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EUROVOC.name())
+            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EURO_VOC.name())
                     .orElse(HarvestSettings.builder()
-                            .id(Settings.EUROVOC.name())
+                            .id(Settings.EURO_VOC.name())
                             .latestVersion("0")
                             .build());
 
             final int currentVersion = Integer.parseInt(settings.getLatestVersion().replace("-", ""));
 
             if(currentVersion < versionIntValue) {
-                eurovocRepository.deleteAll();
-                eurovocRepository.saveAll(eurovocHarvester.harvest().toIterable());
+                euroVocRepository.deleteAll();
+                euroVocRepository.saveAll(euroVocHarvester.harvest().toIterable());
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);
