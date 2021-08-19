@@ -2,6 +2,7 @@ package no.fdk.referencedata.eu.eurovoc;
 
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class EurovocControllerIntegrationTest extends AbstractMongoDbContainerTe
     private EurovocRepository EurovocRepository;
 
     @Autowired
-    private EurovocSettingsRepository EurovocSettingsRepository;
+    private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -35,7 +36,7 @@ public class EurovocControllerIntegrationTest extends AbstractMongoDbContainerTe
         EurovocService eurovocService = new EurovocService(
                 new LocalEurovocHarvester("1"),
                 EurovocRepository,
-                EurovocSettingsRepository);
+                harvestSettingsRepository);
 
         eurovocService.harvest();
     }

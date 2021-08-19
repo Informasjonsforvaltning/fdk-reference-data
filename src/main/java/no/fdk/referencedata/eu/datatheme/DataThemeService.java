@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.datatheme;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.settings.HarvestSettings;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import no.fdk.referencedata.settings.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +18,15 @@ public class DataThemeService {
 
     private final DataThemeRepository dataThemeRepository;
 
-    private final DataThemeSettingsRepository dataThemeSettingsRepository;
+    private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     public DataThemeService(DataThemeHarvester dataThemeHarvester,
                             DataThemeRepository dataThemeRepository,
-                            DataThemeSettingsRepository dataThemeSettingsRepository) {
+                            HarvestSettingsRepository harvestSettingsRepository) {
         this.dataThemeHarvester = dataThemeHarvester;
         this.dataThemeRepository = dataThemeRepository;
-        this.dataThemeSettingsRepository = dataThemeSettingsRepository;
+        this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
     @Transactional
@@ -32,9 +35,9 @@ public class DataThemeService {
             final String version = dataThemeHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(dataThemeHarvester.getVersion().replace("-", ""));
 
-            final DataThemeSettings settings = dataThemeSettingsRepository.findById(DataThemeSettings.SETTINGS)
-                    .orElse(DataThemeSettings.builder()
-                            .id(DataThemeSettings.SETTINGS)
+            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATA_THEME.name())
+                    .orElse(HarvestSettings.builder()
+                            .id(Settings.DATA_THEME.name())
                             .latestVersion("0")
                             .build());
 
@@ -46,7 +49,7 @@ public class DataThemeService {
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);
-                dataThemeSettingsRepository.save(settings);
+                harvestSettingsRepository.save(settings);
             }
 
         } catch(Exception e) {

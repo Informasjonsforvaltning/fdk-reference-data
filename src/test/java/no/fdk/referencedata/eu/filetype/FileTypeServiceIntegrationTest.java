@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.filetype;
 
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettings;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import no.fdk.referencedata.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.settings.Settings.FILE_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
@@ -20,14 +24,14 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
     private FileTypeRepository fileTypeRepository;
 
     @Autowired
-    private FileTypeSettingsRepository fileTypeSettingsRepository;
+    private HarvestSettingsRepository harvestSettingsRepository;
 
     @Test
     public void test_if_harvest_persists_filetypes() {
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210512-0"),
                 fileTypeRepository,
-                fileTypeSettingsRepository);
+                harvestSettingsRepository);
 
         fileTypeService.harvestAndSaveFileTypes();
 
@@ -46,13 +50,13 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210512-6"),
                 fileTypeRepository,
-                fileTypeSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         fileTypeService.harvestAndSaveFileTypes();
 
-        FileTypeSettings settings =
-                fileTypeSettingsRepository.findById(FileTypeSettings.SETTINGS).orElseThrow();
+        HarvestSettings settings =
+                harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20210512-6", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
@@ -62,13 +66,13 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
         fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210513-0"),
                 fileTypeRepository,
-                fileTypeSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         fileTypeService.harvestAndSaveFileTypes();
 
         settings =
-                fileTypeSettingsRepository.findById(FileTypeSettings.SETTINGS).orElseThrow();
+                harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20210513-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
@@ -78,13 +82,13 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
         fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210512-6"),
                 fileTypeRepository,
-                fileTypeSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         fileTypeService.harvestAndSaveFileTypes();
 
         settings =
-                fileTypeSettingsRepository.findById(FileTypeSettings.SETTINGS).orElseThrow();
+                harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20210513-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
@@ -110,7 +114,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210514-2"),
                 fileTypeRepositorySpy,
-                fileTypeSettingsRepository);
+                harvestSettingsRepository);
 
         assertEquals(count, fileTypeRepositorySpy.count());
     }

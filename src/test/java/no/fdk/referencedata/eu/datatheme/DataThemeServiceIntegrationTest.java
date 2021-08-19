@@ -2,6 +2,9 @@ package no.fdk.referencedata.eu.datatheme;
 
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettings;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import no.fdk.referencedata.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.settings.Settings.DATA_THEME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
@@ -22,14 +26,14 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
     private DataThemeRepository dataThemeRepository;
 
     @Autowired
-    private DataThemeSettingsRepository dataThemeSettingsRepository;
+    private HarvestSettingsRepository harvestSettingsRepository;
 
     @Test
     public void test_if_harvest_persists_datathemes() {
         DataThemeService fileTypeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200923-0"),
                 dataThemeRepository,
-                dataThemeSettingsRepository);
+                harvestSettingsRepository);
 
         fileTypeService.harvestAndSaveDataThemes();
 
@@ -48,13 +52,13 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200923-1"),
                 dataThemeRepository,
-                dataThemeSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         dataThemeService.harvestAndSaveDataThemes();
 
-        DataThemeSettings settings =
-                dataThemeSettingsRepository.findById(DataThemeSettings.SETTINGS).orElseThrow();
+        HarvestSettings settings =
+                harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
@@ -64,13 +68,13 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
         dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200924-0"),
                 dataThemeRepository,
-                dataThemeSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         dataThemeService.harvestAndSaveDataThemes();
 
         settings =
-                dataThemeSettingsRepository.findById(DataThemeSettings.SETTINGS).orElseThrow();
+                harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
@@ -80,13 +84,13 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
         dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200924-0"),
                 dataThemeRepository,
-                dataThemeSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         dataThemeService.harvestAndSaveDataThemes();
 
         settings =
-                dataThemeSettingsRepository.findById(DataThemeSettings.SETTINGS).orElseThrow();
+                harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
@@ -112,7 +116,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200924-2"),
                 dataThemeRepositorySpy,
-                dataThemeSettingsRepository);
+                harvestSettingsRepository);
 
         assertEquals(count, dataThemeRepositorySpy.count());
     }

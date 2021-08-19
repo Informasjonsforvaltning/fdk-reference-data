@@ -1,4 +1,4 @@
-package no.fdk.referencedata.eu.filetype;
+package no.fdk.referencedata.settings;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -14,9 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @Document
-public class FileTypeSettings {
-
-    public static final String SETTINGS = "fileTypeSettings";
+public class HarvestSettings {
 
     @Id
     String id;

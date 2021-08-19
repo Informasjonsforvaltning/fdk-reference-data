@@ -1,6 +1,10 @@
 package no.fdk.referencedata.eu.eurovoc;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.eu.datatheme.DataTheme;
+import no.fdk.referencedata.settings.HarvestSettings;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import no.fdk.referencedata.settings.Settings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +19,15 @@ public class EurovocService {
 
     private final EurovocRepository eurovocRepository;
 
-    private final EurovocSettingsRepository eurovocSettingsRepository;
+    private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     public EurovocService(EurovocHarvester eurovocHarvester,
                           EurovocRepository eurovocRepository,
-                          EurovocSettingsRepository eurovocSettingsRepository) {
+                          HarvestSettingsRepository harvestSettingsRepository) {
         this.eurovocHarvester = eurovocHarvester;
         this.eurovocRepository = eurovocRepository;
-        this.eurovocSettingsRepository = eurovocSettingsRepository;
+        this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
     @Transactional
@@ -32,9 +36,9 @@ public class EurovocService {
             final String version = eurovocHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(eurovocHarvester.getVersion().replace("-", ""));
 
-            final EurovocSettings settings = eurovocSettingsRepository.findById(EurovocSettings.SETTINGS)
-                    .orElse(EurovocSettings.builder()
-                            .id(EurovocSettings.SETTINGS)
+            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EUROVOC.name())
+                    .orElse(HarvestSettings.builder()
+                            .id(Settings.EUROVOC.name())
                             .latestVersion("0")
                             .build());
 
@@ -46,7 +50,7 @@ public class EurovocService {
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);
-                eurovocSettingsRepository.save(settings);
+                harvestSettingsRepository.save(settings);
             }
 
         } catch(Exception e) {

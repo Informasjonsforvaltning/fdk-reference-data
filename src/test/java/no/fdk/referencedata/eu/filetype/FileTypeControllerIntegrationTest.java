@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerT
     private FileTypeRepository fileTypeRepository;
 
     @Autowired
-    private FileTypeSettingsRepository fileTypeSettingsRepository;
+    private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -34,7 +35,7 @@ public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerT
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("1"),
                 fileTypeRepository,
-                fileTypeSettingsRepository);
+                harvestSettingsRepository);
 
         fileTypeService.harvestAndSaveFileTypes();
     }
@@ -42,7 +43,7 @@ public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerT
     @Test
     public void test_if_get_all_filetypes_returns_valid_response() {
         FileTypes fileTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/file-types", FileTypes.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/file-types", FileTypes.class);
 
         assertEquals(15, fileTypes.getFileTypes().size());
 
@@ -55,7 +56,7 @@ public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerT
     @Test
     public void test_if_get_filetype_by_code_returns_valid_response() {
         FileType fileType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/file-types/7Z", FileType.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/file-types/7Z", FileType.class);
 
         assertNotNull(fileType);
         assertEquals("http://publications.europa.eu/resource/authority/file-type/7Z", fileType.getUri());

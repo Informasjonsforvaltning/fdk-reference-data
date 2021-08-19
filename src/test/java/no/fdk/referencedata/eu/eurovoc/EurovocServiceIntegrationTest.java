@@ -2,6 +2,9 @@ package no.fdk.referencedata.eu.eurovoc;
 
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettings;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import no.fdk.referencedata.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.settings.Settings.EUROVOC;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
@@ -22,14 +26,14 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
     private EurovocRepository eurovocRepository;
 
     @Autowired
-    private EurovocSettingsRepository eurovocSettingsRepository;
+    private HarvestSettingsRepository harvestSettingsRepository;
 
     @Test
     public void test_if_harvest_persists_eurovoc() {
         EurovocService eurovocService = new EurovocService(
                 new LocalEurovocHarvester("20200923-0"),
                 eurovocRepository,
-                eurovocSettingsRepository);
+                harvestSettingsRepository);
 
         eurovocService.harvest();
 
@@ -48,13 +52,13 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
         EurovocService eurovocService = new EurovocService(
                 new LocalEurovocHarvester("20200923-1"),
                 eurovocRepository,
-                eurovocSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         eurovocService.harvest();
 
-        EurovocSettings settings =
-                eurovocSettingsRepository.findById(EurovocSettings.SETTINGS).orElseThrow();
+        HarvestSettings settings =
+                harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
@@ -64,13 +68,13 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
         eurovocService = new EurovocService(
                 new LocalEurovocHarvester("20200924-0"),
                 eurovocRepository,
-                eurovocSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         eurovocService.harvest();
 
         settings =
-                eurovocSettingsRepository.findById(EurovocSettings.SETTINGS).orElseThrow();
+                harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
@@ -80,13 +84,13 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
         eurovocService = new EurovocService(
                 new LocalEurovocHarvester("20200924-0"),
                 eurovocRepository,
-                eurovocSettingsRepository);
+                harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         eurovocService.harvest();
 
         settings =
-                eurovocSettingsRepository.findById(EurovocSettings.SETTINGS).orElseThrow();
+                harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
@@ -112,7 +116,7 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
         EurovocService EurovocService = new EurovocService(
                 new LocalEurovocHarvester("20200924-2"),
                 eurovocRepositorySpy,
-                eurovocSettingsRepository);
+                harvestSettingsRepository);
 
         assertEquals(count, eurovocRepositorySpy.count());
     }
