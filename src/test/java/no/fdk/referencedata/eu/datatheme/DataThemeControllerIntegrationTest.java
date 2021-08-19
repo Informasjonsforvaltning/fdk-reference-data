@@ -2,6 +2,7 @@ package no.fdk.referencedata.eu.datatheme;
 
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public class DataThemeControllerIntegrationTest extends AbstractMongoDbContainer
     private DataThemeRepository dataThemeRepository;
 
     @Autowired
-    private DataThemeSettingsRepository dataThemeSettingsRepository;
+    private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -35,7 +36,7 @@ public class DataThemeControllerIntegrationTest extends AbstractMongoDbContainer
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("1"),
                 dataThemeRepository,
-                dataThemeSettingsRepository);
+                harvestSettingsRepository);
 
         dataThemeService.harvestAndSaveDataThemes();
     }
@@ -43,7 +44,7 @@ public class DataThemeControllerIntegrationTest extends AbstractMongoDbContainer
     @Test
     public void test_if_get_all_datathemes_returns_valid_response() {
         DataThemes dataThemes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/data-themes", DataThemes.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/data-themes", DataThemes.class);
 
         assertEquals(14, dataThemes.getDataThemes().size());
 
@@ -56,7 +57,7 @@ public class DataThemeControllerIntegrationTest extends AbstractMongoDbContainer
     @Test
     public void test_if_get_datatheme_by_code_returns_valid_response() {
         DataTheme dataTheme =
-                this.restTemplate.getForObject("http://localhost:" + port + "/data-themes/AGRI", DataTheme.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/data-themes/AGRI", DataTheme.class);
 
         assertNotNull(dataTheme);
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", dataTheme.getUri());
