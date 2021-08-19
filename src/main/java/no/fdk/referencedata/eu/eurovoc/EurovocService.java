@@ -31,7 +31,7 @@ public class EurovocService {
     }
 
     @Transactional
-    public void harvest() {
+    public void harvestAndSaveEurovoc() {
         try {
             final String version = eurovocHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(eurovocHarvester.getVersion().replace("-", ""));

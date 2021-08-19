@@ -4,7 +4,6 @@ import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,7 +34,7 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 eurovocRepository,
                 harvestSettingsRepository);
 
-        eurovocService.harvest();
+        eurovocService.harvestAndSaveEurovoc();
 
         final AtomicInteger counter = new AtomicInteger();
         eurovocRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -55,7 +54,7 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        eurovocService.harvest();
+        eurovocService.harvestAndSaveEurovoc();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
@@ -71,7 +70,7 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        eurovocService.harvest();
+        eurovocService.harvestAndSaveEurovoc();
 
         settings =
                 harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
@@ -87,7 +86,7 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        eurovocService.harvest();
+        eurovocService.harvestAndSaveEurovoc();
 
         settings =
                 harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();

@@ -2,6 +2,8 @@ package no.fdk.referencedata;
 
 import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
+import no.fdk.referencedata.eu.eurovoc.EurovocRepository;
+import no.fdk.referencedata.eu.eurovoc.EurovocService;
 import no.fdk.referencedata.eu.filetype.FileTypeRepository;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
@@ -29,6 +31,9 @@ public class Scheduler {
     private DataThemeRepository dataThemeRepository;
 
     @Autowired
+    private EurovocRepository eurovocRepository;
+
+    @Autowired
     private MediaTypeService mediaTypeService;
 
     @Autowired
@@ -36,6 +41,9 @@ public class Scheduler {
 
     @Autowired
     private DataThemeService dataThemeService;
+
+    @Autowired
+    private EurovocService eurovocService;
 
     /**
      * Run every day 02:00 (at night)
@@ -61,6 +69,14 @@ public class Scheduler {
         dataThemeService.harvestAndSaveDataThemes();
     }
 
+    /**
+     * Run every day 03:30 (at night)
+     */
+    @Scheduled(cron = "0 30 3 * * ?")
+    public void updateEurovoc() {
+        eurovocService.harvestAndSaveEurovoc();
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(fileTypeRepository.count() == 0) {
@@ -73,6 +89,10 @@ public class Scheduler {
 
         if(dataThemeRepository.count() == 0) {
             dataThemeService.harvestAndSaveDataThemes();
+        }
+
+        if(eurovocRepository.count() == 0) {
+            eurovocService.harvestAndSaveEurovoc();
         }
     }
 }
