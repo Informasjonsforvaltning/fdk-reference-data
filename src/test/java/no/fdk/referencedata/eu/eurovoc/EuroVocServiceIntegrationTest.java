@@ -12,84 +12,84 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.EUROVOC;
+import static no.fdk.referencedata.settings.Settings.EURO_VOC;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(properties = { "scheduling.enabled=false" })
-public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest {
+public class EuroVocServiceIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Autowired
-    private EurovocRepository eurovocRepository;
+    private EuroVocRepository euroVocRepository;
 
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Test
     public void test_if_harvest_persists_eurovoc() {
-        EurovocService eurovocService = new EurovocService(
-                new LocalEurovocHarvester("20200923-0"),
-                eurovocRepository,
+        EuroVocService euroVocService = new EuroVocService(
+                new LocalEuroVocHarvester("20200923-0"),
+                euroVocRepository,
                 harvestSettingsRepository);
 
-        eurovocService.harvestAndSaveEurovoc();
+        euroVocService.harvestAndSaveEuroVoc();
 
         final AtomicInteger counter = new AtomicInteger();
-        eurovocRepository.findAll().forEach(fileType -> counter.incrementAndGet());
+        euroVocRepository.findAll().forEach(fileType -> counter.incrementAndGet());
         assertEquals(7322, counter.get());
 
-        final Eurovoc eurovoc5548 = eurovocRepository.findById("http://eurovoc.europa.eu/5548").orElseThrow();
-        assertEquals("http://eurovoc.europa.eu/5548", eurovoc5548.getUri());
-        assertEquals("5548", eurovoc5548.getCode());
-        assertEquals("interinstitutional cooperation (EU)", eurovoc5548.getLabel().get(Language.ENGLISH.code()));
+        final EuroVoc euroVoc5548 = euroVocRepository.findById("http://eurovoc.europa.eu/5548").orElseThrow();
+        assertEquals("http://eurovoc.europa.eu/5548", euroVoc5548.getUri());
+        assertEquals("5548", euroVoc5548.getCode());
+        assertEquals("interinstitutional cooperation (EU)", euroVoc5548.getLabel().get(Language.ENGLISH.code()));
     }
 
     @Test
     public void test_if_harvest_only_persists_if_newer_version() {
-        EurovocService eurovocService = new EurovocService(
-                new LocalEurovocHarvester("20200923-1"),
-                eurovocRepository,
+        EuroVocService euroVocService = new EuroVocService(
+                new LocalEuroVocHarvester("20200923-1"),
+                euroVocRepository,
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        eurovocService.harvestAndSaveEurovoc();
+        euroVocService.harvestAndSaveEuroVoc();
 
         HarvestSettings settings =
-                harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
+                harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
-        eurovocService = new EurovocService(
-                new LocalEurovocHarvester("20200924-0"),
-                eurovocRepository,
+        euroVocService = new EuroVocService(
+                new LocalEuroVocHarvester("20200924-0"),
+                euroVocRepository,
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        eurovocService.harvestAndSaveEurovoc();
+        euroVocService.harvestAndSaveEuroVoc();
 
         settings =
-                harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
+                harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Older version
-        eurovocService = new EurovocService(
-                new LocalEurovocHarvester("20200924-0"),
-                eurovocRepository,
+        euroVocService = new EuroVocService(
+                new LocalEuroVocHarvester("20200924-0"),
+                euroVocRepository,
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        eurovocService.harvestAndSaveEurovoc();
+        euroVocService.harvestAndSaveEuroVoc();
 
         settings =
-                harvestSettingsRepository.findById(EUROVOC.name()).orElseThrow();
+                harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
@@ -98,25 +98,25 @@ public class EurovocServiceIntegrationTest extends AbstractMongoDbContainerTest 
 
     @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
-        EurovocRepository eurovocRepositorySpy = spy(this.eurovocRepository);
+        EuroVocRepository EuroVocRepositorySpy = spy(this.euroVocRepository);
 
-        eurovocRepositorySpy.save(Eurovoc.builder()
+        EuroVocRepositorySpy.save(EuroVoc.builder()
                 .uri("http://uri.no")
                 .code("1111")
-                .label(Map.of("en", "My eurovoc"))
+                .label(Map.of("en", "My EuroVoc"))
                 .build());
 
 
-        long count = eurovocRepositorySpy.count();
+        long count = EuroVocRepositorySpy.count();
         assertTrue(count > 0);
 
-        when(eurovocRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
+        when(EuroVocRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        EurovocService EurovocService = new EurovocService(
-                new LocalEurovocHarvester("20200924-2"),
-                eurovocRepositorySpy,
+        EuroVocService EuroVocService = new EuroVocService(
+                new LocalEuroVocHarvester("20200924-2"),
+                EuroVocRepositorySpy,
                 harvestSettingsRepository);
 
-        assertEquals(count, eurovocRepositorySpy.count());
+        assertEquals(count, EuroVocRepositorySpy.count());
     }
 }

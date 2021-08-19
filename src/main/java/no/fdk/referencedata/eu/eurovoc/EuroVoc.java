@@ -11,7 +11,7 @@ import java.util.Map;
 @Data
 @Builder
 @Document
-public class Eurovoc {
+public class EuroVoc {
     @Id
     String uri;
     @Indexed

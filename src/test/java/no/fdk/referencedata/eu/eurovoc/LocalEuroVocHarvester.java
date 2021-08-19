@@ -3,10 +3,10 @@ package no.fdk.referencedata.eu.eurovoc;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-public class LocalEurovocHarvester extends EurovocHarvester {
+public class LocalEuroVocHarvester extends EuroVocHarvester {
     private final String version;
 
-    public LocalEurovocHarvester(String version) {
+    public LocalEuroVocHarvester(String version) {
         this.version = version;
     }
 
