@@ -38,7 +38,7 @@ public class EurovocControllerIntegrationTest extends AbstractMongoDbContainerTe
                 EurovocRepository,
                 harvestSettingsRepository);
 
-        eurovocService.harvest();
+        eurovocService.harvestAndSaveEurovoc();
     }
 
     @Test
