@@ -1,0 +1,223 @@
+openapi: 3.0.1
+info:
+  title: Reference data API
+  version: v2.0
+servers:
+- url: https://data.norge.no/new-reference-data/
+  description: Production server
+paths:
+  /media-types:
+    get:
+      tags:
+      - media-type-controller
+      operationId: getMediaTypes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MediaTypes'
+  /media-types/{type}:
+    get:
+      tags:
+      - media-type-controller
+      operationId: getMediaTypes
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MediaTypes'
+  /media-types/{type}/{subType}:
+    get:
+      tags:
+      - media-type-controller
+      operationId: getMediaType
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: subType
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MediaType'
+  /eu/file-types:
+    get:
+      tags:
+      - file-type-controller
+      operationId: getFileTypes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FileTypes'
+  /eu/file-types/{code}:
+    get:
+      tags:
+      - file-type-controller
+      operationId: getFileType
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FileType'
+  /eu/eurovocs:
+    get:
+      tags:
+      - euro-voc-controller
+      operationId: getEuroVocs
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EuroVocs'
+  /eu/eurovocs/{code}:
+    get:
+      tags:
+      - euro-voc-controller
+      operationId: getEuroVoc
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EuroVoc'
+  /eu/data-themes:
+    get:
+      tags:
+      - data-theme-controller
+      operationId: getDataThemes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DataThemes'
+  /eu/data-themes/{code}:
+    get:
+      tags:
+      - data-theme-controller
+      operationId: getDataTheme
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DataTheme'
+components:
+  schemas:
+    MediaType:
+      type: object
+      properties:
+        uri:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        subType:
+          type: string
+    MediaTypes:
+      type: object
+      properties:
+        mediaTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaType'
+    FileType:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        mediaType:
+          type: string
+    FileTypes:
+      type: object
+      properties:
+        fileTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileType'
+    EuroVoc:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+    EuroVocs:
+      type: object
+      properties:
+        euroVocs:
+          type: array
+          items:
+            $ref: '#/components/schemas/EuroVoc'
+    DataTheme:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+    DataThemes:
+      type: object
+      properties:
+        dataThemes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataTheme'
