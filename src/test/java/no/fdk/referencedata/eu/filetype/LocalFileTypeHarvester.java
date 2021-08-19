@@ -1,10 +1,9 @@
 package no.fdk.referencedata.eu.filetype;
 
-import no.fdk.referencedata.eu.filetype.eu.EUFileTypeHarvester;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-public class LocalFileTypeHarvester extends EUFileTypeHarvester {
+public class LocalFileTypeHarvester extends FileTypeHarvester {
     private final String version;
 
     public LocalFileTypeHarvester(String version) {
@@ -17,7 +16,7 @@ public class LocalFileTypeHarvester extends EUFileTypeHarvester {
     }
 
     @Override
-    public Resource getFileTypesSource() {
+    public Resource getSource() {
         return new ClassPathResource("filetypes-skos-ap-act.rdf");
     }
 }
