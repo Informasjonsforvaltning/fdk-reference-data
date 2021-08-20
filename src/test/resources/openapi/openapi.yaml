@@ -6,7 +6,7 @@ servers:
 - url: https://data.norge.no/new-reference-data/
   description: Production server
 paths:
-  /media-types:
+  /iana/media-types:
     get:
       tags:
       - media-type-controller
@@ -18,7 +18,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MediaTypes'
-  /media-types/{type}:
+  /iana/media-types/{type}:
     get:
       tags:
       - media-type-controller
@@ -36,7 +36,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MediaTypes'
-  /media-types/{type}/{subType}:
+  /iana/media-types/{type}/{subType}:
     get:
       tags:
       - media-type-controller

@@ -3,10 +3,7 @@ package no.fdk.referencedata.eu.filetype;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -20,6 +17,7 @@ public class FileTypeController {
     @Autowired
     private FileTypeRepository fileTypeRepository;
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<FileTypes> getFileTypes() {
         return ResponseEntity.ok(FileTypes.builder().fileTypes(
@@ -28,6 +26,7 @@ public class FileTypeController {
                         .collect(Collectors.toList())).build());
     }
 
+    @CrossOrigin
     @GetMapping(path = "/{code}")
     public ResponseEntity<FileType> getFileType(@PathVariable("code") String code) {
         return ResponseEntity.of(fileTypeRepository.findByCode(code));
