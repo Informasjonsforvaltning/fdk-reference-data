@@ -38,7 +38,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractMongoDbContainer
     @Test
     public void test_if_get_all_mediatypes_returns_valid_response() {
         MediaTypes mediaTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/media-types", MediaTypes.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/iana/media-types", MediaTypes.class);
 
         assertEquals(1441, mediaTypes.getMediaTypes().size());
 
@@ -52,7 +52,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractMongoDbContainer
     @Test
     public void test_if_get_mediatypes_by_type_returns_valid_response() {
         MediaTypes mediaTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/media-types/text", MediaTypes.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/iana/media-types/text", MediaTypes.class);
 
         assertEquals(1, mediaTypes.getMediaTypes().size());
 
@@ -66,7 +66,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractMongoDbContainer
     @Test
     public void test_if_get_mediatype_by_type_and_subtype_returns_valid_response() {
         MediaType mediaType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/media-types/application/1d-interleaved-parityfec", MediaType.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/iana/media-types/application/1d-interleaved-parityfec", MediaType.class);
 
         assertNotNull(mediaType);
         assertEquals("https://www.iana.org/assignments/media-types/application/1d-interleaved-parityfec", mediaType.getUri());

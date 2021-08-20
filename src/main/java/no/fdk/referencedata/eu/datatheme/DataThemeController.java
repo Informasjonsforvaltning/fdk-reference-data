@@ -3,10 +3,7 @@ package no.fdk.referencedata.eu.datatheme;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -20,6 +17,7 @@ public class DataThemeController {
     @Autowired
     private DataThemeRepository dataThemeRepository;
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<DataThemes> getDataThemes() {
         return ResponseEntity.ok(DataThemes.builder().dataThemes(
@@ -28,6 +26,7 @@ public class DataThemeController {
                         .collect(Collectors.toList())).build());
     }
 
+    @CrossOrigin
     @GetMapping(path = "/{code}")
     public ResponseEntity<DataTheme> getDataTheme(@PathVariable("code") String code) {
         return ResponseEntity.of(dataThemeRepository.findByCode(code));

@@ -4,10 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.datatheme.DataTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -21,6 +18,7 @@ public class EuroVocController {
     @Autowired
     private EuroVocRepository euroVocRepository;
 
+    @CrossOrigin
     @GetMapping
     public ResponseEntity<EuroVocs> getEuroVocs() {
         return ResponseEntity.ok(EuroVocs.builder().euroVocs(
@@ -29,6 +27,7 @@ public class EuroVocController {
                         .collect(Collectors.toList())).build());
     }
 
+    @CrossOrigin
     @GetMapping(path = "/{code}")
     public ResponseEntity<EuroVoc> getEuroVoc(@PathVariable("code") String code) {
         return ResponseEntity.of(euroVocRepository.findByCode(code));
