@@ -55,7 +55,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                             SKOS.Concept).toList())
                     .filter(Resource::isURIResource)
                     .map(this::mapEuroVoc)
-                    .doOnNext(fileType -> count.getAndIncrement())
+                    .doOnNext(item -> count.getAndIncrement())
                     .doFinally(signal -> log.info("Harvested {} EU eurovoc", count.get()));
         } catch(IOException ex) {
             return Flux.error(ex);

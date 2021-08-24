@@ -3,7 +3,7 @@ package no.fdk.referencedata.eu.datatheme;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.vocabulary.EUDataTheme;
+import no.fdk.referencedata.eu.vocabulary.EUDataTheme;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.SKOS;
@@ -45,7 +45,7 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
                         EUDataTheme.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapDataTheme)
-                .doOnNext(fileType -> count.getAndIncrement())
+                .doOnNext(item -> count.getAndIncrement())
                 .doFinally(signal -> log.info("Successfully harvested {} EU data themes", count.get()));
     }
 
