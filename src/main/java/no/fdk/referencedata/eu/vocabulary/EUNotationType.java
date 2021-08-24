@@ -1,20 +1,20 @@
-package no.fdk.referencedata.vocabulary;
+package no.fdk.referencedata.eu.vocabulary;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 
-public class EUDataTheme {
+public class EUNotationType {
     private static final Model m = ModelFactory.createDefaultModel();
     public static final Resource NAMESPACE;
-    public static final Resource SCHEME;
+    public static final Resource IanaMT;
 
     public static String getURI() {
-        return "http://publications.europa.eu/resource/authority/data-theme";
+        return "http://publications.europa.eu/resource/authority/notation-type/";
     }
 
     static {
-        NAMESPACE = m.createResource(getURI() + "/");
-        SCHEME = m.createResource(getURI());
+        NAMESPACE = m.createResource(getURI());
+        IanaMT = m.createResource(getURI() + "IANA_MT");
     }
 }

@@ -1,4 +1,4 @@
-package no.fdk.referencedata.vocabulary;
+package no.fdk.referencedata.eu.vocabulary;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
