@@ -2,8 +2,8 @@ package no.fdk.referencedata.eu.filetype;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
-import no.fdk.referencedata.vocabulary.EUNotationType;
-import no.fdk.referencedata.vocabulary.EUVOC;
+import no.fdk.referencedata.eu.vocabulary.EUNotationType;
+import no.fdk.referencedata.eu.vocabulary.EUVOC;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.DCTerms;
