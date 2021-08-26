@@ -14,9 +14,9 @@ public class MediaTypeHarvesterTest {
     public void test_fetch_mediatypes() {
         MediaTypeHarvester mediaTypeHarvester = new LocalMediaTypeHarvester();
 
-        Resource firstResource = mediaTypeHarvester.getSources().blockFirst();
-        assertNotNull(firstResource);
-        assertEquals("mediatypes-test.csv", firstResource.getFilename());
+        IanaSource firstSource = mediaTypeHarvester.getSources().blockFirst();
+        assertNotNull(firstSource);
+        assertEquals("mediatypes-test.csv", firstSource.getResource().getFilename());
 
         List<MediaType> mediaTypes = mediaTypeHarvester.harvest().collectList().block();
         assertNotNull(mediaTypes);

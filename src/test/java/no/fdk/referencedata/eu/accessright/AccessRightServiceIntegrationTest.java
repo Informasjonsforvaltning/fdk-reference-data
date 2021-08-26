@@ -1,12 +1,10 @@
 package no.fdk.referencedata.eu.accessright;
 
-import no.fdk.referencedata.eu.datatheme.DataTheme;
-import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
-import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,13 +14,13 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.settings.Settings.ACCESS_RIGHT;
-import static no.fdk.referencedata.settings.Settings.DATA_THEME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class AccessRightServiceIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Autowired
@@ -104,11 +102,12 @@ public class AccessRightServiceIntegrationTest extends AbstractMongoDbContainerT
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         AccessRightRepository accessRightRepositorySpy = spy(this.accessRightRepository);
 
-        accessRightRepositorySpy.save(AccessRight.builder()
+        AccessRight accessRight = AccessRight.builder()
                 .uri("http://uri.no")
                 .code("ACCESS_RIGHT")
                 .label(Map.of("en", "My right"))
-                .build());
+                .build();
+        accessRightRepositorySpy.save(accessRight);
 
 
         long count = accessRightRepositorySpy.count();

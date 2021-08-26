@@ -1,7 +1,5 @@
 package no.fdk.referencedata.eu.accessright;
 
-import no.fdk.referencedata.eu.datatheme.DataTheme;
-import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class AccessRightHarvesterTest {
 
     @Test
-    public void test_fetch_access_rights() throws Exception {
+    public void test_fetch_access_rights() {
         AccessRightHarvester harvester = new LocalAccessRightHarvester("20200923-0");
 
         assertNotNull(harvester.getSource());

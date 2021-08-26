@@ -13,9 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerTest {
 
     @LocalServerPort
@@ -37,7 +36,7 @@ public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerT
                 fileTypeRepository,
                 harvestSettingsRepository);
 
-        fileTypeService.harvestAndSaveFileTypes();
+        fileTypeService.harvestAndSave();
     }
 
     @Test

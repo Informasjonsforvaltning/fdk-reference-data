@@ -1,7 +1,9 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,7 +16,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 
-@SpringBootTest(properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class MediaTypeServiceIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Autowired
@@ -26,7 +29,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository);
 
-        mediaTypeService.harvestAndSaveMediaTypes();
+        mediaTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         mediaTypeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -41,7 +44,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractMongoDbContainerTes
 
     @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
-        MediaTypeRepository mediaTypeRepositorySpy = spy(mediaTypeRepository);
+        MediaTypeRepository mediaTypeRepositorySpy = Mockito.spy(mediaTypeRepository);
 
         mediaTypeRepositorySpy.save(MediaType.builder()
                 .uri("http://uri.no")

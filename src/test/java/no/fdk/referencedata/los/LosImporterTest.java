@@ -8,7 +8,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.util.AssertionErrors.assertNull;
 
 public class LosImporterTest {
 
@@ -23,7 +22,7 @@ public class LosImporterTest {
         LosNode first = losNodes.get(0);
         assertEquals("https://psi.norge.no/los/ord/abort", first.getUri());
         assertEquals("Abort", first.getName().get(Language.NORWEGIAN_BOKMAAL.code()));
-        assertEquals(false, first.isTema());
+        assertFalse(first.isTheme());
         assertEquals(List.of("helse-og-omsorg/svangerskap/abort"), first.getLosPaths());
         assertEquals(List.of(URI.create("https://psi.norge.no/los/tema/svangerskap")), first.getParents());
         assertEquals(List.of("Svangerskapsavbrudd", "Svangerskapsavbrot"), first.getSynonyms());
@@ -49,7 +48,7 @@ public class LosImporterTest {
         assertTrue(akuttHjelp.getChildren().contains(URI.create("https://psi.norge.no/los/ord/hjelp-ved-overgrep")));
 
         assertEquals(List.of(URI.create("https://psi.norge.no/los/tema/helse-og-omsorg")), akuttHjelp.getParents());
-        assertTrue(akuttHjelp.isTema());
+        assertTrue(akuttHjelp.isTheme());
         assertEquals(List.of("helse-og-omsorg/akutt-hjelp"), akuttHjelp.getLosPaths());
         assertEquals("Akutt hjelp", akuttHjelp.getName().get(Language.NORWEGIAN_BOKMAAL.code()));
         assertEquals("Akutt hjelp", akuttHjelp.getName().get(Language.NORWEGIAN_NYNORSK.code()));
