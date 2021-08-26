@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.eu.vocabulary.EUDataTheme;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.SKOS;
@@ -38,15 +39,10 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
             return Flux.error(new Exception("Unable to fetch data-theme distribution"));
         }
 
-        final AtomicInteger count = new AtomicInteger();
-
         return Mono.justOrEmpty(getModel(dataThemesRdfSource))
-                .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
-                        EUDataTheme.SCHEME).toList())
+                .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDataTheme.SCHEME).toList())
                 .filter(Resource::isURIResource)
-                .map(this::mapDataTheme)
-                .doOnNext(item -> count.getAndIncrement())
-                .doFinally(signal -> log.info("Successfully harvested {} EU data themes", count.get()));
+                .map(this::mapDataTheme);
     }
 
     private DataTheme mapDataTheme(Resource dataTheme) {

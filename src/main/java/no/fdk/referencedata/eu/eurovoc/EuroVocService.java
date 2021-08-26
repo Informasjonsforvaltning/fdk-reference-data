@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.eurovoc;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -30,10 +32,10 @@ public class EuroVocService {
     }
 
     @Transactional
-    public void harvestAndSaveEuroVoc() {
+    public void harvestAndSave() {
         try {
             final String version = euroVocHarvester.getVersion();
-            final Double versionDoubleValue = Double.parseDouble(euroVocHarvester.getVersion().replace("-", ""));
+            final double versionDoubleValue = Double.parseDouble(euroVocHarvester.getVersion().replace("-", ""));
 
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EURO_VOC.name())
                     .orElse(HarvestSettings.builder()
@@ -41,11 +43,16 @@ public class EuroVocService {
                             .latestVersion("0")
                             .build());
 
-            final Double currentVersion = Double.parseDouble(settings.getLatestVersion().replace("-", ""));
+            final double currentVersion = Double.parseDouble(settings.getLatestVersion().replace("-", ""));
 
             if(currentVersion < versionDoubleValue) {
                 euroVocRepository.deleteAll();
-                euroVocRepository.saveAll(euroVocHarvester.harvest().toIterable());
+
+                final AtomicInteger counter = new AtomicInteger(0);
+                final Iterable<EuroVoc> iterable = euroVocHarvester.harvest().toIterable();
+                iterable.forEach(item -> counter.getAndIncrement());
+                log.info("Harvest and saving {} eurovocs", counter.get());
+                euroVocRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);
