@@ -3,7 +3,7 @@ package no.fdk.referencedata.eu.filetype;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,8 @@ import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Autowired
@@ -33,7 +34,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 fileTypeRepository,
                 harvestSettingsRepository);
 
-        fileTypeService.harvestAndSaveFileTypes();
+        fileTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         fileTypeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -53,7 +54,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSaveFileTypes();
+        fileTypeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
@@ -69,7 +70,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSaveFileTypes();
+        fileTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
@@ -85,7 +86,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSaveFileTypes();
+        fileTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();

@@ -1,8 +1,5 @@
 package no.fdk.referencedata.eu.accessright;
 
-import no.fdk.referencedata.eu.datatheme.DataTheme;
-import no.fdk.referencedata.eu.datatheme.DataThemeService;
-import no.fdk.referencedata.eu.datatheme.DataThemes;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
@@ -17,9 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class AccessRightControllerIntegrationTest extends AbstractMongoDbContainerTest {
 
     @LocalServerPort

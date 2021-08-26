@@ -14,9 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class EuroVocControllerIntegrationTest extends AbstractMongoDbContainerTest {
 
     @LocalServerPort
@@ -38,7 +37,7 @@ public class EuroVocControllerIntegrationTest extends AbstractMongoDbContainerTe
                 euroVocRepository,
                 harvestSettingsRepository);
 
-        EuroVocService.harvestAndSaveEuroVoc();
+        EuroVocService.harvestAndSave();
     }
 
     @Test

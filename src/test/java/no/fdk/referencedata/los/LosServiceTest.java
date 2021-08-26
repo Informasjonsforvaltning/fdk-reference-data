@@ -4,12 +4,10 @@ import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.spy;
 
 public class LosServiceTest {
@@ -25,7 +23,7 @@ public class LosServiceTest {
         final LosNode first = losNodeList.get(0);
         assertEquals("https://psi.norge.no/los/ord/abort", first.getUri());
         assertEquals("Abort", first.getName().get(Language.NORWEGIAN_BOKMAAL.code()));
-        assertEquals(false, first.isTema());
+        assertFalse(first.isTheme());
         assertEquals(List.of("helse-og-omsorg/svangerskap/abort"), first.getLosPaths());
         assertEquals(List.of(URI.create("https://psi.norge.no/los/tema/svangerskap")), first.getParents());
         assertEquals(List.of("Svangerskapsavbrudd", "Svangerskapsavbrot"), first.getSynonyms());
@@ -46,7 +44,7 @@ public class LosServiceTest {
         final LosNode first = losNodeList.get(0);
         assertEquals("https://psi.norge.no/los/ord/festival", first.getUri());
         assertEquals("Festival", first.getName().get(Language.NORWEGIAN_BOKMAAL.code()));
-        assertEquals(false, first.isTema());
+        assertFalse(first.isTheme());
         assertEquals(List.of("kultur-idrett-og-fritid/kultur/festival"), first.getLosPaths());
         assertEquals(List.of(URI.create("https://psi.norge.no/los/tema/kultur")), first.getParents());
         assertEquals(List.of("Billettbestilling", "Festivalpass"), first.getSynonyms());
@@ -54,7 +52,7 @@ public class LosServiceTest {
         final LosNode second = losNodeList.get(1);
         assertEquals("https://psi.norge.no/los/tema/politikk-og-valg", second.getUri());
         assertEquals("Politikk og valg", second.getName().get(Language.NORWEGIAN_BOKMAAL.code()));
-        assertEquals(true, second.isTema());
+        assertTrue(second.isTheme());
         assertEquals(List.of("demokrati-og-innbyggerrettigheter/politikk-og-valg"), second.getLosPaths());
         assertEquals(List.of(URI.create("https://psi.norge.no/los/tema/demokrati-og-innbyggerrettigheter")), second.getParents());
         assertEquals(emptyList(), second.getSynonyms());
@@ -62,7 +60,7 @@ public class LosServiceTest {
         final LosNode third = losNodeList.get(2);
         assertEquals("https://psi.norge.no/los/tema/var-og-klima", third.getUri());
         assertEquals("Vær og klima", third.getName().get(Language.NORWEGIAN_BOKMAAL.code()));
-        assertEquals(true, third.isTema());
+        assertTrue(third.isTheme());
         assertEquals(List.of("natur-klima-og-miljo/var-og-klima"), third.getLosPaths());
         assertEquals(List.of(URI.create("https://psi.norge.no/los/tema/natur-klima-og-miljo")), third.getParents());
         assertEquals(emptyList(), third.getSynonyms());

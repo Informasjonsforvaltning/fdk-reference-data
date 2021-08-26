@@ -12,9 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class MediaTypeControllerIntegrationTest extends AbstractMongoDbContainerTest {
 
     @LocalServerPort
@@ -32,7 +31,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractMongoDbContainer
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository);
 
-        mediaTypeService.harvestAndSaveMediaTypes();
+        mediaTypeService.harvestAndSave();
     }
 
     @Test

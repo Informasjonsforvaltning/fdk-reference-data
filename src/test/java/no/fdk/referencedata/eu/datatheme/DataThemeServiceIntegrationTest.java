@@ -4,6 +4,7 @@ import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +19,8 @@ import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest(properties = { "scheduling.enabled=false" })
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Autowired
@@ -34,7 +36,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 dataThemeRepository,
                 harvestSettingsRepository);
 
-        fileTypeService.harvestAndSaveDataThemes();
+        fileTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         dataThemeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -54,7 +56,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSaveDataThemes();
+        dataThemeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
@@ -70,7 +72,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSaveDataThemes();
+        dataThemeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
@@ -86,7 +88,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSaveDataThemes();
+        dataThemeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
