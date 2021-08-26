@@ -10,6 +10,8 @@ spring:
 
 server:
   port: 8080
+  servlet:
+    context-path: /new-reference-data
   compression:
     enabled: true
     mime-types: application/json
@@ -42,6 +44,8 @@ spring:
   config.activate.on-profile: develop,unit-integration
 server:
   port: 8113
+  servlet:
+    context-path: /
 graphiql:
   cdn:
     enabled: false
