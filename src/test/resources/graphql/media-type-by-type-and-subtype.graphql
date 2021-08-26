@@ -1,0 +1,5 @@
+query {
+    mediaTypeByTypeAndSubType(type: "text", subType: "plain") {
+        uri
+    }
+}

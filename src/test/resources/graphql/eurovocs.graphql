@@ -1,0 +1,7 @@
+query {
+    euroVocs {
+        uri
+        code
+        label
+    }
+}

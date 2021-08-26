@@ -1,0 +1,7 @@
+query {
+    euroVocByCode(code: "5548") {
+        uri
+        code
+        label
+    }
+}

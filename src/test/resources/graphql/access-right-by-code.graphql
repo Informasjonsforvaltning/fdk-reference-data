@@ -1,0 +1,7 @@
+query {
+    accessRightByCode(code: "PUBLIC") {
+        uri
+        code
+        label
+    }
+}

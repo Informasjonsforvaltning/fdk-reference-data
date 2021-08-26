@@ -1,0 +1,65 @@
+scalar Object
+
+type Query {
+  accessRights: [AccessRight!]!
+  accessRightByCode(code: String!): AccessRight
+
+  dataThemes: [DataTheme!]!
+  dataThemeByCode(code: String!): DataTheme
+
+  euroVocs:  [EuroVoc!]!
+  euroVocByCode(code: String!):  EuroVoc
+
+  fileTypes:  [FileType!]!
+  fileTypeByCode(code: String!):  FileType
+
+  losThemesAndWords(uris: [String!]):  [LosNode!]!
+
+  mediaTypes: [MediaType!]!
+  mediaTypesByType(type: String!): [MediaType!]!
+  mediaTypeByTypeAndSubType(type: String!, subType: String!): MediaType
+}
+
+type AccessRight {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type DataTheme {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type EuroVoc {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type FileType {
+  uri: ID!
+  code: String
+  mediaType: String
+}
+
+type LosNode {
+  uri: ID!
+  children: [String!]
+  parents: [String!]
+  isTheme: Boolean!
+  losPaths: [String!]
+  name: Object
+  definition: Object
+  synonyms: [String!]
+  relatedTerms: [String!]
+}
+
+type MediaType {
+  uri: ID!
+  name: String
+  type: String
+  subType: String
+}
+
