@@ -25,6 +25,10 @@ management:
       exposure:
         include: health, info
 
+graphiql:
+  cdn:
+    enabled: true
+
 logging:
   level:
     root: WARN
@@ -38,5 +42,8 @@ spring:
   config.activate.on-profile: develop,unit-integration
 server:
   port: 8113
+graphiql:
+  cdn:
+    enabled: false
 
 
