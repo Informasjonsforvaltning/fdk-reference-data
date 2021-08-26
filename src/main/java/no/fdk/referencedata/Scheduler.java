@@ -1,5 +1,7 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.eu.accessright.AccessRightRepository;
+import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocRepository;
@@ -22,6 +24,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class Scheduler {
 
     @Autowired
+    private AccessRightRepository accessRightRepository;
+
+    @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
     @Autowired
@@ -32,6 +37,9 @@ public class Scheduler {
 
     @Autowired
     private EuroVocRepository euroVocRepository;
+
+    @Autowired
+    private AccessRightService accessRightService;
 
     @Autowired
     private MediaTypeService mediaTypeService;
@@ -46,11 +54,19 @@ public class Scheduler {
     private EuroVocService euroVocService;
 
     /**
+     * Run every day 01:30 (at night)
+     */
+    @Scheduled(cron = "0 30 1 * * ?")
+    public void updateAccessRights() {
+        accessRightService.harvestAndSave();
+    }
+
+    /**
      * Run every day 02:00 (at night)
      */
     @Scheduled(cron = "0 0 2 * * ?")
     public void updateMediaTypes() {
-        mediaTypeService.harvestAndSaveMediaTypes();
+        mediaTypeService.harvestAndSave();
     }
 
     /**
@@ -58,7 +74,7 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 30 2 * * ?")
     public void updateFileTypes() {
-        fileTypeService.harvestAndSaveFileTypes();
+        fileTypeService.harvestAndSave();
     }
 
     /**
@@ -66,7 +82,7 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 0 3 * * ?")
     public void updateDataThemes() {
-        dataThemeService.harvestAndSaveDataThemes();
+        dataThemeService.harvestAndSave();
     }
 
     /**
@@ -74,25 +90,29 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 30 3 * * ?")
     public void updateEuroVoc() {
-        euroVocService.harvestAndSaveEuroVoc();
+        euroVocService.harvestAndSave();
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
+        if(accessRightRepository.count() == 0) {
+            accessRightService.harvestAndSave();
+        }
+
         if(fileTypeRepository.count() == 0) {
-            fileTypeService.harvestAndSaveFileTypes();
+            fileTypeService.harvestAndSave();
         }
 
         if(mediaTypeRepository.count() == 0) {
-            mediaTypeService.harvestAndSaveMediaTypes();
+            mediaTypeService.harvestAndSave();
         }
 
         if(dataThemeRepository.count() == 0) {
-            dataThemeService.harvestAndSaveDataThemes();
+            dataThemeService.harvestAndSave();
         }
 
         if(euroVocRepository.count() == 0) {
-            euroVocService.harvestAndSaveEuroVoc();
+            euroVocService.harvestAndSave();
         }
     }
 }

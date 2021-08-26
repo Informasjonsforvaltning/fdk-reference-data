@@ -1,9 +1,12 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.eu.filetype.FileType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -21,10 +24,16 @@ public class MediaTypeService {
     }
 
     @Transactional
-    public void harvestAndSaveMediaTypes() {
+    public void harvestAndSave() {
         try {
             mediaTypeRepository.deleteAll();
-            mediaTypeRepository.saveAll(mediaTypeHarvester.harvest().toIterable());
+
+            final AtomicInteger counter = new AtomicInteger(0);
+            final Iterable<MediaType> iterable = mediaTypeHarvester.harvest().toIterable();
+            iterable.forEach(item -> counter.getAndIncrement());
+            log.info("Harvest and saving {} media-types", counter.get());
+            mediaTypeRepository.saveAll(iterable);
+
         } catch(Exception e) {
             log.error("Unable to harvest media-types", e);
         }
