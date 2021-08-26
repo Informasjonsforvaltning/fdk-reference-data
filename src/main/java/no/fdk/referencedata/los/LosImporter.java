@@ -57,7 +57,7 @@ public class LosImporter {
         node.setRelatedTerms(extractLiterals(losResource, SKOS.related));
         node.setParents(extractLiterals(losResource, SKOS.broader));
         node.setChildren(extractLiterals(losResource, SKOS.narrower));
-        node.setTema(requireNonNull(extractLiteral(losResource, SKOS.inScheme))
+        node.setTheme(requireNonNull(extractLiteral(losResource, SKOS.inScheme))
                 .toString().equals(LosNode.NODE_IS_TEMA_OR_SUBTEMA));
         node.setUri(losResource.getURI());
         return node;

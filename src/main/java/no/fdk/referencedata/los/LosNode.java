@@ -16,7 +16,7 @@ public class LosNode {
 
     public List<URI> children;
     public List<URI> parents;
-    public boolean isTema;
+    public boolean isTheme;
     public List<String> losPaths;
     private Map<String, String> name;
     private Map<String, String> definition;
