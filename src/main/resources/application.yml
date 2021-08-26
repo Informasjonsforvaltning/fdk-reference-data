@@ -35,7 +35,7 @@ logging:
 ---
 
 spring:
-  profiles: develop,unit-integration
+  config.activate.on-profile: develop,unit-integration
 server:
   port: 8113
 
