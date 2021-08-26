@@ -1,0 +1,6 @@
+query {
+    losThemesAndWords {
+        uri
+        name
+    }
+}

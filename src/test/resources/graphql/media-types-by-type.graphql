@@ -1,0 +1,8 @@
+query {
+    mediaTypesByType(type: "text") {
+        uri
+        name
+        type
+        subType
+    }
+}

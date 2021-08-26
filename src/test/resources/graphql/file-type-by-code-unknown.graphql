@@ -1,0 +1,5 @@
+query {
+    fileTypeByCode(code: "unknown") {
+        uri
+    }
+}

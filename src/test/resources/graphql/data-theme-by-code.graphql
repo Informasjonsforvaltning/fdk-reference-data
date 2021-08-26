@@ -1,0 +1,7 @@
+query {
+    dataThemeByCode(code: "ECON") {
+        uri
+        code
+        label
+    }
+}
