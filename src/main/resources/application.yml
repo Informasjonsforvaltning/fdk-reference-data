@@ -46,8 +46,12 @@ server:
   port: 8113
   servlet:
     context-path: /
-graphiql:
-  cdn:
-    enabled: false
 
+---
+
+spring:
+  config.activate.on-profile: test
+server:
+  servlet:
+    context-path: /
 
