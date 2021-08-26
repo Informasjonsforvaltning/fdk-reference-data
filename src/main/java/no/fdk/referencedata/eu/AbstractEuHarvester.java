@@ -1,7 +1,6 @@
 package no.fdk.referencedata.eu;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.datatheme.DataTheme;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;

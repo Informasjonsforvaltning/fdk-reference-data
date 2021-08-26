@@ -2,11 +2,11 @@ package no.fdk.referencedata.los;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,10 +17,11 @@ import static java.net.URLDecoder.decode;
 @RequiredArgsConstructor
 @RequestMapping("/los")
 public class LosController {
+
     private final LosService losService;
 
     @CrossOrigin
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "themes-and-words", produces = MediaType.APPLICATION_JSON_VALUE)
     public LosNodes getLosNodes(@RequestParam(value = "uris", required = false) List<String> uris) {
         return LosNodes.builder()
             .losNodes(uris != null ?
