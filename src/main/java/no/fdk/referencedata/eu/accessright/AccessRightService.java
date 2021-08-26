@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -45,7 +46,12 @@ public class AccessRightService {
 
             if(currentVersion < versionIntValue) {
                 accessRightRepository.deleteAll();
-                accessRightRepository.saveAll(accessRightHarvester.harvest().toIterable());
+
+                final AtomicInteger counter = new AtomicInteger(0);
+                final Iterable<AccessRight> iterable = accessRightHarvester.harvest().toIterable();
+                iterable.forEach(item -> counter.getAndIncrement());
+                log.info("Harvest and saving {} access-rights", counter.get());
+                accessRightRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);

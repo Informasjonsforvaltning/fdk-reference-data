@@ -1,7 +1,6 @@
 package no.fdk.referencedata.eu.eurovoc;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.datatheme.DataTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

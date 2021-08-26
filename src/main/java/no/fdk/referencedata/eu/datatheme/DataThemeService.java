@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.datatheme;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -30,7 +32,7 @@ public class DataThemeService {
     }
 
     @Transactional
-    public void harvestAndSaveDataThemes() {
+    public void harvestAndSave() {
         try {
             final String version = dataThemeHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(dataThemeHarvester.getVersion().replace("-", ""));
@@ -45,7 +47,12 @@ public class DataThemeService {
 
             if(currentVersion < versionIntValue) {
                 dataThemeRepository.deleteAll();
-                dataThemeRepository.saveAll(dataThemeHarvester.harvest().toIterable());
+
+                final AtomicInteger counter = new AtomicInteger(0);
+                final Iterable<DataTheme> iterable = dataThemeHarvester.harvest().toIterable();
+                iterable.forEach(item -> counter.getAndIncrement());
+                log.info("Harvest and saving {} data-themes", counter.get());
+                dataThemeRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);

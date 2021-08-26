@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 @Component
 @Slf4j
 public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
@@ -29,14 +27,10 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
             return Flux.error(new Exception("Unable to fetch file-types distribution"));
         }
 
-        final AtomicInteger count = new AtomicInteger();
-
         return Mono.justOrEmpty(getModel(fileTypesRdfSource))
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, EUVOC.FileType).toList())
                 .filter(Resource::isURIResource)
-                .map(this::mapFileType)
-                .doOnNext(fileType -> count.getAndIncrement())
-                .doFinally(signal -> log.info("Successfully harvested {} EU file types", count.get()));
+                .map(this::mapFileType);
     }
 
     private FileType mapFileType(Resource fileType) {

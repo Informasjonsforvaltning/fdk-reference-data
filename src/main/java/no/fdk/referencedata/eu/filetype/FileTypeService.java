@@ -1,7 +1,6 @@
 package no.fdk.referencedata.eu.filetype;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -31,7 +31,7 @@ public class FileTypeService {
     }
 
     @Transactional
-    public void harvestAndSaveFileTypes() {
+    public void harvestAndSave() {
         try {
             final String version = fileTypeHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(fileTypeHarvester.getVersion().replace("-", ""));
@@ -46,7 +46,12 @@ public class FileTypeService {
 
             if(currentVersion < versionIntValue) {
                 fileTypeRepository.deleteAll();
-                fileTypeRepository.saveAll(fileTypeHarvester.harvest().toIterable());
+
+                final AtomicInteger counter = new AtomicInteger(0);
+                final Iterable<FileType> iterable = fileTypeHarvester.harvest().toIterable();
+                iterable.forEach(item -> counter.getAndIncrement());
+                log.info("Harvest and saving {} file-types", counter.get());
+                fileTypeRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(version);

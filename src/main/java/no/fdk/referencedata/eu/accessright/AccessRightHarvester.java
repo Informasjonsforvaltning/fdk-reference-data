@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.eu.vocabulary.EUAccessRight;
-import no.fdk.referencedata.eu.vocabulary.EUDataTheme;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.SKOS;
@@ -39,15 +38,11 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
             return Flux.error(new Exception("Unable to fetch access-right distribution"));
         }
 
-        final AtomicInteger count = new AtomicInteger();
-
         return Mono.justOrEmpty(getModel(rdfSource))
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EUAccessRight.SCHEME).toList())
                 .filter(Resource::isURIResource)
-                .map(this::mapAccessRight)
-                .doOnNext(item -> count.getAndIncrement())
-                .doFinally(signal -> log.info("Successfully harvested {} EU access-rights", count.get()));
+                .map(this::mapAccessRight);
     }
 
     private AccessRight mapAccessRight(Resource accessRight) {

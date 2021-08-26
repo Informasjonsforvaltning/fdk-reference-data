@@ -36,13 +36,11 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
     }
 
     public Flux<EuroVoc> harvest() {
-        log.info("Starting harvest of EU data themes");
+        log.info("Starting harvest of EU eurovoc");
         final org.springframework.core.io.Resource source = getSource();
         if(source == null) {
             return Flux.error(new Exception("Unable to fetch eurovoc distribution"));
         }
-
-        final AtomicInteger count = new AtomicInteger();
 
         try {
             final File destDir = Files.createTempDirectory("").toFile();
@@ -54,9 +52,8 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                     .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type,
                             SKOS.Concept).toList())
                     .filter(Resource::isURIResource)
-                    .map(this::mapEuroVoc)
-                    .doOnNext(item -> count.getAndIncrement())
-                    .doFinally(signal -> log.info("Harvested {} EU eurovoc", count.get()));
+                    .map(this::mapEuroVoc);
+
         } catch(IOException ex) {
             return Flux.error(ex);
         }
