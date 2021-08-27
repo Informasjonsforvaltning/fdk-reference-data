@@ -1,5 +1,5 @@
-query {
-    accessRightByCode(code: "PUBLIC") {
+query GetAccessRightByCode($code: String!) {
+    accessRightByCode(code: $code) {
         uri
         code
         label

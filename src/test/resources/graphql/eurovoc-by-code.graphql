@@ -1,5 +1,5 @@
-query {
-    euroVocByCode(code: "5548") {
+query GetEuroVocByCode($code: String!) {
+    euroVocByCode(code: $code) {
         uri
         code
         label

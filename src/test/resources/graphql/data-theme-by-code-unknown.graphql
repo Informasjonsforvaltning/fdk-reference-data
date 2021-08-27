@@ -1,5 +1,0 @@
-query {
-    dataThemeByCode(code: "unknown") {
-        uri
-    }
-}

@@ -1,5 +1,0 @@
-query {
-    euroVocByCode(code: "unknown") {
-        uri
-    }
-}

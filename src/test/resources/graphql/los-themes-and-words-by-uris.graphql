@@ -1,5 +1,5 @@
-query {
-    losThemesAndWords(uris: ["https://psi.norge.no/los/ord/abort"]) {
+query GetLosThemesAndWords($uris: [String!]) {
+    losThemesAndWords(uris: $uris) {
         uri
     }
 }

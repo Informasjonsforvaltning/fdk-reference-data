@@ -1,5 +1,0 @@
-query {
-    accessRightByCode(code: "unknown") {
-        uri
-    }
-}

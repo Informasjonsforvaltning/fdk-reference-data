@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.eu.eurovoc.EuroVocRepository;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
         properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
 class EuroVocQueryIntegrationTest extends AbstractMongoDbContainerTest {
+
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     private GraphQLTestTemplate template;
@@ -53,7 +57,8 @@ class EuroVocQueryIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Test
     void test_if_eurovoc_by_code_5548_query_returns_interinstitutional_cooperation_eu() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/eurovoc-by-code.graphql");
+        GraphQLResponse response = template.perform("graphql/eurovoc-by-code.graphql",
+                mapper.valueToTree(Map.of("code", "5548")));
         assertNotNull(response);
         assertTrue(response.isOk());
         assertEquals("http://eurovoc.europa.eu/5548", response.get("$['data']['euroVocByCode']['uri']"));
@@ -63,7 +68,8 @@ class EuroVocQueryIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Test
     void test_if_eurovoc_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/eurovoc-by-code-unknown.graphql");
+        GraphQLResponse response = template.perform("graphql/eurovoc-by-code.graphql",
+                mapper.valueToTree(Map.of("code", "unknown")));
         assertNotNull(response);
         assertTrue(response.isOk());
         assertNull(response.get("$['data']['euroVocByCode']"));
