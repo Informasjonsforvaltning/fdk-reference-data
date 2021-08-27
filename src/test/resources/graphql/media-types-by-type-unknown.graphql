@@ -1,8 +1,0 @@
-query {
-    mediaTypesByType(type: "unknown") {
-        uri
-        name
-        type
-        subType
-    }
-}

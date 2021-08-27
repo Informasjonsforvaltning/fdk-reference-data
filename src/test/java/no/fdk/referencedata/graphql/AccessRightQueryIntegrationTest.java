@@ -1,5 +1,8 @@
 package no.fdk.referencedata.graphql;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.eu.accessright.AccessRightRepository;
@@ -14,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.*;
         properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
 class AccessRightQueryIntegrationTest extends AbstractMongoDbContainerTest {
+
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     private AccessRightRepository accessRightRepository;
@@ -53,7 +59,8 @@ class AccessRightQueryIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Test
     void test_if_access_right_by_code_public_query_returns_public_access_right() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/access-right-by-code.graphql");
+        GraphQLResponse response = template.perform("graphql/access-right-by-code.graphql",
+                mapper.valueToTree(Map.of("code", "PUBLIC")));
         assertNotNull(response);
         assertTrue(response.isOk());
         assertEquals("http://publications.europa.eu/resource/authority/access-right/PUBLIC", response.get("$['data']['accessRightByCode']['uri']"));
@@ -63,7 +70,8 @@ class AccessRightQueryIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Test
     void test_if_access_right_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/access-right-by-code-unknown.graphql");
+        GraphQLResponse response = template.perform("graphql/access-right-by-code.graphql",
+                mapper.valueToTree(Map.of("code", "unknown")));
         assertNotNull(response);
         assertTrue(response.isOk());
         assertNull(response.get("$['data']['accessRightByCode']"));

@@ -1,5 +1,0 @@
-query {
-    losThemesAndWords(uris: ["https://psi.norge.no/los/ord/unknown"]) {
-        uri
-    }
-}

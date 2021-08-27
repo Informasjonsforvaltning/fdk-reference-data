@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
         properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
 class DataThemeQueryIntegrationTest extends AbstractMongoDbContainerTest {
+
+    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     private GraphQLTestTemplate template;
@@ -53,7 +57,8 @@ class DataThemeQueryIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Test
     void test_if_data_theme_by_code_aac_query_returns_econ_data_theme() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/data-theme-by-code.graphql");
+        GraphQLResponse response = template.perform("graphql/data-theme-by-code.graphql",
+                mapper.valueToTree(Map.of("code", "ECON")));
         assertNotNull(response);
         assertTrue(response.isOk());
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/ECON", response.get("$['data']['dataThemeByCode']['uri']"));
@@ -63,7 +68,8 @@ class DataThemeQueryIntegrationTest extends AbstractMongoDbContainerTest {
 
     @Test
     void test_if_data_theme_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/data-theme-by-code-unknown.graphql");
+        GraphQLResponse response = template.perform("graphql/data-theme-by-code.graphql",
+                mapper.valueToTree(Map.of("code", "unknown")));
         assertNotNull(response);
         assertTrue(response.isOk());
         assertNull(response.get("$['data']['dataThemeByCode']"));

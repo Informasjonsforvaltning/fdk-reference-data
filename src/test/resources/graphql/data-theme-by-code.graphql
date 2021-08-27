@@ -1,5 +1,5 @@
-query {
-    dataThemeByCode(code: "ECON") {
+query GetDataThemeByCode($code: String!) {
+    dataThemeByCode(code: $code) {
         uri
         code
         label

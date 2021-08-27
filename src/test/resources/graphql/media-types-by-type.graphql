@@ -1,5 +1,5 @@
-query {
-    mediaTypesByType(type: "text") {
+query GetMediaTypeByType($type: String!) {
+    mediaTypesByType(type: $type) {
         uri
         name
         type

@@ -1,5 +1,5 @@
-query {
-    fileTypeByCode(code: "AAC") {
+query GetFileTypeByCode($code: String!) {
+    fileTypeByCode(code: $code) {
         uri
         code
         mediaType
