@@ -3,6 +3,7 @@ package no.fdk.referencedata.eu.datatheme;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,6 +27,10 @@ public class DataThemeHarvesterTest {
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/TRAN", first.getUri());
         assertEquals("TRAN", first.getCode());
         assertEquals("Transport", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals(LocalDate.parse("2015-10-01"), first.getStartUse());
+        assertEquals("http://publications.europa.eu/resource/authority/data-theme", first.getConceptSchema().getUri());
+        assertEquals("Data theme", first.getConceptSchema().getLabel().get(Language.ENGLISH.code()));
+        assertEquals("20200923-0", first.getConceptSchema().getVersionNumber());
     }
 
 }

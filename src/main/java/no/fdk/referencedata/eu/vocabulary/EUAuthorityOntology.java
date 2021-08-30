@@ -9,6 +9,7 @@ public class EUAuthorityOntology {
     private static final Model m = ModelFactory.createDefaultModel();
     public static final Resource NAMESPACE;
     public static final Property startUse;
+    public static final Property tableVersionNumber;
 
 
     public static String getURI() {
@@ -18,5 +19,6 @@ public class EUAuthorityOntology {
     static {
         NAMESPACE = m.createResource(getURI());
         startUse = m.createProperty(getURI() + "start.use");
+        tableVersionNumber = m.createProperty(getURI() + "table.version.number");
     }
 }
