@@ -46,6 +46,9 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", first.getUri());
         assertEquals("AGRI", first.getCode());
         assertEquals("Agriculture, fisheries, forestry and food", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/data-theme", first.getConceptSchema().getUri());
+        assertEquals("Data theme", first.getConceptSchema().getLabel().get(Language.ENGLISH.code()));
+        assertEquals("20200923-0", first.getConceptSchema().getVersionNumber());
     }
 
     @Test

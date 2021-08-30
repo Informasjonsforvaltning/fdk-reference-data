@@ -12,12 +12,9 @@ import java.util.Map;
 @Data
 @Builder
 @Document
-public class DataTheme {
+public class ConceptSchema {
     @Id
     String uri;
-    @Indexed
-    String code;
     Map<String, String> label;
-    LocalDate startUse;
-    ConceptSchema conceptSchema;
+    String versionNumber;
 }

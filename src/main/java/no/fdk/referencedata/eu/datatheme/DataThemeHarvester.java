@@ -2,8 +2,10 @@ package no.fdk.referencedata.eu.datatheme;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
+import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.eu.vocabulary.EUDataTheme;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -46,17 +49,27 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
     }
 
     private DataTheme mapDataTheme(Resource dataTheme) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(dataTheme.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        final ConceptSchema conceptSchema = Mono.justOrEmpty(dataTheme.getProperty(SKOS.inScheme).getResource())
+                .map(resource -> ConceptSchema.builder()
+                    .uri(resource.getURI())
+                    .label(resource.listProperties(SKOS.prefLabel).toList().stream()
+                            .map(stmt -> stmt.getObject().asLiteral())
+                            .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
+                            .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                    .versionNumber(resource.getProperty(EUAuthorityOntology.tableVersionNumber).getString())
+                    .build())
+                .block();
 
         return DataTheme.builder()
                 .uri(dataTheme.getURI())
                 .code(dataTheme.getProperty(DC.identifier).getObject().toString())
-                .label(label)
+                .label(dataTheme.listProperties(SKOS.prefLabel).toList().stream()
+                        .map(stmt -> stmt.getObject().asLiteral())
+                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
+                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                .startUse(dataTheme.hasProperty(EUAuthorityOntology.startUse) ?
+                        LocalDate.parse(dataTheme.getProperty(EUAuthorityOntology.startUse).getString()) : null)
+                .conceptSchema(conceptSchema)
                 .build();
     }
 }
