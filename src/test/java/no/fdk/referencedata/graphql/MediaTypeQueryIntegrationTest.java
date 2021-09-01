@@ -8,6 +8,7 @@ import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,15 @@ class MediaTypeQueryIntegrationTest extends AbstractMongoDbContainerTest {
     @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
+    @Autowired
+    private HarvestSettingsRepository harvestSettingsRepository;
+
     @BeforeEach
     public void setup() {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
-                mediaTypeRepository);
+                mediaTypeRepository,
+                harvestSettingsRepository);
 
         mediaTypeService.harvestAndSave();
     }

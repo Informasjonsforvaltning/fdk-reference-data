@@ -32,7 +32,7 @@ public class DataThemeService {
     }
 
     @Transactional
-    public void harvestAndSave() {
+    public void harvestAndSave(boolean force) {
         try {
             final String version = dataThemeHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(dataThemeHarvester.getVersion().replace("-", ""));
@@ -45,7 +45,7 @@ public class DataThemeService {
 
             final int currentVersion = Integer.parseInt(settings.getLatestVersion().replace("-", ""));
 
-            if(currentVersion < versionIntValue) {
+            if(force || currentVersion < versionIntValue) {
                 dataThemeRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);

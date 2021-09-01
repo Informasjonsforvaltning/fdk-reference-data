@@ -42,7 +42,7 @@ class EuroVocQueryIntegrationTest extends AbstractMongoDbContainerTest {
                 euroVocRepository,
                 harvestSettingsRepository);
 
-        EuroVocService.harvestAndSave();
+        EuroVocService.harvestAndSave(false);
     }
 
     @Test
@@ -58,12 +58,12 @@ class EuroVocQueryIntegrationTest extends AbstractMongoDbContainerTest {
     @Test
     void test_if_eurovoc_by_code_5548_query_returns_interinstitutional_cooperation_eu() throws IOException {
         GraphQLResponse response = template.perform("graphql/eurovoc-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "5548")));
+                mapper.valueToTree(Map.of("code", "337")));
         assertNotNull(response);
         assertTrue(response.isOk());
-        assertEquals("http://eurovoc.europa.eu/5548", response.get("$['data']['euroVocByCode']['uri']"));
-        assertEquals("5548", response.get("$['data']['euroVocByCode']['code']"));
-        assertEquals("interinstitutional cooperation (EU)", response.get("$['data']['euroVocByCode']['label']['en']"));
+        assertEquals("http://eurovoc.europa.eu/337", response.get("$['data']['euroVocByCode']['uri']"));
+        assertEquals("337", response.get("$['data']['euroVocByCode']['code']"));
+        assertEquals("regions of Denmark", response.get("$['data']['euroVocByCode']['label']['en']"));
     }
 
     @Test

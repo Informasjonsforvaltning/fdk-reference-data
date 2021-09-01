@@ -36,7 +36,7 @@ public class AccessRightServiceIntegrationTest extends AbstractMongoDbContainerT
                 accessRightRepository,
                 harvestSettingsRepository);
 
-        accessRightService.harvestAndSave();
+        accessRightService.harvestAndSave(false);
 
         final AtomicInteger counter = new AtomicInteger();
         accessRightRepository.findAll().forEach(accessRight -> counter.incrementAndGet());
@@ -56,7 +56,7 @@ public class AccessRightServiceIntegrationTest extends AbstractMongoDbContainerT
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
+        accessRightService.harvestAndSave(false);
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
@@ -72,7 +72,7 @@ public class AccessRightServiceIntegrationTest extends AbstractMongoDbContainerT
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
+        accessRightService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
@@ -88,7 +88,7 @@ public class AccessRightServiceIntegrationTest extends AbstractMongoDbContainerT
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
+        accessRightService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();

@@ -17,6 +17,9 @@ public class MediaTypeController {
     @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
+    @Autowired
+    private MediaTypeService mediaTypeService;
+
     @CrossOrigin
     @GetMapping
     public ResponseEntity<MediaTypes> getMediaTypes() {
@@ -24,6 +27,13 @@ public class MediaTypeController {
                 StreamSupport.stream(mediaTypeRepository.findAll().spliterator(), false)
                     .sorted(Comparator.comparing(MediaType::getUri))
                     .collect(Collectors.toList())).build());
+    }
+
+    @CrossOrigin
+    @PostMapping
+    public ResponseEntity<Void> updateMediaTypes() {
+        mediaTypeService.harvestAndSave();
+        return ResponseEntity.ok().build();
     }
 
     @CrossOrigin

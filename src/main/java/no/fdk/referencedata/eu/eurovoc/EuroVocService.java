@@ -32,7 +32,7 @@ public class EuroVocService {
     }
 
     @Transactional
-    public void harvestAndSave() {
+    public void harvestAndSave(boolean force) {
         try {
             final String version = euroVocHarvester.getVersion();
             final double versionDoubleValue = Double.parseDouble(euroVocHarvester.getVersion().replace("-", ""));
@@ -45,7 +45,7 @@ public class EuroVocService {
 
             final double currentVersion = Double.parseDouble(settings.getLatestVersion().replace("-", ""));
 
-            if(currentVersion < versionDoubleValue) {
+            if(force || currentVersion < versionDoubleValue) {
                 euroVocRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);

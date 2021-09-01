@@ -31,7 +31,7 @@ public class FileTypeService {
     }
 
     @Transactional
-    public void harvestAndSave() {
+    public void harvestAndSave(boolean force) {
         try {
             final String version = fileTypeHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(fileTypeHarvester.getVersion().replace("-", ""));
@@ -44,7 +44,7 @@ public class FileTypeService {
 
             final int currentVersion = Integer.parseInt(settings.getLatestVersion().replace("-", ""));
 
-            if(currentVersion < versionIntValue) {
+            if(force || currentVersion < versionIntValue) {
                 fileTypeRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);

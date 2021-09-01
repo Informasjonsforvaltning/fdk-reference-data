@@ -17,6 +17,9 @@ public class DataThemeController {
     @Autowired
     private DataThemeRepository dataThemeRepository;
 
+    @Autowired
+    private DataThemeService dataThemeService;
+
     @CrossOrigin
     @GetMapping
     public ResponseEntity<DataThemes> getDataThemes() {
@@ -24,6 +27,13 @@ public class DataThemeController {
                 StreamSupport.stream(dataThemeRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(DataTheme::getUri))
                         .collect(Collectors.toList())).build());
+    }
+
+    @CrossOrigin
+    @PostMapping
+    public ResponseEntity<Void> updateDataThemes() {
+        dataThemeService.harvestAndSave(true);
+        return ResponseEntity.ok().build();
     }
 
     @CrossOrigin

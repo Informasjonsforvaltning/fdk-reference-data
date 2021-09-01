@@ -36,7 +36,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 dataThemeRepository,
                 harvestSettingsRepository);
 
-        fileTypeService.harvestAndSave();
+        fileTypeService.harvestAndSave(false);
 
         final AtomicInteger counter = new AtomicInteger();
         dataThemeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -59,7 +59,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave();
+        dataThemeService.harvestAndSave(false);
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
@@ -75,7 +75,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave();
+        dataThemeService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
@@ -91,7 +91,7 @@ public class DataThemeServiceIntegrationTest extends AbstractMongoDbContainerTes
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave();
+        dataThemeService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();

@@ -42,7 +42,7 @@ class DataThemeQueryIntegrationTest extends AbstractMongoDbContainerTest {
                 dataThemeRepository,
                 harvestSettingsRepository);
 
-        dataThemeService.harvestAndSave();
+        dataThemeService.harvestAndSave(false);
     }
 
     @Test
