@@ -44,7 +44,7 @@ class AccessRightQueryIntegrationTest extends AbstractMongoDbContainerTest {
                 accessRightRepository,
                 harvestSettingsRepository);
 
-        accessRightService.harvestAndSave();
+        accessRightService.harvestAndSave(false);
     }
 
     @Test

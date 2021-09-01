@@ -36,16 +36,16 @@ public class EuroVocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 euroVocRepository,
                 harvestSettingsRepository);
 
-        euroVocService.harvestAndSave();
+        euroVocService.harvestAndSave(false);
 
         final AtomicInteger counter = new AtomicInteger();
         euroVocRepository.findAll().forEach(fileType -> counter.incrementAndGet());
-        assertEquals(7322, counter.get());
+        assertEquals(1916, counter.get());
 
-        final EuroVoc euroVoc5548 = euroVocRepository.findById("http://eurovoc.europa.eu/5548").orElseThrow();
-        assertEquals("http://eurovoc.europa.eu/5548", euroVoc5548.getUri());
-        assertEquals("5548", euroVoc5548.getCode());
-        assertEquals("interinstitutional cooperation (EU)", euroVoc5548.getLabel().get(Language.ENGLISH.code()));
+        final EuroVoc euroVoc5548 = euroVocRepository.findById("http://eurovoc.europa.eu/337").orElseThrow();
+        assertEquals("http://eurovoc.europa.eu/337", euroVoc5548.getUri());
+        assertEquals("337", euroVoc5548.getCode());
+        assertEquals("regions of Denmark", euroVoc5548.getLabel().get(Language.ENGLISH.code()));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class EuroVocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        euroVocService.harvestAndSave();
+        euroVocService.harvestAndSave(false);
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
@@ -72,7 +72,7 @@ public class EuroVocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        euroVocService.harvestAndSave();
+        euroVocService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
@@ -88,7 +88,7 @@ public class EuroVocServiceIntegrationTest extends AbstractMongoDbContainerTest 
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        euroVocService.harvestAndSave();
+        euroVocService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();

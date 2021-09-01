@@ -1,22 +1,34 @@
 package no.fdk.referencedata.eu.accessright;
 
+import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import no.fdk.referencedata.settings.Settings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.time.LocalDateTime;
+import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "scheduling.enabled=false")
+        properties = {
+            "spring.main.allow-bean-definition-overriding=true",
+            "scheduling.enabled=false",
+            "application.apiKey=my-api-key",
+        })
+@Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 public class AccessRightControllerIntegrationTest extends AbstractMongoDbContainerTest {
 
@@ -39,7 +51,7 @@ public class AccessRightControllerIntegrationTest extends AbstractMongoDbContain
                 accessRightRepository,
                 harvestSettingsRepository);
 
-        accessRightService.harvestAndSave();
+        accessRightService.harvestAndSave(true);
     }
 
     @Test
@@ -64,5 +76,47 @@ public class AccessRightControllerIntegrationTest extends AbstractMongoDbContain
         assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", accessRight.getUri());
         assertEquals("CONFIDENTIAL", accessRight.getCode());
         assertEquals("confidential", accessRight.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_if_post_access_rights_fails_without_api_key() {
+        assertEquals(6, accessRightRepository.count());
+
+        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
+        assertEquals("1", harvestSettingsBefore.getLatestVersion());
+        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-API-KEY", "");
+        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/access-rights",
+                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        assertEquals(6, accessRightRepository.count());
+
+        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
+        assertEquals("1", harvestSettingsAfter.getLatestVersion());
+        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
+    }
+
+    @Test
+    public void test_if_post_access_rights_executes_a_force_update() {
+        assertEquals(6, accessRightRepository.count());
+
+        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
+        assertEquals("1", harvestSettingsBefore.getLatestVersion());
+        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("X-API-KEY", "my-api-key");
+        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/access-rights",
+                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(6, accessRightRepository.count());
+
+        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
+        assertEquals("1", harvestSettingsAfter.getLatestVersion());
+        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 }

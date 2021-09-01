@@ -9,24 +9,23 @@ FDK reference-data is a service that provides metadata for the various applicati
 # Technologies/frameworks
 * Java 15
 * Spring Boot v2.4.5
-* Redis
+* MongoDB
 
 ## API
-
-API documentation provided by Swagger 2.0 and is available on "/api-docs/reference-data".
-
-The service provides REST API for:
-
-* `GET /media-types`
-    * Returns all IANA media types.
-* `GET /file-types`
-    * Returns all EU file types.    
-  
+The service provides REST API with following specification: [OpenAPI3](./src/main/resources/openapi/openapi.yaml).
 
 ## Environment variables
 ```
-REDIS_HOST=localhost
-REDIS_PORT=6379
+MONGODB_DATABASE=reference-data
+MONGODB_PORT=27017
+MONGODB_HOST=localhost
+MONGODB_USERNAME=root
+MONGODB_PASSWORD=password
+MONGODB_AUTH_DATABASE=admin
+
+API_KEY=my-api-key
+
+LOG_LEVEL=DEBUG
 ```
 
 ## Run locally
@@ -36,4 +35,3 @@ docker-compose up -d
 Start application in IDE of choice.
 ```    
         
- 

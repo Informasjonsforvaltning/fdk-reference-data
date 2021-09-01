@@ -34,7 +34,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 fileTypeRepository,
                 harvestSettingsRepository);
 
-        fileTypeService.harvestAndSave();
+        fileTypeService.harvestAndSave(false);
 
         final AtomicInteger counter = new AtomicInteger();
         fileTypeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -54,7 +54,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave();
+        fileTypeService.harvestAndSave(false);
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
@@ -70,7 +70,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave();
+        fileTypeService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
@@ -86,7 +86,7 @@ public class FileTypeServiceIntegrationTest extends AbstractMongoDbContainerTest
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave();
+        fileTypeService.harvestAndSave(false);
 
         settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();

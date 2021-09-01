@@ -1,6 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,11 +24,15 @@ public class MediaTypeServiceIntegrationTest extends AbstractMongoDbContainerTes
     @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
+    @Autowired
+    private HarvestSettingsRepository harvestSettingsRepository;
+
     @Test
     public void test_if_harvest_persists_mediatypes() {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
-                mediaTypeRepository);
+                mediaTypeRepository,
+                harvestSettingsRepository);
 
         mediaTypeService.harvestAndSave();
 
@@ -60,7 +65,8 @@ public class MediaTypeServiceIntegrationTest extends AbstractMongoDbContainerTes
 
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
-                mediaTypeRepositorySpy);
+                mediaTypeRepositorySpy,
+                harvestSettingsRepository);
 
         assertEquals(count, mediaTypeRepositorySpy.count());
     }

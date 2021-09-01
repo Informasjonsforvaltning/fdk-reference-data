@@ -42,7 +42,7 @@ class FileTypeQueryIntegrationTest extends AbstractMongoDbContainerTest {
                 fileTypeRepository,
                 harvestSettingsRepository);
 
-        fileTypeService.harvestAndSave();
+        fileTypeService.harvestAndSave(false);
     }
 
     @Test

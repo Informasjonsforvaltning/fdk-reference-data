@@ -31,7 +31,7 @@ public class AccessRightService {
     }
 
     @Transactional
-    public void harvestAndSave() {
+    public void harvestAndSave(boolean force) {
         try {
             final String version = accessRightHarvester.getVersion();
             final int versionIntValue = Integer.parseInt(accessRightHarvester.getVersion().replace("-", ""));
@@ -44,7 +44,7 @@ public class AccessRightService {
 
             final int currentVersion = Integer.parseInt(settings.getLatestVersion().replace("-", ""));
 
-            if(currentVersion < versionIntValue) {
+            if(force || currentVersion < versionIntValue) {
                 accessRightRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);

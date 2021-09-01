@@ -3,13 +3,13 @@ info:
   title: Reference data API
   version: v2.0
 servers:
-- url: https://data.norge.no/new-reference-data/
-  description: Production server
+  - url: https://data.norge.no/new-reference-data/
+    description: Production server
 paths:
   /iana/media-types:
     get:
       tags:
-      - media-type-controller
+        - media-type-controller
       operationId: getMediaTypes
       responses:
         "200":
@@ -18,17 +18,140 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MediaTypes'
+    post:
+      tags:
+        - media-type-controller
+      operationId: updateMediaTypes
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/file-types:
+    get:
+      tags:
+        - file-type-controller
+      operationId: getFileTypes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FileTypes'
+    post:
+      tags:
+        - file-type-controller
+      operationId: updateFileTypes
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/eurovocs:
+    get:
+      tags:
+        - euro-voc-controller
+      operationId: getEuroVocs
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EuroVocs'
+    post:
+      tags:
+        - euro-voc-controller
+      operationId: updateEuroVocs
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/data-themes:
+    get:
+      tags:
+        - data-theme-controller
+      operationId: getDataThemes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DataThemes'
+    post:
+      tags:
+        - data-theme-controller
+      operationId: updateDataThemes
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/access-rights:
+    get:
+      tags:
+        - access-right-controller
+      operationId: getDataThemes_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccessRights'
+    post:
+      tags:
+        - access-right-controller
+      operationId: updateAccessRights
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /los/themes-and-words:
+    get:
+      tags:
+        - los-controller
+      operationId: getLosNodes
+      parameters:
+        - name: uris
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LosNodes'
   /iana/media-types/{type}:
     get:
       tags:
-      - media-type-controller
-      operationId: getMediaTypes
+        - media-type-controller
+      operationId: getMediaType
       parameters:
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -39,19 +162,19 @@ paths:
   /iana/media-types/{type}/{subType}:
     get:
       tags:
-      - media-type-controller
-      operationId: getMediaType
+        - media-type-controller
+      operationId: getMediaType_1
       parameters:
-      - name: type
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: subType
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: subType
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -59,29 +182,17 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MediaType'
-  /eu/file-types:
-    get:
-      tags:
-      - file-type-controller
-      operationId: getFileTypes
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/FileTypes'
   /eu/file-types/{code}:
     get:
       tags:
-      - file-type-controller
+        - file-type-controller
       operationId: getFileType
       parameters:
-      - name: code
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -89,29 +200,17 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/FileType'
-  /eu/eurovocs:
-    get:
-      tags:
-      - euro-voc-controller
-      operationId: getEuroVocs
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/EuroVocs'
   /eu/eurovocs/{code}:
     get:
       tags:
-      - euro-voc-controller
+        - euro-voc-controller
       operationId: getEuroVoc
       parameters:
-      - name: code
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -119,29 +218,17 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/EuroVoc'
-  /eu/data-themes:
-    get:
-      tags:
-      - data-theme-controller
-      operationId: getDataThemes
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/DataThemes'
   /eu/data-themes/{code}:
     get:
       tags:
-      - data-theme-controller
+        - data-theme-controller
       operationId: getDataTheme
       parameters:
-      - name: code
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -149,8 +236,81 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/DataTheme'
+  /eu/access-rights/{code}:
+    get:
+      tags:
+        - access-right-controller
+      operationId: getDataTheme_1
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccessRight'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
   schemas:
+    LosNode:
+      type: object
+      properties:
+        internalId:
+          type: integer
+          format: int64
+        children:
+          type: array
+          items:
+            type: string
+            format: uri
+        parents:
+          type: array
+          items:
+            type: string
+            format: uri
+        isTheme:
+          type: boolean
+        losPaths:
+          type: array
+          items:
+            type: string
+        name:
+          type: object
+          additionalProperties:
+            type: string
+        definition:
+          type: object
+          additionalProperties:
+            type: string
+        uri:
+          type: string
+        synonyms:
+          type: array
+          items:
+            type: string
+        relatedTerms:
+          type: array
+          items:
+            type: string
+            format: uri
+        theme:
+          type: boolean
+    LosNodes:
+      type: object
+      properties:
+        losNodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/LosNode'
     MediaType:
       type: object
       properties:
@@ -203,6 +363,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EuroVoc'
+    ConceptSchema:
+      type: object
+      properties:
+        uri:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+        versionNumber:
+          type: string
     DataTheme:
       type: object
       properties:
@@ -214,6 +385,11 @@ components:
           type: object
           additionalProperties:
             type: string
+        startUse:
+          type: string
+          format: date
+        conceptSchema:
+          $ref: '#/components/schemas/ConceptSchema'
     DataThemes:
       type: object
       properties:
@@ -221,3 +397,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DataTheme'
+    AccessRight:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+    AccessRights:
+      type: object
+      properties:
+        accessRights:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccessRight'

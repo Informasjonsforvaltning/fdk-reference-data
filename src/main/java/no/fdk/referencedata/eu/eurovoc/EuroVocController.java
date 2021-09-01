@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.eurovoc;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ public class EuroVocController {
     @Autowired
     private EuroVocRepository euroVocRepository;
 
+    @Autowired
+    private EuroVocService euroVocService;
+
     @CrossOrigin
     @GetMapping
     public ResponseEntity<EuroVocs> getEuroVocs() {
@@ -24,6 +28,13 @@ public class EuroVocController {
                 StreamSupport.stream(euroVocRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(EuroVoc::getUri))
                         .collect(Collectors.toList())).build());
+    }
+
+    @CrossOrigin
+    @PostMapping
+    public ResponseEntity<Void> updateEuroVocs() {
+        euroVocService.harvestAndSave(true);
+        return ResponseEntity.ok().build();
     }
 
     @CrossOrigin

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class EuroVocHarvesterTest {
 
     @Test
-    public void test_fetch_EuroVoc() throws Exception {
+    public void test_fetch_EuroVoc() {
         EuroVocHarvester euroVocHarvester = new LocalEuroVocHarvester("20200923-0");
 
         assertNotNull(euroVocHarvester.getSource());
@@ -20,7 +20,7 @@ public class EuroVocHarvesterTest {
 
         List<EuroVoc> euroVocList = euroVocHarvester.harvest().collectList().block();
         assertNotNull(euroVocList);
-        assertEquals(7322, euroVocList.size());
+        assertEquals(1916, euroVocList.size());
 
         EuroVoc first = euroVocList.get(0);
         assertEquals("http://eurovoc.europa.eu/7353", first.getUri());

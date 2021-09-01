@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ public class FileTypeController {
     @Autowired
     private FileTypeRepository fileTypeRepository;
 
+    @Autowired
+    private FileTypeService fileTypeService;
+
     @CrossOrigin
     @GetMapping
     public ResponseEntity<FileTypes> getFileTypes() {
@@ -24,6 +28,13 @@ public class FileTypeController {
                 StreamSupport.stream(fileTypeRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(FileType::getUri))
                         .collect(Collectors.toList())).build());
+    }
+
+    @CrossOrigin
+    @PostMapping
+    public ResponseEntity<Void> updateFileTypes() {
+        fileTypeService.harvestAndSave(true);
+        return ResponseEntity.ok().build();
     }
 
     @CrossOrigin

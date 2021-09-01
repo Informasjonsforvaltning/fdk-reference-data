@@ -17,6 +17,9 @@ public class AccessRightController {
     @Autowired
     private AccessRightRepository accessRightRepository;
 
+    @Autowired
+    private AccessRightService accessRightService;
+
     @CrossOrigin
     @GetMapping
     public ResponseEntity<AccessRights> getDataThemes() {
@@ -24,6 +27,13 @@ public class AccessRightController {
                 StreamSupport.stream(accessRightRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(AccessRight::getUri))
                         .collect(Collectors.toList())).build());
+    }
+
+    @CrossOrigin
+    @PostMapping
+    public ResponseEntity<Void> updateAccessRights() {
+        accessRightService.harvestAndSave(true);
+        return ResponseEntity.ok().build();
     }
 
     @CrossOrigin

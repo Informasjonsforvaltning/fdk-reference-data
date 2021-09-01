@@ -4,5 +4,6 @@ public enum Settings {
     ACCESS_RIGHT,
     DATA_THEME,
     FILE_TYPE,
-    EURO_VOC
+    EURO_VOC,
+    MEDIA_TYPE
 }

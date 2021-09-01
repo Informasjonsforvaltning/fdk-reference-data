@@ -58,7 +58,7 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 30 1 * * ?")
     public void updateAccessRights() {
-        accessRightService.harvestAndSave();
+        accessRightService.harvestAndSave(false);
     }
 
     /**
@@ -74,7 +74,7 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 30 2 * * ?")
     public void updateFileTypes() {
-        fileTypeService.harvestAndSave();
+        fileTypeService.harvestAndSave(false);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 0 3 * * ?")
     public void updateDataThemes() {
-        dataThemeService.harvestAndSave();
+        dataThemeService.harvestAndSave(false);
     }
 
     /**
@@ -90,17 +90,17 @@ public class Scheduler {
      */
     @Scheduled(cron = "0 30 3 * * ?")
     public void updateEuroVoc() {
-        euroVocService.harvestAndSave();
+        euroVocService.harvestAndSave(false);
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightRepository.count() == 0) {
-            accessRightService.harvestAndSave();
+            accessRightService.harvestAndSave(false);
         }
 
         if(fileTypeRepository.count() == 0) {
-            fileTypeService.harvestAndSave();
+            fileTypeService.harvestAndSave(false);
         }
 
         if(mediaTypeRepository.count() == 0) {
@@ -108,11 +108,11 @@ public class Scheduler {
         }
 
         if(dataThemeRepository.count() == 0) {
-            dataThemeService.harvestAndSave();
+            dataThemeService.harvestAndSave(false);
         }
 
         if(euroVocRepository.count() == 0) {
-            euroVocService.harvestAndSave();
+            euroVocService.harvestAndSave(false);
         }
     }
 }
