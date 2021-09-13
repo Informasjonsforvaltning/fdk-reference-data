@@ -6,17 +6,20 @@ on:
     branches:
       - main
 
+env:
+    TEST_TAG: user/myapp:test
+
 jobs:
   build-and-deploy:
-    name: Build and deploy to staging environment when pull request is created
+    name: Build, test and deploy to staging environment when pull request is created
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
 
     steps:
       - uses: actions/checkout@v2
 
-      # Setup java jdk
-      - uses: actions/setup-java@v1
+      - name: Setup java jdk
+        uses: actions/setup-java@v1
         with:
           java-version: '15'
 
@@ -29,20 +32,61 @@ jobs:
       - name: Configure docker to use the gcloud command-line tool as a credential helper
         run: gcloud auth configure-docker eu.gcr.io
 
-      - name: Build Docker image with GitHub commit sha tag
-        run: docker build -f Dockerfile . -t eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA -t eu.gcr.io/digdir-fdk-infra/reference-data:staging_latest
+      - name: Cache Docker layers
+        uses: actions/cache@v2.1.6
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1.6.0
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: eu.gcr.io/digdir-fdk-infra/reference-data
+          flavor: |
+            latest=false
+          tags: |
+            type=raw,value=staging_latest
+            type=raw,value=${{ github.sha }},priority=1000
+            type=ref,event=branch
+
+      - name: Build
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: false
+          tags: ${{ env.TEST_TAG }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          build-args:  |
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
       - name: Run tests with maven
         run: mvn verify --no-transfer-progress
 
-      - name: Publish docker image to Google Cloud
-        run: docker -- push eu.gcr.io/digdir-fdk-infra/reference-data -a
+      - name: Push
+        id: docker_push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Apply Helm template
         run: |
           helm repo add fdk https://informasjonsforvaltning.github.io/helm-chart/
           helm fetch --untar --untardir ./helm fdk/new-reference-data
-          helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/reference-data:$GITHUB_SHA" \
+          helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/reference-data:${{ steps.meta.outputs.version }}" \
           -f ./helm/new-reference-data/values/staging.yaml \
           ./helm/new-reference-data/ > ./kubectlapply.yaml
           chmod o+w ./kubectlapply.yaml
@@ -63,7 +107,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          author_name: 'Application: New fdk-reference-data | Environment: staging'
+          author_name: 'Application: new-reference-data | Environment: staging'
           fields: commit,author,workflow
         env:
           GITHUB_TOKEN: ${{ github.token }}
