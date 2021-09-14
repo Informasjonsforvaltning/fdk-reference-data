@@ -1,0 +1,22 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@base <https://data.norge.no/reference-data/api-specifications/> .
+
+<api-specifications>
+    a skos:ConceptScheme ;
+    skos:prefLabel "API specifications"@en, "API spesifikasjoner"@nb, "API spesifikasjonar"@nn .
+
+<account>
+    a skos:Concept ;
+    skos:inScheme   <api-specifications> ;
+    dc:identifier "account" ;
+    dct:source <https://bitsnorge.github.io/dsop-accounts-api> ;
+    skos:prefLabel "Account details"@en, "Kontoopplysninger"@nb, "Kontoopplysingar"@nn .
+
+<customer-relationship>
+    a skos:Concept ;
+    skos:inScheme   <api-specifications> ;
+    dc:identifier "customer-relationship" ;
+    dct:source <https://bitsnorge.github.io/dsop-kfr-api> ;
+    skos:prefLabel "Customer relationship"@en, "Kundeforhold"@nb, "Kundeforhold"@nn .
