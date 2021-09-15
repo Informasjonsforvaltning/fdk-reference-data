@@ -81,6 +81,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-to: type=local,dest=/tmp/.buildx-cache
+          build-args:  |
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
       - name: Apply Helm template
         run: |
