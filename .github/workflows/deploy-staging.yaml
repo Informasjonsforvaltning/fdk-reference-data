@@ -65,7 +65,6 @@ jobs:
           push: false
           tags: ${{ env.TEST_TAG }}
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
           build-args:  |
             GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
@@ -81,6 +80,7 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Apply Helm template
         run: |
