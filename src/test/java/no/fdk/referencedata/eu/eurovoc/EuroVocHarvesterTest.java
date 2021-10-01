@@ -2,12 +2,14 @@ package no.fdk.referencedata.eu.eurovoc;
 
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ActiveProfiles("test")
 public class EuroVocHarvesterTest {
 
     @Test

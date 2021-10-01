@@ -2,12 +2,14 @@ package no.fdk.referencedata.iana.mediatype;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ActiveProfiles("test")
 public class MediaTypeHarvesterTest {
 
     @Test

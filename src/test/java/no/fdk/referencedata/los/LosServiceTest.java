@@ -2,6 +2,7 @@ package no.fdk.referencedata.los;
 
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 import java.util.List;
@@ -10,6 +11,7 @@ import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.spy;
 
+@ActiveProfiles("test")
 public class LosServiceTest {
 
     @Test

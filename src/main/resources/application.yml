@@ -24,11 +24,19 @@ server:
 management:
   endpoints:
     web:
-      base-path: /
       path-mapping:
         info: ping
       exposure:
-        include: health, info
+        include: health, info, metrics
+  metrics:
+    export:
+      statsd:
+        enabled: true
+        flavor: telegraf
+        host: fdk-monitoring-services-telegraf
+        port: 8125
+    tags:
+      application: new-reference-data
 
 graphiql:
   cdn:
@@ -37,7 +45,7 @@ graphiql:
 logging:
   level:
     root: WARN
-    no.*: ${LOG_LEVEL:DEBUG}
+    no.*: ${LOG_LEVEL:INFO}
     org.springframework.*: WARN
     org.apache.jena.*: ERROR
 
@@ -50,6 +58,11 @@ server:
   servlet:
     context-path: /
 
+management:
+  metrics:
+    export:
+      statsd:
+        enabled: false
 ---
 
 spring:
@@ -57,4 +70,10 @@ spring:
 server:
   servlet:
     context-path: /
+
+management:
+  metrics:
+    export:
+      statsd:
+        enabled: false
 
