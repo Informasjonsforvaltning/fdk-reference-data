@@ -5,6 +5,7 @@ import no.fdk.referencedata.los.LosImporter;
 import no.fdk.referencedata.los.LosNode;
 import no.fdk.referencedata.los.LosService;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 public class ApiSpecificationServiceTest {
 
     @Test
