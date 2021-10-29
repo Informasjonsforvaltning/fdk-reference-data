@@ -39,8 +39,9 @@ public class EuDatasetFetcher {
         final JsonNode distributions = root.path("result").path("distributions");
         if (distributions.isArray()) {
             for (JsonNode dist : distributions) {
-                if (dist.path("access_url").textValue().contains(filePath)) {
-                    return new UrlResource(dist.path("access_url").textValue());
+                JsonNode url = dist.path("access_url").isArray() ? dist.path("access_url").get(0) : dist.path("access_url");
+                if (url.textValue().contains(filePath)) {
+                    return new UrlResource(url.textValue());
                 }
             }
         }
