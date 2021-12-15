@@ -39,6 +39,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- må ha actuator for å kjøre på openshift. kreves av readyness probe -->
@@ -127,6 +133,12 @@
         <dependency>
           <groupId>org.springframework.data</groupId>
           <artifactId>spring-data-elasticsearch</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
       </dependency>
       <dependency>
         <groupId>com.github.fge</groupId>
