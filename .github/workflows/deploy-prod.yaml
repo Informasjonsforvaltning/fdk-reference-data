@@ -3,7 +3,7 @@ name: Deploy to production
 on:
   push:
     branches:
-      - main
+      - log4j-old
   workflow_dispatch:
 
 jobs:
