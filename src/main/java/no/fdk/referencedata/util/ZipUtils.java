@@ -1,4 +1,4 @@
-package no.fdk.referencedata.zip;
+package no.fdk.referencedata.util;
 
 import java.io.*;
 import java.util.zip.ZipEntry;

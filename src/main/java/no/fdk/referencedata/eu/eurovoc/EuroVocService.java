@@ -5,6 +5,7 @@ import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import no.fdk.referencedata.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +35,7 @@ public class EuroVocService {
     @Transactional
     public void harvestAndSave(boolean force) {
         try {
-            final String version = euroVocHarvester.getVersion();
-            final double versionDoubleValue = Double.parseDouble(euroVocHarvester.getVersion().replace("-", ""));
+            final Version latestVersion = new Version(euroVocHarvester.getVersion().replace("-", ""));
 
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EURO_VOC.name())
                     .orElse(HarvestSettings.builder()
@@ -43,9 +43,9 @@ public class EuroVocService {
                             .latestVersion("0")
                             .build());
 
-            final double currentVersion = Double.parseDouble(settings.getLatestVersion().replace("-", ""));
+            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || currentVersion < versionDoubleValue) {
+            if(force || latestVersion.compareTo(currentVersion) > 0) {
                 euroVocRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);
@@ -55,7 +55,7 @@ public class EuroVocService {
                 euroVocRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(version);
+                settings.setLatestVersion(euroVocHarvester.getVersion());
                 harvestSettingsRepository.save(settings);
             }
 
