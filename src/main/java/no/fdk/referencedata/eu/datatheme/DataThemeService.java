@@ -5,6 +5,7 @@ import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import no.fdk.referencedata.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +35,7 @@ public class DataThemeService {
     @Transactional
     public void harvestAndSave(boolean force) {
         try {
-            final String version = dataThemeHarvester.getVersion();
-            final int versionIntValue = Integer.parseInt(dataThemeHarvester.getVersion().replace("-", ""));
+            final Version latestVersion = new Version(dataThemeHarvester.getVersion().replace("-", ""));
 
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATA_THEME.name())
                     .orElse(HarvestSettings.builder()
@@ -43,9 +43,9 @@ public class DataThemeService {
                             .latestVersion("0")
                             .build());
 
-            final int currentVersion = Integer.parseInt(settings.getLatestVersion().replace("-", ""));
+            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || currentVersion < versionIntValue) {
+            if(force || latestVersion.compareTo(currentVersion) > 0) {
                 dataThemeRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);
@@ -55,7 +55,7 @@ public class DataThemeService {
                 dataThemeRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(version);
+                settings.setLatestVersion(dataThemeHarvester.getVersion());
                 harvestSettingsRepository.save(settings);
             }
 

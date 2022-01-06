@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import no.fdk.referencedata.util.Version;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,8 +34,7 @@ public class AccessRightService {
     @Transactional
     public void harvestAndSave(boolean force) {
         try {
-            final String version = accessRightHarvester.getVersion();
-            final int versionIntValue = Integer.parseInt(accessRightHarvester.getVersion().replace("-", ""));
+            final Version latestVersion = new Version(accessRightHarvester.getVersion().replace("-", ""));
 
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name())
                     .orElse(HarvestSettings.builder()
@@ -42,9 +42,9 @@ public class AccessRightService {
                             .latestVersion("0")
                             .build());
 
-            final int currentVersion = Integer.parseInt(settings.getLatestVersion().replace("-", ""));
+            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || currentVersion < versionIntValue) {
+            if(force || latestVersion.compareTo(currentVersion) > 0) {
                 accessRightRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);
@@ -54,7 +54,7 @@ public class AccessRightService {
                 accessRightRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(version);
+                settings.setLatestVersion(accessRightHarvester.getVersion());
                 harvestSettingsRepository.save(settings);
             }
 

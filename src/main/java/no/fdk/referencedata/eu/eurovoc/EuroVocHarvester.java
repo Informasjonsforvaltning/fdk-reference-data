@@ -3,7 +3,7 @@ package no.fdk.referencedata.eu.eurovoc;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.zip.ZipUtils;
+import no.fdk.referencedata.util.ZipUtils;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Component
