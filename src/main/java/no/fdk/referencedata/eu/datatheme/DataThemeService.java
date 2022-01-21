@@ -1,7 +1,6 @@
 package no.fdk.referencedata.eu.datatheme;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -30,6 +29,10 @@ public class DataThemeService {
         this.dataThemeHarvester = dataThemeHarvester;
         this.dataThemeRepository = dataThemeRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+    }
+
+    public boolean firstTime() {
+        return dataThemeRepository.count() == 0;
     }
 
     @Transactional

@@ -13,6 +13,9 @@ type Query {
   fileTypes:  [FileType!]!
   fileTypeByCode(code: String!):  FileType
 
+  frequencies: [Frequency!]!
+  frequencyByCode(code: String!): Frequency
+
   losThemesAndWords(uris: [String!]):  [LosNode!]!
 
   mediaTypes: [MediaType!]!
@@ -42,6 +45,12 @@ type FileType {
   uri: ID!
   code: String
   mediaType: String
+}
+
+type Frequency {
+  uri: ID!
+  code: String
+  label: Object
 }
 
 type LosNode {

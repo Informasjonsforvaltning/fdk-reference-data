@@ -31,6 +31,10 @@ public class FileTypeService {
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
+    public boolean firstTime() {
+        return fileTypeRepository.count() == 0;
+    }
+
     @Transactional
     public void harvestAndSave(boolean force) {
         try {

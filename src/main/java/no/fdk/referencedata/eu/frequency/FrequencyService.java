@@ -1,4 +1,4 @@
-package no.fdk.referencedata.eu.eurovoc;
+package no.fdk.referencedata.eu.frequency;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.settings.HarvestSettings;
@@ -14,56 +14,56 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
-public class EuroVocService {
+public class FrequencyService {
 
-    private final EuroVocHarvester euroVocHarvester;
+    private final FrequencyHarvester frequencyHarvester;
 
-    private final EuroVocRepository euroVocRepository;
+    private final FrequencyRepository frequencyRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
-    public EuroVocService(EuroVocHarvester euroVocHarvester,
-                          EuroVocRepository euroVocRepository,
-                          HarvestSettingsRepository harvestSettingsRepository) {
-        this.euroVocHarvester = euroVocHarvester;
-        this.euroVocRepository = euroVocRepository;
+    public FrequencyService(FrequencyHarvester frequencyHarvester,
+                            FrequencyRepository frequencyRepository,
+                            HarvestSettingsRepository harvestSettingsRepository) {
+        this.frequencyHarvester = frequencyHarvester;
+        this.frequencyRepository = frequencyRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
     public boolean firstTime() {
-        return euroVocRepository.count() == 0;
+        return frequencyRepository.count() == 0;
     }
 
     @Transactional
     public void harvestAndSave(boolean force) {
         try {
-            final Version latestVersion = new Version(euroVocHarvester.getVersion().replace("-", ""));
+            final Version latestVersion = new Version(frequencyHarvester.getVersion().replace("-", ""));
 
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EURO_VOC.name())
+            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.FREQUENCY.name())
                     .orElse(HarvestSettings.builder()
-                            .id(Settings.EURO_VOC.name())
+                            .id(Settings.FREQUENCY.name())
                             .latestVersion("0")
                             .build());
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
             if(force || latestVersion.compareTo(currentVersion) > 0) {
-                euroVocRepository.deleteAll();
+                frequencyRepository.deleteAll();
 
                 final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<EuroVoc> iterable = euroVocHarvester.harvest().toIterable();
+                final Iterable<Frequency> iterable = frequencyHarvester.harvest().toIterable();
                 iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} eurovocs", counter.get());
-                euroVocRepository.saveAll(iterable);
+                log.info("Harvest and saving {} frequencies", counter.get());
+                frequencyRepository.saveAll(iterable);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(euroVocHarvester.getVersion());
+                settings.setLatestVersion(frequencyHarvester.getVersion());
                 harvestSettingsRepository.save(settings);
             }
 
         } catch(Exception e) {
-            log.error("Unable to harvest eurovoc", e);
+            log.error("Unable to harvest frequencies", e);
         }
     }
 }

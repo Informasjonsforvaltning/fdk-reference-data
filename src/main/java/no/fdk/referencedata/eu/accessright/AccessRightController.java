@@ -22,7 +22,7 @@ public class AccessRightController {
 
     @CrossOrigin
     @GetMapping
-    public ResponseEntity<AccessRights> getDataThemes() {
+    public ResponseEntity<AccessRights> getAccessRights() {
         return ResponseEntity.ok(AccessRights.builder().accessRights(
                 StreamSupport.stream(accessRightRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(AccessRight::getUri))
@@ -38,7 +38,7 @@ public class AccessRightController {
 
     @CrossOrigin
     @GetMapping(path = "/{code}")
-    public ResponseEntity<AccessRight> getDataTheme(@PathVariable("code") String code) {
+    public ResponseEntity<AccessRight> getAccessRight(@PathVariable("code") String code) {
         return ResponseEntity.of(accessRightRepository.findByCode(code));
     }
 }

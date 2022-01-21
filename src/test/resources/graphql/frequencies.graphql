@@ -1,0 +1,7 @@
+query {
+    frequencies {
+        uri
+        code
+        label
+    }
+}
