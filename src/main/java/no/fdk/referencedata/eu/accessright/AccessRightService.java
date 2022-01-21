@@ -31,6 +31,10 @@ public class AccessRightService {
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
+    public boolean firstTime() {
+        return accessRightRepository.count() == 0;
+    }
+
     @Transactional
     public void harvestAndSave(boolean force) {
         try {
@@ -59,7 +63,7 @@ public class AccessRightService {
             }
 
         } catch(Exception e) {
-            log.error("Unable to harvest data-themes", e);
+            log.error("Unable to harvest access-rights", e);
         }
     }
 }

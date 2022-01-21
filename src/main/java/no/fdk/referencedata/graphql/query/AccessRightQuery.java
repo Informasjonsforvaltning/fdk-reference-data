@@ -3,8 +3,6 @@ package no.fdk.referencedata.graphql.query;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.eu.accessright.AccessRightRepository;
-import no.fdk.referencedata.eu.datatheme.DataTheme;
-import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

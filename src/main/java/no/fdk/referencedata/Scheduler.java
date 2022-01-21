@@ -8,6 +8,8 @@ import no.fdk.referencedata.eu.eurovoc.EuroVocRepository;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeRepository;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
+import no.fdk.referencedata.eu.frequency.FrequencyRepository;
+import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +26,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 public class Scheduler {
 
     @Autowired
-    private AccessRightRepository accessRightRepository;
-
-    @Autowired
-    private MediaTypeRepository mediaTypeRepository;
-
-    @Autowired
-    private FileTypeRepository fileTypeRepository;
-
-    @Autowired
-    private DataThemeRepository dataThemeRepository;
-
-    @Autowired
-    private EuroVocRepository euroVocRepository;
-
-    @Autowired
     private AccessRightService accessRightService;
 
     @Autowired
@@ -52,6 +39,9 @@ public class Scheduler {
 
     @Autowired
     private EuroVocService euroVocService;
+
+    @Autowired
+    private FrequencyService frequencyService;
 
     /**
      * Run every day 01:30 (at night)
@@ -93,26 +83,38 @@ public class Scheduler {
         euroVocService.harvestAndSave(false);
     }
 
+    /**
+     * Run every day 04:00 (at night)
+     */
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void updateFrequencies() {
+        frequencyService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
-        if(accessRightRepository.count() == 0) {
-            accessRightService.harvestAndSave(false);
+        if(accessRightService.firstTime()) {
+            accessRightService.harvestAndSave(true);
         }
 
-        if(fileTypeRepository.count() == 0) {
-            fileTypeService.harvestAndSave(false);
+        if(fileTypeService.firstTime()) {
+            fileTypeService.harvestAndSave(true);
         }
 
-        if(mediaTypeRepository.count() == 0) {
+        if(mediaTypeService.firstTime()) {
             mediaTypeService.harvestAndSave();
         }
 
-        if(dataThemeRepository.count() == 0) {
-            dataThemeService.harvestAndSave(false);
+        if(dataThemeService.firstTime()) {
+            dataThemeService.harvestAndSave(true);
         }
 
-        if(euroVocRepository.count() == 0) {
-            euroVocService.harvestAndSave(false);
+        if(euroVocService.firstTime()) {
+            euroVocService.harvestAndSave(true);
+        }
+
+        if(frequencyService.firstTime()) {
+            frequencyService.harvestAndSave(true);
         }
     }
 }

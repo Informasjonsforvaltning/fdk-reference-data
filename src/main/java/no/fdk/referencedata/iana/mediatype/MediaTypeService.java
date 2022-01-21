@@ -31,6 +31,10 @@ public class MediaTypeService {
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
+    public boolean firstTime() {
+        return mediaTypeRepository.count() == 0;
+    }
+
     @Transactional
     public void harvestAndSave() {
         try {

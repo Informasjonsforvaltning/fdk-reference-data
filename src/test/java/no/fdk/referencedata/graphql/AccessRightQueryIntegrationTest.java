@@ -1,8 +1,6 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.eu.accessright.AccessRightRepository;
