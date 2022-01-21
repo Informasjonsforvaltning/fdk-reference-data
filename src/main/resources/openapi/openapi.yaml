@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.1.0
 info:
   title: Reference data API
   version: v2.0
@@ -29,118 +29,6 @@ paths:
           description: OK
         "403":
           description: Forbidden
-  /eu/file-types:
-    get:
-      tags:
-        - file-type-controller
-      operationId: getFileTypes
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/FileTypes'
-    post:
-      tags:
-        - file-type-controller
-      operationId: updateFileTypes
-      security:
-        - ApiKeyAuth: []
-      responses:
-        "200":
-          description: OK
-        "403":
-          description: Forbidden
-  /eu/eurovocs:
-    get:
-      tags:
-        - euro-voc-controller
-      operationId: getEuroVocs
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/EuroVocs'
-    post:
-      tags:
-        - euro-voc-controller
-      operationId: updateEuroVocs
-      security:
-        - ApiKeyAuth: []
-      responses:
-        "200":
-          description: OK
-        "403":
-          description: Forbidden
-  /eu/data-themes:
-    get:
-      tags:
-        - data-theme-controller
-      operationId: getDataThemes
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/DataThemes'
-    post:
-      tags:
-        - data-theme-controller
-      operationId: updateDataThemes
-      security:
-        - ApiKeyAuth: []
-      responses:
-        "200":
-          description: OK
-        "403":
-          description: Forbidden
-  /eu/access-rights:
-    get:
-      tags:
-        - access-right-controller
-      operationId: getDataThemes_1
-      responses:
-        "200":
-          description: OK
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/AccessRights'
-    post:
-      tags:
-        - access-right-controller
-      operationId: updateAccessRights
-      security:
-        - ApiKeyAuth: []
-      responses:
-        "200":
-          description: OK
-        "403":
-          description: Forbidden
-  /los/themes-and-words:
-    get:
-      tags:
-        - los-controller
-      operationId: getLosNodes
-      parameters:
-        - name: uris
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LosNodes'
   /iana/media-types/{type}:
     get:
       tags:
@@ -182,6 +70,29 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/MediaType'
+  /eu/file-types:
+    get:
+      tags:
+        - file-type-controller
+      operationId: getFileTypes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/FileTypes'
+    post:
+      tags:
+        - file-type-controller
+      operationId: updateFileTypes
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
   /eu/file-types/{code}:
     get:
       tags:
@@ -200,6 +111,29 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/FileType'
+  /eu/eurovocs:
+    get:
+      tags:
+        - euro-voc-controller
+      operationId: getEuroVocs
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EuroVocs'
+    post:
+      tags:
+        - euro-voc-controller
+      operationId: updateEuroVocs
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
   /eu/eurovocs/{code}:
     get:
       tags:
@@ -218,6 +152,29 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/EuroVoc'
+  /eu/data-themes:
+    get:
+      tags:
+        - data-theme-controller
+      operationId: getDataThemes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DataThemes'
+    post:
+      tags:
+        - data-theme-controller
+      operationId: updateDataThemes
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
   /eu/data-themes/{code}:
     get:
       tags:
@@ -236,6 +193,70 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/DataTheme'
+  /eu/distribution-types:
+    get:
+      tags:
+        - distribution-type-controller
+      operationId: getDistributionTypes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DistributionTypes'
+    post:
+      tags:
+        - distribution-type-controller
+      operationId: updateDistributionTypes
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/distribution-types/{code}:
+    get:
+      tags:
+        - distribution-type-controller
+      operationId: getDistributionType
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DistributionType'
+  /eu/access-rights:
+    get:
+      tags:
+        - access-right-controller
+      operationId: getDataThemes_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccessRights'
+    post:
+      tags:
+        - access-right-controller
+      operationId: updateAccessRights
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
   /eu/access-rights/{code}:
     get:
       tags:
@@ -254,6 +275,27 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/AccessRight'
+  /los/themes-and-words:
+    get:
+      tags:
+        - los-controller
+      operationId: getLosNodes
+      parameters:
+        - name: uris
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LosNodes'
+
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -397,6 +439,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DataTheme'
+    DistributionType:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+        startUse:
+          type: string
+          format: date
+      DistributionTypes:
+        type: object
+        properties:
+          dataThemes:
+            type: array
+            items:
+              $ref: '#/components/schemas/DistributionType'
     AccessRight:
       type: object
       properties:

@@ -7,6 +7,9 @@ type Query {
   dataThemes: [DataTheme!]!
   dataThemeByCode(code: String!): DataTheme
 
+  distributionTypes: [DistributionType!]!
+  distributionTypeByCode(code: String!): DistributionType
+
   euroVocs:  [EuroVoc!]!
   euroVocByCode(code: String!):  EuroVoc
 
@@ -33,6 +36,14 @@ type DataTheme {
   uri: ID!
   code: String
   label: Object
+  startUse: String
+}
+
+type DistributionType {
+  uri: ID!
+  code: String
+  label: Object
+  startUse: String
 }
 
 type EuroVoc {
