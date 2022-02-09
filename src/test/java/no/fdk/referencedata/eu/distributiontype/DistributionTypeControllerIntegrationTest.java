@@ -1,9 +1,8 @@
 package no.fdk.referencedata.eu.distributiontype;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
-import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -30,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-public class DistributionTypeControllerIntegrationTest extends AbstractMongoDbContainerTest {
+public class DistributionTypeControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;

@@ -2,7 +2,7 @@ package no.fdk.referencedata.eu.datatheme;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-public class DataThemeControllerIntegrationTest extends AbstractMongoDbContainerTest {
+public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;

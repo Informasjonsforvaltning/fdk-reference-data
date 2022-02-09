@@ -1,9 +1,7 @@
 package no.fdk.referencedata.eu.distributiontype;
 
-import no.fdk.referencedata.eu.accessright.AccessRight;
-import no.fdk.referencedata.eu.accessright.AccessRightRepository;
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.ACCESS_RIGHT;
 import static no.fdk.referencedata.settings.Settings.DISTRIBUTION_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -25,7 +22,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
-public class DistributionTypeServiceIntegrationTest extends AbstractMongoDbContainerTest {
+public class DistributionTypeServiceIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private DistributionTypeRepository distributionTypeRepository;

@@ -18,7 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private ApplicationSettings applicationSettings;
+    private final ApplicationSettings applicationSettings;
 
     @Autowired
     public WebSecurityConfig(ApplicationSettings applicationSettings) {
@@ -46,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/actuator/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/eu/**").authenticated()
                     .antMatchers(HttpMethod.POST, "/iana/**").authenticated()
+                    .antMatchers(HttpMethod.POST, "/geonorge/**").authenticated()
                     .anyRequest().permitAll();
     }
 

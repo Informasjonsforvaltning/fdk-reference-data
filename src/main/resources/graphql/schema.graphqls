@@ -24,6 +24,15 @@ type Query {
   mediaTypes: [MediaType!]!
   mediaTypesByType(type: String!): [MediaType!]!
   mediaTypeByTypeAndSubType(type: String!, subType: String!): MediaType
+
+  nasjoner: [Nasjon!]!
+  nasjonByNasjonsnummer(nasjonsnummer: String!): Nasjon
+
+  fylker: [Fylke!]!
+  fylkeByFylkesnummer(fylkesnummer: String!): Fylke
+
+  kommuner: [Kommune!]!
+  kommuneByKommunenummer(kommunenummer: String!): Kommune
 }
 
 type AccessRight {
@@ -81,5 +90,24 @@ type MediaType {
   name: String
   type: String
   subType: String
+}
+
+type Kommune {
+  uri: ID!
+  kommunenavn: String
+  kommunenavnNorsk: String
+  kommunenummer: String
+}
+
+type Fylke {
+  uri: ID!
+  fylkesnavn: String
+  fylkesnummer: String
+}
+
+type Nasjon {
+  uri: ID!
+  nasjonsnavn: String
+  nasjonsnummer: String
 }
 

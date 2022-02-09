@@ -1,10 +1,9 @@
 package no.fdk.referencedata.eu.accessright;
 
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +22,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
-public class AccessRightServiceIntegrationTest extends AbstractMongoDbContainerTest {
+public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private AccessRightRepository accessRightRepository;

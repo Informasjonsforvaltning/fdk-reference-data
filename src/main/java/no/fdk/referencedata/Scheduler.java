@@ -6,6 +6,8 @@ import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
+import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
+import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -40,6 +42,12 @@ public class Scheduler {
 
     @Autowired
     private DistributionTypeService distributionTypeService;
+
+    @Autowired
+    private FylkeService fylkeService;
+
+    @Autowired
+    private KommuneService kommuneService;
 
     /**
      * Run every day 01:30 (at night)
@@ -97,6 +105,22 @@ public class Scheduler {
         distributionTypeService.harvestAndSave(false);
     }
 
+    /**
+     * Run every day 03:00 (at night)
+     */
+    @Scheduled(cron = "0 0 3 * * ?")
+    public void updateFylker() {
+        fylkeService.harvestAndSave();
+    }
+
+    /**
+     * Run every day 03:30 (at night)
+     */
+    @Scheduled(cron = "0 30 3 * * ?")
+    public void updateKommuner() {
+        kommuneService.harvestAndSave();
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -125,6 +149,14 @@ public class Scheduler {
 
         if(distributionTypeService.firstTime()) {
             distributionTypeService.harvestAndSave(true);
+        }
+
+        if(fylkeService.firstTime()) {
+            fylkeService.harvestAndSave();
+        }
+
+        if(kommuneService.firstTime()) {
+            kommuneService.harvestAndSave();
         }
     }
 }
