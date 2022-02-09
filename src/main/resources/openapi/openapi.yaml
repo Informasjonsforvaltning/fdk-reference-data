@@ -295,7 +295,118 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LosNodes'
-
+  /geonorge/administrative-enheter/nasjoner:
+    get:
+      tags:
+        - nasjon-controller
+      operationId: getNasjoner
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Nasjoner'
+  /geonorge/administrative-enheter/nasjoner/{nasjonsnummer}:
+    get:
+      tags:
+        - nasjon-controller
+      operationId: getNasjon
+      parameters:
+        - name: nasjonsnummer
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Nasjon'
+  /geonorge/administrative-enheter/fylker:
+    get:
+      tags:
+        - fylke-controller
+      operationId: getFylker
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Fylker'
+    post:
+      tags:
+        - fylke-controller
+      operationId: updateFylker
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /geonorge/administrative-enheter/fylker/{fylkesnummer}:
+    get:
+      tags:
+        - fylke-controller
+      operationId: getFylke
+      parameters:
+        - name: fylkesnummer
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Fylke'
+  /geonorge/administrative-enheter/kommuner:
+    get:
+      tags:
+        - kommune-controller
+      operationId: getKommuner
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Kommuner'
+    post:
+      tags:
+        - kommune-controller
+      operationId: updateKommuner
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /geonorge/administrative-enheter/kommuner/{kommunenummer}:
+    get:
+      tags:
+        - kommune-controller
+      operationId: getKommune
+      parameters:
+        - name: kommunenummer
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Kommune'
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -478,3 +589,53 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AccessRight'
+    Nasjon:
+      type: object
+      properties:
+        uri:
+          type: string
+        nasjonsnavn:
+          type: string
+        nasjonsnummer:
+          type: string
+    Nasjoner:
+      type: object
+      properties:
+        nasjoner:
+          type: array
+          items:
+            $ref: '#/components/schemas/Nasjon'
+    Fylke:
+      type: object
+      properties:
+        uri:
+          type: string
+        fylkesnavn:
+          type: string
+        fylkesnummer:
+          type: string
+    Fylker:
+      type: object
+      properties:
+        fylker:
+          type: array
+          items:
+            $ref: '#/components/schemas/Fylke'
+    Kommune:
+      type: object
+      properties:
+        uri:
+          type: string
+        kommunenavn:
+          type: string
+        kommunenavnNorsk:
+          type: string
+        kommunenummer:
+          type: string
+    Kommuner:
+      type: object
+      properties:
+        kommuner:
+          type: array
+          items:
+            $ref: '#/components/schemas/Kommune'

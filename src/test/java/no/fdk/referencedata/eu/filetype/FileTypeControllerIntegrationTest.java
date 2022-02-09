@@ -1,7 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
-import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-public class FileTypeControllerIntegrationTest extends AbstractMongoDbContainerTest {
+public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;

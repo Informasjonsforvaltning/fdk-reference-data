@@ -1,8 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
-import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
-public class MediaTypeServiceIntegrationTest extends AbstractMongoDbContainerTest {
+public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private MediaTypeRepository mediaTypeRepository;

@@ -3,15 +3,17 @@ package no.fdk.referencedata.graphql;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
+import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.filetype.FileTypeRepository;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
-import no.fdk.referencedata.mongo.AbstractMongoDbContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -20,9 +22,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "scheduling.enabled=false")
+        properties = {
+                "spring.main.allow-bean-definition-overriding=true",
+                "scheduling.enabled=false",
+        })
+@Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-class FileTypeQueryIntegrationTest extends AbstractMongoDbContainerTest {
+class FileTypeQueryIntegrationTest extends AbstractContainerTest {
 
     private final static ObjectMapper mapper = new ObjectMapper();
 

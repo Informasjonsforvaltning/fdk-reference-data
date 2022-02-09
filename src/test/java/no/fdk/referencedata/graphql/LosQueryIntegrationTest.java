@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.graphql.spring.boot.test.GraphQLResponse;
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import com.jayway.jsonpath.PathNotFoundException;
+import no.fdk.referencedata.LocalHarvesterConfiguration;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -16,9 +19,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "scheduling.enabled=false")
+        properties = {
+                "spring.main.allow-bean-definition-overriding=true",
+                "scheduling.enabled=false",
+        })
+@Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-class LosQueryIntegrationTest {
+class LosQueryIntegrationTest extends AbstractContainerTest {
 
     private final static ObjectMapper mapper = new ObjectMapper();
 

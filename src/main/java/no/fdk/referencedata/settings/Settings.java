@@ -7,5 +7,7 @@ public enum Settings {
     FILE_TYPE,
     FREQUENCY,
     EURO_VOC,
-    MEDIA_TYPE
+    MEDIA_TYPE,
+    GEONORGE_KOMMUNE,
+    GEONORGE_FYLKE
 }
