@@ -115,7 +115,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
         assertEquals(5, distributionTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
-        assertEquals("20201216-0", harvestSettingsAfter.getLatestVersion());
+        assertEquals("20220316-0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 }
