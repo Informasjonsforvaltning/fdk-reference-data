@@ -1,0 +1,54 @@
+@prefix at:    <http://publications.europa.eu/ontology/authority/> .
+@prefix atold: <http://publications.europa.eu/resource/authority/> .
+@prefix dc:    <http://purl.org/dc/elements/1.1/> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+
+<http://data.brreg.no/datakatalog/provinens/nasjonal>
+        rdf:type           skos:Concept ;
+        at:authority-code  "NASJONAL" ;
+        at:deprecated      "false" ;
+        at:op-code         "NASJONAL" ;
+        atold:op-code      "NASJONAL" ;
+        dc:identifier      "NASJONAL" ;
+        skos:inScheme      <http://data.brreg.no/datakatalog/provinens> ;
+        skos:prefLabel     "Authoritativ source"@en , "Autoritativ kilde"@nb , "Autoritativ kilde"@nn .
+
+<http://data.brreg.no/datakatalog/provinens/tredjepart>
+        rdf:type           skos:Concept ;
+        at:authority-code  "TREDJEPART" ;
+        at:deprecated      "false" ;
+        at:op-code         "TREDJEPART" ;
+        atold:op-code      "TREDJEPART" ;
+        dc:identifier      "BRUKERINNSAMLING" ;
+        skos:inScheme      <http://data.brreg.no/datakatalog/provinens> ;
+        skos:prefLabel     "Third party"@en , "Tredjepart"@nb , "Tredjepart"@nn .
+
+<http://data.brreg.no/datakatalog/provinens/bruker>
+        rdf:type           skos:Concept ;
+        at:authority-code  "BRUKER" ;
+        at:deprecated      "false" ;
+        at:op-code         "BRUKER" ;
+        atold:op-code      "BRUKER" ;
+        dc:identifier      "BRUKERINNSAMLING" ;
+        skos:inScheme      <http://data.brreg.no/datakatalog/provinens> ;
+        skos:prefLabel     "Brukerinnsamlede data"@nb , "Brukerinnsamlede data"@nn , "User collection"@en .
+
+<http://data.brreg.no/datakatalog/provinens/vedtak>
+        rdf:type           skos:Concept ;
+        at:authority-code  "VEDTAK" ;
+        at:deprecated      "false" ;
+        at:op-code         "VEDTAK" ;
+        atold:op-code      "VEDTAK" ;
+        dc:identifier      "VEDTAK" ;
+        skos:inScheme      <http://data.brreg.no/datakatalog/provinens> ;
+        skos:prefLabel     "Vedtak"@nb , "Vedtak"@nn , "Governmental decisions"@en .
+
+<http://data.brreg.no/datakatalog/provinens>
+        rdf:type         skos:ConceptScheme ;
+        rdfs:label       "Provinens"@en ;
+        at:prefLabel     "Opphav"@no , "Provinens"@en ;
+        at:table.id      "provinens" ;
+        owl:versionInfo  "20170104-0" .
