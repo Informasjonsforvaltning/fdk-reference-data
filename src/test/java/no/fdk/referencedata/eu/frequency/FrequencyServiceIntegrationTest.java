@@ -4,6 +4,7 @@ import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,16 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
+
+    @BeforeEach
+    public void setup() {
+        FrequencyService frequencyService = new FrequencyService(
+                new LocalFrequencyHarvester("1"),
+                frequencyRepository,
+                harvestSettingsRepository);
+
+        frequencyService.harvestAndSave(true);
+    }
 
     @Test
     public void test_if_harvest_persists_frequencies() {
