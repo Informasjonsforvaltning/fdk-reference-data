@@ -115,7 +115,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(31, frequencyRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertEquals("20190619-0", harvestSettingsAfter.getLatestVersion());
+        assertNotEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 }
