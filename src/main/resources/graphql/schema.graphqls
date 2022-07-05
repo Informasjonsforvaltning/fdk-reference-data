@@ -45,6 +45,9 @@ type Query {
 
   openLicenses: [OpenLicense!]!
   openLicenseByCode(code: String!): OpenLicense
+
+  provenanceStatements: [ProvenanceStatement!]!
+  provenanceStatementByCode(code: String!): ProvenanceStatement
 }
 
 type AccessRight {
@@ -146,5 +149,11 @@ type OpenLicense {
   uri: ID!
   code: String
   isReplacedBy: String
+  label: Object
+}
+
+type ProvenanceStatement {
+  uri: ID!
+  code: String
   label: Object
 }
