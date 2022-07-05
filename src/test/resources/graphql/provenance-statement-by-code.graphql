@@ -1,0 +1,7 @@
+query GetProvenanceStatementByCode($code: String!) {
+    provenanceStatementByCode(code: $code) {
+        uri
+        code
+        label
+    }
+}
