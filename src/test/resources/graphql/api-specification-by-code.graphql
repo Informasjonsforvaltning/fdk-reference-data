@@ -1,0 +1,8 @@
+query GetApiSpecificationByCode($code: String!) {
+    apiSpecificationByCode(code: $code) {
+        uri
+        code
+        source
+        label
+    }
+}
