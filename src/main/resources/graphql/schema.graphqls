@@ -4,6 +4,9 @@ type Query {
   accessRights: [AccessRight!]!
   accessRightByCode(code: String!): AccessRight
 
+  apiSpecifications: [ApiSpecification!]!
+  apiSpecificationByCode(code: String!): ApiSpecification
+
   dataThemes: [DataTheme!]!
   dataThemeByCode(code: String!): DataTheme
 
@@ -37,6 +40,13 @@ type Query {
 
 type AccessRight {
   uri: ID!
+  code: String
+  label: Object
+}
+
+type ApiSpecification {
+  uri: ID!
+  source: String
   code: String
   label: Object
 }
