@@ -42,6 +42,9 @@ type Query {
 
   kommuner: [Kommune!]!
   kommuneByKommunenummer(kommunenummer: String!): Kommune
+
+  openLicenses: [OpenLicense!]!
+  openLicenseByCode(code: String!): OpenLicense
 }
 
 type AccessRight {
@@ -139,3 +142,9 @@ type Nasjon {
   nasjonsnummer: String
 }
 
+type OpenLicense {
+  uri: ID!
+  code: String
+  isReplacedBy: String
+  label: Object
+}
