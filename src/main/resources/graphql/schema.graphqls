@@ -7,6 +7,9 @@ type Query {
   apiSpecifications: [ApiSpecification!]!
   apiSpecificationByCode(code: String!): ApiSpecification
 
+  apiStatuses: [ApiStatus!]!
+  apiStatusByCode(code: String!): ApiStatus
+
   dataThemes: [DataTheme!]!
   dataThemeByCode(code: String!): DataTheme
 
@@ -47,6 +50,12 @@ type AccessRight {
 type ApiSpecification {
   uri: ID!
   source: String
+  code: String
+  label: Object
+}
+
+type ApiStatus {
+  uri: ID!
   code: String
   label: Object
 }
