@@ -25,6 +25,9 @@ type Query {
   frequencies: [Frequency!]!
   frequencyByCode(code: String!): Frequency
 
+  linguisticSystems: [LinguisticSystem!]!
+  linguisticSystemByCode(code: String!): LinguisticSystem
+
   losThemesAndWords(uris: [String!]):  [LosNode!]!
 
   mediaTypes: [MediaType!]!
@@ -87,6 +90,12 @@ type FileType {
 }
 
 type Frequency {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type LinguisticSystem {
   uri: ID!
   code: String
   label: Object
