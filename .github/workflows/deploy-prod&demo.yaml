@@ -19,6 +19,9 @@ jobs:
       coverage_file_path: ./target/site/jacoco/jacoco.xml
       environment: prod
       cluster: digdir-fdk-prod
+      snapshot_disk: fdk-prod-reference-data
+      snapshot_name: autodeploy-prod-reference-data
+      snapshot_zone: europe-north1-a
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GCP_SA_DIGDIR_FDK_GCR_KEY: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
