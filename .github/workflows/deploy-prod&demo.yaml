@@ -11,7 +11,7 @@ jobs:
     name: Deploy to prod on merge to main branch
     uses: Informasjonsforvaltning/workflows/.github/workflows/build-deploy-maven.yaml@main
     with:
-      app_name: new-reference-data
+      app_name: reference-data
       caller_sha: ${{ github.sha }}
       repo: ${{ github.repository }}
       actor: ${{ github.actor }}
@@ -33,7 +33,7 @@ jobs:
     name: Deploy to demo if prod-deploy is successful
     uses: Informasjonsforvaltning/workflows/.github/workflows/deploy.yaml@main
     with:
-      app_name: new-reference-data
+      app_name: reference-data
       caller_sha: ${{ github.sha }}
       repo: ${{ github.repository }}
       actor: ${{ github.actor }}
