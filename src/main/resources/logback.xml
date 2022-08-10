@@ -26,7 +26,7 @@
                     <fieldName>shortMessage</fieldName>
                 </message>
                 <pattern>
-                    <pattern>{ "message": "%exception%message", "serviceContext": { "service": "new-reference-data" } }</pattern>
+                    <pattern>{ "message": "%exception%message", "serviceContext": { "service": "reference-data" } }</pattern>
                 </pattern>
             </providers>
         </encoder>
