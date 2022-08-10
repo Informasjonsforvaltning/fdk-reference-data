@@ -3,7 +3,7 @@ info:
   title: Reference data API
   version: v2.0
 servers:
-  - url: https://data.norge.no/new-reference-data/
+  - url: https://data.norge.no/reference-data/
     description: Production server
 paths:
   /iana/media-types:
