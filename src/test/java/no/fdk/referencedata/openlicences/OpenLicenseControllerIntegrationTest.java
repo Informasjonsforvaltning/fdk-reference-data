@@ -31,13 +31,12 @@ public class OpenLicenseControllerIntegrationTest {
         OpenLicenses licenses =
                 this.restTemplate.getForObject("http://localhost:" + port + "/open-licenses", OpenLicenses.class);
 
-        assertEquals(7, licenses.getOpenLicenses().size());
+        assertEquals(3, licenses.getOpenLicenses().size());
 
-        OpenLicense first = licenses.getOpenLicenses().get(0);
-        assertEquals("http://creativecommons.org/licenses/by/4.0/", first.getUri());
-        assertEquals("CC BY 4.0", first.getCode());
-        assertNull(first.getIsReplacedBy());
-        assertEquals("Creative Commons Attribution 4.0 International", first.getLabel().get(Language.ENGLISH.code()));
+        OpenLicense license = licenses.getOpenLicenses().get(1);
+        assertEquals("http://publications.europa.eu/resource/authority/licence/CC_BY_4_0", license.getUri());
+        assertEquals("CC BY 4.0", license.getCode());
+        assertEquals("Creative Commons Attribution 4.0 International", license.getLabel().get(Language.ENGLISH.code()));
     }
 
     @Test
@@ -46,9 +45,8 @@ public class OpenLicenseControllerIntegrationTest {
                 this.restTemplate.getForObject("http://localhost:" + port + "/open-licenses/NLOD20", OpenLicense.class);
 
         assertNotNull(license);
-        assertEquals("http://data.norge.no/nlod/no/2.0", license.getUri());
+        assertEquals("http://publications.europa.eu/resource/authority/licence/NLOD_2_0", license.getUri());
         assertEquals("NLOD20", license.getCode());
-        assertNull(license.getIsReplacedBy());
         assertEquals("Norwegian Licence for Open Government Data", license.getLabel().get(Language.ENGLISH.code()));
     }
 }

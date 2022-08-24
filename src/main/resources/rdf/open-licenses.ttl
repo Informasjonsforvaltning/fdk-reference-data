@@ -6,60 +6,23 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 
-<http://creativecommons.org/publicdomain/zero/1.0/>
+<http://publications.europa.eu/resource/authority/licence/CC0>
         rdf:type           skos:Concept ;
         at:authority-code  "CC0 1.0" ;
         dc:identifier      "CC0 1.0" ;
-        skos:inScheme      <http:/data.norge.no/opne-data-lisensar> ;
+        skos:inScheme      <http://publications.europa.eu/resource/authority/licence> ;
         skos:prefLabel     "Creative Commons Universal Public Domain Dedication"@en , "Creative Commons Universal Fristatus-erklæring"@no .
 
-<http://data.norge.no/nlod/no/>
-        rdf:type           skos:Concept ;
-        at:authority-code  "NLOD" ;
-        dc:identifier      "NLOD" ;
-        dct:isReplacedBy   "http://data.norge.no/nlod/no/2.0" ;
-        skos:inScheme      <http:/data.norge.no/opne-data-lisensar> ;
-        skos:prefLabel     "Norwegian Licence for Open Government Data"@en , "Norsk lisens for offentlige data"@no .
-
-<http://creativecommons.org/licenses/by/4.0/deed.no>
-        rdf:type           skos:Concept ;
-        at:authority-code  "CC BY 4.0 DEED" ;
-        dc:identifier      "CC BY 4.0 DEED" ;
-        dct:isReplacedBy   "http://creativecommons.org/licenses/by/4.0/" ;
-        skos:inScheme      <http:/data.norge.no/opne-data-lisensar> ;
-        skos:prefLabel     "Creative Commons Attribution 4.0 International"@en , "Creative Commons Navngivelse 4.0 Internasjonal"@no .
-
-<http://data.norge.no/nlod/no/2.0>
+<http://publications.europa.eu/resource/authority/licence/NLOD_2_0>
         rdf:type           skos:Concept ;
         at:authority-code  "NLOD20" ;
         dc:identifier      "NLOD20" ;
-        skos:inScheme      <http:/data.norge.no/opne-data-lisensar> ;
+        skos:inScheme      <http://publications.europa.eu/resource/authority/licence> ;
         skos:prefLabel     "Norwegian Licence for Open Government Data"@en , "Norsk lisens for offentlige data"@no .
 
-<http://data.norge.no/nlod/>
-        rdf:type           skos:Concept ;
-        at:authority-code  "NLOD" ;
-        dc:identifier      "NLOD" ;
-        dct:isReplacedBy   "http://data.norge.no/nlod/no/2.0" ;
-        skos:inScheme      <http:/data.norge.no/opne-data-lisensar> ;
-        skos:prefLabel     "Norwegian Licence for Open Government Data"@en , "Norsk lisens for offentlige data"@no .
-
-<http:/data.norge.no/opne-data-lisensar>
-        rdf:type         skos:ConceptScheme ;
-        rdfs:label       "Åpne data lisenser"@no ;
-        owl:versionInfo  "20160920-0" .
-
-<http://creativecommons.org/licenses/by/4.0/>
+<http://publications.europa.eu/resource/authority/licence/CC_BY_4_0>
         rdf:type           skos:Concept ;
         at:authority-code  "CC BY 4.0" ;
         dc:identifier      "CC BY 4.0" ;
-        skos:inScheme      <http:/data.norge.no/opne-data-lisensar> ;
+        skos:inScheme      <http://publications.europa.eu/resource/authority/licence> ;
         skos:prefLabel     "Creative Commons Attribution 4.0 International"@en , "Creative Commons Navngivelse 4.0 Internasjonal"@no .
-
-<http://data.norge.no/nlod/no/1.0>
-        rdf:type           skos:Concept ;
-        at:authority-code  "NLOD10" ;
-        dc:identifier      "NLOD10" ;
-        dct:isReplacedBy   "http://data.norge.no/nlod/no/2.0" ;
-        skos:inScheme      <http:/data.norge.no/opne-data-lisensar> ;
-        skos:prefLabel     "Norwegian Licence for Open Government Data"@en , "Norsk lisens for offentlige data"@no .
