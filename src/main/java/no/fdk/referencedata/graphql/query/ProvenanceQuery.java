@@ -1,6 +1,6 @@
 package no.fdk.referencedata.graphql.query;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.provenancestatement.ProvenanceStatement;
 import no.fdk.referencedata.provenancestatement.ProvenanceStatementService;
 import org.springframework.beans.factory.annotation.Autowired;

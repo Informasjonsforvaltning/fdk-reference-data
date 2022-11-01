@@ -1,6 +1,6 @@
 package no.fdk.referencedata.graphql.query;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.eu.filetype.FileType;
 import no.fdk.referencedata.eu.filetype.FileTypeRepository;
 import no.fdk.referencedata.iana.mediatype.MediaType;

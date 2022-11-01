@@ -1,6 +1,6 @@
 package no.fdk.referencedata.graphql.query;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.referencetypes.ReferenceType;
 import no.fdk.referencedata.referencetypes.ReferenceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
