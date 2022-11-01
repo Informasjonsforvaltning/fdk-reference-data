@@ -1,6 +1,6 @@
 package no.fdk.referencedata.graphql.query;
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver;
+import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.Kommune;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneRepository;
 import no.fdk.referencedata.iana.mediatype.MediaType;
