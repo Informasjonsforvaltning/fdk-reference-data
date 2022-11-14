@@ -1,7 +1,5 @@
 package no.fdk.referencedata.eu.distributiontype;
 
-import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
-import no.fdk.referencedata.eu.distributiontype.DistributionTypeHarvester;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -18,7 +16,7 @@ public class LocalDistributionTypeHarvester extends DistributionTypeHarvester {
     }
 
     @Override
-    public Resource getSource() {
+    public Resource getSource(final String cellarURI, final String fileName) {
         return new ClassPathResource("distribution-types-skos.rdf");
     }
 }

@@ -16,7 +16,7 @@ public class LocalDataThemeHarvester extends DataThemeHarvester {
     }
 
     @Override
-    public Resource getSource() {
+    public Resource getSource(final String cellarURI, final String fileName) {
         return new ClassPathResource("data-theme-skos-ap-act.rdf");
     }
 }

@@ -16,7 +16,7 @@ public class LocalEuroVocHarvester extends EuroVocHarvester {
     }
 
     @Override
-    public Resource getSource() {
+    public Resource getSource(final String cellarURI, final String fileName) {
         return new ClassPathResource("eurovoc_in_skos_core_concepts.zip");
     }
 }

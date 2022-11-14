@@ -16,7 +16,7 @@ public class LocalAccessRightHarvester extends AccessRightHarvester {
     }
 
     @Override
-    public Resource getSource() {
+    public Resource getSource(final String cellarURI, final String fileName) {
         return new ClassPathResource("access-right-skos-ap-act.rdf");
     }
 }

@@ -4,47 +4,32 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.*;
+import java.net.MalformedURLException;
+import java.util.Optional;
 
 @Component
 @Slf4j
 public abstract class AbstractEuHarvester<T> {
+    private static final String DOWNLOAD_API = "https://op.europa.eu/o/opportal-service/euvoc-download-handler";
 
-    private final String dataset;
+    public abstract String getVersion();
 
-    private final String distributionFile;
-
-    private final EuDatasetFetcher euDatasetFetcher;
-
-    public AbstractEuHarvester(final String dataset, final String distributionFile) {
-        this.dataset = dataset;
-        this.distributionFile = distributionFile;
-        this.euDatasetFetcher = new EuDatasetFetcher(dataset);
-    }
-
-    public String getVersion() {
+    public Resource getSource(final String cellarURI, final String fileName) {
         try {
-            return euDatasetFetcher.getVersion();
-        } catch(Exception e) {
-            log.error("Unable to fetch latest " + dataset + " version", e);
-            return "0";
+            return new UrlResource(DOWNLOAD_API + "?cellarURI=" + cellarURI + "&fileName=" + fileName);
+        } catch (MalformedURLException e) {
+            log.error("Unable to get source", e);
+            return null;
         }
     }
 
-    public org.springframework.core.io.Resource getSource() {
-        try {
-            return euDatasetFetcher.fetchResource(this.distributionFile);
-        } catch(Exception e) {
-            log.error("Unable to retrieve " + dataset + " source", e);
-        }
-        return null;
-    }
-
-    protected Optional<Model> getModel(org.springframework.core.io.Resource resource) {
+    protected Optional<Model> getModel(Resource resource) {
         try {
             return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.RDFXML));
         } catch (IOException e) {

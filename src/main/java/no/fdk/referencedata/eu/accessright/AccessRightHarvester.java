@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.eu.vocabulary.EUAccessRight;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -15,7 +17,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Component
@@ -26,23 +27,38 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
+    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/e504b3a7-b57e-11ec-b6f4-01aa75ed71a1.0001.03/DOC_1";
+    private static final String rdfFileName = "access-right-skos.rdf";
+    private static String VERSION = "0";
 
     public AccessRightHarvester() {
-        super("access-right", "skos_ap_act/access-right-skos-ap-act.rdf");
+        super();
+    }
+
+    public String getVersion() {
+        return VERSION;
     }
 
     public Flux<AccessRight> harvest() {
         log.info("Starting harvest of EU access-rights");
-        final org.springframework.core.io.Resource rdfSource = getSource();
+        final org.springframework.core.io.Resource rdfSource = getSource(cellarURI, rdfFileName);
         if(rdfSource == null) {
             return Flux.error(new Exception("Unable to fetch access-right distribution"));
         }
 
         return Mono.justOrEmpty(getModel(rdfSource))
+                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EUAccessRight.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapAccessRight);
+    }
+
+    private void updateVersion(Model m) {
+        VERSION = m.getProperty(
+                m.getResource("http://publications.europa.eu/resource/authority/access-right"),
+                OWL.versionInfo
+        ).getString();
     }
 
     private AccessRight mapAccessRight(Resource accessRight) {

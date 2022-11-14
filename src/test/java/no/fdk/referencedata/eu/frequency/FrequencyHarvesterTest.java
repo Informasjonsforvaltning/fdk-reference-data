@@ -1,7 +1,5 @@
 package no.fdk.referencedata.eu.frequency;
 
-import no.fdk.referencedata.eu.accessright.AccessRight;
-import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,8 +16,8 @@ public class FrequencyHarvesterTest {
     public void test_fetch_frequencies() {
         FrequencyHarvester harvester = new LocalFrequencyHarvester("20200923-0");
 
-        assertNotNull(harvester.getSource());
-        assertEquals("frequencies-skos.rdf", harvester.getSource().getFilename());
+        assertNotNull(harvester.getSource("", ""));
+        assertEquals("frequencies-skos.rdf", harvester.getSource("", "").getFilename());
         assertEquals("20200923-0", harvester.getVersion());
 
         List<Frequency> frequencies = harvester.harvest().collectList().block();

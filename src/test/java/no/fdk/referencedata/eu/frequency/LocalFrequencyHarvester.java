@@ -1,6 +1,5 @@
 package no.fdk.referencedata.eu.frequency;
 
-import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -17,7 +16,7 @@ public class LocalFrequencyHarvester extends FrequencyHarvester {
     }
 
     @Override
-    public Resource getSource() {
+    public Resource getSource(final String cellarURI, final String fileName) {
         return new ClassPathResource("frequencies-skos.rdf");
     }
 }
