@@ -16,8 +16,8 @@ public class EuroVocHarvesterTest {
     public void test_fetch_EuroVoc() {
         EuroVocHarvester euroVocHarvester = new LocalEuroVocHarvester("20200923-0");
 
-        assertNotNull(euroVocHarvester.getSource());
-        assertEquals("eurovoc_in_skos_core_concepts.zip", euroVocHarvester.getSource().getFilename());
+        assertNotNull(euroVocHarvester.getSource("", ""));
+        assertEquals("eurovoc_in_skos_core_concepts.zip", euroVocHarvester.getSource("", "").getFilename());
         assertEquals("20200923-0", euroVocHarvester.getVersion());
 
         List<EuroVoc> euroVocList = euroVocHarvester.harvest().collectList().block();

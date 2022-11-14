@@ -29,14 +29,21 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
+    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/65e724e6-fe92-11ec-b94a-01aa75ed71a1.0001.04/DOC_1";
+    private static final String rdfFileName = "eurovoc_in_skos_core_concepts.zip";
+    private static final String VERSION = "0";
 
     public EuroVocHarvester() {
-        super("eurovoc", "skos_core/eurovoc_in_skos_core_concepts.zip");
+        super();
+    }
+
+    public String getVersion() {
+        return VERSION;
     }
 
     public Flux<EuroVoc> harvest() {
         log.info("Starting harvest of EU eurovoc");
-        final org.springframework.core.io.Resource source = getSource();
+        final org.springframework.core.io.Resource source = getSource(cellarURI, rdfFileName);
         if(source == null) {
             return Flux.error(new Exception("Unable to fetch eurovoc distribution"));
         }
@@ -48,8 +55,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                     new FileUrlResource(destDir.getAbsolutePath() + "/eurovoc_in_skos_core_concepts.rdf");
 
             return Mono.justOrEmpty(getModel(rdf))
-                    .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type,
-                            SKOS.Concept).toList())
+                    .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, SKOS.Concept).toList())
                     .filter(Resource::isURIResource)
                     .map(this::mapEuroVoc);
 

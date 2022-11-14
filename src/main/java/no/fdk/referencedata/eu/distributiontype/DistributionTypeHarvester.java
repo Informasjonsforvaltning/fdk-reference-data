@@ -6,8 +6,10 @@ import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
 import no.fdk.referencedata.eu.vocabulary.EUDistributionType;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -26,22 +28,37 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
+    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/308180b4-0286-11ed-acce-01aa75ed71a1.0001.02/DOC_1";
+    private static final String rdfFileName = "distribution-types-skos.rdf";
+    private static String VERSION = "0";
 
     public DistributionTypeHarvester() {
-        super("distribution-type", "skos_core/distribution-types-skos.rdf");
+        super();
+    }
+
+    public String getVersion() {
+        return VERSION;
     }
 
     public Flux<DistributionType> harvest() {
         log.info("Starting harvest of EU distribution types");
-        final org.springframework.core.io.Resource dataThemesRdfSource = getSource();
+        final org.springframework.core.io.Resource dataThemesRdfSource = getSource(cellarURI, rdfFileName);
         if(dataThemesRdfSource == null) {
             return Flux.error(new Exception("Unable to fetch distribution-types distribution"));
         }
 
         return Mono.justOrEmpty(getModel(dataThemesRdfSource))
+                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDistributionType.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapDistributionType);
+    }
+
+    private void updateVersion(Model m) {
+        VERSION = m.getProperty(
+                m.getResource("http://publications.europa.eu/resource/authority/distribution-type"),
+                OWL.versionInfo
+        ).getString();
     }
 
     private DistributionType mapDistributionType(Resource distributionType) {
