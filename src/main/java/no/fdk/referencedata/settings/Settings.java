@@ -9,5 +9,6 @@ public enum Settings {
     EURO_VOC,
     MEDIA_TYPE,
     GEONORGE_KOMMUNE,
-    GEONORGE_FYLKE
+    GEONORGE_FYLKE,
+    MAIN_ACTIVITY
 }

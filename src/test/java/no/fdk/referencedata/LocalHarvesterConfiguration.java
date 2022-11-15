@@ -12,6 +12,8 @@ import no.fdk.referencedata.eu.filetype.FileTypeHarvester;
 import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
 import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
+import no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester;
+import no.fdk.referencedata.eu.mainactivity.MainActivityHarvester;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeHarvester;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.LocalFylkeHarvester;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneHarvester;
@@ -74,5 +76,10 @@ public class LocalHarvesterConfiguration {
     @Bean
     public DistributionTypeHarvester distributionTypeHarvester() {
         return new LocalDistributionTypeHarvester("1");
+    }
+
+    @Bean
+    public MainActivityHarvester mainActivityHarvester() {
+        return new LocalMainActivityHarvester("1");
     }
 }
