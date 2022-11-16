@@ -4,10 +4,14 @@ import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
 import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
+import no.fdk.referencedata.eu.distributiontype.DistributionTypeHarvester;
+import no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester;
 import no.fdk.referencedata.eu.eurovoc.EuroVocHarvester;
 import no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester;
 import no.fdk.referencedata.eu.filetype.FileTypeHarvester;
 import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
+import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
+import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeHarvester;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.LocalFylkeHarvester;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneHarvester;
@@ -60,5 +64,15 @@ public class LocalHarvesterConfiguration {
     @Bean
     public FylkeHarvester fylkeHarvester() {
         return new LocalFylkeHarvester(wiremockHost, wiremockPort);
+    }
+
+    @Bean
+    public FrequencyHarvester frequencyHarvester() {
+        return new LocalFrequencyHarvester("1");
+    }
+
+    @Bean
+    public DistributionTypeHarvester distributionTypeHarvester() {
+        return new LocalDistributionTypeHarvester("1");
     }
 }
