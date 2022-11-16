@@ -1,0 +1,7 @@
+query GetPublisherTypeByCode($code: String!) {
+    publisherTypeByCode(code: $code) {
+        uri
+        code
+        label
+    }
+}
