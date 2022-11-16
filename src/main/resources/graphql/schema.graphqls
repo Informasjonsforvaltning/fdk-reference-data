@@ -63,6 +63,12 @@ type Query {
 
   serviceChannelTypes: [ServiceChannelType!]!
   serviceChannelTypeByCode(code: String!): ServiceChannelType
+
+  statuses: [ADMSStatus!]!
+  statusByCode(code: String!): ADMSStatus
+
+  publisherTypes: [PublisherType!]!
+  publisherTypeByCode(code: String!): PublisherType
 }
 
 type AccessRight {
@@ -198,6 +204,18 @@ type RoleType {
 }
 
 type ServiceChannelType {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type ADMSStatus {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type PublisherType {
   uri: ID!
   code: String
   label: Object

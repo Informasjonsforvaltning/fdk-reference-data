@@ -1,0 +1,36 @@
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+<http://purl.org/adms/status/Completed>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/status/1.0> ;
+        skos:notation   "Completed" ;
+        skos:prefLabel  "Completed"@en , "Ferdigstilt"@nb , "Ferdigstilt"@nn .
+
+<http://purl.org/adms/status/1.0>
+        rdf:type            skos:ConceptScheme , owl:NamedIndividual ;
+        rdfs:label          "Status"@en ;
+        skos:hasTopConcept  <http://purl.org/adms/status/Withdrawn> ,
+            <http://purl.org/adms/status/UnderDevelopment> ,
+            <http://purl.org/adms/status/Deprecated> ,
+            <http://purl.org/adms/status/Completed> .
+
+<http://purl.org/adms/status/Withdrawn>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/status/1.0> ;
+        skos:notation   "Withdrawn" ;
+        skos:prefLabel  "Withdrawn"@en , "Trukket tilbake"@nb , "Trekt tilbake"@nn .
+
+<http://purl.org/adms/status/Deprecated>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/status/1.0> ;
+        skos:notation   "Deprecated" ;
+        skos:prefLabel  "Deprecated"@en , "Frarådet"@nb , "Frarådd"@nn .
+
+<http://purl.org/adms/status/UnderDevelopment>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/status/1.0> ;
+        skos:notation   "UnderDevelopment" ;
+        skos:prefLabel  "Under development"@en , "Under utvikling"@nb , "Under utvikling"@nn .

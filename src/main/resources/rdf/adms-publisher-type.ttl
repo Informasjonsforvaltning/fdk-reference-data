@@ -1,0 +1,85 @@
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+<http://purl.org/adms/publishertype/RegionalAuthority>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "RegionalAuthority" ;
+        skos:prefLabel  "Regional authority"@en, "Regional myndighet"@nb, "Regional myndigheit"@nn .
+
+<http://purl.org/adms/publishertype/StandardisationBody>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "StandardisationBody" ;
+        skos:prefLabel  "Standardisation body"@en, "Standardiseringsorgan"@nb, "Standardiseringsorgan"@nn .
+
+<http://purl.org/adms/publishertype/NonGovernmentalOrganisation>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "NonGovernmentalOrganisation" ;
+        skos:prefLabel  "Non-Governmental Organisation"@en, "Ikke-statlig organisasjon"@nb, "Ikkje-statleg organisasjon"@nn .
+
+<http://purl.org/adms/publishertype/IndustryConsortium>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "IndustryConsortium" ;
+        skos:prefLabel  "Industry consortium"@en, "Industrikonsortium"@nb, "Industrikonsortium"@nn .
+
+<http://purl.org/adms/publishertype/Company>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "Company" ;
+        skos:prefLabel  "Company"@en, "Virksomhet"@nb, "Verksemd"@nn .
+
+<http://purl.org/adms/publishertype/SupraNationalAuthority>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "SupraNationalAuthority" ;
+        skos:prefLabel  "Supra-national authority"@en, "Overnasjonal myndighet"@nb, "Overnasjonal myndigheit"@nn .
+
+<http://purl.org/adms/publishertype/Academia-ScientificOrganisation>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "Academia-ScientificOrganisation" ;
+        skos:prefLabel  "Academia/Scientific organisation"@en, "Akademia/Vitenskapelig organisasjon"@nb, "Akademia/Vitskapeleg organisasjon"@nn .
+
+<http://purl.org/adms/publishertype/NonProfitOrganisation>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "NonProfitOrganisation" ;
+        skos:prefLabel  "Non-Profit Organisation"@en, "Frivillig organisasjon"@nb, "Frivilleg organisasjon"@nn .
+
+<http://purl.org/adms/publishertype/NationalAuthority>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "NationalAuthority" ;
+        skos:prefLabel  "National authority"@en, "Nasjonal myndighet"@nb, "Nasjonal myndigheit"@nn .
+
+<http://purl.org/adms/publishertype/LocalAuthority>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "LocalAuthority" ;
+        skos:prefLabel  "Local Authority"@en, "Lokal myndighet"@nb, "Lokal myndigheit"@nn .
+
+<http://purl.org/adms/publishertype/1.0>
+        rdf:type            skos:ConceptScheme , owl:NamedIndividual ;
+        rdfs:label          "Publisher Type"@en ;
+        skos:hasTopConcept  <http://purl.org/adms/publishertype/SupraNationalAuthority> ,
+            <http://purl.org/adms/publishertype/StandardisationBody> ,
+            <http://purl.org/adms/publishertype/Company> ,
+            <http://purl.org/adms/publishertype/Academia-ScientificOrganisation> ,
+            <http://purl.org/adms/publishertype/IndustryConsortium> ,
+            <http://purl.org/adms/publishertype/PrivateIndividual(s)> ,
+            <http://purl.org/adms/publishertype/RegionalAuthority> ,
+            <http://purl.org/adms/publishertype/NonGovernmentalOrganisation> ,
+            <http://purl.org/adms/publishertype/LocalAuthority> ,
+            <http://purl.org/adms/publishertype/NonProfitOrganisation> ,
+            <http://purl.org/adms/publishertype/NationalAuthority> .
+
+<http://purl.org/adms/publishertype/PrivateIndividual(s)>
+        rdf:type        skos:Concept , owl:NamedIndividual ;
+        skos:inScheme   <http://purl.org/adms/publishertype/1.0> ;
+        skos:notation   "PrivateIndividual(s)" ;
+        skos:prefLabel  "Private Individual(s)"@en, "Privatperson(er)"@nb, "Privatperson(ar)"@nn .
