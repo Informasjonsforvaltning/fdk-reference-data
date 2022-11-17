@@ -11,5 +11,6 @@ public enum Settings {
     GEONORGE_KOMMUNE,
     GEONORGE_FYLKE,
     MAIN_ACTIVITY,
-    ROLE_TYPE
+    ROLE_TYPE,
+    SERVICE_CHANNEL_TYPE
 }

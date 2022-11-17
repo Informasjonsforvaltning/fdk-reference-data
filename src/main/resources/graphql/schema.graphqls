@@ -57,6 +57,9 @@ type Query {
 
   roleTypes: [RoleType!]!
   roleTypeByCode(code: String!): RoleType
+
+  serviceChannelTypes: [ServiceChannelType!]!
+  serviceChannelTypeByCode(code: String!): ServiceChannelType
 }
 
 type AccessRight {
@@ -180,6 +183,12 @@ type ReferenceType {
 }
 
 type RoleType {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type ServiceChannelType {
   uri: ID!
   code: String
   label: Object

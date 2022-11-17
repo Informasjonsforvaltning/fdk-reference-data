@@ -1,0 +1,7 @@
+query {
+    serviceChannelTypes {
+        uri
+        code
+        label
+    }
+}
