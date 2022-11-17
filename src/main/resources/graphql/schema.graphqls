@@ -19,6 +19,9 @@ type Query {
   euroVocs:  [EuroVoc!]!
   euroVocByCode(code: String!):  EuroVoc
 
+  evidenceTypes: [EvidenceType!]!
+  evidenceTypeByCode(code: String!): EvidenceType
+
   fileTypes:  [FileType!]!
   fileTypeByCode(code: String!):  FileType
 
@@ -96,6 +99,12 @@ type DistributionType {
 }
 
 type EuroVoc {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type EvidenceType {
   uri: ID!
   code: String
   label: Object
