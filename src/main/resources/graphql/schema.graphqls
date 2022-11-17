@@ -54,6 +54,9 @@ type Query {
 
   referenceTypes: [ReferenceType!]!
   referenceTypeByCode(code: String!): ReferenceType
+
+  roleTypes: [RoleType!]!
+  roleTypeByCode(code: String!): RoleType
 }
 
 type AccessRight {
@@ -171,6 +174,12 @@ type ProvenanceStatement {
 }
 
 type ReferenceType {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type RoleType {
   uri: ID!
   code: String
   label: Object

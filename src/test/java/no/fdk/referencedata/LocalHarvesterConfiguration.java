@@ -1,5 +1,7 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
+import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
 import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
@@ -81,5 +83,10 @@ public class LocalHarvesterConfiguration {
     @Bean
     public MainActivityHarvester mainActivityHarvester() {
         return new LocalMainActivityHarvester("1");
+    }
+
+    @Bean
+    public RoleTypeHarvester roleTypeHarvester() {
+        return new LocalRoleTypeHarvester("1");
     }
 }
