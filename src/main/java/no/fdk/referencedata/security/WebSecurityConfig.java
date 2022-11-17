@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                         .antMatchers(HttpMethod.POST, "/eu/**").authenticated()
                         .antMatchers(HttpMethod.POST, "/iana/**").authenticated()
                         .antMatchers(HttpMethod.POST, "/geonorge/**").authenticated()
+                        .antMatchers(HttpMethod.POST, "/digdir/**").authenticated()
                         .anyRequest().permitAll()
                 );
         return http.build();

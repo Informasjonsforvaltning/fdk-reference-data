@@ -1,0 +1,61 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix uneskos: <http://purl.org/umu/uneskos#> .
+@prefix xkos: <http://rdf-vocabulary.ddialliance.org/xkos#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://data.norge.no/vocabulary/role-type#data-consumer> a skos:Concept,
+        foaf:Agent ;
+    dct:identifier "https://data.norge.no/vocabulary/role-type#data-consumer"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/role-type> ;
+    skos:prefLabel "data consumer"@en,
+        "datakonsument"@nb .
+
+<https://data.norge.no/vocabulary/role-type#data-provider> a skos:Concept,
+        foaf:Agent ;
+    dct:identifier "https://data.norge.no/vocabulary/role-type#data-provider"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/role-type> ;
+    skos:prefLabel "data provider"@en,
+        "dataleverandør"@nb .
+
+<https://data.norge.no/vocabulary/role-type#service-producer> a skos:Concept,
+        foaf:Agent ;
+    dct:identifier "https://data.norge.no/vocabulary/role-type#service-producer"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/role-type> ;
+    skos:prefLabel "service producer"@en,
+        "tjenesteprodusent"@nb .
+
+<https://data.norge.no/vocabulary/role-type#service-provider> a skos:Concept,
+        foaf:Agent ;
+    dct:identifier "https://data.norge.no/vocabulary/role-type#service-provider"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/role-type> ;
+    skos:prefLabel "service provider"@en,
+        "tjenestetilbyder"@nb .
+
+<https://data.norge.no/vocabulary/role-type#service-receiver> a skos:Concept,
+        foaf:Agent ;
+    dct:identifier "https://data.norge.no/vocabulary/role-type#service-receiver"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/role-type> ;
+    skos:prefLabel "service receiver"@en,
+        "tjenestemottaker"@nb .
+
+<https://data.norge.no/vocabulary/role-type> a skos:ConceptScheme ;
+    dct:description "Controlled vocabulary with predefined role types, primarily meant to be used in connection with describing services and events in accordance with CPSV-AP-NO."@en,
+        "Kontrollert vokabular med predefinerte rolletyper, primært ment for å brukes i forbindelse med å beskrive tjenester og hendelser i henhold til CPSV-AP-NO."@nb ;
+    dct:identifier "https://data.norge.no/vocabulary/role-type"^^xsd:anyURI ;
+    dct:issued "2022-01-29"^^xsd:date ;
+    dct:language <http://publications.europa.eu/resource/authority/language/ENG>,
+        <http://publications.europa.eu/resource/authority/language/NOB> ;
+    dct:modified "2022-02-17"^^xsd:date ;
+    dct:publisher <https://organization-catalogue.fellesdatakatalog.digdir.no/organizations/991825827> ;
+    dct:title "Role type"@en,
+        "Rolletype"@nb ;
+    uneskos:contains <https://data.norge.no/vocabulary/role-type#data-consumer>,
+        <https://data.norge.no/vocabulary/role-type#data-provider>,
+        <https://data.norge.no/vocabulary/role-type#service-producer>,
+        <https://data.norge.no/vocabulary/role-type#service-provider>,
+        <https://data.norge.no/vocabulary/role-type#service-receiver> ;
+    xkos:numberOfLevels "1"^^xsd:positiveInteger ;
+    adms:status <http://publications.europa.eu/resource/authority/dataset-status/DEVELOP> .

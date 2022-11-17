@@ -10,5 +10,6 @@ public enum Settings {
     MEDIA_TYPE,
     GEONORGE_KOMMUNE,
     GEONORGE_FYLKE,
-    MAIN_ACTIVITY
+    MAIN_ACTIVITY,
+    ROLE_TYPE
 }
