@@ -2,6 +2,8 @@ package no.fdk.referencedata;
 
 import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
 import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
+import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
+import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeHarvester;
 import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
@@ -88,5 +90,10 @@ public class LocalHarvesterConfiguration {
     @Bean
     public RoleTypeHarvester roleTypeHarvester() {
         return new LocalRoleTypeHarvester("1");
+    }
+
+    @Bean
+    public ServiceChannelTypeHarvester serviceChannelTypeHarvester() {
+        return new LocalServiceChannelTypeHarvester("1");
     }
 }
