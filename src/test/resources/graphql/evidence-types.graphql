@@ -1,0 +1,7 @@
+query {
+    evidenceTypes {
+        uri
+        code
+        label
+    }
+}

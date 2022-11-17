@@ -1,5 +1,7 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeHarvester;
+import no.fdk.referencedata.digdir.evidencetype.LocalEvidenceTypeHarvester;
 import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
 import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
@@ -80,6 +82,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public DistributionTypeHarvester distributionTypeHarvester() {
         return new LocalDistributionTypeHarvester("1");
+    }
+
+    @Bean
+    public EvidenceTypeHarvester evidenceTypeHarvester() {
+        return new LocalEvidenceTypeHarvester("1");
     }
 
     @Bean

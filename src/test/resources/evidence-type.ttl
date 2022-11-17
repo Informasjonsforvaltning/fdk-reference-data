@@ -1,0 +1,48 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix uneskos: <http://purl.org/umu/uneskos#> .
+@prefix xkos: <http://rdf-vocabulary.ddialliance.org/xkos#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://data.norge.no/vocabulary/evidence-type#attestation> a skos:Concept ;
+    dct:identifier "https://data.norge.no/vocabulary/evidence-type#attestation"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/evidence-type> ;
+    skos:prefLabel "attestation"@en,
+        "attest"@nb .
+
+<https://data.norge.no/vocabulary/evidence-type#certificate> a skos:Concept ;
+    dct:identifier "https://data.norge.no/vocabulary/evidence-type#certificate"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/evidence-type> ;
+    skos:prefLabel "certificate"@en,
+        "sertifikat"@nb .
+
+<https://data.norge.no/vocabulary/evidence-type#declaration> a skos:Concept ;
+    dct:identifier "https://data.norge.no/vocabulary/evidence-type#declaration"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/evidence-type> ;
+    skos:prefLabel "declaration"@en,
+        "erklæring"@nb .
+
+<https://data.norge.no/vocabulary/evidence-type#protocol> a skos:Concept ;
+    dct:identifier "https://data.norge.no/vocabulary/evidence-type#protocol"^^xsd:anyURI ;
+    skos:inScheme <https://data.norge.no/vocabulary/evidence-type> ;
+    skos:prefLabel "protocol"@en,
+        "protokoll"@nb .
+
+<https://data.norge.no/vocabulary/evidence-type> a skos:ConceptScheme ;
+    dct:description "Controlled vocabulary with predefined evidence types, primarily meant to be used in connection with describing services and events in accordance with CPSV-AP-NO."@en,
+        "Kontrollert vokabular med predefinerte dokumentasjonstyper, primært ment for å brukes i forbindelse med å beskrive tjenester og hendelser i henhold til CPSV-AP-NO."@nb ;
+    dct:identifier "https://data.norge.no/vocabulary/evidence-type"^^xsd:anyURI ;
+    dct:issued "2022-01-29"^^xsd:date ;
+    dct:language <http://publications.europa.eu/resource/authority/language/ENG>,
+        <http://publications.europa.eu/resource/authority/language/NOB> ;
+    dct:modified "2022-02-15"^^xsd:date ;
+    dct:publisher <https://organization-catalogue.fellesdatakatalog.digdir.no/organizations/991825827> ;
+    dct:title "Evidence type"@en,
+        "Dokumentasjonstype"@nb ;
+    uneskos:contains <https://data.norge.no/vocabulary/evidence-type#attestation>,
+        <https://data.norge.no/vocabulary/evidence-type#certificate>,
+        <https://data.norge.no/vocabulary/evidence-type#declaration>,
+        <https://data.norge.no/vocabulary/evidence-type#protocol> ;
+    xkos:numberOfLevels "1"^^xsd:positiveInteger ;
+    adms:status <http://publications.europa.eu/resource/authority/dataset-status/DEVELOP> .

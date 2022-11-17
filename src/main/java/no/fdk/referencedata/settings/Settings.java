@@ -4,6 +4,7 @@ public enum Settings {
     ACCESS_RIGHT,
     DATA_THEME,
     DISTRIBUTION_TYPE,
+    EVIDENCE_TYPE,
     FILE_TYPE,
     FREQUENCY,
     EURO_VOC,

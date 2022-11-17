@@ -1,5 +1,6 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
@@ -60,6 +61,17 @@ public class Scheduler {
 
     @Autowired
     private ServiceChannelTypeService serviceChannelTypeService;
+
+    @Autowired
+    private EvidenceTypeService evidenceTypeService;
+
+    /**
+     * Run every day 01:00 (at night)
+     */
+    @Scheduled(cron = "0 0 1 * * ?")
+    public void updateEvidenceTypes() {
+        evidenceTypeService.harvestAndSave(false);
+    }
 
     /**
      * Run every day 01:10 (at night)
@@ -205,6 +217,10 @@ public class Scheduler {
 
         if(serviceChannelTypeService.firstTime()) {
             serviceChannelTypeService.harvestAndSave(true);
+        }
+
+        if(evidenceTypeService.firstTime()) {
+            evidenceTypeService.harvestAndSave(true);
         }
     }
 }

@@ -1,0 +1,7 @@
+query EvidenceTypeRightByCode($code: String!) {
+    evidenceTypeByCode(code: $code) {
+        uri
+        code
+        label
+    }
+}
