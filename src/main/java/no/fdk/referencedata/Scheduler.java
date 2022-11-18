@@ -1,11 +1,14 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.roletype.RoleTypeService;
+import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
+import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
@@ -48,6 +51,31 @@ public class Scheduler {
 
     @Autowired
     private KommuneService kommuneService;
+
+    @Autowired
+    private MainActivityService mainActivityService;
+
+    @Autowired
+    private RoleTypeService roleTypeService;
+
+    @Autowired
+    private ServiceChannelTypeService serviceChannelTypeService;
+
+    /**
+     * Run every day 01:10 (at night)
+     */
+    @Scheduled(cron = "0 10 1 * * ?")
+    public void updateServiceChannelTypes() {
+        serviceChannelTypeService.harvestAndSave(false);
+    }
+
+    /**
+     * Run every day 01:20 (at night)
+     */
+    @Scheduled(cron = "0 20 1 * * ?")
+    public void updateRoleTypes() {
+        roleTypeService.harvestAndSave(false);
+    }
 
     /**
      * Run every day 01:30 (at night)
@@ -106,6 +134,14 @@ public class Scheduler {
     }
 
     /**
+     * Run every day 02:40 (at night)
+     */
+    @Scheduled(cron = "0 40 2 * * ?")
+    public void updateMainActivities() {
+        mainActivityService.harvestAndSave(false);
+    }
+
+    /**
      * Run every day 03:00 (at night)
      */
     @Scheduled(cron = "0 0 3 * * ?")
@@ -157,6 +193,18 @@ public class Scheduler {
 
         if(kommuneService.firstTime()) {
             kommuneService.harvestAndSave();
+        }
+
+        if(mainActivityService.firstTime()) {
+            mainActivityService.harvestAndSave(true);
+        }
+
+        if(roleTypeService.firstTime()) {
+            roleTypeService.harvestAndSave(true);
+        }
+
+        if(serviceChannelTypeService.firstTime()) {
+            serviceChannelTypeService.harvestAndSave(true);
         }
     }
 }
