@@ -16,7 +16,7 @@ public class LocalFrequencyHarvester extends FrequencyHarvester {
     }
 
     @Override
-    public Resource getSource(final String cellarURI, final String fileName) {
-        return new ClassPathResource("frequencies-skos.rdf");
+    public Resource getSource(final String sparqlQuery) {
+        return new ClassPathResource("frequencies-sparql-result.ttl");
     }
 }

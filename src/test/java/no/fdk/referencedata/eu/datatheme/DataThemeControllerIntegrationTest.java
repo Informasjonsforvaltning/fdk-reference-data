@@ -67,7 +67,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("Agriculture, fisheries, forestry and food", first.getLabel().get(Language.ENGLISH.code()));
         assertEquals("http://publications.europa.eu/resource/authority/data-theme", first.getConceptSchema().getUri());
         assertEquals("Data theme", first.getConceptSchema().getLabel().get(Language.ENGLISH.code()));
-        assertEquals("20200923-0", first.getConceptSchema().getVersionNumber());
+        assertEquals("20220715-0", first.getConceptSchema().getVersionNumber());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("Agriculture, fisheries, forestry and food", dataTheme.getLabel().get(Language.ENGLISH.code()));
         assertEquals("http://publications.europa.eu/resource/authority/data-theme", dataTheme.getConceptSchema().getUri());
         assertEquals("Data theme", dataTheme.getConceptSchema().getLabel().get(Language.ENGLISH.code()));
-        assertEquals("20200923-0", dataTheme.getConceptSchema().getVersionNumber());
+        assertEquals("20220715-0", dataTheme.getConceptSchema().getVersionNumber());
     }
 
     @Test

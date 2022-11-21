@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -28,8 +30,6 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/34802596-0286-11ed-acce-01aa75ed71a1.0001.01/DOC_1";
-    private static final String rdfFileName = "data-theme-skos-ap-act.rdf";
     private static String VERSION = "0";
 
     public DataThemeHarvester() {
@@ -42,7 +42,7 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
 
     public Flux<DataTheme> harvest() {
         log.info("Starting harvest of EU data themes");
-        final org.springframework.core.io.Resource dataThemesRdfSource = getSource(cellarURI, rdfFileName);
+        final org.springframework.core.io.Resource dataThemesRdfSource = getSource(sparqlQuery());
         if(dataThemesRdfSource == null) {
             return Flux.error(new Exception("Unable to fetch data-theme distribution"));
         }
@@ -69,7 +69,7 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
                             .map(stmt -> stmt.getObject().asLiteral())
                             .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
                             .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
-                    .versionNumber(resource.getProperty(EUAuthorityOntology.tableVersionNumber).getString())
+                    .versionNumber(resource.getProperty(OWL.versionInfo).getString())
                     .build())
                 .block();
 
@@ -84,5 +84,43 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
                         LocalDate.parse(dataTheme.getProperty(EUAuthorityOntology.startUse).getString()) : null)
                 .conceptSchema(conceptSchema)
                 .build();
+    }
+
+    private String sparqlQuery() {
+        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
+            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
+            "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
+            "CONSTRUCT { " +
+                "atres:data-theme owl:versionInfo ?version . " +
+                "atres:data-theme skos:prefLabel ?schemaLabel . " +
+                "?dataTheme skos:inScheme ?inScheme . " +
+                "?dataTheme dc:identifier ?code . " +
+                "?dataTheme at:start.use ?startUse . " +
+                "?dataTheme skos:prefLabel ?prefLabel . " +
+            "} WHERE { " +
+                "atres:data-theme owl:versionInfo ?version . " +
+                "atres:data-theme skos:prefLabel ?schemaLabel . " +
+                "FILTER(" +
+                    "LANG(?schemaLabel) = 'en' || " +
+                    "LANG(?schemaLabel) = 'no' || " +
+                    "LANG(?schemaLabel) = 'nb' || " +
+                    "LANG(?schemaLabel) = 'nn'" +
+                ") . " +
+                "?dataTheme skos:inScheme atres:data-theme . " +
+                "?dataTheme skos:inScheme ?inScheme . " +
+                "?dataTheme a skos:Concept . " +
+                "?dataTheme dc:identifier ?code . " +
+                "OPTIONAL { ?dataTheme at:start.use ?startUse . } " +
+                "?dataTheme skos:prefLabel ?prefLabel . " +
+                "FILTER(" +
+                    "LANG(?prefLabel) = 'en' || " +
+                    "LANG(?prefLabel) = 'no' || " +
+                    "LANG(?prefLabel) = 'nb' || " +
+                    "LANG(?prefLabel) = 'nn'" +
+                ") . " +
+            "}";
+        return URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
 }

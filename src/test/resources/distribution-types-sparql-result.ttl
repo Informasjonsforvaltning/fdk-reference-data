@@ -1,0 +1,38 @@
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/distribution-type/> .
+@prefix ns2:	<http://publications.europa.eu/resource/authority/> .
+ns1:DOWNLOADABLE_FILE	skos:inScheme	ns2:distribution-type ;
+	skos:prefLabel	"Nedlastbar fil"@no ,
+		"Downloadable file"@en ,
+		"Nedlastbar fil"@nb ,
+		"Nedlastbar fil"@nn .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+ns1:DOWNLOADABLE_FILE	dc:identifier	"DOWNLOADABLE_FILE" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-01-01" .
+ns1:FEED_INFO	skos:inScheme	ns2:distribution-type ;
+	skos:prefLabel	"Informasjonsstraum"@nn ,
+		"Information feed"@en ,
+		"Informasjonsstr\u00F8m"@nb ,
+		"Informasjonsstr\u00F8m"@no ;
+	dc:identifier	"FEED_INFO" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-01-01" .
+ns1:OP_DATPRO	skos:inScheme	ns2:distribution-type ;
+	skos:prefLabel	"Provisional data"@en ;
+	dc:identifier	"OP_DATPRO" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1952-07-23" .
+ns1:VISUALIZATION	skos:inScheme	ns2:distribution-type ;
+	skos:prefLabel	"Visualization"@en ,
+		"Visualisering"@nb ,
+		"Visualisering"@nn ,
+		"Visualisering"@no ;
+	dc:identifier	"VISUALIZATION" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-01-01" .
+ns1:WEB_SERVICE	skos:inScheme	ns2:distribution-type ;
+	skos:prefLabel	"Webteneste/API"@nn ,
+		"Webtjeneste/API"@nb ,
+		"Webtjeneste/API"@no ,
+		"Web service/API"@en ;
+	dc:identifier	"WEB_SERVICE" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-01-01" .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+ns2:distribution-type	owl:versionInfo	"20220715-0" .

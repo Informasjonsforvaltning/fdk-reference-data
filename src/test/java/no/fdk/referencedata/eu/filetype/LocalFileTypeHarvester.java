@@ -16,7 +16,7 @@ public class LocalFileTypeHarvester extends FileTypeHarvester {
     }
 
     @Override
-    public Resource getSource(final String cellarURI, final String fileName) {
-        return new ClassPathResource("filetypes-skos-ap-act.rdf");
+    public Resource getSource(final String sparqlQuery) {
+        return new ClassPathResource("filetypes-sparql-result.ttl");
     }
 }

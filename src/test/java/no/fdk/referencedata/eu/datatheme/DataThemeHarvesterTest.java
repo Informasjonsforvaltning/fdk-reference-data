@@ -17,8 +17,8 @@ public class DataThemeHarvesterTest {
     public void test_fetch_datatypes() throws Exception {
         DataThemeHarvester dataThemeHarvester = new LocalDataThemeHarvester("20200923-0");
 
-        assertNotNull(dataThemeHarvester.getSource("", ""));
-        assertEquals("data-theme-skos-ap-act.rdf", dataThemeHarvester.getSource("", "").getFilename());
+        assertNotNull(dataThemeHarvester.getSource(""));
+        assertEquals("data-theme-sparql-result.ttl", dataThemeHarvester.getSource("").getFilename());
         assertEquals("20200923-0", dataThemeHarvester.getVersion());
 
         List<DataTheme> dataThemes = dataThemeHarvester.harvest().collectList().block();
@@ -32,7 +32,7 @@ public class DataThemeHarvesterTest {
         assertEquals(LocalDate.parse("2015-10-01"), first.getStartUse());
         assertEquals("http://publications.europa.eu/resource/authority/data-theme", first.getConceptSchema().getUri());
         assertEquals("Data theme", first.getConceptSchema().getLabel().get(Language.ENGLISH.code()));
-        assertEquals("20200923-0", first.getConceptSchema().getVersionNumber());
+        assertEquals("20220715-0", first.getConceptSchema().getVersionNumber());
     }
 
 }

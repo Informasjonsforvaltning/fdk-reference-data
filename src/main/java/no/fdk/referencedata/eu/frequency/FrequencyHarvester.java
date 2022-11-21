@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +29,6 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/c7429320-f70c-11ec-b94a-01aa75ed71a1.0001.02/DOC_1";
-    private static final String rdfFileName = "frequencies-skos.rdf";
     private static String VERSION = "0";
 
     public FrequencyHarvester() {
@@ -41,7 +41,7 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
 
     public Flux<Frequency> harvest() {
         log.info("Starting harvest of EU frequencies");
-        final org.springframework.core.io.Resource rdfSource = getSource(cellarURI, rdfFileName);
+        final org.springframework.core.io.Resource rdfSource = getSource(sparqlQuery());
         if(rdfSource == null) {
             return Flux.error(new Exception("Unable to fetch frequency distribution"));
         }
@@ -74,5 +74,31 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
                 .code(frequency.getProperty(DC.identifier).getObject().toString())
                 .label(label)
                 .build();
+    }
+
+    private String sparqlQuery() {
+        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
+            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
+            "CONSTRUCT { " +
+                "atres:frequency owl:versionInfo ?version . " +
+                "?frequency skos:inScheme atres:frequency . " +
+                "?frequency dc:identifier ?code . " +
+                "?frequency skos:prefLabel ?prefLabel . " +
+            "} WHERE { " +
+                "atres:frequency owl:versionInfo ?version . " +
+                "?frequency skos:inScheme atres:frequency . " +
+                "?frequency a skos:Concept . " +
+                "?frequency dc:identifier ?code . " +
+                "?frequency skos:prefLabel ?prefLabel . " +
+                "FILTER(" +
+                    "LANG(?prefLabel) = 'en' || " +
+                    "LANG(?prefLabel) = 'no' || " +
+                    "LANG(?prefLabel) = 'nb' || " +
+                    "LANG(?prefLabel) = 'nn'" +
+                ") . " +
+            "}";
+        return URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
 }

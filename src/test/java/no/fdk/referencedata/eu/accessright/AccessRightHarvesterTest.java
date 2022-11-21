@@ -16,18 +16,18 @@ public class AccessRightHarvesterTest {
     public void test_fetch_access_rights() {
         AccessRightHarvester harvester = new LocalAccessRightHarvester("20200923-0");
 
-        assertNotNull(harvester.getSource("", ""));
-        assertEquals("access-right-skos-ap-act.rdf", harvester.getSource("", "").getFilename());
+        assertNotNull(harvester.getSource(""));
+        assertEquals("access-right-sparql-result.ttl", harvester.getSource("").getFilename());
         assertEquals("20200923-0", harvester.getVersion());
 
         List<AccessRight> accessRights = harvester.harvest().collectList().block();
         assertNotNull(accessRights);
-        assertEquals(6, accessRights.size());
+        assertEquals(7, accessRights.size());
 
         AccessRight first = accessRights.get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", first.getUri());
-        assertEquals("CONFIDENTIAL", first.getCode());
-        assertEquals("confidential", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/access-right/NORMAL", first.getUri());
+        assertEquals("NORMAL", first.getCode());
+        assertEquals("normal", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }

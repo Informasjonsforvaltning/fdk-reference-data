@@ -1,0 +1,69 @@
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/> .
+ns1:main-activity	owl:versionInfo	"20220928-0" .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns3:	<http://publications.europa.eu/resource/authority/main-activity/> .
+ns3:OP_DATPRO	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Provisional data"@en .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+ns3:OP_DATPRO	dc:identifier	"OP_DATPRO" .
+ns3:airport	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Airport-related activities"@en ;
+	dc:identifier	"airport" .
+ns3:defence	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Defence"@en ;
+	dc:identifier	"defence" .
+ns3:econ-aff	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Economic affairs"@en ;
+	dc:identifier	"econ-aff" .
+ns3:education	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Education"@en ;
+	dc:identifier	"education" .
+ns3:electricity	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Electricity-related activities"@en ;
+	dc:identifier	"electricity" .
+ns3:env-pro	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Environmental protection"@en ;
+	dc:identifier	"env-pro" .
+ns3:gas-heat	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Production, transport or distribution of gas or heat"@en ;
+	dc:identifier	"gas-heat" .
+ns3:gas-oil	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Extraction of gas or oil"@en ;
+	dc:identifier	"gas-oil" .
+ns3:gen-pub	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"General public services"@en ;
+	dc:identifier	"gen-pub" .
+ns3:hc-am	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Housing and community amenities"@en ;
+	dc:identifier	"hc-am" .
+ns3:health	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Health"@en ;
+	dc:identifier	"health" .
+ns3:port	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Port-related activities"@en ;
+	dc:identifier	"port" .
+ns3:post	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Postal services"@en ;
+	dc:identifier	"post" .
+ns3:pub-os	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Public order and safety"@en ;
+	dc:identifier	"pub-os" .
+ns3:rail	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Railway services"@en ;
+	dc:identifier	"rail" .
+ns3:rcr	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Recreation, culture and religion"@en ;
+	dc:identifier	"rcr" .
+ns3:soc-pro	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Social protection"@en ;
+	dc:identifier	"soc-pro" .
+ns3:solid-fuel	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Exploration or extraction of coal or other solid fuels"@en ;
+	dc:identifier	"solid-fuel" .
+ns3:urttb	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Urban railway, tramway, trolleybus or bus services"@en ;
+	dc:identifier	"urttb" .
+ns3:water	skos:inScheme	ns1:main-activity ;
+	skos:prefLabel	"Water-related activities"@en ;
+	dc:identifier	"water" .

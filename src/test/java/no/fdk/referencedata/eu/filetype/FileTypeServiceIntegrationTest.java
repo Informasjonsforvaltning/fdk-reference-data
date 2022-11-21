@@ -39,7 +39,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         fileTypeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
-        assertEquals(15, counter.get());
+        assertEquals(198, counter.get());
 
         final FileType first = fileTypeRepository.findById("http://publications.europa.eu/resource/authority/file-type/7Z").orElseThrow();
         assertEquals("http://publications.europa.eu/resource/authority/file-type/7Z", first.getUri());

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +29,6 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/e504b3a7-b57e-11ec-b6f4-01aa75ed71a1.0001.03/DOC_1";
-    private static final String rdfFileName = "access-right-skos.rdf";
     private static String VERSION = "0";
 
     public AccessRightHarvester() {
@@ -41,7 +41,7 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
 
     public Flux<AccessRight> harvest() {
         log.info("Starting harvest of EU access-rights");
-        final org.springframework.core.io.Resource rdfSource = getSource(cellarURI, rdfFileName);
+        final org.springframework.core.io.Resource rdfSource = getSource(sparqlQuery());
         if(rdfSource == null) {
             return Flux.error(new Exception("Unable to fetch access-right distribution"));
         }
@@ -74,5 +74,31 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
                 .code(accessRight.getProperty(DC.identifier).getObject().toString())
                 .label(label)
                 .build();
+    }
+
+    private String sparqlQuery() {
+        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
+            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
+            "CONSTRUCT { " +
+                "atres:access-right owl:versionInfo ?version . " +
+                "?accessRight skos:inScheme atres:access-right . " +
+                "?accessRight dc:identifier ?code . " +
+                "?accessRight skos:prefLabel ?prefLabel . " +
+            "} WHERE { " +
+                "atres:access-right owl:versionInfo ?version . " +
+                "?accessRight skos:inScheme atres:access-right . " +
+                "?accessRight a skos:Concept . " +
+                "?accessRight dc:identifier ?code . " +
+                "?accessRight skos:prefLabel ?prefLabel . " +
+                "FILTER(" +
+                    "LANG(?prefLabel) = 'en' || " +
+                    "LANG(?prefLabel) = 'no' || " +
+                    "LANG(?prefLabel) = 'nb' || " +
+                    "LANG(?prefLabel) = 'nn'" +
+                ") . " +
+            "}";
+        return URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
 }

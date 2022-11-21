@@ -16,7 +16,7 @@ public class LocalDistributionTypeHarvester extends DistributionTypeHarvester {
     }
 
     @Override
-    public Resource getSource(final String cellarURI, final String fileName) {
-        return new ClassPathResource("distribution-types-skos.rdf");
+    public Resource getSource(final String sparqlQuery) {
+        return new ClassPathResource("distribution-types-sparql-result.ttl");
     }
 }

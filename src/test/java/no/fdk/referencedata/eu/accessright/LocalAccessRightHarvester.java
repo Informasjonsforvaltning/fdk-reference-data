@@ -16,7 +16,7 @@ public class LocalAccessRightHarvester extends AccessRightHarvester {
     }
 
     @Override
-    public Resource getSource(final String cellarURI, final String fileName) {
-        return new ClassPathResource("access-right-skos-ap-act.rdf");
+    public Resource getSource(final String sparqlQuery) {
+        return new ClassPathResource("access-right-sparql-result.ttl");
     }
 }
