@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.util.ZipUtils;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.core.io.FileUrlResource;
@@ -14,6 +16,8 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,9 +33,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/65e724e6-fe92-11ec-b94a-01aa75ed71a1.0001.04/DOC_1";
-    private static final String rdfFileName = "eurovoc_in_skos_core_concepts.zip";
-    private static final String VERSION = "0";
+    private static String VERSION = "0";
 
     public EuroVocHarvester() {
         super();
@@ -43,25 +45,23 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
 
     public Flux<EuroVoc> harvest() {
         log.info("Starting harvest of EU eurovoc");
-        final org.springframework.core.io.Resource source = getSource(cellarURI, rdfFileName);
+        final org.springframework.core.io.Resource source = getSource(sparqlQuery());
         if(source == null) {
             return Flux.error(new Exception("Unable to fetch eurovoc distribution"));
         }
 
-        try {
-            final File destDir = Files.createTempDirectory("").toFile();
-            ZipUtils.extractZip(source.getInputStream(), destDir);
-            final org.springframework.core.io.Resource rdf =
-                    new FileUrlResource(destDir.getAbsolutePath() + "/eurovoc_in_skos_core_concepts.rdf");
+        return Mono.justOrEmpty(getModel(source))
+                .doOnSuccess(this::updateVersion)
+                .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, SKOS.Concept).toList())
+                .filter(Resource::isURIResource)
+                .map(this::mapEuroVoc);
+    }
 
-            return Mono.justOrEmpty(getModel(rdf))
-                    .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, SKOS.Concept).toList())
-                    .filter(Resource::isURIResource)
-                    .map(this::mapEuroVoc);
-
-        } catch(IOException ex) {
-            return Flux.error(ex);
-        }
+    private void updateVersion(Model m) {
+        VERSION = m.getProperty(
+                m.getResource("http://publications.europa.eu/ontology/euvoc#EuroVoc"),
+                OWL.versionInfo
+        ).getString();
     }
 
     private EuroVoc mapEuroVoc(Resource euroVoc) {
@@ -77,5 +77,31 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                 .code(euroVoc.getURI().substring(euroVoc.getURI().lastIndexOf("/") + 1))
                 .label(label)
                 .build();
+    }
+
+    private String sparqlQuery() {
+        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+            "PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#> " +
+            "CONSTRUCT { " +
+                "euvoc:EuroVoc owl:versionInfo ?version . " +
+                "?euroVoc a skos:Concept . " +
+                "?euroVoc skos:notation ?code . " +
+                "?euroVoc skos:prefLabel ?prefLabel . " +
+            "} WHERE { " +
+                "euvoc:EuroVoc owl:equivalentClass ?eqClass . " +
+                "?eqClass owl:hasValue ?eqVoc . " +
+                "?eqVoc owl:versionInfo ?version . " +
+                "?euroVoc skos:inScheme ?eqVoc . " +
+                "?euroVoc a skos:Concept . " +
+                "?euroVoc skos:prefLabel ?prefLabel . " +
+                "FILTER(" +
+                    "LANG(?prefLabel) = 'en' || " +
+                    "LANG(?prefLabel) = 'no' || " +
+                    "LANG(?prefLabel) = 'nb' || " +
+                    "LANG(?prefLabel) = 'nn'" +
+                ") . " +
+            "}";
+        return URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
 }

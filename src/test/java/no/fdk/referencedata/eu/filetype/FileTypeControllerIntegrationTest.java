@@ -58,7 +58,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         FileTypes fileTypes =
                 this.restTemplate.getForObject("http://localhost:" + port + "/eu/file-types", FileTypes.class);
 
-        assertEquals(15, fileTypes.getFileTypes().size());
+        assertEquals(198, fileTypes.getFileTypes().size());
 
         FileType first = fileTypes.getFileTypes().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/file-type/7Z", first.getUri());
@@ -79,7 +79,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_file_types_fails_without_api_key() {
-        assertEquals(15, fileTypeRepository.count());
+        assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -91,7 +91,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(15, fileTypeRepository.count());
+        assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -100,7 +100,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_file_types_executes_a_force_update() {
-        assertEquals(15, fileTypeRepository.count());
+        assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -112,7 +112,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(15, fileTypeRepository.count());
+        assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());

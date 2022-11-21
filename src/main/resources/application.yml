@@ -1,5 +1,5 @@
 application:
-  api-key: ${API_KEY:}
+  api-key: ${API_KEY:tst}
 
 spring:
   data:

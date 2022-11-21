@@ -16,7 +16,7 @@ public class LocalMainActivityHarvester extends MainActivityHarvester {
     }
 
     @Override
-    public Resource getSource(final String cellarURI, final String fileName) {
-        return new ClassPathResource("main-activity-skos.rdf");
+    public Resource getSource(final String sparqlQuery) {
+        return new ClassPathResource("main-activity-sparql-result.ttl");
     }
 }

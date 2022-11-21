@@ -41,7 +41,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         accessRightRepository.findAll().forEach(accessRight -> counter.incrementAndGet());
-        assertEquals(6, counter.get());
+        assertEquals(7, counter.get());
 
         final AccessRight first = accessRightRepository.findById("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL").orElseThrow();
         assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", first.getUri());

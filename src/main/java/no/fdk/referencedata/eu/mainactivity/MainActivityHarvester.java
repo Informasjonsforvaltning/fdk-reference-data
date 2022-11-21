@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +29,6 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/c37a3d76-3e74-11ed-92ed-01aa75ed71a1.0001.03/DOC_1";
-    private static final String rdfFileName = "main-activity-skos.rdf";
     private static String VERSION = "0";
 
     public MainActivityHarvester() {
@@ -41,7 +41,7 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
 
     public Flux<MainActivity> harvest() {
         log.info("Starting harvest of EU main-activity");
-        final org.springframework.core.io.Resource rdfSource = getSource(cellarURI, rdfFileName);
+        final org.springframework.core.io.Resource rdfSource = getSource(sparqlQuery());
         if(rdfSource == null) {
             return Flux.error(new Exception("Unable to fetch main-activity distribution"));
         }
@@ -74,5 +74,31 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
                 .code(mainActivity.getProperty(DC.identifier).getObject().toString())
                 .label(label)
                 .build();
+    }
+
+    private String sparqlQuery() {
+        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
+            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
+            "CONSTRUCT { " +
+                "atres:main-activity owl:versionInfo ?version . " +
+                "?mainActivity skos:inScheme atres:main-activity . " +
+                "?mainActivity dc:identifier ?code . " +
+                "?mainActivity skos:prefLabel ?prefLabel . " +
+            "} WHERE { " +
+                "atres:main-activity owl:versionInfo ?version . " +
+                "?mainActivity skos:inScheme atres:main-activity . " +
+                "?mainActivity a skos:Concept . " +
+                "?mainActivity dc:identifier ?code . " +
+                "?mainActivity skos:prefLabel ?prefLabel . " +
+                "FILTER(" +
+                    "LANG(?prefLabel) = 'en' || " +
+                    "LANG(?prefLabel) = 'no' || " +
+                    "LANG(?prefLabel) = 'nb' || " +
+                    "LANG(?prefLabel) = 'nn'" +
+                ") . " +
+            "}";
+        return URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
 }

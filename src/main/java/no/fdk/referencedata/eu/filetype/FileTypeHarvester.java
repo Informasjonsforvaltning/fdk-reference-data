@@ -14,11 +14,12 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Component
 @Slf4j
 public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
-    private static final String cellarURI = "http://publications.europa.eu/resource/cellar/bfc76ea5-3e74-11ed-92ed-01aa75ed71a1.0001.03/DOC_1";
-    private static final String rdfFileName = "filetypes-skos-ap-act.rdf";
     private static String VERSION = "0";
 
     public FileTypeHarvester() {
@@ -31,7 +32,7 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
 
     public Flux<FileType> harvest() {
         log.info("Starting harvest of EU file types");
-        final org.springframework.core.io.Resource fileTypesRdfSource = getSource(cellarURI, rdfFileName);
+        final org.springframework.core.io.Resource fileTypesRdfSource = getSource(sparqlQuery());
         if(fileTypesRdfSource == null) {
             return Flux.error(new Exception("Unable to fetch file-types distribution"));
         }
@@ -66,5 +67,31 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
                 .code(fileType.getProperty(DC.identifier).getObject().toString())
                 .mediaType(ianaMediaType.toString())
                 .build();
+    }
+
+    private String sparqlQuery() {
+        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
+            "PREFIX dct: <http://purl.org/dc/terms/> " +
+            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
+            "PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#> " +
+            "CONSTRUCT { " +
+                "atres:file-type owl:versionInfo ?version . " +
+                "?fileType a euvoc:FileType . " +
+                "?fileType dc:identifier ?code . " +
+                "?fileType euvoc:xlNotation ?xlNotation . " +
+                "?xlNotation dct:type <http://publications.europa.eu/resource/authority/notation-type/IANA_MT> . " +
+                "?xlNotation euvoc:xlCodification ?xlCodification . " +
+            "} WHERE { " +
+                "atres:file-type owl:versionInfo ?version . " +
+                "?fileType skos:inScheme atres:file-type . " +
+                "?fileType a euvoc:FileType . " +
+                "?fileType dc:identifier ?code . " +
+                "?fileType euvoc:xlNotation ?xlNotation . " +
+                "?xlNotation dct:type <http://publications.europa.eu/resource/authority/notation-type/IANA_MT> . " +
+                "?xlNotation euvoc:xlCodification ?xlCodification . " +
+            "}";
+        return URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
 }

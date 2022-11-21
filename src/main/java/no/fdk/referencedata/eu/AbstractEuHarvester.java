@@ -16,13 +16,13 @@ import java.util.Optional;
 @Component
 @Slf4j
 public abstract class AbstractEuHarvester<T> {
-    private static final String DOWNLOAD_API = "https://op.europa.eu/o/opportal-service/euvoc-download-handler";
+    private static final String SPARQL_API = "http://publications.europa.eu/webapi/rdf/sparql";
 
     public abstract String getVersion();
 
-    public Resource getSource(final String cellarURI, final String fileName) {
+    public Resource getSource(final String sparqlQuery) {
         try {
-            return new UrlResource(DOWNLOAD_API + "?cellarURI=" + cellarURI + "&fileName=" + fileName);
+            return new UrlResource(SPARQL_API + "?query=" + sparqlQuery);
         } catch (MalformedURLException e) {
             log.error("Unable to get source", e);
             return null;
@@ -31,7 +31,7 @@ public abstract class AbstractEuHarvester<T> {
 
     protected Optional<Model> getModel(Resource resource) {
         try {
-            return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.RDFXML));
+            return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE));
         } catch (IOException e) {
             log.error("Unable to load model", e);
             return Optional.empty();

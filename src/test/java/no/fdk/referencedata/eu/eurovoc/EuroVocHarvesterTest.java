@@ -16,13 +16,13 @@ public class EuroVocHarvesterTest {
     public void test_fetch_EuroVoc() {
         EuroVocHarvester euroVocHarvester = new LocalEuroVocHarvester("20200923-0");
 
-        assertNotNull(euroVocHarvester.getSource("", ""));
-        assertEquals("eurovoc_in_skos_core_concepts.zip", euroVocHarvester.getSource("", "").getFilename());
+        assertNotNull(euroVocHarvester.getSource(""));
+        assertEquals("eurovoc-sparql-result.ttl", euroVocHarvester.getSource("").getFilename());
         assertEquals("20200923-0", euroVocHarvester.getVersion());
 
         List<EuroVoc> euroVocList = euroVocHarvester.harvest().collectList().block();
         assertNotNull(euroVocList);
-        assertEquals(1916, euroVocList.size());
+        assertEquals(7363, euroVocList.size());
 
         EuroVoc first = euroVocList.get(0);
         assertEquals("http://eurovoc.europa.eu/7353", first.getUri());

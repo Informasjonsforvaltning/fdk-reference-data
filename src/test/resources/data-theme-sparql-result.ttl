@@ -1,0 +1,102 @@
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/data-theme/> .
+@prefix ns2:	<http://publications.europa.eu/resource/authority/> .
+ns1:AGRI	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Jordbruk, fiskeri, skogbruk og mat"@no ,
+		"Agriculture, fisheries, forestry and food"@en ,
+		"Jordbruk, fiskeri, skogbruk og mat"@nb ,
+		"Jordbruk, fiskeri, skogbruk og mat"@nn .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+ns1:AGRI	dc:identifier	"AGRI" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:ECON	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Economy and finance"@en ,
+		"\u00D8konomi og finans"@nb ,
+		"\u00D8konomi og finans"@nn ,
+		"\u00D8konomi og finans"@no ;
+	dc:identifier	"ECON" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:EDUC	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Utdanning, kultur og sport"@no ,
+		"Utdanning, kultur og sport"@nb ,
+		"Utdanning, kultur og sport"@nn ,
+		"Education, culture and sport"@en ;
+	dc:identifier	"EDUC" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:ENER	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Energi"@no ,
+		"Energi"@nn ,
+		"Energy"@en ,
+		"Energi"@nb ;
+	dc:identifier	"ENER" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:ENVI	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Environment"@en ,
+		"Milj\u00F8"@nb ,
+		"Milj\u00F8"@nn ,
+		"Milj\u00F8"@no ;
+	dc:identifier	"ENVI" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:GOVE	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Forvaltning og offentleg sektor"@nn ,
+		"Government and public sector"@en ,
+		"Forvaltning og offentlig sektor"@nb ,
+		"Forvaltning og offentlig sektor"@no ;
+	dc:identifier	"GOVE" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:HEAL	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Helse"@nb ,
+		"Helse"@no ,
+		"Helse"@nn ,
+		"Health"@en ;
+	dc:identifier	"HEAL" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:INTR	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Internasjonale temaer"@no ,
+		"Internasjonale temaer"@nb ,
+		"Internasjonale tema"@nn ,
+		"International issues"@en ;
+	dc:identifier	"INTR" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:JUST	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Justis, rettssystem og allmenn sikkerhet"@no ,
+		"Justis, rettssystem og allmenn tryggleik"@nn ,
+		"Justice, legal system and public safety"@en ,
+		"Justis, rettssystem og allmenn sikkerhet"@nb ;
+	dc:identifier	"JUST" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:OP_DATPRO	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Provisional data"@en ;
+	dc:identifier	"OP_DATPRO" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1952-07-23" .
+ns1:REGI	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Regionar og byar"@nn ,
+		"Regions and cities"@en ,
+		"Regioner og byer"@no ,
+		"Regioner og byer"@nb ;
+	dc:identifier	"REGI" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:SOCI	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Befolkning og samfunn"@nb ,
+		"Befolkning og samfunn"@nn ,
+		"Population and society"@en ,
+		"Befolkning og samfunn"@no ;
+	dc:identifier	"SOCI" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:TECH	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Vitenskap og teknologi"@nb ,
+		"Science and technology"@en ,
+		"Vitenskap og teknologi"@no ,
+		"Vitskap og teknologi"@nn ;
+	dc:identifier	"TECH" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+ns1:TRAN	skos:inScheme	ns2:data-theme ;
+	skos:prefLabel	"Transport"@en ,
+		"Transport"@nb ,
+		"Transport"@no ,
+		"Transport"@nn ;
+	dc:identifier	"TRAN" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+ns2:data-theme	owl:versionInfo	"20220715-0" ;
+	skos:prefLabel	"Data theme"@en .

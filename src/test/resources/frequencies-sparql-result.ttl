@@ -1,0 +1,189 @@
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/frequency/> .
+@prefix ns2:	<http://publications.europa.eu/resource/authority/> .
+ns1:OTHER	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"annet"@nb ,
+		"anna"@nn ,
+		"annet"@no ,
+		"other"@en .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+ns1:OTHER	dc:identifier	"OTHER" .
+ns1:WEEKLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"ukentlig"@no ,
+		"weekly"@en ,
+		"kvar veke"@nn ,
+		"ukentlig"@nb ;
+	dc:identifier	"WEEKLY" .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+ns2:frequency	owl:versionInfo	"20220615-0" .
+ns1:ANNUAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"annual"@en ,
+		"\u00E5rleg"@nn ,
+		"\u00E5rlig"@nb ,
+		"\u00E5rlig"@no ;
+	dc:identifier	"ANNUAL" .
+ns1:ANNUAL_2	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"semiannual"@en ,
+		"halv\u00E5rlig"@nb ,
+		"halv\u00E5rleg"@nn ,
+		"halv\u00E5rlig"@no ;
+	dc:identifier	"ANNUAL_2" .
+ns1:ANNUAL_3	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"tre ganger per \u00E5r"@no ,
+		"three times a year"@en ,
+		"tre gongar per \u00E5r"@nn ,
+		"tre ganger per \u00E5r"@nb ;
+	dc:identifier	"ANNUAL_3" .
+ns1:BIENNIAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"annethvert \u00E5r"@no ,
+		"annakvart \u00E5r"@nn ,
+		"annethvert \u00E5r"@nb ,
+		"biennial"@en ;
+	dc:identifier	"BIENNIAL" .
+ns1:BIMONTHLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"annenhver m\u00E5ned"@nb ,
+		"bimonthly"@en ,
+		"annakvar m\u00E5nad"@nn ,
+		"annenhver m\u00E5ned"@no ;
+	dc:identifier	"BIMONTHLY" .
+ns1:BIWEEKLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"kvar fjortande dag"@nn ,
+		"hver fjortende dag"@nb ,
+		"hver fjortende dag"@no ,
+		"biweekly"@en ;
+	dc:identifier	"BIWEEKLY" .
+ns1:CONT	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"kontinuerleg"@nn ,
+		"kontinuerlig"@no ,
+		"kontinuerlig"@nb ,
+		"continuous"@en ;
+	dc:identifier	"CONT" .
+ns1:DAILY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"dagleg"@nn ,
+		"daily"@en ,
+		"daglig"@no ,
+		"daglig"@nb ;
+	dc:identifier	"DAILY" .
+ns1:DAILY_2	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"to ganger per dag"@nb ,
+		"twice a day"@en ,
+		"to gongar per dag"@nn ,
+		"to ganger per dag"@no ;
+	dc:identifier	"DAILY_2" .
+ns1:IRREG	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"uregelmessig"@nb ,
+		"irregular"@en ,
+		"uregelmessig"@nn ,
+		"uregelmessig"@no ;
+	dc:identifier	"IRREG" .
+ns1:MONTHLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"m\u00E5nedlig"@nb ,
+		"m\u00E5nadleg"@nn ,
+		"monthly"@en ,
+		"m\u00E5nedlig"@no ;
+	dc:identifier	"MONTHLY" .
+ns1:MONTHLY_2	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"semimonthly"@en ,
+		"to ganger i m\u00E5neden"@nb ,
+		"to gongar i m\u00E5naden"@nn ,
+		"to ganger i m\u00E5neden"@no ;
+	dc:identifier	"MONTHLY_2" .
+ns1:MONTHLY_3	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"tre ganger i m\u00E5neden"@no ,
+		"tre ganger i m\u00E5neden"@nb ,
+		"tre gongar i m\u00E5naden"@nn ,
+		"three times a month"@en ;
+	dc:identifier	"MONTHLY_3" .
+ns1:NEVER	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"never"@en ,
+		"aldri"@nb ,
+		"aldri"@nn ,
+		"aldri"@no ;
+	dc:identifier	"NEVER" .
+ns1:OP_DATPRO	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"Provisional data"@en ;
+	dc:identifier	"OP_DATPRO" .
+ns1:QUARTERLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"kvartalsvis"@no ,
+		"quarterly"@en ,
+		"kvartalsvis"@nn ,
+		"kvartalsvis"@nb ;
+	dc:identifier	"QUARTERLY" .
+ns1:TRIENNIAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"hvert tredje \u00E5r"@nb ,
+		"triennial"@en ,
+		"hvert tredje \u00E5r"@no ,
+		"kvart tredje \u00E5r"@nn ;
+	dc:identifier	"TRIENNIAL" .
+ns1:UNKNOWN	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"ukjent"@nn ,
+		"unknown"@en ,
+		"ukjent"@nb ,
+		"ukjent"@no ;
+	dc:identifier	"UNKNOWN" .
+ns1:UPDATE_CONT	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"kontinuerlig oppdatert"@nb ,
+		"continuously updated"@en ,
+		"kontinuerleg oppdatert"@nn ,
+		"kontinuerlig oppdatert"@no ;
+	dc:identifier	"UPDATE_CONT" .
+ns1:WEEKLY_2	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"to gongar i veka"@nn ,
+		"to ganger i uken"@no ,
+		"semiweekly"@en ,
+		"to ganger i uken"@nb ;
+	dc:identifier	"WEEKLY_2" .
+ns1:WEEKLY_3	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"tre ganger i uken"@nb ,
+		"tre gongar i veka"@nn ,
+		"three times a week"@en ,
+		"tre ganger i uken"@no ;
+	dc:identifier	"WEEKLY_3" .
+ns1:QUINQUENNIAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"hvert femte \u00E5r"@nb ,
+		"quinquennial"@en ,
+		"kvart femte \u00E5r"@nn ,
+		"hvert femte \u00E5r"@no ;
+	dc:identifier	"QUINQUENNIAL" .
+ns1:DECENNIAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"hvert tiende \u00E5r"@no ,
+		"decennial"@en ,
+		"kvart tiande \u00E5r"@nn ,
+		"hvert tiende \u00E5r"@nb ;
+	dc:identifier	"DECENNIAL" .
+ns1:HOURLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"hver time"@nb ,
+		"hourly"@en ,
+		"hver time"@no ,
+		"kvar time"@nn ;
+	dc:identifier	"HOURLY" .
+ns1:QUADRENNIAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"kvart fjerde \u00E5r"@nn ,
+		"hvert fjerde \u00E5r"@no ,
+		"hvert fjerde \u00E5r"@nb ,
+		"quadrennial"@en ;
+	dc:identifier	"QUADRENNIAL" .
+ns1:BIHOURLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"annenhver time"@no ,
+		"bihourly"@en ,
+		"annakvar time"@nn ,
+		"annenhver time"@nb ;
+	dc:identifier	"BIHOURLY" .
+ns1:TRIHOURLY	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"kvar tredje time"@nn ,
+		"trihourly"@en ,
+		"hver tredje time"@no ,
+		"hver tredje time"@nb ;
+	dc:identifier	"TRIHOURLY" .
+ns1:BIDECENNIAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"bidecennial"@en ,
+		"hvert tjuende \u00E5r"@nb ,
+		"kvart tjuande \u00E5r"@nn ,
+		"hvert tjuende \u00E5r"@no ;
+	dc:identifier	"BIDECENNIAL" .
+ns1:TRIDECENNIAL	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"tridecennial"@en ,
+		"kvart trettiande \u00E5r"@nn ,
+		"hvert trettiende \u00E5r"@no ,
+		"hvert trettiende \u00E5r"@nb ;
+	dc:identifier	"TRIDECENNIAL" .
