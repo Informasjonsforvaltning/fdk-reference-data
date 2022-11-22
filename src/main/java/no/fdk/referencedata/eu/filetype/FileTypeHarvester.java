@@ -32,7 +32,7 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
 
     public Flux<FileType> harvest() {
         log.info("Starting harvest of EU file types");
-        final org.springframework.core.io.Resource fileTypesRdfSource = getSource(sparqlQuery());
+        final org.springframework.core.io.Resource fileTypesRdfSource = getSource();
         if(fileTypesRdfSource == null) {
             return Flux.error(new Exception("Unable to fetch file-types distribution"));
         }
@@ -69,7 +69,7 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
                 .build();
     }
 
-    private String sparqlQuery() {
+    public String sparqlQuery() {
         String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +

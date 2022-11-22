@@ -16,7 +16,7 @@ public class LocalAccessRightHarvester extends AccessRightHarvester {
     }
 
     @Override
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         return new ClassPathResource("access-right-sparql-result.ttl");
     }
 }

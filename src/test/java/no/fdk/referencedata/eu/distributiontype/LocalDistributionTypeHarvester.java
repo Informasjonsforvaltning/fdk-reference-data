@@ -16,7 +16,7 @@ public class LocalDistributionTypeHarvester extends DistributionTypeHarvester {
     }
 
     @Override
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         return new ClassPathResource("distribution-types-sparql-result.ttl");
     }
 }

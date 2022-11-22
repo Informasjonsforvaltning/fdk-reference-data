@@ -16,7 +16,7 @@ public class LocalEuroVocHarvester extends EuroVocHarvester {
     }
 
     @Override
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         return new ClassPathResource("eurovoc-sparql-result.ttl");
     }
 }

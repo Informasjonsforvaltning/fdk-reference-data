@@ -16,7 +16,7 @@ public class LocalFrequencyHarvester extends FrequencyHarvester {
     }
 
     @Override
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         return new ClassPathResource("frequencies-sparql-result.ttl");
     }
 }

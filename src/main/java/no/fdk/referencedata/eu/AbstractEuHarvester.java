@@ -20,9 +20,9 @@ public abstract class AbstractEuHarvester<T> {
 
     public abstract String getVersion();
 
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         try {
-            return new UrlResource(SPARQL_API + "?query=" + sparqlQuery);
+            return new UrlResource(SPARQL_API + "?query=" + sparqlQuery());
         } catch (MalformedURLException e) {
             log.error("Unable to get source", e);
             return null;
@@ -39,4 +39,6 @@ public abstract class AbstractEuHarvester<T> {
     }
 
     public abstract Flux<T> harvest();
+
+    public abstract String sparqlQuery();
 }

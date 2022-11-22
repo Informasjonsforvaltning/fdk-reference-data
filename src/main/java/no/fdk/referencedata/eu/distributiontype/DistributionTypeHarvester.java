@@ -42,7 +42,7 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
 
     public Flux<DistributionType> harvest() {
         log.info("Starting harvest of EU distribution types");
-        final org.springframework.core.io.Resource dataThemesRdfSource = getSource(sparqlQuery());
+        final org.springframework.core.io.Resource dataThemesRdfSource = getSource();
         if(dataThemesRdfSource == null) {
             return Flux.error(new Exception("Unable to fetch distribution-types distribution"));
         }
@@ -74,7 +74,7 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
                 .build();
     }
 
-    private String sparqlQuery() {
+    public String sparqlQuery() {
         String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +

@@ -45,7 +45,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
 
     public Flux<EuroVoc> harvest() {
         log.info("Starting harvest of EU eurovoc");
-        final org.springframework.core.io.Resource source = getSource(sparqlQuery());
+        final org.springframework.core.io.Resource source = getSource();
         if(source == null) {
             return Flux.error(new Exception("Unable to fetch eurovoc distribution"));
         }
@@ -79,7 +79,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                 .build();
     }
 
-    private String sparqlQuery() {
+    public String sparqlQuery() {
         String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
             "PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#> " +
