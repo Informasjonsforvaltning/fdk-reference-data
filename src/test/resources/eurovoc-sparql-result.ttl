@@ -13731,6 +13731,48 @@ ns3:EuroVoc	owl:versionInfo	"4.15" .
 	skos:prefLabel	"unitarian State"@en .
 <http://eurovoc.europa.eu/8404>	rdf:type	skos:Concept ;
 	skos:prefLabel	"International Trade Union Confederation"@en .
+<http://eurovoc.europa.eu/100142>	rdf:type	skos:Concept ;
+	skos:prefLabel	"04 POLITICS"@en .
+<http://eurovoc.europa.eu/100143>	rdf:type	skos:Concept ;
+	skos:prefLabel	"08 INTERNATIONAL RELATIONS"@en .
+<http://eurovoc.europa.eu/100144>	rdf:type	skos:Concept ;
+	skos:prefLabel	"10 EUROPEAN UNION"@en .
+<http://eurovoc.europa.eu/100145>	rdf:type	skos:Concept ;
+	skos:prefLabel	"12 LAW"@en .
+<http://eurovoc.europa.eu/100146>	rdf:type	skos:Concept ;
+	skos:prefLabel	"16 ECONOMICS"@en .
+<http://eurovoc.europa.eu/100147>	rdf:type	skos:Concept ;
+	skos:prefLabel	"20 TRADE"@en .
+<http://eurovoc.europa.eu/100148>	rdf:type	skos:Concept ;
+	skos:prefLabel	"24 FINANCE"@en .
+<http://eurovoc.europa.eu/100149>	rdf:type	skos:Concept ;
+	skos:prefLabel	"28 SOCIAL QUESTIONS"@en .
+<http://eurovoc.europa.eu/100150>	rdf:type	skos:Concept ;
+	skos:prefLabel	"32 EDUCATION AND COMMUNICATIONS"@en .
+<http://eurovoc.europa.eu/100151>	rdf:type	skos:Concept ;
+	skos:prefLabel	"36 SCIENCE"@en .
+<http://eurovoc.europa.eu/100152>	rdf:type	skos:Concept ;
+	skos:prefLabel	"40 BUSINESS AND COMPETITION"@en .
+<http://eurovoc.europa.eu/100153>	rdf:type	skos:Concept ;
+	skos:prefLabel	"44 EMPLOYMENT AND WORKING CONDITIONS"@en .
+<http://eurovoc.europa.eu/100154>	rdf:type	skos:Concept ;
+	skos:prefLabel	"48 TRANSPORT"@en .
+<http://eurovoc.europa.eu/100155>	rdf:type	skos:Concept ;
+	skos:prefLabel	"52 ENVIRONMENT"@en .
+<http://eurovoc.europa.eu/100156>	rdf:type	skos:Concept ;
+	skos:prefLabel	"56 AGRICULTURE, FORESTRY AND FISHERIES"@en .
+<http://eurovoc.europa.eu/100157>	rdf:type	skos:Concept ;
+	skos:prefLabel	"60 AGRI-FOODSTUFFS"@en .
+<http://eurovoc.europa.eu/100158>	rdf:type	skos:Concept ;
+	skos:prefLabel	"64 PRODUCTION, TECHNOLOGY AND RESEARCH"@en .
+<http://eurovoc.europa.eu/100159>	rdf:type	skos:Concept ;
+	skos:prefLabel	"66 ENERGY"@en .
+<http://eurovoc.europa.eu/100160>	rdf:type	skos:Concept ;
+	skos:prefLabel	"68 INDUSTRY"@en .
+<http://eurovoc.europa.eu/100161>	rdf:type	skos:Concept ;
+	skos:prefLabel	"72 GEOGRAPHY"@en .
+<http://eurovoc.europa.eu/100162>	rdf:type	skos:Concept ;
+	skos:prefLabel	"76 INTERNATIONAL ORGANISATIONS"@en .
 <http://eurovoc.europa.eu/1407>	rdf:type	skos:Concept ;
 	skos:prefLabel	"light industry"@en .
 <http://eurovoc.europa.eu/1437>	rdf:type	skos:Concept ;

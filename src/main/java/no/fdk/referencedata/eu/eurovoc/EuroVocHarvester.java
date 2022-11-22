@@ -86,20 +86,30 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
             "CONSTRUCT { " +
                 "euvoc:EuroVoc owl:versionInfo ?version . " +
                 "?euroVoc a skos:Concept . " +
-                "?euroVoc skos:notation ?code . " +
-                "?euroVoc skos:prefLabel ?prefLabel . " +
+                "?euroVoc skos:prefLabel ?vocLabel . " +
+                "?domain a skos:Concept . " +
+                "?domain skos:prefLabel ?domainLabel . " +
             "} WHERE { " +
                 "euvoc:EuroVoc owl:equivalentClass ?eqClass . " +
                 "?eqClass owl:hasValue ?eqVoc . " +
                 "?eqVoc owl:versionInfo ?version . " +
                 "?euroVoc skos:inScheme ?eqVoc . " +
                 "?euroVoc a skos:Concept . " +
-                "?euroVoc skos:prefLabel ?prefLabel . " +
+                "?euroVoc skos:prefLabel ?vocLabel . " +
                 "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
+                    "LANG(?vocLabel) = 'en' || " +
+                    "LANG(?vocLabel) = 'no' || " +
+                    "LANG(?vocLabel) = 'nb' || " +
+                    "LANG(?vocLabel) = 'nn'" +
+                ") . " +
+                "?domain skos:inScheme <http://eurovoc.europa.eu/domains> . " +
+                "?domain a skos:Concept . " +
+                "?domain skos:prefLabel ?domainLabel . " +
+                "FILTER(" +
+                    "LANG(?domainLabel) = 'en' || " +
+                    "LANG(?domainLabel) = 'no' || " +
+                    "LANG(?domainLabel) = 'nb' || " +
+                    "LANG(?domainLabel) = 'nn'" +
                 ") . " +
             "}";
         return URLEncoder.encode(query, StandardCharsets.UTF_8);
