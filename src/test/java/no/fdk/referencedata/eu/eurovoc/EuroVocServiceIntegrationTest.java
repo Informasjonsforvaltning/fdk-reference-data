@@ -41,7 +41,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         euroVocRepository.findAll().forEach(fileType -> counter.incrementAndGet());
-        assertEquals(7363, counter.get());
+        assertEquals(7384, counter.get());
 
         final EuroVoc euroVoc5548 = euroVocRepository.findById("http://eurovoc.europa.eu/337").orElseThrow();
         assertEquals("http://eurovoc.europa.eu/337", euroVoc5548.getUri());

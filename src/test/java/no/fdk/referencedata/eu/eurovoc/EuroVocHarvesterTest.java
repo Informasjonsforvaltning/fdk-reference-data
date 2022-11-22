@@ -22,7 +22,7 @@ public class EuroVocHarvesterTest {
 
         List<EuroVoc> euroVocList = euroVocHarvester.harvest().collectList().block();
         assertNotNull(euroVocList);
-        assertEquals(7363, euroVocList.size());
+        assertEquals(7384, euroVocList.size());
 
         EuroVoc first = euroVocList.get(0);
         assertEquals("http://eurovoc.europa.eu/7353", first.getUri());
