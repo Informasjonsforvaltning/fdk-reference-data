@@ -41,7 +41,7 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
 
     public Flux<AccessRight> harvest() {
         log.info("Starting harvest of EU access-rights");
-        final org.springframework.core.io.Resource rdfSource = getSource(sparqlQuery());
+        final org.springframework.core.io.Resource rdfSource = getSource();
         if(rdfSource == null) {
             return Flux.error(new Exception("Unable to fetch access-right distribution"));
         }
@@ -76,7 +76,7 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
                 .build();
     }
 
-    private String sparqlQuery() {
+    public String sparqlQuery() {
         String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
             "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +

@@ -16,7 +16,7 @@ public class LocalFileTypeHarvester extends FileTypeHarvester {
     }
 
     @Override
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         return new ClassPathResource("filetypes-sparql-result.ttl");
     }
 }

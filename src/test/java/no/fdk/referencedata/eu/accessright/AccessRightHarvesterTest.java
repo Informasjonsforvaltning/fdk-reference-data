@@ -16,8 +16,8 @@ public class AccessRightHarvesterTest {
     public void test_fetch_access_rights() {
         AccessRightHarvester harvester = new LocalAccessRightHarvester("20200923-0");
 
-        assertNotNull(harvester.getSource(""));
-        assertEquals("access-right-sparql-result.ttl", harvester.getSource("").getFilename());
+        assertNotNull(harvester.getSource());
+        assertEquals("access-right-sparql-result.ttl", harvester.getSource().getFilename());
         assertEquals("20200923-0", harvester.getVersion());
 
         List<AccessRight> accessRights = harvester.harvest().collectList().block();

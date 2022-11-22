@@ -16,8 +16,8 @@ public class EuroVocHarvesterTest {
     public void test_fetch_EuroVoc() {
         EuroVocHarvester euroVocHarvester = new LocalEuroVocHarvester("20200923-0");
 
-        assertNotNull(euroVocHarvester.getSource(""));
-        assertEquals("eurovoc-sparql-result.ttl", euroVocHarvester.getSource("").getFilename());
+        assertNotNull(euroVocHarvester.getSource());
+        assertEquals("eurovoc-sparql-result.ttl", euroVocHarvester.getSource().getFilename());
         assertEquals("20200923-0", euroVocHarvester.getVersion());
 
         List<EuroVoc> euroVocList = euroVocHarvester.harvest().collectList().block();

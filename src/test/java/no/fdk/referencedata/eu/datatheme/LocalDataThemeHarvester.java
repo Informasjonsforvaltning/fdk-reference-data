@@ -16,7 +16,7 @@ public class LocalDataThemeHarvester extends DataThemeHarvester {
     }
 
     @Override
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         return new ClassPathResource("data-theme-sparql-result.ttl");
     }
 }

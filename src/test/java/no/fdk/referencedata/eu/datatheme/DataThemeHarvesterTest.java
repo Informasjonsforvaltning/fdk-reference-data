@@ -17,8 +17,8 @@ public class DataThemeHarvesterTest {
     public void test_fetch_datatypes() throws Exception {
         DataThemeHarvester dataThemeHarvester = new LocalDataThemeHarvester("20200923-0");
 
-        assertNotNull(dataThemeHarvester.getSource(""));
-        assertEquals("data-theme-sparql-result.ttl", dataThemeHarvester.getSource("").getFilename());
+        assertNotNull(dataThemeHarvester.getSource());
+        assertEquals("data-theme-sparql-result.ttl", dataThemeHarvester.getSource().getFilename());
         assertEquals("20200923-0", dataThemeHarvester.getVersion());
 
         List<DataTheme> dataThemes = dataThemeHarvester.harvest().collectList().block();

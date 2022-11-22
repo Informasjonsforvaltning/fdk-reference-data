@@ -16,8 +16,8 @@ public class MainActivityHarvesterTest {
     public void test_fetch_access_rights() {
         MainActivityHarvester harvester = new LocalMainActivityHarvester("123");
 
-        assertNotNull(harvester.getSource(""));
-        assertEquals("main-activity-sparql-result.ttl", harvester.getSource("").getFilename());
+        assertNotNull(harvester.getSource());
+        assertEquals("main-activity-sparql-result.ttl", harvester.getSource().getFilename());
         assertEquals("123", harvester.getVersion());
 
         List<MainActivity> mainActivities = harvester.harvest().collectList().block();

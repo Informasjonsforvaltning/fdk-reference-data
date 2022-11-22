@@ -16,7 +16,7 @@ public class LocalMainActivityHarvester extends MainActivityHarvester {
     }
 
     @Override
-    public Resource getSource(final String sparqlQuery) {
+    public Resource getSource() {
         return new ClassPathResource("main-activity-sparql-result.ttl");
     }
 }
