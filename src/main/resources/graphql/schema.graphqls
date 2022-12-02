@@ -69,6 +69,9 @@ type Query {
 
   publisherTypes: [PublisherType!]!
   publisherTypeByCode(code: String!): PublisherType
+
+  weekDays: [DayOfWeek!]!
+  dayOfWeekByCode(code: String!): DayOfWeek
 }
 
 type AccessRight {
@@ -216,6 +219,12 @@ type ADMSStatus {
 }
 
 type PublisherType {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type DayOfWeek {
   uri: ID!
   code: String
   label: Object
