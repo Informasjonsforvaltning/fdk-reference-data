@@ -1,0 +1,51 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+schema:Friday a schema:DayOfWeek ;
+    rdfs:label "Friday" ;
+    rdfs:comment "The day of the week between Thursday and Saturday." ;
+    schema:sameAs <http://www.wikidata.org/entity/Q130> ;
+    skos:prefLabel  "Friday"@en , "Fredag"@nb , "Fredag"@nn .
+
+schema:Monday a schema:DayOfWeek ;
+    rdfs:label "Monday" ;
+    rdfs:comment "The day of the week between Sunday and Tuesday." ;
+    schema:sameAs <http://www.wikidata.org/entity/Q105> ;
+    skos:prefLabel  "Monday"@en , "Mandag"@nb , "Måndag"@nn .
+
+schema:PublicHolidays a schema:DayOfWeek ;
+    rdfs:label "PublicHolidays" ;
+    rdfs:comment "This stands for any day that is a public holiday; it is a placeholder for all official public holidays in some particular location. While not technically a \"day of the week\", it can be used with [[OpeningHoursSpecification]]. In the context of an opening hours specification it can be used to indicate opening hours on public holidays, overriding general opening hours for the day of the week on which a public holiday occurs." ;
+    schema:source <http://www.w3.org/wiki/WebSchemas/SchemaDotOrgSources#source_GoodRelationsClass> ;
+    skos:prefLabel  "Public holidays"@en , "Offentlige fridager"@nb , "Offentlege fridagar"@nn .
+
+schema:Saturday a schema:DayOfWeek ;
+    rdfs:label "Saturday" ;
+    rdfs:comment "The day of the week between Friday and Sunday." ;
+    schema:sameAs <http://www.wikidata.org/entity/Q131> ;
+    skos:prefLabel  "Saturday"@en , "Lørdag"@nb , "Laurdag"@nn .
+
+schema:Sunday a schema:DayOfWeek ;
+    rdfs:label "Sunday" ;
+    rdfs:comment "The day of the week between Saturday and Monday." ;
+    schema:sameAs <http://www.wikidata.org/entity/Q132> ;
+    skos:prefLabel  "Sunday"@en , "Søndag"@nb , "Sundag"@nn .
+
+schema:Thursday a schema:DayOfWeek ;
+    rdfs:label "Thursday" ;
+    rdfs:comment "The day of the week between Wednesday and Friday." ;
+    schema:sameAs <http://www.wikidata.org/entity/Q129> ;
+    skos:prefLabel  "Thursday"@en , "Torsdag"@nb , "Torsdag"@nn .
+
+schema:Tuesday a schema:DayOfWeek ;
+    rdfs:label "Tuesday" ;
+    rdfs:comment "The day of the week between Monday and Wednesday." ;
+    schema:sameAs <http://www.wikidata.org/entity/Q127> ;
+    skos:prefLabel  "Tuesday"@en , "Tirsdag"@nb , "Tysdag"@nn .
+
+schema:Wednesday a schema:DayOfWeek ;
+    rdfs:label "Wednesday" ;
+    rdfs:comment "The day of the week between Tuesday and Thursday." ;
+    schema:sameAs <http://www.wikidata.org/entity/Q128> ;
+    skos:prefLabel  "Wednesday"@en , "Onsdag"@nb , "Onsdag"@nn .
