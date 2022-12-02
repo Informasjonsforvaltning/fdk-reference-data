@@ -12,16 +12,10 @@ jobs:
     uses: Informasjonsforvaltning/workflows/.github/workflows/build-deploy-maven.yaml@main
     with:
       app_name: reference-data
-      caller_sha: ${{ github.sha }}
-      repo: ${{ github.repository }}
-      actor: ${{ github.actor }}
       java_version: '17'
       coverage_file_path: ./target/site/jacoco/jacoco.xml
       environment: prod
       cluster: digdir-fdk-prod
-      snapshot_disk: fdk-prod-reference-data
-      snapshot_name: autodeploy-prod-reference-data
-      snapshot_zone: europe-north1-a
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       GCP_SA_DIGDIR_FDK_GCR_KEY: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
@@ -34,9 +28,6 @@ jobs:
     uses: Informasjonsforvaltning/workflows/.github/workflows/deploy.yaml@main
     with:
       app_name: reference-data
-      caller_sha: ${{ github.sha }}
-      repo: ${{ github.repository }}
-      actor: ${{ github.actor }}
       environment: demo
       cluster: digdir-fdk-dev
     secrets:
