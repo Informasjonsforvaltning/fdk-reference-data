@@ -20,6 +20,8 @@ public abstract class AbstractEuHarvester<T> {
 
     public abstract String getVersion();
 
+    private Model model;
+
     public Resource getSource() {
         try {
             return new UrlResource(SPARQL_API + "?query=" + sparqlQuery());
@@ -29,9 +31,12 @@ public abstract class AbstractEuHarvester<T> {
         }
     }
 
-    protected Optional<Model> getModel(Resource resource) {
+    public Model getModel() { return model; }
+
+    protected Optional<Model> loadModel(Resource resource) {
         try {
-            return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE));
+            model = RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE);
+            return Optional.of(model);
         } catch (IOException e) {
             log.error("Unable to load model", e);
             return Optional.empty();

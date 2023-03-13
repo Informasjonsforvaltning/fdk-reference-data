@@ -2,6 +2,7 @@ package no.fdk.referencedata.los;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -35,5 +36,11 @@ public class LosController {
                     }).collect(Collectors.toList())) :
                     losService.getAll())
             .build();
+    }
+
+    @CrossOrigin
+    @GetMapping(path = "rdf")
+    public String getLosRDF() {
+        return losService.getRdf(RDFFormat.TURTLE);
     }
 }

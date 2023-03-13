@@ -1,6 +1,10 @@
 package no.fdk.referencedata.los;
 
 import no.fdk.referencedata.i18n.Language;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +16,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -58,5 +63,13 @@ public class LosControllerIntegrationTest {
         assertEquals(List.of("helse-og-omsorg/svangerskap/abort"), first.getLosPaths());
         assertEquals(List.of(URI.create("https://psi.norge.no/los/tema/svangerskap")), first.getParents());
         assertEquals(List.of("Svangerskapsavbrudd", "Svangerskapsavbrot"), first.getSynonyms());
+    }
+
+    @Test
+    public void test_los_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/los/rdf", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(LosControllerIntegrationTest.class.getClassLoader().getResource("rdf/los.rdf")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }
