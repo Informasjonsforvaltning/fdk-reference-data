@@ -37,7 +37,7 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
             return Flux.error(new Exception("Unable to fetch file-types distribution"));
         }
 
-        return Mono.justOrEmpty(getModel(fileTypesRdfSource))
+        return Mono.justOrEmpty(loadModel(fileTypesRdfSource))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, EUVOC.FileType).toList())
                 .filter(Resource::isURIResource)

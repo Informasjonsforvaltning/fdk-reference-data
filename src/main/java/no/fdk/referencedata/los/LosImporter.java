@@ -18,12 +18,9 @@ import static java.util.Objects.requireNonNull;
 public class LosImporter {
 
     private static final String defaultLanguage = "nb";
-    
-    List<LosNode> importFromLosSource() {
-        final Model model = ModelFactory.createDefaultModel();
 
-        model.read(requireNonNull(LosImporter.class.getClassLoader().getResource("rdf/los.rdf"))
-                .toString());
+    List<LosNode> importFromLosSource() {
+        final Model model = getModel();
 
         List<Resource> concepts = model.listResourcesWithProperty(RDF.type, SKOS.Concept).toList();
 
@@ -43,6 +40,12 @@ public class LosImporter {
 
         return allLosNodes;
 
+    }
+
+    Model getModel() {
+        return ModelFactory.createDefaultModel()
+                .read(requireNonNull(LosImporter.class.getClassLoader().getResource("rdf/los.rdf"))
+                .toString());
     }
 
     private static boolean isInScheme(Resource resource, Resource scheme) {

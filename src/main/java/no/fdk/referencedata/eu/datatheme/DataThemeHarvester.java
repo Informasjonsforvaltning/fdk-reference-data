@@ -47,7 +47,7 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
             return Flux.error(new Exception("Unable to fetch data-theme distribution"));
         }
 
-        return Mono.justOrEmpty(getModel(dataThemesRdfSource))
+        return Mono.justOrEmpty(loadModel(dataThemesRdfSource))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDataTheme.SCHEME).toList())
                 .filter(Resource::isURIResource)

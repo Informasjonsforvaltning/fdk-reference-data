@@ -50,7 +50,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
             return Flux.error(new Exception("Unable to fetch eurovoc distribution"));
         }
 
-        return Mono.justOrEmpty(getModel(source))
+        return Mono.justOrEmpty(loadModel(source))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, SKOS.Concept).toList())
                 .filter(Resource::isURIResource)

@@ -1,6 +1,8 @@
 package no.fdk.referencedata.los;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.rdf.RDFUtils;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -29,6 +31,10 @@ public class LosService {
                 .filter(losNode -> uris.contains(losNode.getUri()))
                 .sorted(Comparator.comparing(LosNode::getUri))
                 .collect(Collectors.toList());
+    }
+
+    public String getRdf(RDFFormat rdfFormat) {
+        return RDFUtils.modelToResponse(losImporter.getModel(), rdfFormat);
     }
 
     public List<LosNode> getAll() {

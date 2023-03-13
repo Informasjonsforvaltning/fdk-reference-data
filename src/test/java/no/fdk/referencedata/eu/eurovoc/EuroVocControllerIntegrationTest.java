@@ -3,9 +3,14 @@ package no.fdk.referencedata.eu.eurovoc;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +44,9 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     private EuroVocRepository euroVocRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
@@ -49,6 +57,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         EuroVocService EuroVocService = new EuroVocService(
                 new LocalEuroVocHarvester("1"),
                 euroVocRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         EuroVocService.harvestAndSave(true);
@@ -118,5 +127,13 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_eurovoc_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/eurovocs/rdf", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(EuroVocControllerIntegrationTest.class.getClassLoader().getResource("eurovoc-sparql-result.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

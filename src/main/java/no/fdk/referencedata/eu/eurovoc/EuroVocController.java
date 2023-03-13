@@ -1,7 +1,8 @@
 package no.fdk.referencedata.eu.eurovoc;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.datatheme.DataThemeService;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,12 @@ public class EuroVocController {
                 StreamSupport.stream(euroVocRepository.findAll().spliterator(), false)
                         .sorted(Comparator.comparing(EuroVoc::getUri))
                         .collect(Collectors.toList())).build());
+    }
+
+    @CrossOrigin
+    @GetMapping(path = "rdf")
+    public ResponseEntity<String> getEuroVocsRDF() {
+        return ResponseEntity.ok(euroVocService.getRdf(RDFFormat.TURTLE));
     }
 
     @CrossOrigin

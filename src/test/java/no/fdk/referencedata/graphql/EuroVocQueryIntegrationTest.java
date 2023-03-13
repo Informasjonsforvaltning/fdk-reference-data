@@ -8,6 +8,7 @@ import no.fdk.referencedata.eu.eurovoc.EuroVocRepository;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -38,6 +40,8 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private EuroVocRepository euroVocRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
@@ -46,6 +50,7 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
         EuroVocService EuroVocService = new EuroVocService(
                 new LocalEuroVocHarvester("1"),
                 euroVocRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         EuroVocService.harvestAndSave(false);
