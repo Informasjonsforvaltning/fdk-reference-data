@@ -2,6 +2,7 @@ package no.fdk.referencedata.los;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -39,7 +40,7 @@ public class LosController {
     }
 
     @CrossOrigin
-    @GetMapping(path = "rdf")
+    @GetMapping(path = "themes-and-words", produces = "text/turtle")
     public String getLosRDF() {
         return losService.getRdf(RDFFormat.TURTLE);
     }

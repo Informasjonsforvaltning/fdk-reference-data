@@ -32,7 +32,7 @@ public class EuroVocController {
     }
 
     @CrossOrigin
-    @GetMapping(path = "rdf")
+    @GetMapping(produces = "text/turtle")
     public ResponseEntity<String> getEuroVocsRDF() {
         return ResponseEntity.ok(euroVocService.getRdf(RDFFormat.TURTLE));
     }

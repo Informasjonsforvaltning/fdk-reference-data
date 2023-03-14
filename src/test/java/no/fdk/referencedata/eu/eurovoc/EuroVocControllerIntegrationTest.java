@@ -131,7 +131,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_eurovoc_rdf_response() {
-        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/eurovocs/rdf", Lang.TURTLE);
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/eurovocs", Lang.TURTLE);
         Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(EuroVocControllerIntegrationTest.class.getClassLoader().getResource("eurovoc-sparql-result.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));

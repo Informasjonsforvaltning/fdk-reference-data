@@ -67,7 +67,7 @@ public class LosControllerIntegrationTest {
 
     @Test
     public void test_los_rdf_response() {
-        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/los/rdf", Lang.TURTLE);
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/los/themes-and-words", Lang.TURTLE);
         Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(LosControllerIntegrationTest.class.getClassLoader().getResource("rdf/los.rdf")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
