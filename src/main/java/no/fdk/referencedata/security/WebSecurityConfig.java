@@ -7,16 +7,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
-@EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class WebSecurityConfig {
 
     private final ApplicationSettings applicationSettings;
@@ -42,12 +38,12 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                 .and().addFilter(filter)
-                .authorizeRequests((authorize) ->
-                    authorize.antMatchers("/actuator/**").permitAll()
-                        .antMatchers(HttpMethod.POST, "/eu/**").authenticated()
-                        .antMatchers(HttpMethod.POST, "/iana/**").authenticated()
-                        .antMatchers(HttpMethod.POST, "/geonorge/**").authenticated()
-                        .antMatchers(HttpMethod.POST, "/digdir/**").authenticated()
+                .authorizeHttpRequests((authorize) ->
+                    authorize.requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/eu/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/iana/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/geonorge/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/digdir/**").authenticated()
                         .anyRequest().permitAll()
                 );
         return http.build();
