@@ -1,8 +1,7 @@
 package no.fdk.referencedata.security;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class APIKeyAuthFilter extends AbstractPreAuthenticatedProcessingFilter {
 
