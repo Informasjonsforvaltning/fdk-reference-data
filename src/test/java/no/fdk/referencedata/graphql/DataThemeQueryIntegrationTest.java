@@ -8,6 +8,7 @@ import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -38,6 +40,8 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private DataThemeRepository dataThemeRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
@@ -46,6 +50,7 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("1"),
                 dataThemeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         dataThemeService.harvestAndSave(false);
