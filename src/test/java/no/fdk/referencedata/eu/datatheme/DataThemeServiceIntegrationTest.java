@@ -2,6 +2,7 @@ package no.fdk.referencedata.eu.datatheme;
 
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static no.fdk.referencedata.settings.Settings.DATA_THEME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +29,8 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private DataThemeRepository dataThemeRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
@@ -35,6 +39,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         DataThemeService fileTypeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200923-0"),
                 dataThemeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         fileTypeService.harvestAndSave(false);
@@ -57,6 +62,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200923-1"),
                 dataThemeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
@@ -73,6 +79,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200924-0"),
                 dataThemeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
@@ -89,6 +96,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200924-0"),
                 dataThemeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
@@ -121,6 +129,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200924-2"),
                 dataThemeRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, dataThemeRepositorySpy.count());
