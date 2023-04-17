@@ -44,6 +44,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/iana/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/geonorge/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/digdir/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/los/**").authenticated()
                         .anyRequest().permitAll()
                 );
         return http.build();

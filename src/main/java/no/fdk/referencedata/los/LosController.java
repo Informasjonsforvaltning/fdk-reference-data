@@ -6,6 +6,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -43,5 +44,12 @@ public class LosController {
     @GetMapping(path = "themes-and-words", produces = "text/turtle")
     public String getLosRDF() {
         return losService.getRdf(RDFFormat.TURTLE);
+    }
+
+    @CrossOrigin
+    @PostMapping(path = "themes-and-words")
+    public ResponseEntity<Void> updateLos() {
+        losService.importLosNodes();
+        return ResponseEntity.ok().build();
     }
 }

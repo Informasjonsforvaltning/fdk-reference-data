@@ -26,6 +26,8 @@ import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneHarves
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.LocalKommuneHarvester;
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaTypeHarvester;
+import no.fdk.referencedata.los.LocalLosImporter;
+import no.fdk.referencedata.los.LosImporter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -97,6 +99,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public RoleTypeHarvester roleTypeHarvester() {
         return new LocalRoleTypeHarvester("1");
+    }
+
+    @Bean
+    public LosImporter losImporter() {
+        return new LocalLosImporter();
     }
 
     @Bean

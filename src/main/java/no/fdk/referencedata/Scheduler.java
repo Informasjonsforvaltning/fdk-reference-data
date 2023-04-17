@@ -13,6 +13,7 @@ import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
+import no.fdk.referencedata.los.LosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -64,6 +65,9 @@ public class Scheduler {
 
     @Autowired
     private EvidenceTypeService evidenceTypeService;
+
+    @Autowired
+    private LosService losService;
 
     /**
      * Run every day 01:00 (at night)
@@ -154,6 +158,14 @@ public class Scheduler {
     }
 
     /**
+     * Run every day 02:50 (at night)
+     */
+    @Scheduled(cron = "0 50 2 * * ?")
+    public void updateLos() {
+        losService.importLosNodes();
+    }
+
+    /**
      * Run every day 03:00 (at night)
      */
     @Scheduled(cron = "0 0 3 * * ?")
@@ -221,6 +233,10 @@ public class Scheduler {
 
         if(evidenceTypeService.firstTime()) {
             evidenceTypeService.harvestAndSave(true);
+        }
+
+        if(losService.firstTime()) {
+            losService.importLosNodes();
         }
     }
 }

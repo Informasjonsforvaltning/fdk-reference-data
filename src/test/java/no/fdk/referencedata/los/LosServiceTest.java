@@ -1,7 +1,11 @@
 package no.fdk.referencedata.los;
 
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
@@ -9,14 +13,21 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.mock;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
-public class LosServiceTest {
+public class LosServiceTest extends AbstractContainerTest {
+
+    @Autowired
+    private LosRepository losRepository;
+
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
     public void test_if_get_all_returns_all_los_nodes() {
-        LosService losService = new LosService(new LosImporter());
+        LosService losService = new LosService(new LocalLosImporter(), losRepository, rdfSourceRepository);
         losService.importLosNodes();
 
         List<LosNode> losNodeList = losService.getAll();
@@ -33,7 +44,7 @@ public class LosServiceTest {
 
     @Test
     public void test_if_get_los_nodes_by_uris_returns_correct_los_nodes() {
-        LosService losService = new LosService(new LosImporter());
+        LosService losService = new LosService(new LocalLosImporter(), losRepository, rdfSourceRepository);
         losService.importLosNodes();
 
         List<LosNode> losNodeList = losService.getByURIs(List.of(

@@ -2,10 +2,16 @@ package no.fdk.referencedata.los;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -16,13 +22,41 @@ import static java.util.Objects.requireNonNull;
 @Slf4j
 @Service
 public class LosImporter {
+    private static final String LOS_URI = "https://psi.norge.no/los/all.rdf";
 
     private static final String defaultLanguage = "nb";
 
-    List<LosNode> importFromLosSource() {
-        final Model model = getModel();
+    private final Model model = ModelFactory.createDefaultModel();
 
-        List<Resource> concepts = model.listResourcesWithProperty(RDF.type, SKOS.Concept).toList();
+    Model getModel() {
+        return model;
+    }
+
+    public org.springframework.core.io.Resource getSource() {
+        try {
+            return new UrlResource(LOS_URI);
+        } catch (MalformedURLException e) {
+            log.error("Unable to get LOS source", e);
+            return null;
+        }
+    }
+
+    private void loadModel(org.springframework.core.io.Resource resource) {
+        try {
+            Model newLosModel = RDFDataMgr.loadModel(resource.getURI().toString(), Lang.RDFXML);
+            model.removeAll().add(newLosModel);
+        } catch (IOException e) {
+            log.error("Unable to load LOS model", e);
+        }
+    }
+
+    List<LosNode> importFromLosSource() {
+        final org.springframework.core.io.Resource source = getSource();
+        if (source != null) {
+            loadModel(source);
+        }
+
+        List<Resource> concepts = getModel().listResourcesWithProperty(RDF.type, SKOS.Concept).toList();
 
         // Extract the theme tree with words.
         List<LosNode> allLosNodes = concepts.stream()
@@ -40,12 +74,6 @@ public class LosImporter {
 
         return allLosNodes;
 
-    }
-
-    Model getModel() {
-        return ModelFactory.createDefaultModel()
-                .read(requireNonNull(LosImporter.class.getClassLoader().getResource("rdf/los.rdf"))
-                .toString());
     }
 
     private static boolean isInScheme(Resource resource, Resource scheme) {
