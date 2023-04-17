@@ -6,6 +6,11 @@ import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import com.jayway.jsonpath.PathNotFoundException;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.los.LocalLosImporter;
+import no.fdk.referencedata.los.LosRepository;
+import no.fdk.referencedata.los.LosService;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -31,6 +37,21 @@ class LosQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private GraphQLTestTemplate template;
+
+    @Autowired
+    private LosRepository losRepository;
+
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
+    @BeforeEach
+    public void setup() {
+        LosService losService = new LosService(
+                new LocalLosImporter(),
+                losRepository,
+                rdfSourceRepository);
+
+        losService.importLosNodes();
+    }
 
     @Test
     void test_if_los_themes_and_words_query_returns_all_themes_and_words_as_los_nodes() throws IOException {
