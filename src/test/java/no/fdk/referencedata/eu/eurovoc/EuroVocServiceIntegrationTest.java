@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -48,10 +49,12 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         euroVocRepository.findAll().forEach(fileType -> counter.incrementAndGet());
         assertEquals(7384, counter.get());
 
-        final EuroVoc euroVoc5548 = euroVocRepository.findById("http://eurovoc.europa.eu/337").orElseThrow();
-        assertEquals("http://eurovoc.europa.eu/337", euroVoc5548.getUri());
-        assertEquals("337", euroVoc5548.getCode());
-        assertEquals("regions of Denmark", euroVoc5548.getLabel().get(Language.ENGLISH.code()));
+        final EuroVoc euroVoc337 = euroVocRepository.findById("http://eurovoc.europa.eu/337").orElseThrow();
+        assertEquals("http://eurovoc.europa.eu/337", euroVoc337.getUri());
+        assertEquals("337", euroVoc337.getCode());
+        assertEquals("regions of Denmark", euroVoc337.getLabel().get(Language.ENGLISH.code()));
+        assertTrue(euroVoc337.getChildren().contains(URI.create("http://eurovoc.europa.eu/1")));
+        assertEquals(1, euroVoc337.getChildren().size());
     }
 
     @Test

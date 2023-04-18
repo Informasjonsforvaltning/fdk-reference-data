@@ -3,5 +3,7 @@ query GetEuroVocByCode($code: String!) {
         uri
         code
         label
+        parents
+        children
     }
 }

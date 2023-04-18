@@ -64,6 +64,7 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("http://eurovoc.europa.eu/1", response.get("$['data']['euroVocs'][0]['uri']"));
         assertEquals("1", response.get("$['data']['euroVocs'][0]['code']"));
         assertEquals("Århus (county)", response.get("$['data']['euroVocs'][0]['label']['en']"));
+        assertTrue(response.get("$['data']['euroVocs'][0]['parents'][0]").contains("http://eurovoc.europa.eu/337"));
     }
 
     @Test

@@ -6422,6 +6422,8 @@
 <http://eurovoc.europa.eu/1138>	rdf:type	skos:Concept ;
 	skos:prefLabel	"leftism"@en .
 <http://eurovoc.europa.eu/337>	rdf:type	skos:Concept ;
+    skos:narrower   <http://eurovoc.europa.eu/1> ;
+    skos:narrower   "is ignored" ;
 	skos:prefLabel	"regions of Denmark"@en .
 <http://eurovoc.europa.eu/4889>	rdf:type	skos:Concept ;
 	skos:prefLabel	"biochemistry"@en .
@@ -13363,6 +13365,7 @@
 <http://eurovoc.europa.eu/7211>	rdf:type	skos:Concept ;
 	skos:prefLabel	"Latin American Parliament"@en .
 <http://eurovoc.europa.eu/1>	rdf:type	skos:Concept ;
+    skos:broader    <http://eurovoc.europa.eu/337> ;
 	skos:prefLabel	"\u00C5rhus (county)"@en .
 <http://eurovoc.europa.eu/1032>	rdf:type	skos:Concept ;
 	skos:prefLabel	"rafting"@en .
