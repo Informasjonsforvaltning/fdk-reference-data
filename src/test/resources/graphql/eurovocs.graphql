@@ -3,5 +3,7 @@ query {
         uri
         code
         label
+        parents
+        children
     }
 }

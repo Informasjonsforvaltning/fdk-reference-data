@@ -6,6 +6,7 @@ import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.util.ZipUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
@@ -16,13 +17,17 @@ import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -46,7 +51,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
     public Flux<EuroVoc> harvest() {
         log.info("Starting harvest of EU eurovoc");
         final org.springframework.core.io.Resource source = getSource();
-        if(source == null) {
+        if (source == null) {
             return Flux.error(new Exception("Unable to fetch eurovoc distribution"));
         }
 
@@ -64,6 +69,19 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
         ).getString();
     }
 
+    private List<URI> uriListFromStatements(List<Statement> statements) {
+        return statements.stream()
+                .map(stmt -> {
+                    try {
+                        return new URI(stmt.getObject().toString());
+                    } catch (URISyntaxException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
     private EuroVoc mapEuroVoc(Resource euroVoc) {
         final Map<String, String> label = new HashMap<>();
         Flux.fromIterable(euroVoc.listProperties(SKOS.prefLabel).toList())
@@ -72,10 +90,12 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                 .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
                 .subscribe();
 
-       return EuroVoc.builder()
+        return EuroVoc.builder()
                 .uri(euroVoc.getURI())
                 .code(euroVoc.getURI().substring(euroVoc.getURI().lastIndexOf("/") + 1))
                 .label(label)
+                .children(uriListFromStatements(euroVoc.listProperties(SKOS.narrower).toList()))
+                .parents(uriListFromStatements(euroVoc.listProperties(SKOS.broader).toList()))
                 .build();
     }
 
@@ -86,8 +106,12 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
             "CONSTRUCT { " +
                 "euvoc:EuroVoc owl:versionInfo ?version . " +
                 "?euroVoc a skos:Concept . " +
+                "?euroVoc skos:broader ?vocBroader . " +
+                "?euroVoc skos:narrower ?vocNarrower . " +
                 "?euroVoc skos:prefLabel ?vocLabel . " +
                 "?domain a skos:Concept . " +
+                "?domain skos:broader ?domainBroader . " +
+                "?domain skos:narrower ?domainNarrower . " +
                 "?domain skos:prefLabel ?domainLabel . " +
             "} WHERE { " +
                 "euvoc:EuroVoc owl:equivalentClass ?eqClass . " +
@@ -95,6 +119,8 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                 "?eqVoc owl:versionInfo ?version . " +
                 "?euroVoc skos:inScheme ?eqVoc . " +
                 "?euroVoc a skos:Concept . " +
+                "OPTIONAL { ?euroVoc skos:broader ?vocBroader } . " +
+                "OPTIONAL { ?euroVoc skos:narrower ?vocNarrower } . " +
                 "?euroVoc skos:prefLabel ?vocLabel . " +
                 "FILTER(" +
                     "LANG(?vocLabel) = 'en' || " +
@@ -104,6 +130,8 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                 ") . " +
                 "?domain skos:inScheme <http://eurovoc.europa.eu/domains> . " +
                 "?domain a skos:Concept . " +
+                "OPTIONAL { ?domain skos:broader ?domainBroader } . " +
+                "OPTIONAL { ?domain skos:narrower ?domainNarrower } . " +
                 "?domain skos:prefLabel ?domainLabel . " +
                 "FILTER(" +
                     "LANG(?domainLabel) = 'en' || " +

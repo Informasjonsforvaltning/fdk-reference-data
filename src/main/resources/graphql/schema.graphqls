@@ -111,6 +111,8 @@ type EuroVoc {
   uri: ID!
   code: String
   label: Object
+  children: [String!]
+  parents: [String!]
 }
 
 type EvidenceType {
