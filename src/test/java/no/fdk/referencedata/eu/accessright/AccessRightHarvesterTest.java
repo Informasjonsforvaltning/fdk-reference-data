@@ -4,6 +4,7 @@ import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,8 @@ public class AccessRightHarvesterTest {
         assertNotNull(accessRights);
         assertEquals(7, accessRights.size());
 
-        AccessRight first = accessRights.get(0);
+        accessRights.sort(Comparator.comparing(AccessRight::getUri));
+        AccessRight first = accessRights.get(2);
         assertEquals("http://publications.europa.eu/resource/authority/access-right/NORMAL", first.getUri());
         assertEquals("NORMAL", first.getCode());
         assertEquals("normal", first.getLabel().get(Language.ENGLISH.code()));

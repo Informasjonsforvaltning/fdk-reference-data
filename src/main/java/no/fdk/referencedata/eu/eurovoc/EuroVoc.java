@@ -22,4 +22,5 @@ public class EuroVoc {
 
     List<URI> children;
     List<URI> parents;
+    List<String> eurovocPaths;
 }

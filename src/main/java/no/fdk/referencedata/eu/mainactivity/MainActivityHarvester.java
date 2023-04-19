@@ -46,7 +46,7 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
             return Flux.error(new Exception("Unable to fetch main-activity distribution"));
         }
 
-        return Mono.justOrEmpty(loadModel(rdfSource))
+        return Mono.justOrEmpty(loadModel(rdfSource, false))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EUMainActivity.SCHEME).toList())

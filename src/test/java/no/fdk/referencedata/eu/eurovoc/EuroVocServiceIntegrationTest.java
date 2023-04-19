@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZE;
 import static no.fdk.referencedata.settings.Settings.EURO_VOC;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -47,14 +48,14 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         euroVocRepository.findAll().forEach(fileType -> counter.incrementAndGet());
-        assertEquals(7384, counter.get());
+        assertEquals(EUROVOCS_SIZE, counter.get());
 
         final EuroVoc euroVoc337 = euroVocRepository.findById("http://eurovoc.europa.eu/337").orElseThrow();
         assertEquals("http://eurovoc.europa.eu/337", euroVoc337.getUri());
         assertEquals("337", euroVoc337.getCode());
         assertEquals("regions of Denmark", euroVoc337.getLabel().get(Language.ENGLISH.code()));
         assertTrue(euroVoc337.getChildren().contains(URI.create("http://eurovoc.europa.eu/1")));
-        assertEquals(1, euroVoc337.getChildren().size());
+        assertEquals(21, euroVoc337.getChildren().size());
     }
 
     @Test

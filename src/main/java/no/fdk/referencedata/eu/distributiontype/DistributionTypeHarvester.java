@@ -47,7 +47,7 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
             return Flux.error(new Exception("Unable to fetch distribution-types distribution"));
         }
 
-        return Mono.justOrEmpty(loadModel(dataThemesRdfSource))
+        return Mono.justOrEmpty(loadModel(dataThemesRdfSource, false))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDistributionType.SCHEME).toList())
                 .filter(Resource::isURIResource)
