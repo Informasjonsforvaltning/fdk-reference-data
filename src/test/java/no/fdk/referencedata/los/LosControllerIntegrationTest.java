@@ -91,7 +91,7 @@ public class LosControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_los_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/los/themes-and-words", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(LosControllerIntegrationTest.class.getClassLoader().getResource("los.rdf")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(LosControllerIntegrationTest.class.getClassLoader().getResource("los-with-fdk-triples.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }

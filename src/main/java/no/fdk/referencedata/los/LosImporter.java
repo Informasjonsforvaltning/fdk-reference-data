@@ -1,14 +1,15 @@
 package no.fdk.referencedata.los;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.vocabulary.FDK;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,6 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
+import static no.fdk.referencedata.rdf.RDFUtils.generateThemePaths;
 
 @Slf4j
 @Service
@@ -41,9 +43,16 @@ public class LosImporter {
         }
     }
 
+    private void addLosPaths(Model m) {
+        m.listResourcesWithProperty(RDF.type, SKOS.Concept).toList().stream()
+                .flatMap(concept -> generateThemePaths(m, concept).stream().map(path -> Pair.of(concept, path)))
+                .forEach(themeWithPath -> m.add(themeWithPath.getFirst(), FDK.themePath, themeWithPath.getSecond()));
+    }
+
     private void loadModel(org.springframework.core.io.Resource resource) {
         try {
             Model newLosModel = RDFDataMgr.loadModel(resource.getURI().toString(), Lang.RDFXML);
+            addLosPaths(newLosModel);
             model.removeAll().add(newLosModel);
         } catch (IOException e) {
             log.error("Unable to load LOS model", e);
@@ -64,11 +73,6 @@ public class LosImporter {
                 .map(LosImporter::extractLosItemFromModel)
                 .sorted(Comparator.comparing(LosNode::getUri))
                 .collect(Collectors.toList());
-
-        // Generate the paths.
-        for (LosNode node : allLosNodes) {
-            node.setLosPaths(generateLosPaths(node, allLosNodes));
-        }
 
         log.debug("Got {} LOSes", allLosNodes.size());
 
@@ -91,6 +95,7 @@ public class LosImporter {
         node.setTheme(requireNonNull(extractLiteral(losResource, SKOS.inScheme))
                 .toString().equals(LosNode.NODE_IS_TEMA_OR_SUBTEMA));
         node.setUri(losResource.getURI());
+        node.setLosPaths(extractStrings(losResource, FDK.themePath));
         return node;
     }
 
@@ -135,6 +140,14 @@ public class LosImporter {
         return new ArrayList<>(map.keySet());
     }
 
+    private static List<String> extractStrings(Resource resource, Property property) {
+        Statement stmt = resource.getProperty(property);
+        if (stmt == null) {
+            return null;
+        }
+        return resource.listProperties(property).mapWith(Statement::getString).toList();
+    }
+
     private static List<URI> extractLiterals(Resource resource, Property property) {
         List<URI> list = new ArrayList<>();
         Statement stmt = resource.getProperty(property);
@@ -172,39 +185,6 @@ public class LosImporter {
                 } catch (URISyntaxException ue) {
                     log.warn("Got Exception for URI " + statement.getResource().getURI());
                 }
-            }
-        }
-        return null;
-    }
-
-    private static String getKeywordFromURI(String uri) {
-        return uri.substring(uri.lastIndexOf('/') + 1);
-    }
-
-    private static List<String> generateLosPaths(LosNode node, List<LosNode> allLosNodes) {
-        List<URI> parentURIs = node.getParents();
-        String myKeyword = getKeywordFromURI(node.getUri());
-
-        // no parents - root node has only self as the only element in the only path
-        if (parentURIs == null || parentURIs.size() == 0) {
-            return Collections.singletonList(myKeyword);
-        }
-
-        // add self to all parent paths
-        return parentURIs.stream()
-                .map(parentURI -> Optional.ofNullable(getByURI(parentURI, allLosNodes)))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .flatMap(parentNode -> generateLosPaths(parentNode, allLosNodes).stream())
-                .map(parentPath -> parentPath + "/" + myKeyword)
-                .collect(Collectors.toList());
-    }
-
-    private static LosNode getByURI(URI keyword, List<LosNode> allLosNodes) {
-        String uriAsString = keyword.toString();
-        for (LosNode node : allLosNodes) {
-            if (node.getUri().equals(uriAsString)) {
-                return node;
             }
         }
         return null;
