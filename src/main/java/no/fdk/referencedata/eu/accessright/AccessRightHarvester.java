@@ -46,7 +46,7 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
             return Flux.error(new Exception("Unable to fetch access-right distribution"));
         }
 
-        return Mono.justOrEmpty(loadModel(rdfSource))
+        return Mono.justOrEmpty(loadModel(rdfSource, false))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EUAccessRight.SCHEME).toList())

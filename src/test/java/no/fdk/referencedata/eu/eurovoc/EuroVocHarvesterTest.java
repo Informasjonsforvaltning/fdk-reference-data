@@ -6,6 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
+import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,7 +23,7 @@ public class EuroVocHarvesterTest {
 
         List<EuroVoc> euroVocList = euroVocHarvester.harvest().collectList().block();
         assertNotNull(euroVocList);
-        assertEquals(7384, euroVocList.size());
+        assertEquals(EUROVOCS_SIZE, euroVocList.size());
 
         EuroVoc first = euroVocList.get(0);
         assertEquals("http://eurovoc.europa.eu/7353", first.getUri());

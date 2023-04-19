@@ -6,6 +6,8 @@ import org.springframework.core.io.Resource;
 public class LocalEuroVocHarvester extends EuroVocHarvester {
     private final String version;
 
+    public static final int EUROVOCS_SIZE = 7403;
+
     public LocalEuroVocHarvester(String version) {
         this.version = version;
     }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.util.ZipUtils;
+import no.fdk.referencedata.vocabulary.FDK;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
@@ -55,7 +56,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
             return Flux.error(new Exception("Unable to fetch eurovoc distribution"));
         }
 
-        return Mono.justOrEmpty(loadModel(source))
+        return Mono.justOrEmpty(loadModel(source, true))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, SKOS.Concept).toList())
                 .filter(Resource::isURIResource)
@@ -96,6 +97,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                 .label(label)
                 .children(uriListFromStatements(euroVoc.listProperties(SKOS.narrower).toList()))
                 .parents(uriListFromStatements(euroVoc.listProperties(SKOS.broader).toList()))
+                .eurovocPaths(euroVoc.listProperties(FDK.themePath).mapWith(Statement::getString).toList())
                 .build();
     }
 

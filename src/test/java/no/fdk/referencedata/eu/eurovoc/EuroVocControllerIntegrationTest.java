@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
+import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -68,7 +69,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         EuroVocs euroVocs =
                 this.restTemplate.getForObject("http://localhost:" + port + "/eu/eurovocs", EuroVocs.class);
 
-        assertEquals(7384, euroVocs.getEuroVocs().size());
+        assertEquals(EUROVOCS_SIZE, euroVocs.getEuroVocs().size());
 
         EuroVoc first = euroVocs.getEuroVocs().get(0);
         assertEquals("http://eurovoc.europa.eu/1", first.getUri());
@@ -89,7 +90,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_eurovocs_fails_without_api_key() {
-        assertEquals(7384, euroVocRepository.count());
+        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -101,7 +102,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(7384, euroVocRepository.count());
+        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -110,7 +111,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_data_themes_executes_a_force_update() {
-        assertEquals(7384, euroVocRepository.count());
+        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -122,7 +123,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(7384, euroVocRepository.count());
+        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -132,7 +133,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_eurovoc_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/eurovocs", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(EuroVocControllerIntegrationTest.class.getClassLoader().getResource("eurovoc-sparql-result.ttl")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(EuroVocControllerIntegrationTest.class.getClassLoader().getResource("eurovoc-with-fdk-triples.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
