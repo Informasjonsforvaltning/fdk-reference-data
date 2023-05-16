@@ -72,6 +72,9 @@ type Query {
 
   weekDays: [DayOfWeek!]!
   dayOfWeekByCode(code: String!): DayOfWeek
+
+  fylkeOrganisasjoner: [FylkeOrganisasjon!]!
+  fylkeOrganisasjonByFylkesnummer(fylkesnummer: String!): FylkeOrganisasjon
 }
 
 type AccessRight {
@@ -230,4 +233,12 @@ type DayOfWeek {
   uri: ID!
   code: String
   label: Object
+}
+
+type FylkeOrganisasjon {
+  uri: ID!
+  organisasjonsnummer: String
+  organisasjonsnavn: String
+  fylkesnavn: String
+  fylkesnummer: String
 }

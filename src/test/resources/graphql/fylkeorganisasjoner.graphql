@@ -1,0 +1,9 @@
+query {
+    fylkeOrganisasjoner {
+        uri
+        organisasjonsnavn
+        organisasjonsnummer
+        fylkesnavn
+        fylkesnummer
+    }
+}

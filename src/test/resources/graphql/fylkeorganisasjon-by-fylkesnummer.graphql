@@ -1,0 +1,7 @@
+query GetFylkeOrganisasjonByFylkesnummer($fylkesnummer: String!) {
+    fylkeOrganisasjonByFylkesnummer(fylkesnummer: $fylkesnummer) {
+        uri
+        organisasjonsnummer
+        fylkesnummer
+    }
+}
