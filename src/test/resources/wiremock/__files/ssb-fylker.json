@@ -1,0 +1,20 @@
+{
+  "correspondenceItems": [
+    {
+      "sourceCode": "817920632",
+      "sourceName": "FYLKE 1 FYLKESKOMMUNE",
+      "sourceShortName": "",
+      "targetCode": "50",
+      "targetName": "Fylke 1",
+      "targetShortName": ""
+    },
+    {
+      "sourceCode": "821227062",
+      "sourceName": "FYLKE 2 FYLKESKOMMUNE",
+      "sourceShortName": "",
+      "targetCode": "38",
+      "targetName": "Fylke 2",
+      "targetShortName": ""
+    }
+  ]
+}

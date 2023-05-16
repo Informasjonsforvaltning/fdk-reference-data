@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/classifications/589/correspondsAt.*"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "ssb-fylker.json"
+  }
+}
