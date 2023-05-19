@@ -75,6 +75,9 @@ type Query {
 
   fylkeOrganisasjoner: [FylkeOrganisasjon!]!
   fylkeOrganisasjonByFylkesnummer(fylkesnummer: String!): FylkeOrganisasjon
+
+  kommuneOrganisasjoner: [KommuneOrganisasjon!]!
+  kommuneOrganisasjonByKommunenummer(kommunenummer: String!): KommuneOrganisasjon
 }
 
 type AccessRight {
@@ -241,4 +244,12 @@ type FylkeOrganisasjon {
   organisasjonsnavn: String
   fylkesnavn: String
   fylkesnummer: String
+}
+
+type KommuneOrganisasjon {
+  uri: ID!
+  organisasjonsnummer: String
+  organisasjonsnavn: String
+  kommunenavn: String
+  kommunenummer: String
 }

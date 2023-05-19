@@ -1,0 +1,9 @@
+query {
+    kommuneOrganisasjoner {
+        uri
+        organisasjonsnavn
+        organisasjonsnummer
+        kommunenavn
+        kommunenummer
+    }
+}

@@ -15,6 +15,7 @@ import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneServic
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.los.LosService;
 import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonService;
+import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -72,6 +73,9 @@ public class Scheduler {
 
     @Autowired
     private FylkeOrganisasjonService fylkeOrganisasjonService;
+
+    @Autowired
+    private KommuneOrganisasjonService kommuneOrganisasjonService;
 
     /**
      * Run every day 01:00 (at night)
@@ -186,6 +190,14 @@ public class Scheduler {
     }
 
     /**
+     * Run every day 03:20 (at night)
+     */
+    @Scheduled(cron = "0 20 3 * * ?")
+    public void updateKommuneOrganisasjoner() {
+        kommuneOrganisasjonService.harvestAndSave();
+    }
+
+    /**
      * Run every day 03:30 (at night)
      */
     @Scheduled(cron = "0 30 3 * * ?")
@@ -253,6 +265,10 @@ public class Scheduler {
 
         if(fylkeOrganisasjonService.firstTime()) {
             fylkeOrganisasjonService.harvestAndSave();
+        }
+
+        if(kommuneOrganisasjonService.firstTime()) {
+            kommuneOrganisasjonService.harvestAndSave();
         }
     }
 }

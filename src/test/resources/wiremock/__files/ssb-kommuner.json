@@ -1,0 +1,20 @@
+{
+  "correspondenceItems": [
+    {
+      "sourceCode": "817263992",
+      "sourceName": "KOMMUNE 1 KOMMUNE",
+      "sourceShortName": "",
+      "targetCode": "3811",
+      "targetName": "Kommune 1",
+      "targetShortName": ""
+    },
+    {
+      "sourceCode": "997391853",
+      "sourceName": "KOMMUNE 2 KOMMUNE",
+      "sourceShortName": "",
+      "targetCode": "5053",
+      "targetName": "Kommune 2",
+      "targetShortName": ""
+    }
+  ]
+}
