@@ -1,0 +1,78 @@
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/> .
+ns1:concept-status	owl:versionInfo	"20220715-0" .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns3:	<http://publications.europa.eu/resource/authority/concept-status/> .
+ns3:REVISED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"revised"@en ,
+		"revidert"@nb ,
+		"revidert"@nn ,
+		"revidert"@no .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+ns3:REVISED	dc:identifier	"REVISED" .
+ns3:REVISED_DEPRECATED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"revised.deprecated"@en ,
+		"revidert frar\u00E5dd"@nn ,
+		"revidert frar\u00E5det"@nb ,
+		"revidert frar\u00E5det"@no ;
+	dc:identifier	"REVISED_DEPRECATED" .
+ns3:CANDIDATE	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"kandidat"@nb ,
+		"kandidat"@no ,
+		"kandidat"@nn ,
+		"candidate"@en ;
+	dc:identifier	"CANDIDATE" .
+ns3:CANDIDATE_DEPRECATED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"candidate.deprecated"@en ,
+		"kandidat frar\u00E5det"@no ,
+		"kandidat frar\u00E5dd"@nn ,
+		"kandidat frar\u00E5det"@nb ;
+	dc:identifier	"CANDIDATE_DEPRECATED" .
+ns3:CURRENT	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"current"@en ,
+		"gjeldende"@no ,
+		"gjeldande"@nn ,
+		"gjeldende"@nb ;
+	dc:identifier	"CURRENT" .
+ns3:DEPRECATED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"frar\u00E5det"@no ,
+		"deprecated"@en ,
+		"frar\u00E5dd"@nn ,
+		"frar\u00E5det"@nb ;
+	dc:identifier	"DEPRECATED" .
+ns3:DRAFT	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"utkast"@no ,
+		"utkast"@nb ,
+		"draft"@en ,
+		"utkast"@nn ;
+	dc:identifier	"DRAFT" .
+ns3:DRAFT_DEPRECATED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"draft.deprecated"@en ,
+		"utkast frar\u00E5det"@no ,
+		"utkast frar\u00E5dd"@nn ,
+		"utkast frar\u00E5det"@nb ;
+	dc:identifier	"DRAFT_DEPRECATED" .
+ns3:OP_DATPRO	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"Provisional data"@en ;
+	dc:identifier	"OP_DATPRO" .
+ns3:RETIRED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"foreldet"@no ,
+		"foreldet"@nb ,
+		"retired"@en ,
+		"forelda"@nn ;
+	dc:identifier	"RETIRED" .
+ns3:WAITING	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"p\u00E5 vent"@nn ,
+		"p\u00E5 vent"@no ,
+		"p\u00E5 vent"@nb ,
+		"waiting"@en ;
+	dc:identifier	"WAITING" .
+ns3:WAITING_DEPRECATED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"waiting.deprecated"@en ,
+		"p\u00E5 vent frar\u00E5dd"@nn ,
+		"p\u00E5 vent frar\u00E5det"@nb ,
+		"p\u00E5 vent frar\u00E5det"@no ;
+	dc:identifier	"WAITING_DEPRECATED" .
+ns3:PLANNED	skos:inScheme	ns1:concept-status ;
+	skos:prefLabel	"planned"@en ;
+	dc:identifier	"PLANNED" .
