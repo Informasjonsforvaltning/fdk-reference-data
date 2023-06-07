@@ -8,6 +8,8 @@ import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHar
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeHarvester;
 import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
+import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
+import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
 import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
 import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeHarvester;
@@ -79,6 +81,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public FrequencyHarvester frequencyHarvester() {
         return new LocalFrequencyHarvester("1");
+    }
+
+    @Bean
+    public ConceptStatusHarvester conceptStatusHarvester() {
+        return new LocalConceptStatusHarvester("1");
     }
 
     @Bean

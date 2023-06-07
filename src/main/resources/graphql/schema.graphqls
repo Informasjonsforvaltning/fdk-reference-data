@@ -10,6 +10,9 @@ type Query {
   apiStatuses: [ApiStatus!]!
   apiStatusByCode(code: String!): ApiStatus
 
+  conceptStatuses: [ConceptStatus!]!
+  conceptStatusByCode(code: String!): ConceptStatus
+
   dataThemes: [DataTheme!]!
   dataThemeByCode(code: String!): DataTheme
 
@@ -97,6 +100,12 @@ type ApiStatus {
   uri: ID!
   code: String
   label: Object
+}
+
+type ConceptStatus {
+ uri: ID!
+ code: String
+ label: Object
 }
 
 type DataTheme {

@@ -4,6 +4,7 @@ import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
+import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
@@ -46,6 +47,9 @@ public class Scheduler {
 
     @Autowired
     private FrequencyService frequencyService;
+
+    @Autowired
+    private ConceptStatusService conceptStatusService;
 
     @Autowired
     private DistributionTypeService distributionTypeService;
@@ -205,6 +209,14 @@ public class Scheduler {
         kommuneService.harvestAndSave();
     }
 
+    /**
+     * Run every day 03:40 (at night)
+     */
+    @Scheduled(cron = "0 40 3 * * ?")
+    public void updateConceptStatuses() {
+        conceptStatusService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -269,6 +281,10 @@ public class Scheduler {
 
         if(kommuneOrganisasjonService.firstTime()) {
             kommuneOrganisasjonService.harvestAndSave();
+        }
+
+        if(conceptStatusService.firstTime()) {
+            conceptStatusService.harvestAndSave(true);
         }
     }
 }

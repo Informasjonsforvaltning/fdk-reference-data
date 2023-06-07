@@ -2,6 +2,7 @@ package no.fdk.referencedata.settings;
 
 public enum Settings {
     ACCESS_RIGHT,
+    CONCEPT_STATUS,
     DATA_THEME,
     DISTRIBUTION_TYPE,
     EVIDENCE_TYPE,
