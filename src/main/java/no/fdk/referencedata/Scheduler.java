@@ -1,5 +1,6 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
@@ -70,6 +71,9 @@ public class Scheduler {
     private ServiceChannelTypeService serviceChannelTypeService;
 
     @Autowired
+    private ConceptSubjectService conceptSubjectService;
+
+    @Autowired
     private EvidenceTypeService evidenceTypeService;
 
     @Autowired
@@ -80,6 +84,14 @@ public class Scheduler {
 
     @Autowired
     private KommuneOrganisasjonService kommuneOrganisasjonService;
+
+    /**
+     * Run every hour
+     */
+    @Scheduled(cron = "0 45 * * * ?")
+    public void updateConceptSubjects() {
+        conceptSubjectService.harvestAndSave();
+    }
 
     /**
      * Run every day 01:00 (at night)
@@ -265,6 +277,10 @@ public class Scheduler {
 
         if(serviceChannelTypeService.firstTime()) {
             serviceChannelTypeService.harvestAndSave(true);
+        }
+
+        if(conceptSubjectService.firstTime()) {
+            conceptSubjectService.harvestAndSave();
         }
 
         if(evidenceTypeService.firstTime()) {

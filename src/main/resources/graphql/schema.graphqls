@@ -13,6 +13,8 @@ type Query {
   conceptStatuses: [ConceptStatus!]!
   conceptStatusByCode(code: String!): ConceptStatus
 
+  conceptSubjects: [ConceptSubject!]!
+
   dataThemes: [DataTheme!]!
   dataThemeByCode(code: String!): DataTheme
 
@@ -106,6 +108,12 @@ type ConceptStatus {
  uri: ID!
  code: String
  label: Object
+}
+
+type ConceptSubject {
+  uri: ID!
+  code: String
+  label: Object
 }
 
 type DataTheme {

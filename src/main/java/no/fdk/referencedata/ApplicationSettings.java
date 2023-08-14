@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @Data
 public class ApplicationSettings {
     private String apiKey;
+    private String catalogAdminUri;
 }
