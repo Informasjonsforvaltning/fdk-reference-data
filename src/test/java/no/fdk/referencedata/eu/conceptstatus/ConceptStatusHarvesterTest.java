@@ -4,6 +4,7 @@ import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester.CONCEPT_STATUSES_SIZE;
@@ -25,6 +26,7 @@ public class ConceptStatusHarvesterTest {
         assertNotNull(statuses);
         assertEquals(CONCEPT_STATUSES_SIZE, statuses.size());
 
+        statuses.sort(Comparator.comparing(ConceptStatus::getUri));
         ConceptStatus first = statuses.get(0);
         assertEquals("http://publications.europa.eu/resource/authority/concept-status/CANDIDATE", first.getUri());
         assertEquals("CANDIDATE", first.getCode());

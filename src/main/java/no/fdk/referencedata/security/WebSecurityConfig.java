@@ -12,6 +12,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @Configuration
 public class WebSecurityConfig {
 
@@ -39,13 +41,13 @@ public class WebSecurityConfig {
                 .and().cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
                 .and().addFilter(filter)
                 .authorizeHttpRequests((authorize) ->
-                    authorize.requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/eu/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/iana/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/geonorge/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/digdir/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/los/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/ssb/**").authenticated()
+                    authorize.requestMatchers(antMatcher("/actuator/**")).permitAll()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/eu/**")).authenticated()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/iana/**")).authenticated()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/geonorge/**")).authenticated()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/digdir/**")).authenticated()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/los/**")).authenticated()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/ssb/**")).authenticated()
                         .anyRequest().permitAll()
                 );
         return http.build();
