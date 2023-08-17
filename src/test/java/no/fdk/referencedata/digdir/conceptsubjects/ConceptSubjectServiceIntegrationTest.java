@@ -3,6 +3,7 @@ package no.fdk.referencedata.digdir.conceptsubjects;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -25,10 +27,13 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
     @Autowired
     private ConceptSubjectRepository conceptSubjectRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_harvest_persists_concept_subjects() {
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                rdfSourceRepository,
                 conceptSubjectRepository);
 
         conceptSubjectService.harvestAndSave();
@@ -62,6 +67,7 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
 
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                rdfSourceRepository,
                 conceptSubjectRepositorySpy);
 
         assertEquals(count, conceptSubjectRepositorySpy.count());

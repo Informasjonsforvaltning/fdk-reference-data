@@ -1,9 +1,11 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
@@ -53,12 +55,23 @@ public class ConceptSubjectHarvester {
         }
     }
 
-    private Optional<Model> getModel(org.springframework.core.io.Resource resource) {
+    @Getter
+    private final Model model = ModelFactory.createDefaultModel();
+
+    private Optional<Model> fetchModel(org.springframework.core.io.Resource resource) {
         try {
             return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE));
         } catch (IOException e) {
             log.error("Unable to load model", e);
             return Optional.empty();
+        }
+    }
+
+    private void loadModel(org.springframework.core.io.Resource resource) {
+        Optional<Model> fetched = fetchModel(resource);
+        if (fetched.isPresent()) {
+            model.removeAll();
+            model.add(fetched.get());
         }
     }
 
@@ -69,7 +82,9 @@ public class ConceptSubjectHarvester {
             return Flux.error(new Exception("Unable to fetch concept subjects"));
         }
 
-        return Mono.justOrEmpty(getModel(rdfSource))
+        loadModel(rdfSource);
+
+        return Mono.justOrEmpty(model)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, SKOS.Concept).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapConceptSubject);
