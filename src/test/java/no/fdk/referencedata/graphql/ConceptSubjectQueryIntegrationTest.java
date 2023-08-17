@@ -9,6 +9,7 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectRepository;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
 import no.fdk.referencedata.digdir.conceptsubjects.LocalConceptSubjectHarvester;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -41,6 +43,8 @@ class ConceptSubjectQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private ConceptSubjectRepository conceptSubjectRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private GraphQLTestTemplate template;
 
@@ -48,6 +52,7 @@ class ConceptSubjectQueryIntegrationTest extends AbstractContainerTest {
     public void setup() {
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                rdfSourceRepository,
                 conceptSubjectRepository);
 
         conceptSubjectService.harvestAndSave();

@@ -3,7 +3,13 @@ package no.fdk.referencedata.digdir.conceptsubjects;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.eu.eurovoc.EuroVocControllerIntegrationTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -39,12 +46,16 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
     private ConceptSubjectRepository conceptSubjectRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     @BeforeEach
     public void setup() {
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                rdfSourceRepository,
                 conceptSubjectRepository);
 
         conceptSubjectService.harvestAndSave();
@@ -87,5 +98,13 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, conceptSubjectRepository.count());
+    }
+
+    @Test
+    public void test_concept_subjects_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/digdir/concept-subjects", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(EuroVocControllerIntegrationTest.class.getClassLoader().getResource("concept-subjects.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

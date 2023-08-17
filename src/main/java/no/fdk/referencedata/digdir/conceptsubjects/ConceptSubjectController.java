@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -39,5 +40,11 @@ public class ConceptSubjectController {
     public ResponseEntity<Void> updateConceptSubjects() {
         conceptSubjectService.harvestAndSave();
         return ResponseEntity.ok().build();
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getConceptSubjectsRDF() {
+        return ResponseEntity.ok(conceptSubjectService.getRdf(RDFFormat.TURTLE));
     }
 }
