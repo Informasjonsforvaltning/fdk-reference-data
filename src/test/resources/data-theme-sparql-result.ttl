@@ -65,10 +65,6 @@ ns1:JUST	skos:inScheme	ns2:data-theme ;
 		"Justis, rettssystem og allmenn sikkerhet"@nb ;
 	dc:identifier	"JUST" ;
 	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-01" .
-ns1:OP_DATPRO	skos:inScheme	ns2:data-theme ;
-	skos:prefLabel	"Provisional data"@en ;
-	dc:identifier	"OP_DATPRO" ;
-	<http://publications.europa.eu/ontology/authority/start.use>	"1952-07-23" .
 ns1:REGI	skos:inScheme	ns2:data-theme ;
 	skos:prefLabel	"Regionar og byar"@nn ,
 		"Regions and cities"@en ,

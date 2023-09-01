@@ -6,6 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
+import static no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester.MAIN_ACTIVITIES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,7 +23,7 @@ public class MainActivityHarvesterTest {
 
         List<MainActivity> mainActivities = harvester.harvest().collectList().block();
         assertNotNull(mainActivities);
-        assertEquals(21, mainActivities.size());
+        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivities.size());
 
         MainActivity first = mainActivities.get(0);
         assertEquals("http://publications.europa.eu/resource/authority/main-activity/gas-heat", first.getUri());

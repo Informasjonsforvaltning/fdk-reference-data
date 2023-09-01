@@ -61,9 +61,9 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
         GraphQLResponse response = template.postForResource("graphql/main-activities.graphql");
         assertNotNull(response);
         assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/main-activity/OP_DATPRO", response.get("$['data']['mainActivities'][0]['uri']"));
-        assertEquals("OP_DATPRO", response.get("$['data']['mainActivities'][0]['code']"));
-        assertEquals("Provisional data", response.get("$['data']['mainActivities'][0]['label']['en']"));
+        assertEquals("http://publications.europa.eu/resource/authority/main-activity/airport", response.get("$['data']['mainActivities'][0]['uri']"));
+        assertEquals("airport", response.get("$['data']['mainActivities'][0]['code']"));
+        assertEquals("Airport-related activities", response.get("$['data']['mainActivities'][0]['label']['en']"));
     }
 
     @Test

@@ -112,6 +112,7 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
                 "?dataTheme skos:inScheme ?inScheme . " +
                 "?dataTheme a skos:Concept . " +
                 "?dataTheme dc:identifier ?code . " +
+                "FILTER(?code != 'OP_DATPRO') . " +
                 "OPTIONAL { ?dataTheme at:start.use ?startUse . } " +
                 "?dataTheme skos:prefLabel ?prefLabel . " +
                 "FILTER(" +

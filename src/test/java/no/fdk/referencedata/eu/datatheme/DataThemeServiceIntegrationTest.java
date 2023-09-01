@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester.DATA_THEMES_SIZE;
 import static no.fdk.referencedata.settings.Settings.DATA_THEME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -46,7 +47,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         dataThemeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
-        assertEquals(14, counter.get());
+        assertEquals(DATA_THEMES_SIZE, counter.get());
 
         final DataTheme first = dataThemeRepository.findById("http://publications.europa.eu/resource/authority/data-theme/AGRI").orElseThrow();
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", first.getUri());

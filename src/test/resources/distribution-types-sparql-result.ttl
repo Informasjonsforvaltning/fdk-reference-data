@@ -16,10 +16,6 @@ ns1:FEED_INFO	skos:inScheme	ns2:distribution-type ;
 		"Informasjonsstr\u00F8m"@no ;
 	dc:identifier	"FEED_INFO" ;
 	<http://publications.europa.eu/ontology/authority/start.use>	"2013-01-01" .
-ns1:OP_DATPRO	skos:inScheme	ns2:distribution-type ;
-	skos:prefLabel	"Provisional data"@en ;
-	dc:identifier	"OP_DATPRO" ;
-	<http://publications.europa.eu/ontology/authority/start.use>	"1952-07-23" .
 ns1:VISUALIZATION	skos:inScheme	ns2:distribution-type ;
 	skos:prefLabel	"Visualization"@en ,
 		"Visualisering"@nb ,

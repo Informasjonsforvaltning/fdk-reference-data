@@ -91,6 +91,7 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
                 "?accessRight skos:inScheme atres:access-right . " +
                 "?accessRight a skos:Concept . " +
                 "?accessRight dc:identifier ?code . " +
+                "FILTER(?code != 'OP_DATPRO') . " +
                 "?accessRight skos:prefLabel ?prefLabel . " +
                 "FILTER(" +
                     "LANG(?prefLabel) = 'en' || " +

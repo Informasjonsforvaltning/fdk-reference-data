@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester.FREQUENCIES_SIZE;
 import static no.fdk.referencedata.settings.Settings.FREQUENCY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -52,7 +53,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         frequencyRepository.findAll().forEach(frequency -> counter.incrementAndGet());
-        assertEquals(31, counter.get());
+        assertEquals(FREQUENCIES_SIZE, counter.get());
 
         final Frequency first = frequencyRepository.findById("http://publications.europa.eu/resource/authority/frequency/ANNUAL").orElseThrow();
         assertEquals("http://publications.europa.eu/resource/authority/frequency/ANNUAL", first.getUri());

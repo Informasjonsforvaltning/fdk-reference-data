@@ -91,6 +91,7 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
                 "?mainActivity skos:inScheme atres:main-activity . " +
                 "?mainActivity a skos:Concept . " +
                 "?mainActivity dc:identifier ?code . " +
+                "FILTER(?code != 'OP_DATPRO') . " +
                 "?mainActivity skos:prefLabel ?prefLabel . " +
                 "FILTER(" +
                     "LANG(?prefLabel) = 'en' || " +

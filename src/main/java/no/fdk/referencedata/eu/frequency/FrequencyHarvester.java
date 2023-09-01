@@ -91,6 +91,7 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
                 "?frequency skos:inScheme atres:frequency . " +
                 "?frequency a skos:Concept . " +
                 "?frequency dc:identifier ?code . " +
+                "FILTER(?code != 'OP_DATPRO') . " +
                 "?frequency skos:prefLabel ?prefLabel . " +
                 "FILTER(" +
                     "LANG(?prefLabel) = 'en' || " +

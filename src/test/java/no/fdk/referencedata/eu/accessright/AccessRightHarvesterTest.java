@@ -7,6 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Comparator;
 import java.util.List;
 
+import static no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester.ACCESS_RIGHTS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -23,7 +24,7 @@ public class AccessRightHarvesterTest {
 
         List<AccessRight> accessRights = harvester.harvest().collectList().block();
         assertNotNull(accessRights);
-        assertEquals(7, accessRights.size());
+        assertEquals(ACCESS_RIGHTS_SIZE, accessRights.size());
 
         accessRights.sort(Comparator.comparing(AccessRight::getUri));
         AccessRight first = accessRights.get(2);

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester.MAIN_ACTIVITIES_SIZE;
 import static no.fdk.referencedata.settings.Settings.MAIN_ACTIVITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -43,7 +44,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         mainActivityRepository.findAll().forEach(activity -> counter.incrementAndGet());
-        assertEquals(21, counter.get());
+        assertEquals(MAIN_ACTIVITIES_SIZE, counter.get());
 
         final MainActivity first = mainActivityRepository.findById("http://publications.europa.eu/resource/authority/main-activity/hc-am").orElseThrow();
         assertEquals("http://publications.europa.eu/resource/authority/main-activity/hc-am", first.getUri());

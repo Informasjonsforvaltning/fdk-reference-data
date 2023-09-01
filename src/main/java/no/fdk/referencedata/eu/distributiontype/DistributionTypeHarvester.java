@@ -91,6 +91,7 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
                 "?distType skos:inScheme atres:distribution-type . " +
                 "?distType a skos:Concept . " +
                 "?distType dc:identifier ?code . " +
+                "FILTER(?code != 'OP_DATPRO') . " +
                 "OPTIONAL { ?distType at:start.use ?startUse . } " +
                 "?distType skos:prefLabel ?prefLabel . " +
                 "FILTER(" +

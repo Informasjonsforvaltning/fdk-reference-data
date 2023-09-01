@@ -24,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
+import static no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester.DATA_THEMES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -69,7 +70,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         DataThemes dataThemes =
                 this.restTemplate.getForObject("http://localhost:" + port + "/eu/data-themes", DataThemes.class);
 
-        assertEquals(14, dataThemes.getDataThemes().size());
+        assertEquals(DATA_THEMES_SIZE, dataThemes.getDataThemes().size());
 
         DataTheme first = dataThemes.getDataThemes().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", first.getUri());
@@ -96,7 +97,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_data_themes_fails_without_api_key() {
-        assertEquals(14, dataThemeRepository.count());
+        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -108,7 +109,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(14, dataThemeRepository.count());
+        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -117,7 +118,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_data_themes_executes_a_force_update() {
-        assertEquals(14, dataThemeRepository.count());
+        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -129,7 +130,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(14, dataThemeRepository.count());
+        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
