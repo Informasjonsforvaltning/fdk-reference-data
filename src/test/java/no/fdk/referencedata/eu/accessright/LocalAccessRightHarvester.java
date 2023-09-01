@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 
 public class LocalAccessRightHarvester extends AccessRightHarvester {
     private final String version;
+    public static final int ACCESS_RIGHTS_SIZE = 6;
 
     public LocalAccessRightHarvester(String version) {
         this.version = version;

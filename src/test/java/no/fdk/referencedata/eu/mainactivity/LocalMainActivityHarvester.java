@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 
 public class LocalMainActivityHarvester extends MainActivityHarvester {
     private final String version;
+    public static final int MAIN_ACTIVITIES_SIZE = 20;
 
     public LocalMainActivityHarvester(String version) {
         this.version = version;

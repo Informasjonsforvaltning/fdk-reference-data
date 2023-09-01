@@ -22,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
+import static no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester.MAIN_ACTIVITIES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,12 +65,12 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         MainActivities mainActivities =
                 this.restTemplate.getForObject("http://localhost:" + port + "/eu/main-activities", MainActivities.class);
 
-        assertEquals(21, mainActivities.getMainActivities().size());
+        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivities.getMainActivities().size());
 
         MainActivity first = mainActivities.getMainActivities().get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/main-activity/OP_DATPRO", first.getUri());
-        assertEquals("OP_DATPRO", first.getCode());
-        assertEquals("Provisional data", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/main-activity/airport", first.getUri());
+        assertEquals("airport", first.getCode());
+        assertEquals("Airport-related activities", first.getLabel().get(Language.ENGLISH.code()));
     }
 
     @Test
@@ -85,7 +86,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
 
     @Test
     public void test_if_post_access_rights_fails_without_api_key() {
-        assertEquals(21, mainActivityRepository.count());
+        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -97,7 +98,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(21, mainActivityRepository.count());
+        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -106,7 +107,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
 
     @Test
     public void test_if_post_access_rights_executes_a_force_update() {
-        assertEquals(21, mainActivityRepository.count());
+        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -118,7 +119,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(21, mainActivityRepository.count());
+        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester.DISTRIBUTION_TYPES_SIZE;
 import static no.fdk.referencedata.settings.Settings.DISTRIBUTION_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -41,7 +42,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
 
         final AtomicInteger counter = new AtomicInteger();
         distributionTypeRepository.findAll().forEach(accessRight -> counter.incrementAndGet());
-        assertEquals(5, counter.get());
+        assertEquals(DISTRIBUTION_TYPES_SIZE, counter.get());
 
         final DistributionType first = distributionTypeRepository.findById("http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE").orElseThrow();
         assertEquals("http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE", first.getUri());

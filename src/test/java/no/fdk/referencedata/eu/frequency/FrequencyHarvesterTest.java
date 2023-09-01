@@ -6,6 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
+import static no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester.FREQUENCIES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,7 +23,7 @@ public class FrequencyHarvesterTest {
 
         List<Frequency> frequencies = harvester.harvest().collectList().block();
         assertNotNull(frequencies);
-        assertEquals(31, frequencies.size());
+        assertEquals(FREQUENCIES_SIZE, frequencies.size());
 
         Frequency first = frequencies.get(0);
         assertEquals("http://publications.europa.eu/resource/authority/frequency/WEEKLY_3", first.getUri());

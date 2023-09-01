@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
+import static no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester.FREQUENCIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -58,7 +59,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         Frequencies frequencies =
                 this.restTemplate.getForObject("http://localhost:" + port + "/eu/frequencies", Frequencies.class);
 
-        assertEquals(31, frequencies.getFrequencies().size());
+        assertEquals(FREQUENCIES_SIZE, frequencies.getFrequencies().size());
 
         Frequency first = frequencies.getFrequencies().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/frequency/ANNUAL", first.getUri());
@@ -79,7 +80,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_frequencies_fails_without_api_key() {
-        assertEquals(31, frequencyRepository.count());
+        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -91,7 +92,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(31, frequencyRepository.count());
+        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -100,7 +101,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
 
     @Test
     public void test_if_post_frequencies_executes_a_force_update() {
-        assertEquals(31, frequencyRepository.count());
+        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -112,7 +113,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(31, frequencyRepository.count());
+        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());

@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
+import static no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester.DISTRIBUTION_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -58,7 +59,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
         DistributionTypes distributionTypes =
                 this.restTemplate.getForObject("http://localhost:" + port + "/eu/distribution-types", DistributionTypes.class);
 
-        assertEquals(5, distributionTypes.getDistributionTypes().size());
+        assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypes.getDistributionTypes().size());
 
         DistributionType first = distributionTypes.getDistributionTypes().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE", first.getUri());
@@ -79,7 +80,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
 
     @Test
     public void test_if_post_distribution_types_fails_without_api_key() {
-        assertEquals(5, distributionTypeRepository.count());
+        assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -91,7 +92,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(5, distributionTypeRepository.count());
+        assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -100,7 +101,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
 
     @Test
     public void test_if_post_distribution_types_executes_a_force_update() {
-        assertEquals(5, distributionTypeRepository.count());
+        assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -112,7 +113,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(5, distributionTypeRepository.count());
+        assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());

@@ -3,10 +3,7 @@
 ns1:main-activity	owl:versionInfo	"20220928-0" .
 @prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
 @prefix ns3:	<http://publications.europa.eu/resource/authority/main-activity/> .
-ns3:OP_DATPRO	skos:inScheme	ns1:main-activity ;
-	skos:prefLabel	"Provisional data"@en .
 @prefix dc:	<http://purl.org/dc/elements/1.1/> .
-ns3:OP_DATPRO	dc:identifier	"OP_DATPRO" .
 ns3:airport	skos:inScheme	ns1:main-activity ;
 	skos:prefLabel	"Airport-related activities"@en ;
 	dc:identifier	"airport" .

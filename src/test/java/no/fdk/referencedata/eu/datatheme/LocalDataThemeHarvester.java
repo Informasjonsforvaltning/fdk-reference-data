@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 
 public class LocalDataThemeHarvester extends DataThemeHarvester {
     private final String version;
+    public static final int DATA_THEMES_SIZE = 13;
 
     public LocalDataThemeHarvester(String version) {
         this.version = version;

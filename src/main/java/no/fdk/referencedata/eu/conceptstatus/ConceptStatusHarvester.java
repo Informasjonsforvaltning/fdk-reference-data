@@ -91,6 +91,7 @@ public class ConceptStatusHarvester extends AbstractEuHarvester<ConceptStatus> {
                 "?status skos:inScheme atres:concept-status . " +
                 "?status a skos:Concept . " +
                 "?status dc:identifier ?code . " +
+                "FILTER(?code != 'OP_DATPRO') . " +
                 "?status skos:prefLabel ?prefLabel . " +
                 "FILTER(" +
                     "LANG(?prefLabel) = 'en' || " +

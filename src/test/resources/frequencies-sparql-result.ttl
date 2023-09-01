@@ -100,9 +100,6 @@ ns1:NEVER	skos:inScheme	ns2:frequency ;
 		"aldri"@nn ,
 		"aldri"@no ;
 	dc:identifier	"NEVER" .
-ns1:OP_DATPRO	skos:inScheme	ns2:frequency ;
-	skos:prefLabel	"Provisional data"@en ;
-	dc:identifier	"OP_DATPRO" .
 ns1:QUARTERLY	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"kvartalsvis"@no ,
 		"quarterly"@en ,

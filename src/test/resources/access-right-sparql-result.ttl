@@ -5,9 +5,6 @@ ns1:NON_PUBLIC	skos:inScheme	ns2:access-right ;
 	skos:prefLabel	"non-public"@en .
 @prefix dc:	<http://purl.org/dc/elements/1.1/> .
 ns1:NON_PUBLIC	dc:identifier	"NON_PUBLIC" .
-ns1:OP_DATPRO	skos:inScheme	ns2:access-right ;
-	skos:prefLabel	"Provisional data"@en ;
-	dc:identifier	"OP_DATPRO" .
 ns1:PUBLIC	skos:inScheme	ns2:access-right ;
 	skos:prefLabel	"public"@en ;
 	dc:identifier	"PUBLIC" .

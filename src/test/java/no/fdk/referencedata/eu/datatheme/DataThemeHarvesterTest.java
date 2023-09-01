@@ -7,6 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.List;
 
+import static no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester.DATA_THEMES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -23,7 +24,7 @@ public class DataThemeHarvesterTest {
 
         List<DataTheme> dataThemes = dataThemeHarvester.harvest().collectList().block();
         assertNotNull(dataThemes);
-        assertEquals(14, dataThemes.size());
+        assertEquals(DATA_THEMES_SIZE, dataThemes.size());
 
         DataTheme first = dataThemes.get(0);
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/TRAN", first.getUri());

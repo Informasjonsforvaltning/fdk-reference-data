@@ -6,6 +6,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
+import static no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester.DISTRIBUTION_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -22,7 +23,7 @@ public class DistributionTypeHarvesterTest {
 
         List<DistributionType> distributionTypes = harvester.harvest().collectList().block();
         assertNotNull(distributionTypes);
-        assertEquals(5, distributionTypes.size());
+        assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypes.size());
 
         DistributionType first = distributionTypes.get(0);
         assertEquals("http://publications.europa.eu/resource/authority/distribution-type/FEED_INFO", first.getUri());

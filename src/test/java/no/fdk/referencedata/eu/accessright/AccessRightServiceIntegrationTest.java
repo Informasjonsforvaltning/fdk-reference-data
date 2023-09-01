@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester.ACCESS_RIGHTS_SIZE;
 import static no.fdk.referencedata.settings.Settings.ACCESS_RIGHT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -41,7 +42,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
 
         final AtomicInteger counter = new AtomicInteger();
         accessRightRepository.findAll().forEach(accessRight -> counter.incrementAndGet());
-        assertEquals(7, counter.get());
+        assertEquals(ACCESS_RIGHTS_SIZE, counter.get());
 
         final AccessRight first = accessRightRepository.findById("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL").orElseThrow();
         assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", first.getUri());

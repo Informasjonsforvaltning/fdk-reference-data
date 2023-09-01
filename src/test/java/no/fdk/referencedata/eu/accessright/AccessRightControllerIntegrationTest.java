@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
+import static no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester.ACCESS_RIGHTS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -58,7 +59,7 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
         AccessRights accessRights =
                 this.restTemplate.getForObject("http://localhost:" + port + "/eu/access-rights", AccessRights.class);
 
-        assertEquals(7, accessRights.getAccessRights().size());
+        assertEquals(ACCESS_RIGHTS_SIZE, accessRights.getAccessRights().size());
 
         AccessRight first = accessRights.getAccessRights().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", first.getUri());
@@ -79,7 +80,7 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
 
     @Test
     public void test_if_post_access_rights_fails_without_api_key() {
-        assertEquals(7, accessRightRepository.count());
+        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -91,7 +92,7 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(7, accessRightRepository.count());
+        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -100,7 +101,7 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
 
     @Test
     public void test_if_post_access_rights_executes_a_force_update() {
-        assertEquals(7, accessRightRepository.count());
+        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -112,7 +113,7 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(7, accessRightRepository.count());
+        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());

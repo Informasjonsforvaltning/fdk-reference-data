@@ -52,9 +52,6 @@ ns3:DRAFT_DEPRECATED	skos:inScheme	ns1:concept-status ;
 		"utkast frar\u00E5dd"@nn ,
 		"utkast frar\u00E5det"@nb ;
 	dc:identifier	"DRAFT_DEPRECATED" .
-ns3:OP_DATPRO	skos:inScheme	ns1:concept-status ;
-	skos:prefLabel	"Provisional data"@en ;
-	dc:identifier	"OP_DATPRO" .
 ns3:RETIRED	skos:inScheme	ns1:concept-status ;
 	skos:prefLabel	"foreldet"@no ,
 		"foreldet"@nb ,
