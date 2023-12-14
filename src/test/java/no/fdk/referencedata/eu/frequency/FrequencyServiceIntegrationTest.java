@@ -2,6 +2,7 @@ package no.fdk.referencedata.eu.frequency;
 
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import static no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester.FREQUENC
 import static no.fdk.referencedata.settings.Settings.FREQUENCY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -32,11 +34,14 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @BeforeEach
     public void setup() {
         FrequencyService frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester("1"),
                 frequencyRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         frequencyService.harvestAndSave(true);
@@ -47,6 +52,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         FrequencyService frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester("20200923-0"),
                 frequencyRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         frequencyService.harvestAndSave(false);
@@ -66,6 +72,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         FrequencyService frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester("20200923-1"),
                 frequencyRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
@@ -82,6 +89,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester("20200924-0"),
                 frequencyRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
@@ -98,6 +106,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester("20200923-0"),
                 frequencyRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
@@ -131,6 +140,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         FrequencyService frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester("20200924-2"),
                 frequencyRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, frequencyRepositorySpy.count());

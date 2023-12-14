@@ -8,6 +8,7 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeRepository;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
 import no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -44,11 +46,14 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @BeforeEach
     public void setup() {
         DistributionTypeService distributionTypeService = new DistributionTypeService(
                 new LocalDistributionTypeHarvester("1"),
                 distributionTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         distributionTypeService.harvestAndSave(false);

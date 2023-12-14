@@ -2,6 +2,7 @@ package no.fdk.referencedata.eu.mainactivity;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -33,11 +35,14 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_harvest_persists_datathemes() {
         MainActivityService mainActivityService = new MainActivityService(
                 new LocalMainActivityHarvester("123"),
                 mainActivityRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         mainActivityService.harvestAndSave(false);
@@ -57,6 +62,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         MainActivityService mainActivityService = new MainActivityService(
                 new LocalMainActivityHarvester("123-0"),
                 mainActivityRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
@@ -73,6 +79,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         mainActivityService = new MainActivityService(
                 new LocalMainActivityHarvester("123-2"),
                 mainActivityRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
@@ -89,6 +96,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         mainActivityService = new MainActivityService(
                 new LocalMainActivityHarvester("123-1"),
                 mainActivityRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
@@ -122,6 +130,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         MainActivityService mainActivityService = new MainActivityService(
                 new LocalMainActivityHarvester("123"),
                 mainActivityRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, mainActivityRepositorySpy.count());

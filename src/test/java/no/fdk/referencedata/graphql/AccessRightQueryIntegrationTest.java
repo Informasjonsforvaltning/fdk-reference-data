@@ -8,6 +8,7 @@ import no.fdk.referencedata.eu.accessright.AccessRightRepository;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -40,6 +42,8 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private GraphQLTestTemplate template;
 
@@ -48,6 +52,7 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
         AccessRightService accessRightService = new AccessRightService(
                 new LocalAccessRightHarvester("1"),
                 accessRightRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         accessRightService.harvestAndSave(false);

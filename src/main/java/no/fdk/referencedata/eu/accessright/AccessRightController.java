@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.accessright;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,11 @@ public class AccessRightController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<AccessRight> getAccessRight(@PathVariable("code") String code) {
         return ResponseEntity.of(accessRightRepository.findByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getAccessRightsRDF() {
+        return ResponseEntity.ok(accessRightService.getRdf(RDFFormat.TURTLE));
     }
 }
