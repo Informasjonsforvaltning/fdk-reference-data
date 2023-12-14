@@ -2,6 +2,7 @@ package no.fdk.referencedata.digdir.evidencetype;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -32,11 +34,14 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_harvest_persists_evidence_types() {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("123-0"),
                 evidenceTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         evidenceTypeService.harvestAndSave(false);
@@ -56,6 +61,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("132-0"),
                 evidenceTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
@@ -72,6 +78,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("132-2"),
                 evidenceTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
@@ -88,6 +95,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("132-1"),
                 evidenceTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
@@ -121,6 +129,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("123-2"),
                 evidenceTypeRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, evidenceTypeRepositorySpy.count());

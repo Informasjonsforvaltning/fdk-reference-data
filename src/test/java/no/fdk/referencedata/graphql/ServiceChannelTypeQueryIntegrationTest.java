@@ -8,6 +8,7 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeRepository;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -43,6 +45,8 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private GraphQLTestTemplate template;
 
@@ -51,6 +55,7 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("1"),
                 serviceChannelTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         serviceChannelTypeService.harvestAndSave(false);

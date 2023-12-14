@@ -1,7 +1,9 @@
 package no.fdk.referencedata.digdir;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.springframework.core.io.Resource;
@@ -29,7 +31,18 @@ public abstract class AbstractDataNorgeHarvester<T> {
         }
     }
 
-    protected Optional<Model> getModel(Resource resource) {
+    @Getter
+    private final Model model = ModelFactory.createDefaultModel();
+
+    protected void loadModel(org.springframework.core.io.Resource resource) {
+        Optional<Model> fetched = fetchModel(resource);
+        if (fetched.isPresent()) {
+            model.removeAll();
+            model.add(fetched.get());
+        }
+    }
+
+    private Optional<Model> fetchModel(Resource resource) {
         try {
             return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE));
         } catch (IOException e) {

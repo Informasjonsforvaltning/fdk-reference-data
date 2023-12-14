@@ -3,7 +3,6 @@ package no.fdk.referencedata.digdir.conceptsubjects;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.eu.eurovoc.EuroVocControllerIntegrationTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.apache.jena.rdf.model.Model;
@@ -103,7 +102,7 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
     @Test
     public void test_concept_subjects_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/digdir/concept-subjects", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(EuroVocControllerIntegrationTest.class.getClassLoader().getResource("concept-subjects.ttl")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ConceptSubjectControllerIntegrationTest.class.getClassLoader().getResource("concept-subjects.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }

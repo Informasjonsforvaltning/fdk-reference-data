@@ -44,7 +44,9 @@ public class RoleTypeHarvester extends AbstractDataNorgeHarvester<RoleType> {
             return Flux.error(new Exception("Unable to fetch role-type distribution"));
         }
 
-        return Mono.justOrEmpty(getModel(rdfSource))
+        loadModel(rdfSource);
+
+        return Mono.justOrEmpty(getModel())
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         RoleTypeVocabulary.SCHEME).toList())

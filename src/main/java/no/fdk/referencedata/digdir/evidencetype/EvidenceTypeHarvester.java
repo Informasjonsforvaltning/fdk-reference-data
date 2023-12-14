@@ -44,7 +44,9 @@ public class EvidenceTypeHarvester extends AbstractDataNorgeHarvester<EvidenceTy
             return Flux.error(new Exception("Unable to fetch evidence-type distribution"));
         }
 
-        return Mono.justOrEmpty(getModel(rdfSource))
+        loadModel(rdfSource);
+
+        return Mono.justOrEmpty(getModel())
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EvidenceTypeVocabulary.SCHEME).toList())
