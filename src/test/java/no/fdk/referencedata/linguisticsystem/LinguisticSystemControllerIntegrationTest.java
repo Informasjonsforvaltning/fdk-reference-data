@@ -1,6 +1,11 @@
 package no.fdk.referencedata.linguisticsystem;
 
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -18,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
                 "scheduling.enabled=false",
         })
 @ActiveProfiles("test")
-public class LinguisticSystemControllerIntegrationTest {
+public class LinguisticSystemControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;
@@ -48,5 +53,13 @@ public class LinguisticSystemControllerIntegrationTest {
         assertEquals("http://publications.europa.eu/resource/authority/language/NOB", language.getUri());
         assertEquals("NOB", language.getCode());
         assertEquals("Norwegian Bokmål", language.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_linguistic_systems_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/linguistic-systems", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(LinguisticSystemControllerIntegrationTest.class.getClassLoader().getResource("languages-skos.rdf")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }
