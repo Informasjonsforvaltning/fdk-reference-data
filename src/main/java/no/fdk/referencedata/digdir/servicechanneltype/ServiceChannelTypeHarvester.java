@@ -44,7 +44,9 @@ public class ServiceChannelTypeHarvester extends AbstractDataNorgeHarvester<Serv
             return Flux.error(new Exception("Unable to fetch service-channel-type distribution"));
         }
 
-        return Mono.justOrEmpty(getModel(rdfSource))
+        loadModel(rdfSource);
+
+        return Mono.justOrEmpty(getModel())
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         ServiceChannelTypeVocabulary.SCHEME).toList())

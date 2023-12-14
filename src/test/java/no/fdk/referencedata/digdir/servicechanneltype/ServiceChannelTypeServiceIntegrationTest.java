@@ -2,6 +2,7 @@ package no.fdk.referencedata.digdir.servicechanneltype;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -32,11 +34,14 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_harvest_persists_datathemes() {
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("123-0"),
                 serviceChannelTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         serviceChannelTypeService.harvestAndSave(false);
@@ -56,6 +61,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("132-0"),
                 serviceChannelTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
@@ -72,6 +78,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
         serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("132-2"),
                 serviceChannelTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
@@ -88,6 +95,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
         serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("132-1"),
                 serviceChannelTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
@@ -121,6 +129,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("123-2"),
                 serviceChannelTypeRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, serviceChannelTypeRepositorySpy.count());

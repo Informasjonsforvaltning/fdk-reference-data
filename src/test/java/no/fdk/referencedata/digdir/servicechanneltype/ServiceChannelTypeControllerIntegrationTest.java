@@ -3,9 +3,14 @@ package no.fdk.referencedata.digdir.servicechanneltype;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +49,9 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
     private ServiceChannelTypeRepository serviceChannelTypeRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
@@ -54,6 +62,7 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("1"),
                 serviceChannelTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         serviceChannelTypeService.harvestAndSave(true);
@@ -123,5 +132,13 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.SERVICE_CHANNEL_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_service_channel_types_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/digdir/service-channel-types", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ServiceChannelTypeControllerIntegrationTest.class.getClassLoader().getResource("service-channel-type.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

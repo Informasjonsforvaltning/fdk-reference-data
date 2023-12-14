@@ -3,9 +3,14 @@ package no.fdk.referencedata.digdir.evidencetype;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +49,9 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
     private EvidenceTypeRepository evidenceTypeRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
@@ -54,6 +62,7 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("1"),
                 evidenceTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         evidenceTypeService.harvestAndSave(true);
@@ -123,5 +132,13 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EVIDENCE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_evidence_types_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/digdir/evidence-types", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(EvidenceTypeControllerIntegrationTest.class.getClassLoader().getResource("evidence-type.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

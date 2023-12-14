@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,5 +46,11 @@ public class EvidenceTypeController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<EvidenceType> getEvidenceType(@PathVariable("code") String code) {
         return ResponseEntity.of(evidenceTypeRepository.findByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getEvidenceTypesRDF() {
+        return ResponseEntity.ok(evidenceTypeService.getRdf(RDFFormat.TURTLE));
     }
 }

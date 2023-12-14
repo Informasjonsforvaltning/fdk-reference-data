@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,5 +46,11 @@ public class ServiceChannelTypeController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<ServiceChannelType> getServiceChannelType(@PathVariable("code") String code) {
         return ResponseEntity.of(serviceChannelTypeRepository.findByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getServiceChannelTypesRDF() {
+        return ResponseEntity.ok(serviceChannelTypeService.getRdf(RDFFormat.TURTLE));
     }
 }

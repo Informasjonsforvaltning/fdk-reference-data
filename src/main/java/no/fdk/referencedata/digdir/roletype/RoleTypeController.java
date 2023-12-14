@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.roletype;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,5 +46,11 @@ public class RoleTypeController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<RoleType> getRoleType(@PathVariable("code") String code) {
         return ResponseEntity.of(roleTypeRepository.findByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getRoleTypesRDF() {
+        return ResponseEntity.ok(roleTypeService.getRdf(RDFFormat.TURTLE));
     }
 }
