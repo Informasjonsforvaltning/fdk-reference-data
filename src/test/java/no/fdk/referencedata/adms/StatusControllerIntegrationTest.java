@@ -2,7 +2,12 @@ package no.fdk.referencedata.adms;
 
 import no.fdk.referencedata.adms.status.ADMSStatus;
 import no.fdk.referencedata.adms.status.ADMSStatuses;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -19,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 "scheduling.enabled=false",
         })
 @ActiveProfiles("test")
-public class StatusControllerIntegrationTest {
+public class StatusControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;
@@ -49,5 +55,13 @@ public class StatusControllerIntegrationTest {
         assertEquals("http://purl.org/adms/status/UnderDevelopment", status.getUri());
         assertEquals("UnderDevelopment", status.getCode());
         assertEquals("Under development", status.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_adms_status_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/adms/statuses", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(PublisherTypeControllerIntegrationTest.class.getClassLoader().getResource("rdf/adms-status.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }
