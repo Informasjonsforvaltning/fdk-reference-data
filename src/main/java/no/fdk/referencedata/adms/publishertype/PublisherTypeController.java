@@ -1,6 +1,7 @@
 package no.fdk.referencedata.adms.publishertype;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,7 +24,7 @@ public class PublisherTypeController {
 
     @CrossOrigin
     @GetMapping
-    public ResponseEntity<PublisherTypes> getPublisherTypees() {
+    public ResponseEntity<PublisherTypes> getPublisherTypes() {
         return ResponseEntity.ok(PublisherTypes.builder()
                 .publisherTypes(publisherTypeService.getAll())
                 .build());
@@ -33,6 +34,12 @@ public class PublisherTypeController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<PublisherType> getPublisherType(@PathVariable("code") final String code) {
         return ResponseEntity.of(publisherTypeService.getByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public String getPublisherTypeRDF() {
+        return publisherTypeService.getRdf(RDFFormat.TURTLE);
     }
 
 }
