@@ -3,9 +3,14 @@ package no.fdk.referencedata.eu.mainactivity;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +53,9 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     @BeforeEach
@@ -55,6 +63,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         MainActivityService mainActivityService = new MainActivityService(
                 new LocalMainActivityHarvester("1"),
                 mainActivityRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         mainActivityService.harvestAndSave(true);
@@ -124,5 +133,13 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_main_activities_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/main-activities", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(MainActivityControllerIntegrationTest.class.getClassLoader().getResource("main-activity-sparql-result.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

@@ -8,6 +8,7 @@ import no.fdk.referencedata.eu.filetype.FileTypeRepository;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -41,11 +43,14 @@ class FileTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @BeforeEach
     public void setup() {
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("1"),
                 fileTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         fileTypeService.harvestAndSave(false);

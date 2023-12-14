@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static no.fdk.referencedata.settings.Settings.FILE_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +30,14 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_harvest_persists_filetypes() {
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210512-0"),
                 fileTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         fileTypeService.harvestAndSave(false);
@@ -52,6 +57,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210512-6"),
                 fileTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
@@ -68,6 +74,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210513-0"),
                 fileTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
@@ -84,6 +91,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210512-6"),
                 fileTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
@@ -116,6 +124,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210514-2"),
                 fileTypeRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, fileTypeRepositorySpy.count());

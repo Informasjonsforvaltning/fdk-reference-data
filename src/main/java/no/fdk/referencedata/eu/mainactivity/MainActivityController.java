@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.mainactivity;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -45,5 +46,11 @@ public class MainActivityController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<MainActivity> getMainActivity(@PathVariable("code") String code) {
         return ResponseEntity.of(mainActivityRepository.findByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getMainActivitiesRDF() {
+        return ResponseEntity.ok(mainActivityService.getRdf(RDFFormat.TURTLE));
     }
 }

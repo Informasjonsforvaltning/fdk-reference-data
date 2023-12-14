@@ -2,6 +2,7 @@ package no.fdk.referencedata.eu.filetype;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,5 +42,11 @@ public class FileTypeController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<FileType> getFileType(@PathVariable("code") String code) {
         return ResponseEntity.of(fileTypeRepository.findByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getFileTypesRDF() {
+        return ResponseEntity.ok(fileTypeService.getRdf(RDFFormat.TURTLE));
     }
 }

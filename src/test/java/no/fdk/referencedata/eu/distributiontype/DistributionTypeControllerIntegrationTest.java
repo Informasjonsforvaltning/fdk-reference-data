@@ -3,9 +3,14 @@ package no.fdk.referencedata.eu.distributiontype;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +47,9 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     @BeforeEach
@@ -49,6 +57,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
         DistributionTypeService distributionTypeService = new DistributionTypeService(
                 new LocalDistributionTypeHarvester("1"),
                 distributionTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         distributionTypeService.harvestAndSave(true);
@@ -118,5 +127,13 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_distribution_types_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/distribution-types", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(DistributionTypeControllerIntegrationTest.class.getClassLoader().getResource("distribution-types-sparql-result.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

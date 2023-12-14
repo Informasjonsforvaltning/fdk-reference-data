@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.distributiontype;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,11 @@ public class DistributionTypeController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<DistributionType> getDistributionType(@PathVariable("code") String code) {
         return ResponseEntity.of(distributionTypeRepository.findByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getDistributionTypesRDF() {
+        return ResponseEntity.ok(distributionTypeService.getRdf(RDFFormat.TURTLE));
     }
 }
