@@ -2,9 +2,14 @@ package no.fdk.referencedata.iana.mediatype;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +48,15 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
     @BeforeEach
     public void setup() {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         mediaTypeService.harvestAndSave();
@@ -129,5 +138,13 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MEDIA_TYPE.name()).orElseThrow();
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_media_types_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/iana/media-types", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(MediaTypeControllerIntegrationTest.class.getClassLoader().getResource("media-types.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

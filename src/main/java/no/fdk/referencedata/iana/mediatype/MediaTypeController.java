@@ -1,6 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,5 +51,11 @@ public class MediaTypeController {
     public ResponseEntity<MediaType> getMediaType(@PathVariable("type") final String type,
                                                   @PathVariable("subType") final String subType) {
         return ResponseEntity.of(mediaTypeRepository.findByTypeAndSubType(type, subType));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getMediaTypesRDF() {
+        return ResponseEntity.ok(mediaTypeService.getRdf(RDFFormat.TURTLE));
     }
 }
