@@ -1,6 +1,11 @@
 package no.fdk.referencedata.schema.dayofweek;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.rdf.RDFSource;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
+import no.fdk.referencedata.rdf.RDFUtils;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +21,18 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class DayOfWeekService {
+    private final String rdfSourceID = "weekdays-source";
 
     private List<DayOfWeek> weekDays = Collections.emptyList();
 
     public DayOfWeekImporter dayOfWeekImporter;
 
+    private final RDFSourceRepository rdfSourceRepository;
+
     @Autowired
-    public DayOfWeekService(DayOfWeekImporter dayOfWeekImporter) {
+    public DayOfWeekService(DayOfWeekImporter dayOfWeekImporter, RDFSourceRepository rdfSourceRepository) {
         this.dayOfWeekImporter = dayOfWeekImporter;
+        this.rdfSourceRepository = rdfSourceRepository;
     }
 
     public List<DayOfWeek> getAll() {
@@ -37,15 +46,27 @@ public class DayOfWeekService {
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        StringWriter stringWriter = new StringWriter();
-        RDFDataMgr.write(stringWriter, dayOfWeekImporter.getModel(), rdfFormat) ;
-        return stringWriter.toString();
+        String source = rdfSourceRepository.findById(rdfSourceID).orElse(new RDFSource()).getTurtle();
+        if (rdfFormat == RDFFormat.TURTLE) {
+            return source;
+        } else {
+            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
+        }
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void importWeekDays() {
         log.debug("Importing schema DayOfWeek");
-        weekDays = dayOfWeekImporter.importFromSource();
+        try {
+            weekDays = dayOfWeekImporter.importFromSource();
+
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(rdfSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(dayOfWeekImporter.getModel(), RDFFormat.TURTLE));
+            rdfSourceRepository.save(rdfSource);
+        } catch(Exception e) {
+            log.error("Unable to import schema DayOfWeek", e);
+        }
     }
 
 }

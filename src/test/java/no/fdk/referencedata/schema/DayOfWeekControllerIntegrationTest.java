@@ -1,8 +1,13 @@
 package no.fdk.referencedata.schema;
 
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.schema.dayofweek.DayOfWeek;
 import no.fdk.referencedata.schema.dayofweek.WeekDays;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -19,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 "scheduling.enabled=false",
         })
 @ActiveProfiles("test")
-public class DayOfWeekControllerIntegrationTest {
+public class DayOfWeekControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;
@@ -49,5 +55,13 @@ public class DayOfWeekControllerIntegrationTest {
         assertEquals("https://schema.org/Saturday", dayOfWeek.getUri());
         assertEquals("Saturday", dayOfWeek.getCode());
         assertEquals("Saturday", dayOfWeek.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_week_days_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/schema/week-days", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(DayOfWeekControllerIntegrationTest.class.getClassLoader().getResource("rdf/schema-day-of-week.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }
