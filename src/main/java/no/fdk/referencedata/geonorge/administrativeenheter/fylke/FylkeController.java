@@ -1,6 +1,7 @@
 package no.fdk.referencedata.geonorge.administrativeenheter.fylke;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,11 @@ public class FylkeController {
     @GetMapping(path = "/{fylkesnummer}")
     public ResponseEntity<Fylke> getKommune(@PathVariable("fylkesnummer") final String fylkesnummer) {
         return ResponseEntity.of(fylkeRepository.findByFylkesnummer(fylkesnummer));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getFylkerRDF() {
+        return ResponseEntity.ok(fylkeService.getRdf(RDFFormat.TURTLE));
     }
 }

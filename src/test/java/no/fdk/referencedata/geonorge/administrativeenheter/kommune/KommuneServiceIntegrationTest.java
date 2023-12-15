@@ -5,6 +5,7 @@ import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.eu.accessright.AccessRightRepository;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static no.fdk.referencedata.settings.Settings.ACCESS_RIGHT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +36,8 @@ public class KommuneServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Value("${wiremock.host}")
     private String wiremockHost;
 
@@ -45,6 +49,7 @@ public class KommuneServiceIntegrationTest extends AbstractContainerTest {
         KommuneService kommuneService = new KommuneService(
                 new LocalKommuneHarvester(wiremockHost, wiremockPort),
                 kommuneRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         kommuneService.harvestAndSave();
@@ -81,6 +86,7 @@ public class KommuneServiceIntegrationTest extends AbstractContainerTest {
         KommuneService kommuneService = new KommuneService(
                 new LocalKommuneHarvester(wiremockHost, wiremockPort),
                 kommuneRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, kommuneRepositorySpy.count());

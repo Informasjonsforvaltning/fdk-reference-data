@@ -12,6 +12,7 @@ import no.fdk.referencedata.geonorge.administrativeenheter.fylke.LocalFylkeHarve
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneRepository;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.LocalKommuneHarvester;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -46,6 +48,8 @@ class FylkeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private FylkeRepository fylkeRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
@@ -57,6 +61,7 @@ class FylkeQueryIntegrationTest extends AbstractContainerTest {
         FylkeService fylkeService = new FylkeService(
                 new LocalFylkeHarvester(wiremockHost, wiremockPort),
                 fylkeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         fylkeService.harvestAndSave();

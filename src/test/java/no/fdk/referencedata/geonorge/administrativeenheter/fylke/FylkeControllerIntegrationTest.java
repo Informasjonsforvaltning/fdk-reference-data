@@ -2,9 +2,14 @@ package no.fdk.referencedata.geonorge.administrativeenheter.fylke;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +46,9 @@ public class FylkeControllerIntegrationTest extends AbstractContainerTest {
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     @Value("${wiremock.host}")
@@ -54,6 +62,7 @@ public class FylkeControllerIntegrationTest extends AbstractContainerTest {
         FylkeService fylkeService = new FylkeService(
                 new LocalFylkeHarvester(wiremockHost, wiremockPort),
                 fylkeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         fylkeService.harvestAndSave();
@@ -123,5 +132,13 @@ public class FylkeControllerIntegrationTest extends AbstractContainerTest {
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.GEONORGE_FYLKE.name()).orElseThrow();
         assertEquals("0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_fylker_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/geonorge/administrative-enheter/fylker", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(FylkeControllerIntegrationTest.class.getClassLoader().getResource("fylker.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

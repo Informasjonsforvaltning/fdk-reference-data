@@ -2,25 +2,17 @@ package no.fdk.referencedata.geonorge.administrativeenheter.nasjon;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.Kommune;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneRepository;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.Kommuner;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
-import org.junit.jupiter.api.BeforeEach;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-public class NasjonControllerIntegrationTest {
+public class NasjonControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;
@@ -64,5 +56,13 @@ public class NasjonControllerIntegrationTest {
         assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", nasjon.getUri());
         assertEquals("Norge", nasjon.getNasjonsnavn());
         assertEquals("173163", nasjon.getNasjonsnummer());
+    }
+
+    @Test
+    public void test_nasjoner_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/geonorge/administrative-enheter/nasjoner", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(NasjonControllerIntegrationTest.class.getClassLoader().getResource("nasjoner.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

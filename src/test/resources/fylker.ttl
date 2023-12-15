@@ -1,0 +1,21 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/423456>
+        a               dct:Location;
+        dct:identifier  "423456";
+        dct:title       "Fylke 4" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/323456>
+        a               dct:Location;
+        dct:identifier  "323456";
+        dct:title       "Fylke 3" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/223456>
+        a               dct:Location;
+        dct:identifier  "223456";
+        dct:title       "Fylke 2" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/123456>
+        a               dct:Location;
+        dct:identifier  "123456";
+        dct:title       "Fylke 1" .

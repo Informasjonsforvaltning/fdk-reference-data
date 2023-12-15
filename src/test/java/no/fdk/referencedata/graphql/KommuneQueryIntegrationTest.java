@@ -11,6 +11,7 @@ import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneServic
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.LocalKommuneHarvester;
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -45,6 +47,8 @@ class KommuneQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private KommuneRepository kommuneRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
@@ -56,6 +60,7 @@ class KommuneQueryIntegrationTest extends AbstractContainerTest {
         KommuneService kommuneService = new KommuneService(
                 new LocalKommuneHarvester(wiremockHost, wiremockPort),
                 kommuneRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         kommuneService.harvestAndSave();
