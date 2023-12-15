@@ -1,6 +1,11 @@
 package no.fdk.referencedata.openlicences;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.rdf.RDFSource;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
+import no.fdk.referencedata.rdf.RDFUtils;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +21,18 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class OpenLicenseService {
+    private final String rdfSourceID = "open-licences-source";
 
     private List<OpenLicense> openLicenses = Collections.emptyList();
 
     public OpenLicenseImporter openLicenseImporter;
 
+    private final RDFSourceRepository rdfSourceRepository;
+
     @Autowired
-    public OpenLicenseService(OpenLicenseImporter openLicenseImporter) {
+    public OpenLicenseService(OpenLicenseImporter openLicenseImporter, RDFSourceRepository rdfSourceRepository) {
         this.openLicenseImporter = openLicenseImporter;
+        this.rdfSourceRepository = rdfSourceRepository;
     }
 
     public List<OpenLicense> getAll() {
@@ -37,15 +46,27 @@ public class OpenLicenseService {
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        StringWriter stringWriter = new StringWriter();
-        RDFDataMgr.write(stringWriter, openLicenseImporter.getModel(), rdfFormat) ;
-        return stringWriter.toString();
+        String source = rdfSourceRepository.findById(rdfSourceID).orElse(new RDFSource()).getTurtle();
+        if (rdfFormat == RDFFormat.TURTLE) {
+            return source;
+        } else {
+            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
+        }
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void importOpenLicenses() {
         log.debug("Importing open licenses");
-        openLicenses = openLicenseImporter.importFromSource();
+        try {
+            openLicenses = openLicenseImporter.importFromSource();
+
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(rdfSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(openLicenseImporter.getModel(), RDFFormat.TURTLE));
+            rdfSourceRepository.save(rdfSource);
+        } catch(Exception e) {
+            log.error("Unable to import open licenses", e);
+        }
     }
 
 }

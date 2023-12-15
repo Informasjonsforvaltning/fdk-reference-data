@@ -1,6 +1,11 @@
 package no.fdk.referencedata.openlicences;
 
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -18,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
                 "scheduling.enabled=false",
         })
 @ActiveProfiles("test")
-public class OpenLicenseControllerIntegrationTest {
+public class OpenLicenseControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;
@@ -48,5 +53,13 @@ public class OpenLicenseControllerIntegrationTest {
         assertEquals("http://publications.europa.eu/resource/authority/licence/NLOD_2_0", license.getUri());
         assertEquals("NLOD20", license.getCode());
         assertEquals("Norwegian Licence for Open Government Data", license.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_open_licenses_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/open-licenses", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(OpenLicenseControllerIntegrationTest.class.getClassLoader().getResource("rdf/open-licenses.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }
