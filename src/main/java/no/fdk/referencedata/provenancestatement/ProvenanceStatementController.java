@@ -1,6 +1,7 @@
 package no.fdk.referencedata.provenancestatement;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +34,12 @@ public class ProvenanceStatementController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<ProvenanceStatement> getProvenanceStatement(@PathVariable("code") final String code) {
         return ResponseEntity.of(provenanceStatementService.getByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public String getProvenanceStatementsRDF() {
+        return provenanceStatementService.getRdf(RDFFormat.TURTLE);
     }
 
 }
