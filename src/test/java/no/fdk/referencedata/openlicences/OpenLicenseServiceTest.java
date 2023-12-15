@@ -1,6 +1,7 @@
 package no.fdk.referencedata.openlicences;
 
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.RDFFormat;
@@ -15,13 +16,16 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @ActiveProfiles("test")
 public class OpenLicenseServiceTest {
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_get_all_returns_all_open_licenses() {
-        OpenLicenseService service = new OpenLicenseService(new OpenLicenseImporter());
+        OpenLicenseService service = new OpenLicenseService(new OpenLicenseImporter(), rdfSourceRepository);
         service.importOpenLicenses();
 
         List<OpenLicense> licenses = service.getAll();
@@ -35,7 +39,7 @@ public class OpenLicenseServiceTest {
 
     @Test
     public void test_if_get_license_by_code_returns_correct_api_specification() {
-        OpenLicenseService service = new OpenLicenseService(new OpenLicenseImporter());
+        OpenLicenseService service = new OpenLicenseService(new OpenLicenseImporter(), rdfSourceRepository);
         service.importOpenLicenses();
 
         Optional<OpenLicense> licenseOptional = service.getByCode("NLOD20");
