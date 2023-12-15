@@ -1,6 +1,7 @@
 package no.fdk.referencedata.geonorge.administrativeenheter.kommune;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +41,11 @@ public class KommuneController {
     @GetMapping(path = "/{kommunenummer}")
     public ResponseEntity<Kommune> getKommune(@PathVariable("kommunenummer") final String kommunenummer) {
         return ResponseEntity.of(kommuneRepository.findByKommunenummer(kommunenummer));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public ResponseEntity<String> getKommunerRDF() {
+        return ResponseEntity.ok(kommuneService.getRdf(RDFFormat.TURTLE));
     }
 }

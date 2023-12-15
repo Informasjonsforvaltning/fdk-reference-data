@@ -1,20 +1,18 @@
 package no.fdk.referencedata.geonorge.administrativeenheter.nasjon;
 
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.Kommune;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneHarvester;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
-import org.springframework.beans.factory.annotation.Autowired;
+import no.fdk.referencedata.rdf.RDFUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDF;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Slf4j
@@ -33,5 +31,15 @@ public class NasjonService {
         return getNasjoner().stream()
                 .filter(nasjon -> nasjon.getNasjonsnummer().equals(nasjonsnummer))
                 .findFirst();
+    }
+
+    public String getRdf(RDFFormat rdfFormat) {
+        Model model = ModelFactory.createDefaultModel();
+        model.setNsPrefix("dct", DCTerms.NS);
+        Resource norge = model.createResource(NORGE.uri);
+        norge.addProperty(RDF.type, DCTerms.Location);
+        norge.addProperty(DCTerms.title, NORGE.nasjonsnavn);
+        norge.addProperty(DCTerms.identifier, NORGE.nasjonsnummer);
+        return RDFUtils.modelToResponse(model, rdfFormat);
     }
 }

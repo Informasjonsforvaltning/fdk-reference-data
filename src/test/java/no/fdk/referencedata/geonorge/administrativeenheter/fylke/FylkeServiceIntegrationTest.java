@@ -4,6 +4,7 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.Fylke;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeRepository;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +32,8 @@ public class FylkeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Value("${wiremock.host}")
     private String wiremockHost;
 
@@ -41,6 +45,7 @@ public class FylkeServiceIntegrationTest extends AbstractContainerTest {
         FylkeService fylkeService = new FylkeService(
                 new LocalFylkeHarvester(wiremockHost, wiremockPort),
                 fylkeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         fylkeService.harvestAndSave();
@@ -75,6 +80,7 @@ public class FylkeServiceIntegrationTest extends AbstractContainerTest {
         FylkeService fylkeService = new FylkeService(
                 new LocalFylkeHarvester(wiremockHost, wiremockPort),
                 fylkeRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, fylkeRepositorySpy.count());

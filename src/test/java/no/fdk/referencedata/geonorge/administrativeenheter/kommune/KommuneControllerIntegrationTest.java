@@ -1,13 +1,15 @@
 package no.fdk.referencedata.geonorge.administrativeenheter.kommune;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
-import no.fdk.referencedata.eu.accessright.AccessRight;
-import no.fdk.referencedata.eu.accessright.AccessRights;
-import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ public class KommuneControllerIntegrationTest extends AbstractContainerTest {
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
+    private RDFSourceRepository rdfSourceRepository;
+
+    @Autowired
     private TestRestTemplate restTemplate;
 
     @Value("${wiremock.host}")
@@ -57,6 +62,7 @@ public class KommuneControllerIntegrationTest extends AbstractContainerTest {
         KommuneService kommuneService = new KommuneService(
                 new LocalKommuneHarvester(wiremockHost, wiremockPort),
                 kommuneRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         kommuneService.harvestAndSave();
@@ -128,5 +134,13 @@ public class KommuneControllerIntegrationTest extends AbstractContainerTest {
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.GEONORGE_KOMMUNE.name()).orElseThrow();
         assertEquals("0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
+    }
+
+    @Test
+    public void test_kommuner_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/geonorge/administrative-enheter/kommuner", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(KommuneControllerIntegrationTest.class.getClassLoader().getResource("kommuner.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }
