@@ -1,6 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
@@ -28,11 +30,14 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_harvest_persists_mediatypes() {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         mediaTypeService.harvestAndSave();
@@ -67,6 +72,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepositorySpy,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         assertEquals(count, mediaTypeRepositorySpy.count());

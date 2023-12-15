@@ -9,6 +9,7 @@ import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -39,6 +41,8 @@ class MediaTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
@@ -47,6 +51,7 @@ class MediaTypeQueryIntegrationTest extends AbstractContainerTest {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
+                rdfSourceRepository,
                 harvestSettingsRepository);
 
         mediaTypeService.harvestAndSave();
