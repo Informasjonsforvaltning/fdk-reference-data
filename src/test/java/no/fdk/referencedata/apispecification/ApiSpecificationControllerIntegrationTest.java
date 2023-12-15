@@ -1,6 +1,11 @@
 package no.fdk.referencedata.apispecification;
 
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -17,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 "scheduling.enabled=false",
         })
 @ActiveProfiles("test")
-public class ApiSpecificationControllerIntegrationTest {
+public class ApiSpecificationControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;
@@ -49,5 +55,13 @@ public class ApiSpecificationControllerIntegrationTest {
         assertEquals("account", apiSpecification.getCode());
         assertEquals("https://bitsnorge.github.io/dsop-accounts-api", apiSpecification.getSource());
         assertEquals("Account details", apiSpecification.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_api_specifications_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/api-specifications", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ApiSpecificationControllerIntegrationTest.class.getClassLoader().getResource("rdf/api-specification-skos.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }

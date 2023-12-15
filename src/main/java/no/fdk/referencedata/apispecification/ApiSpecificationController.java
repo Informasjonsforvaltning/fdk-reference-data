@@ -38,5 +38,10 @@ public class ApiSpecificationController {
         return ResponseEntity.of(apiSpecificationService.getByCode(code));
     }
 
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public String getApiSpecificationsRDF() {
+        return apiSpecificationService.getRdf(RDFFormat.TURTLE);
+    }
 
 }

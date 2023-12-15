@@ -4,6 +4,7 @@ import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.los.LosImporter;
 import no.fdk.referencedata.los.LosNode;
 import no.fdk.referencedata.los.LosService;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -13,13 +14,16 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 @ActiveProfiles("test")
 public class ApiSpecificationServiceTest {
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_get_all_returns_all_api_specifications() {
-        ApiSpecificationService service = new ApiSpecificationService(new ApiSpecificationImporter());
+        ApiSpecificationService service = new ApiSpecificationService(new ApiSpecificationImporter(), rdfSourceRepository);
         service.importApiSpecifications();
 
         List<ApiSpecification> apiSpecifications = service.getAll();
@@ -34,7 +38,7 @@ public class ApiSpecificationServiceTest {
 
     @Test
     public void test_if_get_api_specifiction_by_code_returns_correct_api_specification() {
-        ApiSpecificationService service = new ApiSpecificationService(new ApiSpecificationImporter());
+        ApiSpecificationService service = new ApiSpecificationService(new ApiSpecificationImporter(), rdfSourceRepository);
         service.importApiSpecifications();
 
         Optional<ApiSpecification> apiSpecificationOptional = service.getByCode("customer-relationship");
