@@ -1,6 +1,7 @@
 package no.fdk.referencedata.apistatus;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +34,12 @@ public class ApiStatusController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<ApiStatus> getApiStatus(@PathVariable("code") final String code) {
         return ResponseEntity.of(apiStatusService.getByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public String getApiStatusesRDF() {
+        return apiStatusService.getRdf(RDFFormat.TURTLE);
     }
 
 }
