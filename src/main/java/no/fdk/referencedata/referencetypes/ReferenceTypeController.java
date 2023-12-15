@@ -1,6 +1,7 @@
 package no.fdk.referencedata.referencetypes;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,6 +34,12 @@ public class ReferenceTypeController {
     @GetMapping(path = "/{code}")
     public ResponseEntity<ReferenceType> getReferenceType(@PathVariable("code") final String code) {
         return ResponseEntity.of(referenceTypeService.getByCode(code));
+    }
+
+    @CrossOrigin
+    @GetMapping(produces = "text/turtle")
+    public String getReferenceTypesRDF() {
+        return referenceTypeService.getRdf(RDFFormat.TURTLE);
     }
 
 }
