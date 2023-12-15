@@ -1,6 +1,11 @@
 package no.fdk.referencedata.referencetypes;
 
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -17,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 "scheduling.enabled=false",
         })
 @ActiveProfiles("test")
-public class ReferenceTypeControllerIntegrationTest {
+public class ReferenceTypeControllerIntegrationTest extends AbstractContainerTest {
 
     @LocalServerPort
     private int port;
@@ -47,5 +53,13 @@ public class ReferenceTypeControllerIntegrationTest {
         assertEquals("http://purl.org/dc/terms/isRequiredBy", referenceType.getUri());
         assertEquals("isRequiredBy", referenceType.getCode());
         assertEquals("Is required by", referenceType.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_reference_types_rdf_response() {
+        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/reference-types", Lang.TURTLE);
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ReferenceTypeControllerIntegrationTest.class.getClassLoader().getResource("reference-code-skos.ttl")));
+
+        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }
 }
