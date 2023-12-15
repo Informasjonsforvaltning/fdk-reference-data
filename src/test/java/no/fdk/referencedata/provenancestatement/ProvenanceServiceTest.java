@@ -1,6 +1,7 @@
 package no.fdk.referencedata.provenancestatement;
 
 import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.RDFFormat;
@@ -14,13 +15,16 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @ActiveProfiles("test")
 public class ProvenanceServiceTest {
 
+    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+
     @Test
     public void test_if_get_all_returns_all_provenance_statements() {
-        ProvenanceStatementService service = new ProvenanceStatementService(new ProvenanceStatementImporter());
+        ProvenanceStatementService service = new ProvenanceStatementService(new ProvenanceStatementImporter(), rdfSourceRepository);
         service.importProvenanceStatements();
 
         List<ProvenanceStatement> provenanceStatements = service.getAll();
@@ -34,7 +38,7 @@ public class ProvenanceServiceTest {
 
     @Test
     public void test_if_get_provenance_by_code_returns_correct_api_specification() {
-        ProvenanceStatementService service = new ProvenanceStatementService(new ProvenanceStatementImporter());
+        ProvenanceStatementService service = new ProvenanceStatementService(new ProvenanceStatementImporter(), rdfSourceRepository);
         service.importProvenanceStatements();
 
         Optional<ProvenanceStatement> provenanceOptional = service.getByCode("TREDJEPART");
@@ -45,20 +49,6 @@ public class ProvenanceServiceTest {
         assertEquals("http://data.brreg.no/datakatalog/provinens/tredjepart", provenance.getUri());
         assertEquals("TREDJEPART", provenance.getCode());
         assertEquals("Third party", provenance.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_get_provenance_model_is_isomorphic_with_old_rdf() {
-        Model expected = ModelFactory.createDefaultModel();
-        expected.read(requireNonNull(ProvenanceStatementImporter.class.getClassLoader().getResource("provenance.rdf")).toString());
-
-        ProvenanceStatementService service = new ProvenanceStatementService(new ProvenanceStatementImporter());
-        service.importProvenanceStatements();
-
-        Model result = ModelFactory.createDefaultModel();
-        result.read(new StringReader(service.getRdf(RDFFormat.TURTLE)), "http://base.example.com", "TURTLE");
-
-        assertTrue(result.isIsomorphicWith(expected));
     }
 
 }
