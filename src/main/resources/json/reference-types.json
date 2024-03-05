@@ -1,0 +1,353 @@
+[
+    {
+        "code": "hasVersion",
+        "label": {
+            "nn": "Har versjon",
+            "nb": "Har versjon",
+            "en": "Has version"
+        },
+        "inverseLabel": {
+            "nn": "Er versjon av",
+            "nb": "Er versjon av",
+            "en": "Is version of"
+        }
+    },
+    {
+        "code": "isPartOf",
+        "label": {
+            "nn": "Er del av",
+            "nb": "Er en del av",
+            "en": "Is part of"
+        },
+        "inverseLabel": {
+            "nn": "Har del",
+            "nb": "Har del",
+            "en": "Has part"
+        }
+    },
+    {
+        "code": "hasPart",
+        "label": {
+            "nn": "Har del",
+            "nb": "Har del",
+            "en": "Has part"
+        },
+        "inverseLabel": {
+            "nn": "Er del av",
+            "nb": "Er en del av",
+            "en": "Is part of"
+        }
+    },
+    {
+        "code": "isReferencedBy",
+        "label": {
+            "nn": "Er referert av",
+            "nb": "Er referert av",
+            "en": "Is referenced By"
+        },
+        "inverseLabel": {
+            "nn": "Refererar",
+            "nb": "Refererer",
+            "en": "References"
+        }
+    },
+    {
+        "code": "isReplacedBy",
+        "label": {
+            "nn": "Er erstatta av",
+            "nb": "Er erstattet av",
+            "en": "Is replaced by"
+        },
+        "inverseLabel": {
+            "nn": "Erstatter",
+            "nb": "Erstatter",
+            "en": "Replaces"
+        }
+    },
+    {
+        "code": "isRequiredBy",
+        "label": {
+            "nn": "Er påkravd av",
+            "nb": "Er påkrevd av",
+            "en": "Is required by"
+        },
+        "inverseLabel": {
+            "nn": "Krevjar",
+            "nb": "Krever",
+            "en": "Requires"
+        }
+    },
+    {
+        "code": "isVersionOf",
+        "label": {
+            "nn": "Er versjon av",
+            "nb": "Er versjon av",
+            "en": "Is version of"
+        },
+        "inverseLabel": {
+            "nn": "Har versjon",
+            "nb": "Har versjon",
+            "en": "Has version"
+        }
+    },
+    {
+        "code": "references",
+        "label": {
+            "nn": "Refererar",
+            "nb": "Refererer",
+            "en": "References"
+        },
+        "inverseLabel": {
+            "nn": "Er referert av",
+            "nb": "Er referert av",
+            "en": "Is referenced By"
+        }
+    },
+    {
+        "code": "relation",
+        "label": {
+            "nn": "Er relatert til",
+            "nb": "Er relatert til",
+            "en": "Has relation to"
+        },
+        "inverseLabel": {
+            "nn": "Er relatert til",
+            "nb": "Er relatert til",
+            "en": "Has relation to"
+        }
+    },
+    {
+        "code": "replaces",
+        "label": {
+            "nn": "Erstatter",
+            "nb": "Erstatter",
+            "en": "Replaces"
+        },
+        "inverseLabel": {
+            "nn": "Er erstatta av",
+            "nb": "Er erstattet av",
+            "en": "Is replaced by"
+        }
+    },
+    {
+        "code": "requires",
+        "label": {
+            "nn": "Krevjar",
+            "nb": "Krever",
+            "en": "Requires"
+        },
+        "inverseLabel": {
+            "nn": "Er påkravd av",
+            "nb": "Er påkrevd av",
+            "en": "Is required by"
+        }
+    },
+    {
+        "code": "source",
+        "label": {
+            "nn": "Er avleda frå (kjelde)",
+            "nb": "Er avledet fra (kilde)",
+            "en": "Source"
+        },
+        "inverseLabel": {
+            "nn": "Er kjelde til",
+            "nb": "Er kilde til",
+            "en": "Is source for"
+        }
+    },
+    {
+        "code": "isDescribedAt",
+        "label": {
+            "nn": "Beskrivande datasett",
+            "nb": "Beskrivende datasett",
+            "en": "Is described at"
+        },
+        "inverseLabel": {
+            "nn": "Beskriv",
+            "nb": "Beskriver",
+            "en": "Describes"
+        }
+    },
+    {
+        "code": "isClassifiedBy",
+        "label": {
+            "nn": "Er klassifisert under",
+            "nb": "Er klassifisert under",
+            "en": "Is classified by"
+        },
+        "inverseLabel": {
+            "nn": "Klassifiserer",
+            "nb": "Klassifiserer",
+            "en": "Classifies"
+        }
+    },
+    {
+        "code": "isGroupedBy",
+        "label": {
+            "nn": "Er gruppert ved",
+            "nb": "Er gruppert ved",
+            "en": "Is grouped by"
+        },
+        "inverseLabel": {
+            "nn": "Grupperer",
+            "nb": "Grupperer",
+            "en": "Groups"
+        }
+    },
+    {
+        "code": "mayTrigger",
+        "label": {
+            "nn": "Kan setje i gang",
+            "nb": "Kan sette i gang",
+            "en": "May trigger"
+        },
+        "inverseLabel": {
+            "nn": "Kan bli sett i gang av",
+            "nb": "Kan bli satt i gang av",
+            "en": "May be triggered by"
+        }
+    },
+    {
+        "code": "inSeries",
+        "label": {
+            "nn": "I serie",
+            "nb": "I serie",
+            "en": "In series"
+        },
+        "inverseLabel": {
+            "nn": "Inkluderer",
+            "nb": "Inkluderer",
+            "en": "Includes"
+        }
+    },
+    {
+        "code": "servesDataset",
+        "label": {
+            "nn": "Tilgjengeleggjer datasett",
+            "nb": "Tilgjengeliggjør datasett",
+            "en": "Serves dataset"
+        },
+        "inverseLabel": {
+            "nn": "Tilgjengeleggjort av",
+            "nb": "Tilgjengeliggjort av",
+            "en": "Served by"
+        }
+    },
+    {
+        "code": "seeAlso",
+        "label": {
+            "nn": "Sjå også",
+            "nb": "Se også",
+            "en": "See also"
+        },
+        "inverseLabel": {
+            "nn": "Sjå også",
+            "nb": "Se også",
+            "en": "See also"
+        }
+    },
+    {
+        "code": "memberOf",
+        "label": {
+            "nn": "Medlem av",
+            "nb": "Medlem av",
+            "en": "Member of"
+        },
+        "inverseLabel": {
+            "nn": "Har medlem",
+            "nb": "Har medlem",
+            "en": "Has member"
+        }
+    },
+    {
+        "code": "subject",
+        "label": {
+            "nn": "Omgrep",
+            "nb": "Begrep",
+            "en": "Subject"
+        },
+        "inverseLabel": {
+            "nn": "Er referert av",
+            "nb": "Er referert av",
+            "en": "Is referenced By"
+        }
+    },
+    {
+        "code": "conformsTo",
+        "label": {
+            "nn": "I samsvar med",
+            "nb": "I samsvar med",
+            "en": "Conforms to"
+        },
+        "inverseLabel": {
+            "nn": "Implementeres av",
+            "nb": "Implementeres av",
+            "en": "Implemented by"
+        }
+    },
+    {
+        "code": "associativeRelation",
+        "label": {
+            "nn": "Assosiert med",
+            "nb": "Assosiert med",
+            "en": "Associated with"
+        },
+        "inverseLabel": {
+            "nn": "Assosiert med",
+            "nb": "Assosiert med",
+            "en": "Associated with"
+        }
+    },
+    {
+        "code": "closeMatch",
+        "label": {
+            "nn": "Samsvarer tett med",
+            "nb": "Samsvarer tett med",
+            "en": "Close match"
+        },
+        "inverseLabel": {
+            "nn": "Samsvarer tett med",
+            "nb": "Samsvarer tett med",
+            "en": "Close match"
+        }
+    },
+    {
+        "code": "exactMatch",
+        "label": {
+            "nn": "Samsvarer eksakt med",
+            "nb": "Samsvarer eksakt med",
+            "en": "Exact match"
+        },
+        "inverseLabel": {
+            "nn": "Samsvarer eksakt med",
+            "nb": "Samsvarer eksakt med",
+            "en": "Exact match"
+        }
+    },
+    {
+        "code": "generalizes",
+        "label": {
+            "nn": "Generaliserer",
+            "nb": "Generaliserer",
+            "en": "Generalizes"
+        },
+        "inverseLabel": {
+            "nn": "Spesialiserer",
+            "nb": "Spesialiserer",
+            "en": "Specializes"
+        }
+    },
+    {
+        "code": "specializes",
+        "label": {
+            "nn": "Spesialiserer",
+            "nb": "Spesialiserer",
+            "en": "Specializes"
+        },
+        "inverseLabel": {
+            "nn": "Generaliserer",
+            "nb": "Generaliserer",
+            "en": "Generalizes"
+        }
+    }
+]

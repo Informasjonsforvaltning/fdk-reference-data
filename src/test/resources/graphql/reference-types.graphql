@@ -1,7 +1,7 @@
 query {
     referenceTypes {
-        uri
         code
         label
+        inverseLabel
     }
 }

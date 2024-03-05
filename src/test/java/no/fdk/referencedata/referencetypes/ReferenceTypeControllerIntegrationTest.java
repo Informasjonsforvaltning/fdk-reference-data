@@ -2,10 +2,6 @@ package no.fdk.referencedata.referencetypes;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -36,12 +31,12 @@ public class ReferenceTypeControllerIntegrationTest extends AbstractContainerTes
         ReferenceTypes referenceTypes =
                 this.restTemplate.getForObject("http://localhost:" + port + "/reference-types", ReferenceTypes.class);
 
-        assertEquals(11, referenceTypes.getReferenceTypes().size());
+        assertEquals(27, referenceTypes.getReferenceTypes().size());
 
         ReferenceType first = referenceTypes.getReferenceTypes().get(0);
-        assertEquals("http://purl.org/dc/terms/hasVersion", first.getUri());
         assertEquals("hasVersion", first.getCode());
         assertEquals("Has version", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("Is version of", first.getInverseLabel().get(Language.ENGLISH.code()));
     }
 
     @Test
@@ -50,16 +45,8 @@ public class ReferenceTypeControllerIntegrationTest extends AbstractContainerTes
                 this.restTemplate.getForObject("http://localhost:" + port + "/reference-types/isRequiredBy", ReferenceType.class);
 
         assertNotNull(referenceType);
-        assertEquals("http://purl.org/dc/terms/isRequiredBy", referenceType.getUri());
         assertEquals("isRequiredBy", referenceType.getCode());
         assertEquals("Is required by", referenceType.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_reference_types_rdf_response() {
-        Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/reference-types", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ReferenceTypeControllerIntegrationTest.class.getClassLoader().getResource("reference-code-skos.ttl")));
-
-        assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
+        assertEquals("Requires", referenceType.getInverseLabel().get(Language.ENGLISH.code()));
     }
 }
