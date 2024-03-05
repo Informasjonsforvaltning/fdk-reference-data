@@ -35,9 +35,9 @@ class ReferenceTypeQueryIntegrationTest extends AbstractContainerTest {
         GraphQLResponse response = template.postForResource("graphql/reference-types.graphql");
         assertNotNull(response);
         assertTrue(response.isOk());
-        assertEquals("http://purl.org/dc/terms/hasVersion", response.get("$['data']['referenceTypes'][0]['uri']"));
-        assertEquals("hasVersion", response.get("$['data']['referenceTypes'][0]['code']"));
-        assertEquals("Has version", response.get("$['data']['referenceTypes'][0]['label']['en']"));
+        assertEquals("associativeRelation", response.get("$['data']['referenceTypes'][0]['code']"));
+        assertEquals("Associated with", response.get("$['data']['referenceTypes'][0]['label']['en']"));
+        assertEquals("Associated with", response.get("$['data']['referenceTypes'][0]['inverseLabel']['en']"));
     }
 
     @Test
@@ -46,9 +46,9 @@ class ReferenceTypeQueryIntegrationTest extends AbstractContainerTest {
                 mapper.valueToTree(Map.of("code", "isRequiredBy")));
         assertNotNull(response);
         assertTrue(response.isOk());
-        assertEquals("http://purl.org/dc/terms/isRequiredBy", response.get("$['data']['referenceTypeByCode']['uri']"));
         assertEquals("isRequiredBy", response.get("$['data']['referenceTypeByCode']['code']"));
         assertEquals("Is required by", response.get("$['data']['referenceTypeByCode']['label']['en']"));
+        assertEquals("Requires", response.get("$['data']['referenceTypeByCode']['inverseLabel']['en']"));
     }
 
     @Test

@@ -1,65 +1,26 @@
 package no.fdk.referencedata.referencetypes;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.vocabulary.AT;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.RDF;
-import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static java.util.Objects.requireNonNull;
 
 @Slf4j
 @Service
 public class ReferenceTypeImporter {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
-
-    private Model model;
-
     List<ReferenceType> importFromSource() {
-        model = ModelFactory.createDefaultModel();
-        model.read(requireNonNull(ReferenceTypeImporter.class.getClassLoader().getResource("rdf/reference-types.ttl"))
-                .toString());
-
-        List<Resource> concepts = model.listResourcesWithProperty(RDF.type, SKOS.Concept).toList();
-
-        return concepts.stream()
-                .map(ReferenceTypeImporter::extractReferenceTypesFromModel)
-                .sorted(Comparator.comparing(ReferenceType::getUri))
-                .collect(Collectors.toList());
-    }
-
-    Model getModel() {
-        return model;
-    }
-
-    private static ReferenceType extractReferenceTypesFromModel(Resource specResource) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(specResource.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
-
-        return ReferenceType.builder()
-                .uri(specResource.getURI())
-                .code(specResource.getProperty(AT.authorityCode).getObject().toString())
-                .label(label)
-                .build();
+        try (InputStream in = ReferenceTypeImporter.class.getClassLoader().getResourceAsStream("json/reference-types.json")) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(in, new TypeReference<>(){});
+        }
+        catch(Exception e){
+            log.error("Unable to import reference types", e);
+            return Collections.emptyList();
+        }
     }
 }

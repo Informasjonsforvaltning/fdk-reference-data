@@ -1,8 +1,8 @@
 package no.fdk.referencedata.referencetypes;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +38,8 @@ public class ReferenceTypeController {
 
     @CrossOrigin
     @GetMapping(produces = "text/turtle")
-    public String getReferenceTypesRDF() {
-        return referenceTypeService.getRdf(RDFFormat.TURTLE);
+    public ResponseEntity<Void> getReferenceTypesRDF() {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
 }

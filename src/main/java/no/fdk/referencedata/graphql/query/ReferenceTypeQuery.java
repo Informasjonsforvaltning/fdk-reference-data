@@ -22,7 +22,7 @@ public class ReferenceTypeQuery implements GraphQLQueryResolver {
 
     public List<ReferenceType> getReferenceTypes() {
         return referenceTypeService.getAll().stream()
-                .sorted(Comparator.comparing(ReferenceType::getUri))
+                .sorted(Comparator.comparing(ReferenceType::getCode))
                 .collect(Collectors.toList());
     }
 
