@@ -10,6 +10,9 @@ type Query {
   apiStatuses: [ApiStatus!]!
   apiStatusByCode(code: String!): ApiStatus
 
+  audienceTypes: [AudienceType!]!
+  audienceTypeByCode(code: String!): AudienceType
+
   conceptStatuses: [ConceptStatus!]!
   conceptStatusByCode(code: String!): ConceptStatus
 
@@ -99,6 +102,12 @@ type ApiSpecification {
 }
 
 type ApiStatus {
+  uri: ID!
+  code: String
+  label: Object
+}
+
+type AudienceType {
   uri: ID!
   code: String
   label: Object
