@@ -1,5 +1,6 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.relationshipWithSourceType.RelationshipWithSourceTypeService;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
@@ -37,6 +38,9 @@ public class Scheduler {
 
     @Autowired
     private AudienceTypeService audienceTypeService;
+
+    @Autowired
+    private RelationshipWithSourceTypeService relationshipWithSourceTypeService;
 
     @Autowired
     private MediaTypeService mediaTypeService;
@@ -241,6 +245,11 @@ public class Scheduler {
         audienceTypeService.harvestAndSave(false);
     }
 
+    @Scheduled(cron = "0 50 3 * * ?")
+    public void updateRelationshipWithSourceTypes() {
+        relationshipWithSourceTypeService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -317,6 +326,10 @@ public class Scheduler {
 
         if(audienceTypeService.firstTime()) {
             audienceTypeService.harvestAndSave(true);
+        }
+
+        if(relationshipWithSourceTypeService.firstTime()) {
+            relationshipWithSourceTypeService.harvestAndSave(true);
         }
     }
 }
