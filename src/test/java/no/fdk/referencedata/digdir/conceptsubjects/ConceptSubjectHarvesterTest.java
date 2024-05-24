@@ -26,9 +26,9 @@ public class ConceptSubjectHarvesterTest {
         assertEquals(4, subjects.size());
 
         ConceptSubject first = subjects.get(0);
-        assertEquals("https://catalog-admin-service.staging.fellesdatakatalog.digdir.no/123456789/concepts/subjects#3", first.getUri());
-        assertEquals("3", first.getCode());
-        assertEquals("nb 3", first.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+        assertEquals("https://catalog-admin-service.staging.fellesdatakatalog.digdir.no/910244132/concepts/subjects#555", first.getUri());
+        assertEquals("555", first.getCode());
+        assertEquals(null, first.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
     }
 
 }

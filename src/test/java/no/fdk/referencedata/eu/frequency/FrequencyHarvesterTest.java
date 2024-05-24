@@ -26,9 +26,9 @@ public class FrequencyHarvesterTest {
         assertEquals(FREQUENCIES_SIZE, frequencies.size());
 
         Frequency first = frequencies.get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/frequency/WEEKLY_3", first.getUri());
-        assertEquals("WEEKLY_3", first.getCode());
-        assertEquals("three times a week", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/frequency/MONTHLY_3", first.getUri());
+        assertEquals("MONTHLY_3", first.getCode());
+        assertEquals("three times a month", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }

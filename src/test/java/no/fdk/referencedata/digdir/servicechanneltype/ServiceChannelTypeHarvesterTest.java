@@ -25,9 +25,9 @@ public class ServiceChannelTypeHarvesterTest {
         assertEquals(11, serviceChannelTypes.size());
 
         ServiceChannelType first = serviceChannelTypes.get(0);
-        assertEquals("https://data.norge.no/vocabulary/service-channel-type#fax", first.getUri());
-        assertEquals("fax", first.getCode());
-        assertEquals("fax", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("https://data.norge.no/vocabulary/service-channel-type#client-location", first.getUri());
+        assertEquals("client-location", first.getCode());
+        assertEquals("cient’s location", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }

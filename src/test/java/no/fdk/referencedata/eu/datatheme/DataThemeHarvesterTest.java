@@ -27,9 +27,9 @@ public class DataThemeHarvesterTest {
         assertEquals(DATA_THEMES_SIZE, dataThemes.size());
 
         DataTheme first = dataThemes.get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/data-theme/TRAN", first.getUri());
-        assertEquals("TRAN", first.getCode());
-        assertEquals("Transport", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/data-theme/SOCI", first.getUri());
+        assertEquals("SOCI", first.getCode());
+        assertEquals("Population and society", first.getLabel().get(Language.ENGLISH.code()));
         assertEquals(LocalDate.parse("2015-10-01"), first.getStartUse());
         assertEquals("http://publications.europa.eu/resource/authority/data-theme", first.getConceptSchema().getUri());
         assertEquals("Data theme", first.getConceptSchema().getLabel().get(Language.ENGLISH.code()));

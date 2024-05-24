@@ -27,7 +27,7 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <jena.version>4.10.0</jena.version>
+        <jena.version>5.0.0</jena.version>
     </properties>
 
     <dependencies>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.19.7</version>
+            <version>1.19.8</version>
             <scope>test</scope>
         </dependency>
 

@@ -24,9 +24,9 @@ public class FileTypeHarvesterTest {
         assertEquals(198, fileTypes.size());
 
         FileType first = fileTypes.get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/file-type/RTF", first.getUri());
-        assertEquals("RTF", first.getCode());
-        assertEquals("text/rtf", first.getMediaType());
+        assertEquals("http://publications.europa.eu/resource/authority/file-type/BZIP2", first.getUri());
+        assertEquals("BZIP2", first.getCode());
+        assertEquals("application/x-bzip2", first.getMediaType());
     }
 
 }

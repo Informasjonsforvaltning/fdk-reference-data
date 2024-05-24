@@ -26,9 +26,9 @@ public class EuroVocHarvesterTest {
         assertEquals(EUROVOCS_SIZE, euroVocList.size());
 
         EuroVoc first = euroVocList.get(0);
-        assertEquals("http://eurovoc.europa.eu/7353", first.getUri());
-        assertEquals("7353", first.getCode());
-        assertEquals("territorial enclave", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://eurovoc.europa.eu/5560", first.getUri());
+        assertEquals("5560", first.getCode());
+        assertEquals("organised crime", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }
