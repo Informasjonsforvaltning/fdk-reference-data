@@ -1,4 +1,4 @@
-package no.fdk.referencedata.digdir.relationshipWithSourceType;
+package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
 import lombok.Builder;
 import lombok.Data;

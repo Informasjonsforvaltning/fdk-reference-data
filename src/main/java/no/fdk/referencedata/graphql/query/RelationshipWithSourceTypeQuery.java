@@ -1,8 +1,8 @@
 package no.fdk.referencedata.graphql.query;
 
 import graphql.kickstart.tools.GraphQLQueryResolver;
-import no.fdk.referencedata.digdir.relationshipWithSourceType.RelationshipWithSourceType;
-import no.fdk.referencedata.digdir.relationshipWithSourceType.RelationshipWithSourceTypeRepository;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceType;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,13 +17,13 @@ public class RelationshipWithSourceTypeQuery implements GraphQLQueryResolver {
     @Autowired
     private RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
 
-    public List<RelationshipWithSourceType> getRelationshipWithSources() {
+    public List<RelationshipWithSourceType> getRelationshipWithSourceTypes() {
         return StreamSupport.stream(relationshipWithSourceTypeRepository.findAll().spliterator(), false)
                 .sorted(Comparator.comparing(RelationshipWithSourceType::getUri))
                 .collect(Collectors.toList());
     }
 
-    public RelationshipWithSourceType getRelationshipWithSourceByCode(String code) {
+    public RelationshipWithSourceType getRelationshipWithSourceTypeByCode(String code) {
         return relationshipWithSourceTypeRepository.findByCode(code).orElse(null);
     }
 }

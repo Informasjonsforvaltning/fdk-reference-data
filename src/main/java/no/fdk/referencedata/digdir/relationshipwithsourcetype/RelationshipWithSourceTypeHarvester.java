@@ -1,4 +1,4 @@
-package no.fdk.referencedata.digdir.relationshipWithSourceType;
+package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;

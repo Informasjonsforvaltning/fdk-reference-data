@@ -6,9 +6,9 @@ import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 
-import no.fdk.referencedata.digdir.relationshipWithSourceType.LocalRelationshipWithSourceTypeHarvester;
-import no.fdk.referencedata.digdir.relationshipWithSourceType.RelationshipWithSourceTypeRepository;
-import no.fdk.referencedata.digdir.relationshipWithSourceType.RelationshipWithSourceTypeService;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.LocalRelationshipWithSourceTypeHarvester;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeRepository;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,20 +66,20 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
         GraphQLResponse response = template.postForResource("graphql/relationship-with-source-types.graphql");
         assertNotNull(response);
         assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#public", response.get("$['data']['relationshipWithSourceTypes'][0]['uri']"));
-        assertEquals("public", response.get("$['data']['relationshipWithSourceTypes'][0]['code']"));
-        assertEquals("public", response.get("$['data']['relationshipWithSourceTypes'][0]['label']['en']"));
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", response.get("$['data']['relationshipWithSourceTypes'][0]['uri']"));
+        assertEquals("derived-from-source", response.get("$['data']['relationshipWithSourceTypes'][0]['code']"));
+        assertEquals("derived from source", response.get("$['data']['relationshipWithSourceTypes'][0]['label']['en']"));
     }
 
     @Test
-    void test_if_relationship_with_source_type_by_code_public_query_returns_public_relationship_with_source_type() throws IOException {
-        GraphQLResponse response = template.perform("graphql/relationship-with-source-type-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "specialist")));
+    void test_if_relationship_with_source_type_by_code_derived_from_source_query_returns_derived_from_source_relationship_with_source_type() throws IOException {
+        GraphQLResponse response = template.perform("graphql/relationship-with-source-type-by-code.graphql",
+                mapper.valueToTree(Map.of("code", "derived-from-source")));
         assertNotNull(response);
         assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type-type#specialist", response.get("$['data']['relationshipWithSourceTypeByCode']['uri']"));
-        assertEquals("specialist", response.get("$['data']['relationshipWithSourceTypeByCode']['code']"));
-        assertEquals("specialist", response.get("$['data']['relationshipWithSourceTypeByCode']['label']['en']"));
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", response.get("$['data']['relationshipWithSourceTypeByCode']['uri']"));
+        assertEquals("derived-from-source", response.get("$['data']['relationshipWithSourceTypeByCode']['code']"));
+        assertEquals("derived from source", response.get("$['data']['relationshipWithSourceTypeByCode']['label']['en']"));
     }
 
     @Test

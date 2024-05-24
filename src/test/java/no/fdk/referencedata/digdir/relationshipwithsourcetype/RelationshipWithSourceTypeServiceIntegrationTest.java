@@ -1,4 +1,4 @@
-package no.fdk.referencedata.digdir.relationshipWithSourceType;
+package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -44,13 +44,13 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
 
         final AtomicInteger counter = new AtomicInteger();
         relationshipWithSourceTypeRepository.findAll().forEach(relationshipWithSourceType -> counter.incrementAndGet());
-        assertEquals(2, counter.get());
+        assertEquals(3, counter.get());
 
-        final RelationshipWithSourceType first = relationshipWithSourceTypeRepository.findById("https://data.norge.no/vocabulary/relationship-with-source-type#public").orElseThrow();
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#public", first.getUri());
-        assertEquals("public", first.getCode());
-        assertEquals("public", first.getLabel().get(Language.ENGLISH.code()));
-        assertEquals("allmenta", first.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+        final RelationshipWithSourceType first = relationshipWithSourceTypeRepository.findById("https://data.norge.no/vocabulary/relationship-with-source-type#self-composed").orElseThrow();
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#self-composed", first.getUri());
+        assertEquals("self-composed", first.getCode());
+        assertEquals("self-composed", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("eigendefinert", first.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
     }
 
     @Test

@@ -1,4 +1,4 @@
-package no.fdk.referencedata.digdir.relationshipWithSourceType;
+package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
 
 import no.fdk.referencedata.i18n.Language;
@@ -23,12 +23,12 @@ public class RelationshipWithSourceTypeHarvesterTest {
 
         List<RelationshipWithSourceType> relationshipWithSourceTypes = harvester.harvest().collectList().block();
         assertNotNull(relationshipWithSourceTypes);
-        assertEquals(2, relationshipWithSourceTypes.size());
+        assertEquals(3, relationshipWithSourceTypes.size());
 
         RelationshipWithSourceType first = relationshipWithSourceTypes.get(0);
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#public", first.getUri());
-        assertEquals("public", first.getCode());
-        assertEquals("public", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#self-composed", first.getUri());
+        assertEquals("self-composed", first.getCode());
+        assertEquals("self-composed", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }

@@ -1,4 +1,4 @@
-package no.fdk.referencedata.digdir.relationshipWithSourceType;
+package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -67,28 +67,28 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
         RelationshipWithSourceTypes relationshipWithSourceTypes =
                 this.restTemplate.getForObject("http://localhost:" + port + "/digdir/relationship-with-source-types", RelationshipWithSourceTypes.class);
 
-        assertEquals(2, relationshipWithSourceTypes.getRelationshipWithSourceTypes().size());
+        assertEquals(3, relationshipWithSourceTypes.getRelationshipWithSourceTypes().size());
 
         RelationshipWithSourceType first = relationshipWithSourceTypes.getRelationshipWithSourceTypes().get(0);
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#public", first.getUri());
-        assertEquals("public", first.getCode());
-        assertEquals("public", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", first.getUri());
+        assertEquals("derived-from-source", first.getCode());
+        assertEquals("derived from source", first.getLabel().get(Language.ENGLISH.code()));
     }
 
     @Test
     public void test_if_get_relationshipWithSource_type_by_code_returns_valid_response() {
         RelationshipWithSourceType relationshipWithSourceType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/relationship-with-source-type/public", RelationshipWithSourceType.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/relationship-with-source-types/derived-from-source", RelationshipWithSourceType.class);
 
         assertNotNull(relationshipWithSourceType);
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#public", relationshipWithSourceType.getUri());
-        assertEquals("public", relationshipWithSourceType.getCode());
-        assertEquals("public", relationshipWithSourceType.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", relationshipWithSourceType.getUri());
+        assertEquals("derived-from-source", relationshipWithSourceType.getCode());
+        assertEquals("derived from source", relationshipWithSourceType.getLabel().get(Language.ENGLISH.code()));
     }
 
     @Test
     public void test_if_post_relationshipWithSource_types_fails_without_api_key() {
-        assertEquals(2, relationshipWithSourceTypeRepository.count());
+        assertEquals(3, relationshipWithSourceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -100,7 +100,7 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(2, relationshipWithSourceTypeRepository.count());
+        assertEquals(3, relationshipWithSourceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsAfter.getLatestVersion());
@@ -109,7 +109,7 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
 
     @Test
     public void test_if_post_relationship_with_source_types_executes_a_force_update() {
-        assertEquals(2, relationshipWithSourceTypeRepository.count());
+        assertEquals(3, relationshipWithSourceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
         assertEquals("1", harvestSettingsBefore.getLatestVersion());
@@ -121,10 +121,10 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
                 HttpMethod.POST, new HttpEntity<>(headers), Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(2, relationshipWithSourceTypeRepository.count());
+        assertEquals(3, relationshipWithSourceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
-        assertEquals("2023-03-16", harvestSettingsAfter.getLatestVersion());
+        assertEquals("2023-01-19", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

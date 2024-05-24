@@ -1,4 +1,4 @@
-package no.fdk.referencedata.digdir.relationshipWithSourceType;
+package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.riot.RDFFormat;
@@ -7,13 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/digdir/relationship-with-source-types")
 @Slf4j
-public class RelationshipWithSourceTypeTypeController {
+public class RelationshipWithSourceTypeController {
 
     @Autowired
     private RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
@@ -40,7 +41,8 @@ public class RelationshipWithSourceTypeTypeController {
     @CrossOrigin
     @GetMapping(path = "/{code}")
     public ResponseEntity<RelationshipWithSourceType> getRelationshipWithSourceType(@PathVariable("code") String code) {
-        return ResponseEntity.of(relationshipWithSourceTypeRepository.findByCode(code));
+        Optional<RelationshipWithSourceType> result = relationshipWithSourceTypeRepository.findByCode(code);
+        return ResponseEntity.of(result);
     }
 
     @CrossOrigin

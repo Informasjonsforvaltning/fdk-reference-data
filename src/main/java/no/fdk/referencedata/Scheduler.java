@@ -1,6 +1,6 @@
 package no.fdk.referencedata;
 
-import no.fdk.referencedata.digdir.relationshipWithSourceType.RelationshipWithSourceTypeService;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
