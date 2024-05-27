@@ -3,6 +3,7 @@ package no.fdk.referencedata.settings;
 public enum Settings {
     ACCESS_RIGHT,
     AUDIENCE_TYPE,
+    RELATIONSHIP_WITH_SOURCE_TYPE,
     CONCEPT_STATUS,
     DATA_THEME,
     DISTRIBUTION_TYPE,
