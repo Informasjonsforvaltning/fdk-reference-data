@@ -5,6 +5,7 @@ import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,10 +26,10 @@ public class RelationshipWithSourceTypeHarvesterTest {
         assertNotNull(relationshipWithSourceTypes);
         assertEquals(3, relationshipWithSourceTypes.size());
 
-        RelationshipWithSourceType first = relationshipWithSourceTypes.get(0);
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#self-composed", first.getUri());
-        assertEquals("self-composed", first.getCode());
-        assertEquals("self-composed", first.getLabel().get(Language.ENGLISH.code()));
+        RelationshipWithSourceType first = relationshipWithSourceTypes.stream().sorted(Comparator.comparing(h -> h.code)).findFirst().get();
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", first.getUri());
+        assertEquals("derived-from-source", first.getCode());
+        assertEquals("derived from source", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }

@@ -26,9 +26,9 @@ public class MainActivityHarvesterTest {
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivities.size());
 
         MainActivity first = mainActivities.get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/main-activity/gas-heat", first.getUri());
-        assertEquals("gas-heat", first.getCode());
-        assertEquals("Production, transport or distribution of gas or heat", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/main-activity/health", first.getUri());
+        assertEquals("health", first.getCode());
+        assertEquals("Health", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }

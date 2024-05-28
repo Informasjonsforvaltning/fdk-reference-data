@@ -25,9 +25,9 @@ public class EvidenceTypeHarvesterTest {
         assertEquals(4, evidenceTypes.size());
 
         EvidenceType first = evidenceTypes.get(0);
-        assertEquals("https://data.norge.no/vocabulary/evidence-type#protocol", first.getUri());
-        assertEquals("protocol", first.getCode());
-        assertEquals("protocol", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("https://data.norge.no/vocabulary/evidence-type#certificate", first.getUri());
+        assertEquals("certificate", first.getCode());
+        assertEquals("certificate", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }

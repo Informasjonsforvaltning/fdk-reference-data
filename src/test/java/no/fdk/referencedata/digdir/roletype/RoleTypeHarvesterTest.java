@@ -25,9 +25,9 @@ public class RoleTypeHarvesterTest {
         assertEquals(5, roleTypes.size());
 
         RoleType first = roleTypes.get(0);
-        assertEquals("https://data.norge.no/vocabulary/role-type#data-provider", first.getUri());
-        assertEquals("data-provider", first.getCode());
-        assertEquals("data provider", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("https://data.norge.no/vocabulary/role-type#data-consumer", first.getUri());
+        assertEquals("data-consumer", first.getCode());
+        assertEquals("data consumer", first.getLabel().get(Language.ENGLISH.code()));
     }
 
 }
