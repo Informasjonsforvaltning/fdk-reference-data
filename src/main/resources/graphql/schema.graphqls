@@ -27,6 +27,9 @@ type Query {
   distributionTypes: [DistributionType!]!
   distributionTypeByCode(code: String!): DistributionType
 
+  datasetTypes: [DatasetType!]!
+  datasetTypeByCode(code: String!): DatasetType
+
   euroVocs:  [EuroVoc!]!
   euroVocByCode(code: String!):  EuroVoc
 
@@ -142,6 +145,13 @@ type DataTheme {
 }
 
 type DistributionType {
+  uri: ID!
+  code: String
+  label: Object
+  startUse: String
+}
+
+type DatasetType {
   uri: ID!
   code: String
   label: Object

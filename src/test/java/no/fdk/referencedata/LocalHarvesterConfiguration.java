@@ -10,6 +10,8 @@ import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
 import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
+import no.fdk.referencedata.eu.datasettype.DatasetTypeHarvester;
+import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
 import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
 import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeHarvester;
@@ -91,6 +93,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public DistributionTypeHarvester distributionTypeHarvester() {
         return new LocalDistributionTypeHarvester("1");
+    }
+
+    @Bean
+    public DatasetTypeHarvester datasetTypeHarvester() {
+        return new LocalDatasetTypeHarvester("1");
     }
 
     @Bean
