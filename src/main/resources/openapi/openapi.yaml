@@ -234,6 +234,47 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/DistributionType'
+  /eu/dataset-types:
+    get:
+      tags:
+        - dataset-type-controller
+      operationId: getDatasetTypes
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DatasetTypes'
+    post:
+      tags:
+        - dataset-type-controller
+      operationId: updateDatasetTypes
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/dataset-types/{code}:
+    get:
+      tags:
+        - dataset-type-controller
+      operationId: getDatasetType
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DatasetType'
   /eu/access-rights:
     get:
       tags:
@@ -564,13 +605,34 @@ components:
         startUse:
           type: string
           format: date
-      DistributionTypes:
-        type: object
-        properties:
-          dataThemes:
-            type: array
-            items:
-              $ref: '#/components/schemas/DistributionType'
+    DistributionTypes:
+      type: object
+      properties:
+        dataThemes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DistributionType'
+    DatasetType:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+        startUse:
+          type: string
+          format: date
+    DatasetTypes:
+      type: object
+      properties:
+        dataThemes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatasetType'
     AccessRight:
       type: object
       properties:

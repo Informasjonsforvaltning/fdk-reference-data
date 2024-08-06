@@ -8,6 +8,7 @@ import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
+import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
@@ -62,6 +63,9 @@ public class Scheduler {
 
     @Autowired
     private DistributionTypeService distributionTypeService;
+
+    @Autowired
+    private DatasetTypeService datasetTypeService;
 
     @Autowired
     private FylkeService fylkeService;
@@ -182,6 +186,14 @@ public class Scheduler {
     }
 
     /**
+     * Run every day 02:35 (at night)
+     */
+    @Scheduled(cron = "0 35 2 * * ?")
+    public void updateDatasetTypes() {
+        datasetTypeService.harvestAndSave(false);
+    }
+
+    /**
      * Run every day 02:40 (at night)
      */
     @Scheduled(cron = "0 40 2 * * ?")
@@ -278,6 +290,10 @@ public class Scheduler {
 
         if(distributionTypeService.firstTime()) {
             distributionTypeService.harvestAndSave(true);
+        }
+
+        if(datasetTypeService.firstTime()) {
+            datasetTypeService.harvestAndSave(true);
         }
 
         if(fylkeService.firstTime()) {
