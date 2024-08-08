@@ -75,32 +75,9 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
     }
 
     public String sparqlQuery() {
-        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
-            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
-            "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
-            "CONSTRUCT { " +
-                "atres:distribution-type owl:versionInfo ?version . " +
-                "?distType skos:inScheme atres:distribution-type . " +
-                "?distType dc:identifier ?code . " +
-                "?distType at:start.use ?startUse . " +
-                "?distType skos:prefLabel ?prefLabel . " +
-            "} WHERE { " +
-                "atres:distribution-type owl:versionInfo ?version . " +
-                "?distType skos:inScheme atres:distribution-type . " +
-                "?distType a skos:Concept . " +
-                "?distType dc:identifier ?code . " +
-                "FILTER(?code != 'OP_DATPRO') . " +
-                "OPTIONAL { ?distType at:start.use ?startUse . } " +
-                "?distType skos:prefLabel ?prefLabel . " +
-                "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
-                ") . " +
-            "}";
-        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+        return URLEncoder.encode(
+                genericSPARQLQuery("distribution-type"),
+                StandardCharsets.UTF_8
+        );
     }
 }

@@ -77,29 +77,9 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
     }
 
     public String sparqlQuery() {
-        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
-            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
-            "CONSTRUCT { " +
-                "atres:frequency owl:versionInfo ?version . " +
-                "?frequency skos:inScheme atres:frequency . " +
-                "?frequency dc:identifier ?code . " +
-                "?frequency skos:prefLabel ?prefLabel . " +
-            "} WHERE { " +
-                "atres:frequency owl:versionInfo ?version . " +
-                "?frequency skos:inScheme atres:frequency . " +
-                "?frequency a skos:Concept . " +
-                "?frequency dc:identifier ?code . " +
-                "FILTER(?code != 'OP_DATPRO') . " +
-                "?frequency skos:prefLabel ?prefLabel . " +
-                "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
-                ") . " +
-            "}";
-        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+        return URLEncoder.encode(
+                genericSPARQLQuery("frequency"),
+                StandardCharsets.UTF_8
+        );
     }
 }
