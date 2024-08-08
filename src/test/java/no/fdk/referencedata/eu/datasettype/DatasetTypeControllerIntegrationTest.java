@@ -80,12 +80,59 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
     @Test
     public void test_if_get_dataset_type_by_code_returns_valid_response() {
         DatasetType datasetType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/HVD", DatasetType.class);
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/NAL", DatasetType.class);
 
         assertNotNull(datasetType);
-        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/HVD", datasetType.getUri());
-        assertEquals("HVD", datasetType.getCode());
-        assertEquals("High-value dataset", datasetType.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/NAL", datasetType.getUri());
+        assertEquals("NAL", datasetType.getCode());
+        assertEquals("Name authority list", datasetType.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_if_all_translated_dataset_types_has_correct_value() {
+        DatasetType hvdType =
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/HVD", DatasetType.class);
+
+        assertNotNull(hvdType);
+        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/HVD", hvdType.getUri());
+        assertEquals("HVD", hvdType.getCode());
+        assertEquals("High-value dataset", hvdType.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("Datasett med høy verdi", hvdType.getLabel().get(Language.NORWEGIAN.code()));
+        assertEquals("Datasett med høg verdi", hvdType.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+        assertEquals("Datasett med høy verdi", hvdType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+
+        DatasetType releaseType =
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/RELEASE", DatasetType.class);
+
+        assertNotNull(releaseType);
+        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/RELEASE", releaseType.getUri());
+        assertEquals("RELEASE", releaseType.getCode());
+        assertEquals("Release", releaseType.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("Versjon", releaseType.getLabel().get(Language.NORWEGIAN.code()));
+        assertEquals("Versjon", releaseType.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+        assertEquals("Versjon", releaseType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+
+        DatasetType statisticalType =
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/STATISTICAL", DatasetType.class);
+
+        assertNotNull(statisticalType);
+        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL", statisticalType.getUri());
+        assertEquals("STATISTICAL", statisticalType.getCode());
+        assertEquals("Statistical data", statisticalType.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("Statistiske data", statisticalType.getLabel().get(Language.NORWEGIAN.code()));
+        assertEquals("Statistiske data", statisticalType.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+        assertEquals("Statistiske data", statisticalType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+
+        DatasetType syntheticType =
+                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/SYNTHETIC_DATA", DatasetType.class);
+
+        assertNotNull(syntheticType);
+        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/SYNTHETIC_DATA", syntheticType.getUri());
+        assertEquals("SYNTHETIC_DATA", syntheticType.getCode());
+        assertEquals("Synthetic data", syntheticType.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("Syntetiske data", syntheticType.getLabel().get(Language.NORWEGIAN.code()));
+        assertEquals("Syntetiske data", syntheticType.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+        assertEquals("Syntetiske data", syntheticType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
     }
 
     @Test
@@ -133,7 +180,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
     @Test
     public void test_dataset_types_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/dataset-types", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(DatasetTypeControllerIntegrationTest.class.getClassLoader().getResource("dataset-types-sparql-result.ttl")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(DatasetTypeControllerIntegrationTest.class.getClassLoader().getResource("dataset-types-translated.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }

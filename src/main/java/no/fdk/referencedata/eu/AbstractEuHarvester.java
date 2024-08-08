@@ -40,6 +40,8 @@ public abstract class AbstractEuHarvester<T> {
 
     public Model getModel() { return model; }
 
+    public void updateModel(Model newModel) { model.removeAll().add(newModel); }
+
     private void addThemePaths(Model m) {
         m.listResourcesWithProperty(RDF.type, SKOS.Concept).toList().stream()
                 .flatMap(concept -> generateThemePaths(m, concept).stream().map(path -> Pair.of(concept, path)))
