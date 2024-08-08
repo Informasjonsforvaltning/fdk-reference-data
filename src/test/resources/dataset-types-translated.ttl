@@ -1,0 +1,152 @@
+PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+PREFIX ns1:  <http://publications.europa.eu/resource/authority/dataset-type/>
+PREFIX ns2:  <http://publications.europa.eu/resource/authority/>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ns2:dataset-type  owl:versionInfo  "20230315-0" .
+
+ns1:HVD  <http://publications.europa.eu/ontology/authority/start.use>
+                "2019-06-26";
+        dc:identifier   "HVD";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "High-value dataset"@en , "Datasett med høy verdi"@nb , "Datasett med høy verdi"@no , "Datasett med høg verdi"@nn .
+
+ns1:ATTO_LEX  <http://publications.europa.eu/ontology/authority/start.use>
+                "2017-10-30";
+        dc:identifier   "ATTO_LEX";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "ATTO-tabell – EUR-Lex-domene"@nn , "ATTO-tabell – EUR-Lex-domene"@nb , "ATTO table – EUR-Lex domain"@en , "ATTO-tabell – EUR-Lex-domene"@no .
+
+ns1:ONTOLOGY  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "ONTOLOGY";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Ontologi"@no , "Ontologi"@nn , "Ontologi"@nb , "Ontology"@en .
+
+ns1:SYNTAX_ECD_SCHEME
+        <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "SYNTAX_ECD_SCHEME";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Kodeskjema for syntaks"@no , "Kodeskjema for syntaks"@nn , "Syntax encoding scheme"@en , "Kodeskjema for syntaks"@nb .
+
+ns1:GLOSSARY  <http://publications.europa.eu/ontology/authority/start.use>
+                "2020-11-25";
+        dc:identifier   "GLOSSARY";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Glossary"@en , "Ordliste"@nn , "Ordliste"@nb , "Ordliste"@no .
+
+ns1:STATISTICAL  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "STATISTICAL";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Statistiske data"@nn , "Statistical data"@en , "Statistiske data"@nb , "Statistiske data"@no .
+
+ns1:SCHEMA  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "SCHEMA";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Skjema"@nn , "Skjema"@nb , "Skjema"@no , "Schema"@en .
+
+ns1:DSCRP_SERV  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "DSCRP_SERV";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Tjenestebeskrivelse"@no , "Tenestebeskriving"@nn , "Tjenestebeskrivelse"@nb , "Service description"@en .
+
+ns1:NAL  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "NAL";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Autoritetsliste for entitetsnavn"@no , "Name authority list"@en , "Autoritetsliste for entitetsnamn"@nn , "Autoritetsliste for entitetsnavn"@nb .
+
+ns1:DIRECTORY  <http://publications.europa.eu/ontology/authority/start.use>
+                "1981-01-10";
+        dc:identifier   "DIRECTORY";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Directory"@en , "Katalog"@nb , "Katalog"@no , "Katalog"@nn .
+
+ns1:CORE_COMP  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "CORE_COMP";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Kjernekomponent"@nn , "Kjernekomponent"@nb , "Kjernekomponent"@no , "Core component"@en .
+
+ns1:CODE_LIST  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "CODE_LIST";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Kodeliste"@no , "Kodeliste"@nn , "Kodeliste"@nb , "Code list"@en .
+
+ns1:ATTO_PUB  <http://publications.europa.eu/ontology/authority/start.use>
+                "2017-10-30";
+        dc:identifier   "ATTO_PUB";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "ATTO-tabell – publikasjonsdomene"@nn , "ATTO table – Publications domain"@en , "ATTO-tabell – publikasjonsdomene"@nb , "ATTO-tabell – publikasjonsdomene"@no .
+
+ns1:TAXONOMY  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "TAXONOMY";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Taxonomy"@en , "Taksonomi"@no , "Taksonomi"@nb , "Taksonomi"@nn .
+
+ns1:GEOSPATIAL  <http://publications.europa.eu/ontology/authority/start.use>
+                "2019-01-30";
+        dc:identifier   "GEOSPATIAL";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Geodata"@nb , "Geodata"@no , "Geospatial data"@en , "Geodata"@nn .
+
+ns1:SYNTHETIC_DATA  <http://publications.europa.eu/ontology/authority/start.use>
+                "2020-05-19";
+        dc:identifier   "SYNTHETIC_DATA";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Synthetic data"@en , "Syntetiske data"@nb , "Syntetiske data"@no , "Syntetiske data"@nn .
+
+ns1:IEPD  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "IEPD";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Beskrivelse av informasjonsutveksling"@no , "Beskrivelse av informasjonsutveksling"@nb , "Beskriving av informasjonsutvekslingspakke"@nn , "Information exchange package description"@en .
+
+ns1:STYLES  <http://publications.europa.eu/ontology/authority/start.use>
+                "2017-10-30";
+        dc:identifier   "STYLES";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Stilark"@nn , "Style sheets"@en , "Stilark"@nb , "Stilark"@no .
+
+ns1:MAPPING  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "MAPPING";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Mapping"@nn , "Mapping"@no , "Mapping"@nb , "Mapping"@en .
+
+ns1:APROF  <http://publications.europa.eu/ontology/authority/start.use>
+                "2017-10-30";
+        dc:identifier   "APROF";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Application profile"@en , "Applikasjonsprofil"@nn , "Applikasjonsprofil"@no , "Applikasjonsprofil"@nb .
+
+ns1:TEST_DATA  <http://publications.europa.eu/ontology/authority/start.use>
+                "2020-05-19";
+        dc:identifier   "TEST_DATA";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Testdata"@nn , "Test data"@en , "Testdata"@no , "Testdata"@nb .
+
+ns1:RELEASE  <http://publications.europa.eu/ontology/authority/start.use>
+                "2023-01-01";
+        dc:identifier   "RELEASE";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Release"@en , "Versjon"@nb , "Versjon"@nn , "Versjon"@no .
+
+ns1:DOMAIN_MODEL  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "DOMAIN_MODEL";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Domain model"@en , "Domenemodell"@nn , "Domenemodell"@nb , "Domenemodell"@no .
+
+ns1:THESAURUS  <http://publications.europa.eu/ontology/authority/start.use>
+                "2013-01-01";
+        dc:identifier   "THESAURUS";
+        skos:inScheme   ns2:dataset-type;
+        skos:prefLabel  "Tesaurus"@nb , "Tesaurus"@nn , "Tesaurus"@no , "Thesaurus"@en .
