@@ -75,32 +75,9 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
     }
 
     public String sparqlQuery() {
-        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
-            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
-            "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
-            "CONSTRUCT { " +
-                "atres:dataset-type owl:versionInfo ?version . " +
-                "?datasetType skos:inScheme atres:dataset-type . " +
-                "?datasetType dc:identifier ?code . " +
-                "?datasetType at:start.use ?startUse . " +
-                "?datasetType skos:prefLabel ?prefLabel . " +
-            "} WHERE { " +
-                "atres:dataset-type owl:versionInfo ?version . " +
-                "?datasetType skos:inScheme atres:dataset-type . " +
-                "?datasetType a skos:Concept . " +
-                "?datasetType dc:identifier ?code . " +
-                "FILTER(?code != 'OP_DATPRO') . " +
-                "OPTIONAL { ?datasetType at:start.use ?startUse . } " +
-                "?datasetType skos:prefLabel ?prefLabel . " +
-                "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
-                ") . " +
-            "}";
-        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+        return URLEncoder.encode(
+                genericSPARQLQuery("dataset-type"),
+                StandardCharsets.UTF_8
+        );
     }
 }
