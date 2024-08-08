@@ -7,6 +7,7 @@ import no.fdk.referencedata.eu.vocabulary.EUDatasetType;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.OWL;
@@ -20,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -40,6 +43,85 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
         return VERSION;
     }
 
+    private final Map<String, Map<String, String>> overrideTranslations = Map.ofEntries(
+            Map.entry(EUDatasetType.getURI() + "/HVD", Map.ofEntries(
+                    Map.entry("nb", "Datasett med høy verdi"),
+                    Map.entry("nn", "Datasett med høg verdi"),
+                    Map.entry("no", "Datasett med høy verdi")
+            )),
+            Map.entry(EUDatasetType.getURI() + "/RELEASE", Map.ofEntries(
+                    Map.entry("nb", "Versjon"),
+                    Map.entry("nn", "Versjon"),
+                    Map.entry("no", "Versjon")
+            )),
+            Map.entry(EUDatasetType.getURI() + "/STATISTICAL", Map.ofEntries(
+                    Map.entry("nb", "Statistiske data"),
+                    Map.entry("nn", "Statistiske data"),
+                    Map.entry("no", "Statistiske data")
+            )),
+            Map.entry(EUDatasetType.getURI() + "/SYNTHETIC_DATA", Map.ofEntries(
+                    Map.entry("nb", "Syntetiske data"),
+                    Map.entry("nn", "Syntetiske data"),
+                    Map.entry("no", "Syntetiske data")
+            ))
+    );
+
+    private final Map<String, Map<String, String>> missingTranslations = Map.ofEntries(
+            Map.entry(EUDatasetType.getURI() + "/HVD", Map.ofEntries(
+                    Map.entry("nb", "Datasett med høy verdi"),
+                    Map.entry("nn", "Datasett med høg verdi"),
+                    Map.entry("no", "Datasett med høy verdi")
+            )),
+            Map.entry(EUDatasetType.getURI() + "/RELEASE", Map.ofEntries(
+                    Map.entry("nb", "Versjon"),
+                    Map.entry("nn", "Versjon"),
+                    Map.entry("no", "Versjon")
+            ))
+    );
+
+    public Model translateDatasetTypes(Model model) {
+        Model translated = ModelFactory.createDefaultModel();
+
+        model.listStatements().forEach(stmt -> {
+            if (stmt.getSubject().isURIResource() && overrideTranslations.containsKey(stmt.getSubject().getURI())) {
+                Map<String, String> subjectTranslations = overrideTranslations.get(stmt.getSubject().getURI());
+                if (stmt.getPredicate().hasURI(SKOS.prefLabel.getURI()) && subjectTranslations.containsKey(stmt.getLanguage())) {
+                    translated.add(
+                            stmt.getSubject(),
+                            stmt.getPredicate(),
+                            subjectTranslations.get(stmt.getLanguage()),
+                            stmt.getLanguage()
+                    );
+                } else {
+                    translated.add(stmt);
+                }
+            } else {
+                translated.add(stmt);
+            }
+        });
+
+        for (String subject : missingTranslations.keySet()) {
+            Resource subjectResource = model.getResource(subject);
+            Map<String, String> subjectTranslations = overrideTranslations.get(subject);
+            for (String language : subjectTranslations.keySet()) {
+                translated.add(
+                        subjectResource,
+                        SKOS.prefLabel,
+                        subjectTranslations.get(language),
+                        language
+                );
+            }
+        }
+
+        updateModel(translated);
+        return translated;
+    }
+
+    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource datasetTypeRdfSource) {
+        return loadModel(datasetTypeRdfSource, false)
+                .map(this::translateDatasetTypes);
+    }
+
     public Flux<DatasetType> harvest() {
         log.info("Starting harvest of EU dataset types");
         final org.springframework.core.io.Resource datasetTypeRdfSource = getSource();
@@ -47,7 +129,7 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
             return Flux.error(new Exception("Unable to fetch dataset-types dataset"));
         }
 
-        return Mono.justOrEmpty(loadModel(datasetTypeRdfSource, false))
+        return Mono.justOrEmpty(loadAndTranslateModel(datasetTypeRdfSource))
                 .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDatasetType.SCHEME).toList())
                 .filter(Resource::isURIResource)
@@ -75,32 +157,9 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
     }
 
     public String sparqlQuery() {
-        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
-            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
-            "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
-            "CONSTRUCT { " +
-                "atres:dataset-type owl:versionInfo ?version . " +
-                "?datasetType skos:inScheme atres:dataset-type . " +
-                "?datasetType dc:identifier ?code . " +
-                "?datasetType at:start.use ?startUse . " +
-                "?datasetType skos:prefLabel ?prefLabel . " +
-            "} WHERE { " +
-                "atres:dataset-type owl:versionInfo ?version . " +
-                "?datasetType skos:inScheme atres:dataset-type . " +
-                "?datasetType a skos:Concept . " +
-                "?datasetType dc:identifier ?code . " +
-                "FILTER(?code != 'OP_DATPRO') . " +
-                "OPTIONAL { ?datasetType at:start.use ?startUse . } " +
-                "?datasetType skos:prefLabel ?prefLabel . " +
-                "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
-                ") . " +
-            "}";
-        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+        return URLEncoder.encode(
+                genericSPARQLQuery("dataset-type"),
+                StandardCharsets.UTF_8
+        );
     }
 }

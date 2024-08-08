@@ -77,29 +77,9 @@ public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
     }
 
     public String sparqlQuery() {
-        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
-            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
-            "CONSTRUCT { " +
-                "atres:access-right owl:versionInfo ?version . " +
-                "?accessRight skos:inScheme atres:access-right . " +
-                "?accessRight dc:identifier ?code . " +
-                "?accessRight skos:prefLabel ?prefLabel . " +
-            "} WHERE { " +
-                "atres:access-right owl:versionInfo ?version . " +
-                "?accessRight skos:inScheme atres:access-right . " +
-                "?accessRight a skos:Concept . " +
-                "?accessRight dc:identifier ?code . " +
-                "FILTER(?code != 'OP_DATPRO') . " +
-                "?accessRight skos:prefLabel ?prefLabel . " +
-                "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
-                ") . " +
-            "}";
-        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+        return URLEncoder.encode(
+                genericSPARQLQuery("access-right"),
+                StandardCharsets.UTF_8
+        );
     }
 }

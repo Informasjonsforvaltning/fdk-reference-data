@@ -77,29 +77,9 @@ public class ConceptStatusHarvester extends AbstractEuHarvester<ConceptStatus> {
     }
 
     public String sparqlQuery() {
-        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
-            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
-            "CONSTRUCT { " +
-                "atres:concept-status owl:versionInfo ?version . " +
-                "?status skos:inScheme atres:concept-status . " +
-                "?status dc:identifier ?code . " +
-                "?status skos:prefLabel ?prefLabel . " +
-            "} WHERE { " +
-                "atres:concept-status owl:versionInfo ?version . " +
-                "?status skos:inScheme atres:concept-status . " +
-                "?status a skos:Concept . " +
-                "?status dc:identifier ?code . " +
-                "FILTER(?code != 'OP_DATPRO') . " +
-                "?status skos:prefLabel ?prefLabel . " +
-                "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
-                ") . " +
-            "}";
-        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+        return URLEncoder.encode(
+                genericSPARQLQuery("concept-status"),
+                StandardCharsets.UTF_8
+        );
     }
 }

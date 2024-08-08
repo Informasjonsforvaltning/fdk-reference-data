@@ -40,6 +40,8 @@ public abstract class AbstractEuHarvester<T> {
 
     public Model getModel() { return model; }
 
+    public void updateModel(Model newModel) { model.removeAll().add(newModel); }
+
     private void addThemePaths(Model m) {
         m.listResourcesWithProperty(RDF.type, SKOS.Concept).toList().stream()
                 .flatMap(concept -> generateThemePaths(m, concept).stream().map(path -> Pair.of(concept, path)))
@@ -63,4 +65,33 @@ public abstract class AbstractEuHarvester<T> {
     public abstract Flux<T> harvest();
 
     public abstract String sparqlQuery();
+
+    public String genericSPARQLQuery(String schemaName) {
+        return "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
+                "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
+                "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
+                "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
+                "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
+                "CONSTRUCT { " +
+                    "atres:" + schemaName + " owl:versionInfo ?version . " +
+                    "?item skos:inScheme atres:" + schemaName + " . " +
+                    "?item dc:identifier ?code . " +
+                    "?item at:start.use ?startUse . " +
+                    "?item skos:prefLabel ?prefLabel . " +
+                "} WHERE { " +
+                    "atres:" + schemaName + " owl:versionInfo ?version . " +
+                    "?item skos:inScheme atres:" + schemaName + " . " +
+                    "?item a skos:Concept . " +
+                    "?item dc:identifier ?code . " +
+                    "FILTER(?code != 'OP_DATPRO') . " +
+                    "OPTIONAL { ?item at:start.use ?startUse . } " +
+                    "?item skos:prefLabel ?prefLabel . " +
+                    "FILTER(" +
+                        "LANG(?prefLabel) = 'en' || " +
+                        "LANG(?prefLabel) = 'no' || " +
+                        "LANG(?prefLabel) = 'nb' || " +
+                        "LANG(?prefLabel) = 'nn'" +
+                    ") . " +
+                "}";
+    }
 }

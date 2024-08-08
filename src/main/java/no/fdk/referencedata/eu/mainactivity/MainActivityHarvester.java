@@ -77,29 +77,9 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
     }
 
     public String sparqlQuery() {
-        String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
-            "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX dc: <http://purl.org/dc/elements/1.1/> " +
-            "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
-            "CONSTRUCT { " +
-                "atres:main-activity owl:versionInfo ?version . " +
-                "?mainActivity skos:inScheme atres:main-activity . " +
-                "?mainActivity dc:identifier ?code . " +
-                "?mainActivity skos:prefLabel ?prefLabel . " +
-            "} WHERE { " +
-                "atres:main-activity owl:versionInfo ?version . " +
-                "?mainActivity skos:inScheme atres:main-activity . " +
-                "?mainActivity a skos:Concept . " +
-                "?mainActivity dc:identifier ?code . " +
-                "FILTER(?code != 'OP_DATPRO') . " +
-                "?mainActivity skos:prefLabel ?prefLabel . " +
-                "FILTER(" +
-                    "LANG(?prefLabel) = 'en' || " +
-                    "LANG(?prefLabel) = 'no' || " +
-                    "LANG(?prefLabel) = 'nb' || " +
-                    "LANG(?prefLabel) = 'nn'" +
-                ") . " +
-            "}";
-        return URLEncoder.encode(query, StandardCharsets.UTF_8);
+        return URLEncoder.encode(
+                genericSPARQLQuery("main-activity"),
+                StandardCharsets.UTF_8
+        );
     }
 }
