@@ -3,29 +3,13 @@ package no.fdk.referencedata.geonorge.administrativeenheter.kommune;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.geonorge.administrativeenheter.fylke.Fylke;
-import no.fdk.referencedata.iana.mediatype.IanaHarvester;
-import no.fdk.referencedata.iana.mediatype.IanaSource;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.springframework.core.io.UrlResource;
-import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
-
-import static java.lang.String.format;
 
 @Component
 @Slf4j

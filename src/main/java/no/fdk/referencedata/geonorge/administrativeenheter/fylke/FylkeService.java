@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
+import no.fdk.referencedata.search.SearchAlternative;
+import no.fdk.referencedata.search.SearchHit;
+import no.fdk.referencedata.search.SearchableReferenceData;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -20,10 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
-public class FylkeService {
+public class FylkeService implements SearchableReferenceData {
     private final String rdfSourceID = "fylke-source";
 
     private final FylkeHarvester fylkeHarvester;
@@ -67,6 +71,15 @@ public class FylkeService {
         if (fylke.fylkesnummer != null) {
             resource.addProperty(DCTerms.identifier, fylke.fylkesnummer);
         }
+    }
+
+    public SearchAlternative getSearchType() {
+        return SearchAlternative.ADMINISTRATIVE_ENHETER;
+    }
+
+    public Stream<SearchHit> search(String query) {
+        return fylkeRepository.findByFylkesnavnContainingIgnoreCase(query)
+                .map(Fylke::toSearchHit);
     }
 
     @Transactional
