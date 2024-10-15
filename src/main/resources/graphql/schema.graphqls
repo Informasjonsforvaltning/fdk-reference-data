@@ -92,6 +92,8 @@ type Query {
 
   kommuneOrganisasjoner: [KommuneOrganisasjon!]!
   kommuneOrganisasjonByKommunenummer(kommunenummer: String!): KommuneOrganisasjon
+
+  search(req: SearchRequest!): [SearchHit!]!
 }
 
 type AccessRight {
@@ -297,4 +299,20 @@ type KommuneOrganisasjon {
   organisasjonsnavn: String
   kommunenavn: String
   kommunenummer: String
+}
+
+type SearchHit {
+  uri: ID!
+  code: String
+  label: Object
+  type: String
+}
+
+input SearchRequest {
+    query: String!
+    types: [SearchAlternative!]!
+}
+
+enum SearchAlternative {
+  ADMINISTRATIVE_ENHETER
 }

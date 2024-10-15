@@ -3,7 +3,6 @@ package no.fdk.referencedata.geonorge.administrativeenheter.fylke;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.Kommune;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
