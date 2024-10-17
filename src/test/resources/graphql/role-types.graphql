@@ -1,7 +1,0 @@
-query {
-    roleTypes {
-        uri
-        code
-        label
-    }
-}

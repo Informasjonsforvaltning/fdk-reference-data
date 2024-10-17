@@ -1,8 +1,0 @@
-query GetOpenLicenseByCode($code: String!) {
-    openLicenseByCode(code: $code) {
-        uri
-        code
-        isReplacedBy
-        label
-    }
-}

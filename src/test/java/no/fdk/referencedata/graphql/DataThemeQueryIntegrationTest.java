@@ -1,26 +1,25 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
+import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -32,10 +31,8 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class DataThemeQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Autowired
     private DataThemeRepository dataThemeRepository;
@@ -57,33 +54,48 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_data_themes_query_returns_all_data_themes() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/data-themes.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", response.get("$['data']['dataThemes'][0]['uri']"));
-        assertEquals("AGRI", response.get("$['data']['dataThemes'][0]['code']"));
-        assertEquals("Agriculture, fisheries, forestry and food", response.get("$['data']['dataThemes'][0]['label']['en']"));
+    void test_if_data_themes_query_returns_all_data_themes() {
+        List<DataTheme> result = graphQlTester.documentName("data-themes")
+                .execute()
+                .path("$['data']['dataThemes']")
+                .entityList(DataTheme.class)
+                .get();
+
+        Assertions.assertEquals(13, result.size());
+
+        DataTheme dataTheme = result.get(0);
+        assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", dataTheme.getUri());
+        assertEquals("AGRI", dataTheme.getCode());
+        assertEquals("Jordbruk, fiskeri, skogbruk og mat", dataTheme.getLabel().get("no"));
+        assertEquals("Jordbruk, fiskeri, skogbruk og mat", dataTheme.getLabel().get("nb"));
+        assertEquals("Jordbruk, fiskeri, skogbruk og mat", dataTheme.getLabel().get("nn"));
+        assertEquals("Agriculture, fisheries, forestry and food", dataTheme.getLabel().get("en"));
     }
 
     @Test
-    void test_if_data_theme_by_code_aac_query_returns_econ_data_theme() throws IOException {
-        GraphQLResponse response = template.perform("graphql/data-theme-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "ECON")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/data-theme/ECON", response.get("$['data']['dataThemeByCode']['uri']"));
-        assertEquals("ECON", response.get("$['data']['dataThemeByCode']['code']"));
-        assertEquals("Economy and finance", response.get("$['data']['dataThemeByCode']['label']['en']"));
+    void test_if_data_theme_by_code_aac_query_returns_econ_data_theme() {
+        DataTheme result = graphQlTester.documentName("data-theme-by-code")
+                .variable("code", "ECON")
+                .execute()
+                .path("$['data']['dataThemeByCode']")
+                .entity(DataTheme.class)
+                .get();
+
+        assertEquals("http://publications.europa.eu/resource/authority/data-theme/ECON", result.getUri());
+        assertEquals("ECON", result.getCode());
+        assertEquals("Økonomi og finans", result.getLabel().get("no"));
+        assertEquals("Økonomi og finans", result.getLabel().get("nb"));
+        assertEquals("Økonomi og finans", result.getLabel().get("nn"));
+        assertEquals("Economy and finance", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_data_theme_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/data-theme-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['dataThemeByCode']"));
+    void test_if_data_theme_by_code_unknown_query_returns_null() {
+        graphQlTester.documentName("data-theme-by-code")
+                .variable("code", "unknown")
+                .execute()
+                .path("$['data']['dataThemeByCode']")
+                .valueIsNull();
     }
 
 }

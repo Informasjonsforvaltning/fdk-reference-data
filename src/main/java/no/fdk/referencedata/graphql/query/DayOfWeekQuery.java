@@ -1,17 +1,18 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.schema.dayofweek.DayOfWeek;
 import no.fdk.referencedata.schema.dayofweek.DayOfWeekService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class DayOfWeekQuery implements GraphQLQueryResolver {
+@Controller
+public class DayOfWeekQuery {
 
     private final DayOfWeekService dayOfWeekService;
 
@@ -20,13 +21,15 @@ public class DayOfWeekQuery implements GraphQLQueryResolver {
         this.dayOfWeekService = dayOfWeekService;
     }
 
-    public List<DayOfWeek> getWeekDays() {
+    @QueryMapping
+    public List<DayOfWeek> weekDays() {
         return dayOfWeekService.getAll().stream()
                 .sorted(Comparator.comparing(DayOfWeek::getUri))
                 .collect(Collectors.toList());
     }
 
-    public DayOfWeek getDayOfWeekByCode(String code) {
+    @QueryMapping
+    public DayOfWeek dayOfWeekByCode(@Argument String code) {
         return dayOfWeekService.getByCode(code).orElse(null);
     }
 }

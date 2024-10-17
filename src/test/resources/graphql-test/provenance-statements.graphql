@@ -1,0 +1,12 @@
+query {
+    provenanceStatements {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

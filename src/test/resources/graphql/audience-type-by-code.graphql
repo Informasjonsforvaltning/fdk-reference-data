@@ -1,7 +1,0 @@
-query AudienceTypeRightByCode($code: String!) {
-    audienceTypeByCode(code: $code) {
-        uri
-        code
-        label
-    }
-}

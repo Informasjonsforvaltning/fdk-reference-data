@@ -1,8 +1,0 @@
-query GetDistributionTypeByCode($code: String!) {
-    distributionTypeByCode(code: $code) {
-        uri
-        code
-        label,
-        startUse
-    }
-}

@@ -1,7 +1,0 @@
-query {
-    statuses {
-        uri
-        code
-        label
-    }
-}

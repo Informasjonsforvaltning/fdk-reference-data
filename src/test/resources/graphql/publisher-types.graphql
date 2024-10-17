@@ -1,7 +1,0 @@
-query {
-    publisherTypes {
-        uri
-        code
-        label
-    }
-}

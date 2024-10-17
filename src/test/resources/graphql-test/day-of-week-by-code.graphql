@@ -1,0 +1,11 @@
+query GetDayOfWeekByCode($code: String!) {
+    dayOfWeekByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

@@ -1,7 +1,0 @@
-query GetConceptStatusByCode($code: String!) {
-    conceptStatusByCode(code: $code) {
-        uri
-        code
-        label
-    }
-}

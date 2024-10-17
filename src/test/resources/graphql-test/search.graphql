@@ -1,0 +1,13 @@
+query Search($req: SearchRequest!) {
+    search(req: $req) {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+        type
+    }
+}

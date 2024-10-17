@@ -1,0 +1,11 @@
+query GetApiStatusByCode($code: String!) {
+    apiStatusByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

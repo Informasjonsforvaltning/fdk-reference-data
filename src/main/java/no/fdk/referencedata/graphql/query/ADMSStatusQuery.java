@@ -1,17 +1,18 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.adms.status.ADMSStatus;
 import no.fdk.referencedata.adms.status.ADMSStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class ADMSStatusQuery implements GraphQLQueryResolver {
+@Controller
+public class ADMSStatusQuery {
 
     private final ADMSStatusService admsStatusService;
 
@@ -20,13 +21,15 @@ public class ADMSStatusQuery implements GraphQLQueryResolver {
         this.admsStatusService = admsStatusService;
     }
 
-    public List<ADMSStatus> getStatuses() {
+    @QueryMapping
+    public List<ADMSStatus> statuses() {
         return admsStatusService.getAll().stream()
                 .sorted(Comparator.comparing(ADMSStatus::getUri))
                 .collect(Collectors.toList());
     }
 
-    public ADMSStatus getStatusByCode(String code) {
+    @QueryMapping
+    public ADMSStatus statusByCode(@Argument String code) {
         return admsStatusService.getByCode(code).orElse(null);
     }
 }

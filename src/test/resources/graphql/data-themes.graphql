@@ -1,7 +1,0 @@
-query {
-    dataThemes {
-        uri
-        code
-        label
-    }
-}

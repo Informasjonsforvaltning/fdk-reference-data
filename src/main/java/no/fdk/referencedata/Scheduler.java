@@ -280,10 +280,6 @@ public class Scheduler {
             dataThemeService.harvestAndSave(true);
         }
 
-        if(euroVocService.firstTime()) {
-            euroVocService.harvestAndSave(true);
-        }
-
         if(frequencyService.firstTime()) {
             frequencyService.harvestAndSave(true);
         }

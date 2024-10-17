@@ -1,0 +1,13 @@
+query {
+    openLicenses {
+        uri
+        code
+        isReplacedBy
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

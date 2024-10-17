@@ -1,7 +1,0 @@
-query {
-    audienceTypes {
-        uri
-        code
-        label
-    }
-}

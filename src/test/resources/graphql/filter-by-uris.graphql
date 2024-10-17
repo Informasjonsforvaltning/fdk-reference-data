@@ -1,8 +1,0 @@
-query FilterByURIs($req: FilterByURIsRequest!) {
-    filterByURIs(req: $req) {
-        uri
-        code
-        label
-        type
-    }
-}

@@ -1,0 +1,11 @@
+query {
+    conceptSubjects {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

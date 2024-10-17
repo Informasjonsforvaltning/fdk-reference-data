@@ -1,0 +1,12 @@
+query {
+    apiSpecifications {
+        uri
+        code
+        source
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

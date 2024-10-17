@@ -1,7 +1,0 @@
-query {
-    distributionTypes {
-        uri
-        code
-        label
-    }
-}

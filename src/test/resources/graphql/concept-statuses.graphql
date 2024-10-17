@@ -1,7 +1,0 @@
-query {
-    conceptStatuses {
-        uri
-        code
-        label
-    }
-}

@@ -1,7 +1,0 @@
-query ServiceChannelTypeRightByCode($code: String!) {
-    serviceChannelTypeByCode(code: $code) {
-        uri
-        code
-        label
-    }
-}

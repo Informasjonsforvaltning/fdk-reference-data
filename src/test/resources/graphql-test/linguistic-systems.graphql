@@ -1,0 +1,12 @@
+query {
+    linguisticSystems {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

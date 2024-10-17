@@ -1,7 +1,0 @@
-query {
-    weekDays {
-        uri
-        code
-        label
-    }
-}

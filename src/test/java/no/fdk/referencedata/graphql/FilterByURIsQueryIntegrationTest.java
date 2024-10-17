@@ -1,8 +1,5 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeRepository;
@@ -14,7 +11,6 @@ import no.fdk.referencedata.geonorge.administrativeenheter.kommune.LocalKommuneH
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.FilterByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
-import no.fdk.referencedata.search.SearchRequest;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static no.fdk.referencedata.search.SearchAlternative.ADMINISTRATIVE_ENHETER;
@@ -41,8 +36,6 @@ import static org.mockito.Mockito.mock;
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class FilterByURIsQueryIntegrationTest extends AbstractContainerTest {
-
-    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Value("${wiremock.host}")
     private String wiremockHost;
@@ -62,7 +55,7 @@ class FilterByURIsQueryIntegrationTest extends AbstractContainerTest {
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
@@ -84,20 +77,21 @@ class FilterByURIsQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_filter_by_uris_query_returns_combined_location_hits() throws IOException {
+    void test_if_filter_by_uris_query_returns_combined_location_hits() {
         List<String> expectedURIs = List.of(
                 "https://data.geonorge.no/administrativeEnheter/fylke/id/123456",
                 "https://data.geonorge.no/administrativeEnheter/kommune/id/123456",
                 "https://data.geonorge.no/administrativeEnheter/kommune/id/323456",
                 "https://data.geonorge.no/administrativeEnheter/nasjon/id/173163"
         );
-
         FilterByURIsRequest req = FilterByURIsRequest.builder().uris(expectedURIs).types(List.of(ADMINISTRATIVE_ENHETER)).build();
-        GraphQLResponse response = template.perform("graphql/filter-by-uris.graphql", mapper.valueToTree(Map.of("req", req)));
-        assertNotNull(response);
-        assertTrue(response.isOk());
 
-        List<SearchHit> actual = response.getList("$['data']['filterByURIs']", SearchHit.class);
+        List<SearchHit> actual = graphQlTester.documentName("filter-by-uris")
+                .variable("req", req)
+                .execute()
+                .path("$['data']['filterByURIs']")
+                .entityList(SearchHit.class)
+                .get();
 
         assertEquals(4, actual.size());
 

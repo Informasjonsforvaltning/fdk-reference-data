@@ -1,0 +1,11 @@
+query {
+    weekDays {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

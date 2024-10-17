@@ -1,0 +1,11 @@
+query {
+    apiStatuses {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

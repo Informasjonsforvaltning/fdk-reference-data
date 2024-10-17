@@ -1,9 +1,0 @@
-query {
-    euroVocs {
-        uri
-        code
-        label
-        parents
-        children
-    }
-}

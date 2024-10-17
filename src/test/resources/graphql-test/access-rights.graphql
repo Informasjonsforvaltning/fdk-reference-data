@@ -1,0 +1,7 @@
+query {
+    accessRights {
+        uri
+        code
+        label { en }
+    }
+}
