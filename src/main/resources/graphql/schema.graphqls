@@ -1,5 +1,3 @@
-scalar Object
-
 type Query {
   accessRights: [AccessRight!]!
   accessRightByCode(code: String!): AccessRight
@@ -97,74 +95,81 @@ type Query {
   findByURIs(req: FindByURIsRequest!): [SearchHit!]!
 }
 
+type LocalizedStrings {
+    nb: String
+    nn: String
+    no: String
+    en: String
+}
+
 type AccessRight {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type ApiSpecification {
   uri: ID!
   source: String
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type ApiStatus {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type AudienceType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type RelationshipWithSourceType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type ConceptStatus {
  uri: ID!
  code: String
- label: Object
+ label: LocalizedStrings
 }
 
 type ConceptSubject {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type DataTheme {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
   startUse: String
 }
 
 type DistributionType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
   startUse: String
 }
 
 type DatasetType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
   startUse: String
 }
 
 type EuroVoc {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
   children: [String!]
   parents: [String!]
 }
@@ -172,7 +177,7 @@ type EuroVoc {
 type EvidenceType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type FileType {
@@ -184,13 +189,13 @@ type FileType {
 type Frequency {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type LinguisticSystem {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type LosNode {
@@ -199,8 +204,8 @@ type LosNode {
   parents: [String!]
   isTheme: Boolean!
   losPaths: [String!]
-  name: Object
-  definition: Object
+  name: LocalizedStrings
+  definition: LocalizedStrings
   synonyms: [String!]
   relatedTerms: [String!]
 }
@@ -208,7 +213,7 @@ type LosNode {
 type MainActivity {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type MediaType {
@@ -241,49 +246,49 @@ type OpenLicense {
   uri: ID!
   code: String
   isReplacedBy: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type ProvenanceStatement {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type ReferenceType {
   code: ID
-  label: Object
-  inverseLabel: Object
+  label: LocalizedStrings
+  inverseLabel: LocalizedStrings
 }
 
 type RoleType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type ServiceChannelType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type ADMSStatus {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type PublisherType {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type DayOfWeek {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
 }
 
 type FylkeOrganisasjon {
@@ -305,7 +310,7 @@ type KommuneOrganisasjon {
 type SearchHit {
   uri: ID!
   code: String
-  label: Object
+  label: LocalizedStrings
   type: String
 }
 

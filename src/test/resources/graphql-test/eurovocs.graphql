@@ -1,0 +1,9 @@
+query {
+    euroVocs {
+        uri
+        code
+        label { en }
+        parents
+        children
+    }
+}

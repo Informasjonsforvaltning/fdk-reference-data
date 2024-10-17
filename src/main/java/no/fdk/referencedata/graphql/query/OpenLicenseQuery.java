@@ -1,17 +1,18 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.openlicences.OpenLicense;
 import no.fdk.referencedata.openlicences.OpenLicenseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class OpenLicenseQuery implements GraphQLQueryResolver {
+@Controller
+public class OpenLicenseQuery {
 
     private final OpenLicenseService openLicenseService;
 
@@ -20,13 +21,15 @@ public class OpenLicenseQuery implements GraphQLQueryResolver {
         this.openLicenseService = openLicenseService;
     }
 
-    public List<OpenLicense> getOpenLicenses() {
+    @QueryMapping
+    public List<OpenLicense> openLicenses() {
         return openLicenseService.getAll().stream()
                 .sorted(Comparator.comparing(OpenLicense::getUri))
                 .collect(Collectors.toList());
     }
 
-    public OpenLicense getOpenLicenseByCode(String code) {
+    @QueryMapping
+    public OpenLicense openLicenseByCode(@Argument String code) {
         return openLicenseService.getByCode(code).orElse(null);
     }
 }

@@ -1,20 +1,22 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.RequiredArgsConstructor;
 import no.fdk.referencedata.los.LosNode;
 import no.fdk.referencedata.los.LosService;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.List;
 
-@Component
+@Controller
 @RequiredArgsConstructor
-public class LosQuery implements GraphQLQueryResolver {
+public class LosQuery {
 
     private final LosService losService;
 
-    public List<LosNode> getLosThemesAndWords(List<String> uris) {
+    @QueryMapping
+    public List<LosNode> losThemesAndWords(@Argument List<String> uris) {
         return uris != null ? losService.getByURIs(uris) : losService.getAll();
     }
 }

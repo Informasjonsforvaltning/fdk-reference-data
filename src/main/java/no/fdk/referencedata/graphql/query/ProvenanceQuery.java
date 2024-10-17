@@ -1,17 +1,18 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.provenancestatement.ProvenanceStatement;
 import no.fdk.referencedata.provenancestatement.ProvenanceStatementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class ProvenanceQuery implements GraphQLQueryResolver {
+@Controller
+public class ProvenanceQuery {
 
     private final ProvenanceStatementService provenanceStatementService;
 
@@ -20,13 +21,15 @@ public class ProvenanceQuery implements GraphQLQueryResolver {
         this.provenanceStatementService = provenanceStatementService;
     }
 
-    public List<ProvenanceStatement> getProvenanceStatements() {
+    @QueryMapping
+    public List<ProvenanceStatement> provenanceStatements() {
         return provenanceStatementService.getAll().stream()
                 .sorted(Comparator.comparing(ProvenanceStatement::getUri))
                 .collect(Collectors.toList());
     }
 
-    public ProvenanceStatement getProvenanceStatementByCode(String code) {
+    @QueryMapping
+    public ProvenanceStatement provenanceStatementByCode(@Argument String code) {
         return provenanceStatementService.getByCode(code).orElse(null);
     }
 }

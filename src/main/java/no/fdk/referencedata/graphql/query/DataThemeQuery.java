@@ -1,29 +1,32 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Component
-public class DataThemeQuery implements GraphQLQueryResolver {
+@Controller
+public class DataThemeQuery {
 
     @Autowired
     private DataThemeRepository dataThemeRepository;
 
-    public List<DataTheme> getDataThemes() {
+    @QueryMapping
+    public List<DataTheme> dataThemes() {
         return StreamSupport.stream(dataThemeRepository.findAll().spliterator(), false)
                 .sorted(Comparator.comparing(DataTheme::getUri))
                 .collect(Collectors.toList());
     }
 
-    public DataTheme getDataThemeByCode(String code) {
+    @QueryMapping
+    public DataTheme dataThemeByCode(@Argument String code) {
         return dataThemeRepository.findByCode(code).orElse(null);
     }
 }

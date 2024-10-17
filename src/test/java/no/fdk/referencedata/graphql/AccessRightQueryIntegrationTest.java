@@ -1,9 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
+import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.eu.accessright.AccessRightRepository;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
@@ -15,12 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -34,8 +30,6 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class AccessRightQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
     private AccessRightRepository accessRightRepository;
 
@@ -45,7 +39,7 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
@@ -59,33 +53,41 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_access_rights_query_returns_all_access_rights() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/access-rights.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", response.get("$['data']['accessRights'][0]['uri']"));
-        assertEquals("CONFIDENTIAL", response.get("$['data']['accessRights'][0]['code']"));
-        assertEquals("confidential", response.get("$['data']['accessRights'][0]['label']['en']"));
+    void test_if_access_rights_query_returns_all_access_rights() {
+        GraphQlTester.EntityList<AccessRight> result = graphQlTester.documentName("access-rights")
+                .execute()
+                .path("$['data']['accessRights']")
+                .entityList(AccessRight.class);
+
+        result.hasSize(6);
+
+        AccessRight accessRight = result.get().get(0);
+        assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", accessRight.getUri());
+        assertEquals("CONFIDENTIAL", accessRight.getCode());
+        assertEquals("confidential", accessRight.getLabel().get("en"));
     }
 
     @Test
-    void test_if_access_right_by_code_public_query_returns_public_access_right() throws IOException {
-        GraphQLResponse response = template.perform("graphql/access-right-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "PUBLIC")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/access-right/PUBLIC", response.get("$['data']['accessRightByCode']['uri']"));
-        assertEquals("PUBLIC", response.get("$['data']['accessRightByCode']['code']"));
-        assertEquals("public", response.get("$['data']['accessRightByCode']['label']['en']"));
+    void test_if_access_right_by_code_public_query_returns_public_access_right() {
+        AccessRight result = graphQlTester.documentName("access-right-by-code")
+                .variable("code", "PUBLIC")
+                .execute()
+                .path("$['data']['accessRightByCode']")
+                .entity(AccessRight.class)
+                .get();
+
+        assertEquals("http://publications.europa.eu/resource/authority/access-right/PUBLIC", result.getUri());
+        assertEquals("PUBLIC", result.getCode());
+        assertEquals("public", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_access_right_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/access-right-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['accessRightByCode']"));
+    void test_if_access_right_by_code_unknown_query_returns_null() {
+        graphQlTester.documentName("access-right-by-code")
+                .variable("code", "unknown")
+                .execute()
+                .path("$['data']['accessRightByCode']")
+                .valueIsNull();
     }
 
 }

@@ -1,8 +1,0 @@
-query FindByURIs($req: FindByURIsRequest!) {
-    findByURIs(req: $req) {
-        uri
-        code
-        label
-        type
-    }
-}

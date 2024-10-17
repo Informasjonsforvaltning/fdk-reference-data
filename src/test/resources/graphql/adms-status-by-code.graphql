@@ -1,7 +1,0 @@
-query GetStatusByCode($code: String!) {
-    statusByCode(code: $code) {
-        uri
-        code
-        label
-    }
-}

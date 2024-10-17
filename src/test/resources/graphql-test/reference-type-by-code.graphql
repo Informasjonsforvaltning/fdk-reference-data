@@ -1,0 +1,7 @@
+query GetReferenceTypeByCode($code: String!) {
+    referenceTypeByCode(code: $code) {
+        code
+        label { en }
+        inverseLabel { en }
+    }
+}

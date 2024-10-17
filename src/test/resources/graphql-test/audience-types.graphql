@@ -1,0 +1,11 @@
+query {
+    audienceTypes {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

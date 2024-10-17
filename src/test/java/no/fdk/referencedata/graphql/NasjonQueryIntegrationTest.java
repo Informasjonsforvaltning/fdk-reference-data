@@ -1,26 +1,18 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
-import com.jayway.jsonpath.PathNotFoundException;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
-import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
-import no.fdk.referencedata.iana.mediatype.MediaTypeService;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import org.junit.jupiter.api.BeforeEach;
+import no.fdk.referencedata.geonorge.administrativeenheter.nasjon.Nasjon;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -31,38 +23,44 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 class NasjonQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Test
-    void test_if_nasjon_query_returns_all_nasjoner() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/nasjoner.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", response.get("$['data']['nasjoner'][0]['uri']"));
-        assertEquals("Norge", response.get("$['data']['nasjoner'][0]['nasjonsnavn']"));
-        assertEquals("173163", response.get("$['data']['nasjoner'][0]['nasjonsnummer']"));
-        assertThrows(PathNotFoundException.class, () -> response.get("$['data']['nasjoner'][1]"));
+    void test_if_nasjon_query_returns_all_nasjoner() {
+        List<Nasjon> result = graphQlTester.documentName("nasjoner")
+                .execute()
+                .path("$['data']['nasjoner']")
+                .entityList(Nasjon.class)
+                .get();
+
+        assertEquals(1, result.size());
+
+        Nasjon nasjon = result.get(0);
+
+        assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", nasjon.getUri());
+        assertEquals("Norge", nasjon.getNasjonsnavn());
+        assertEquals("173163", nasjon.getNasjonsnummer());
     }
 
     @Test
-    void test_if_nasjon_by_nasjonsnummer_query_returns_norge() throws IOException {
-        GraphQLResponse response = template.perform("graphql/nasjon-by-nasjonsnummer.graphql",
-                mapper.valueToTree(Map.of("nasjonsnummer", "173163")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", response.get("$['data']['nasjonByNasjonsnummer']['uri']"));
-        assertThrows(PathNotFoundException.class, () -> response.get("$['data']['nasjonByNasjonsnummer']['nasjonsnavn']"));
+    void test_if_nasjon_by_nasjonsnummer_query_returns_norge() {
+        Nasjon result = graphQlTester.documentName("nasjon-by-nasjonsnummer")
+                .variable("nasjonsnummer", "173163")
+                .execute()
+                .path("$['data']['nasjonByNasjonsnummer']")
+                .entity(Nasjon.class)
+                .get();
+
+        assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", result.getUri());
     }
 
     @Test
-    void test_if_nasjon_by_nasjonsnummer_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/nasjon-by-nasjonsnummer.graphql",
-                mapper.valueToTree(Map.of("nasjonsnummer", "11111")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['nasjonByNasjonsnummer']"));
+    void test_if_nasjon_by_nasjonsnummer_query_returns_null() {
+        graphQlTester.documentName("nasjon-by-nasjonsnummer")
+                .variable("nasjonsnummer", "11111")
+                .execute()
+                .path("$['data']['nasjonByNasjonsnummer']")
+                .valueIsNull();
     }
 }

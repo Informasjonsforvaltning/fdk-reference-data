@@ -1,21 +1,16 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
+import no.fdk.referencedata.adms.publishertype.PublisherType;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -25,38 +20,50 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 class PublisherTypeQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Test
-    void test_if_publisher_type_query_returns_valid_response() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/publisher-types.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://purl.org/adms/publishertype/Company", response.get("$['data']['publisherTypes'][1]['uri']"));
-        assertEquals("Company", response.get("$['data']['publisherTypes'][1]['code']"));
-        assertEquals("Company", response.get("$['data']['publisherTypes'][1]['label']['en']"));
+    void test_if_publisher_type_query_returns_valid_response() {
+        List<PublisherType> result = graphQlTester.documentName("publisher-types")
+                .execute()
+                .path("$['data']['publisherTypes']")
+                .entityList(PublisherType.class)
+                .get();
+
+        assertEquals(11, result.size());
+
+        PublisherType publisherType = result.get(1);
+
+        assertEquals("http://purl.org/adms/publishertype/Company", publisherType.getUri());
+        assertEquals("Company", publisherType.getCode());
+        assertEquals("Virksomhet", publisherType.getLabel().get("nb"));
+        assertEquals("Verksemd", publisherType.getLabel().get("nn"));
+        assertEquals("Company", publisherType.getLabel().get("en"));
     }
 
     @Test
-    void test_if_publisher_type_by_code_query_returns_valid_response() throws IOException {
-        GraphQLResponse response = template.perform("graphql/publisher-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "SupraNationalAuthority")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://purl.org/adms/publishertype/SupraNationalAuthority", response.get("$['data']['publisherTypeByCode']['uri']"));
-        assertEquals("SupraNationalAuthority", response.get("$['data']['publisherTypeByCode']['code']"));
-        assertEquals("Supra-national authority", response.get("$['data']['publisherTypeByCode']['label']['en']"));
+    void test_if_publisher_type_by_code_query_returns_valid_response() {
+        PublisherType result = graphQlTester.documentName("publisher-type-by-code")
+                .variable("code", "SupraNationalAuthority")
+                .execute()
+                .path("$['data']['publisherTypeByCode']")
+                .entity(PublisherType.class)
+                .get();
+
+        assertEquals("http://purl.org/adms/publishertype/SupraNationalAuthority", result.getUri());
+        assertEquals("SupraNationalAuthority", result.getCode());
+        assertEquals("Overnasjonal myndighet", result.getLabel().get("nb"));
+        assertEquals("Overnasjonal myndigheit", result.getLabel().get("nn"));
+        assertEquals("Supra-national authority", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_publisher_type_by_code_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/publisher-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "INVALID")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['publisherTypeByCode']"));
+    void test_if_publisher_type_by_code_query_returns_null() {
+        graphQlTester.documentName("publisher-type-by-code")
+                .variable("code", "INVALID")
+                .execute()
+                .path("$['data']['publisherTypeByCode']")
+                .valueIsNull();
     }
 }

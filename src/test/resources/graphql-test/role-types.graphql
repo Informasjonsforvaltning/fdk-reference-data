@@ -1,0 +1,10 @@
+query {
+    roleTypes {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

@@ -1,7 +1,0 @@
-query RelationshipWithSourceTypeRightByCode($code: String!) {
-    relationshipWithSourceTypeByCode(code: $code) {
-        uri
-        code
-        label
-    }
-}

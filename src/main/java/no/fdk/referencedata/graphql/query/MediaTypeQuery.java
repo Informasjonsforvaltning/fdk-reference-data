@@ -1,35 +1,39 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.iana.mediatype.MediaType;
 import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Component
-public class MediaTypeQuery implements GraphQLQueryResolver {
+@Controller
+public class MediaTypeQuery {
 
     @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
-    public List<MediaType> getMediaTypes() {
+    @QueryMapping
+    public List<MediaType> mediaTypes() {
         return StreamSupport.stream(mediaTypeRepository.findAll().spliterator(), false)
                 .sorted(Comparator.comparing(MediaType::getUri))
                 .collect(Collectors.toList());
     }
 
-    public List<MediaType> getMediaTypesByType(String type) {
+    @QueryMapping
+    public List<MediaType> mediaTypesByType(@Argument String type) {
         return mediaTypeRepository.findByType(type).stream()
                 .sorted(Comparator.comparing(MediaType::getUri))
                 .collect(Collectors.toList());
     }
 
-    public MediaType getMediaTypeByTypeAndSubType(String type, String subType) {
+    @QueryMapping
+    public MediaType mediaTypeByTypeAndSubType(@Argument String type, @Argument String subType) {
         return mediaTypeRepository.findByTypeAndSubType(type, subType).orElse(null);
     }
 }

@@ -1,0 +1,10 @@
+query {
+    losThemesAndWords {
+        uri
+        name {
+            nb
+            nn
+            en
+        }
+    }
+}

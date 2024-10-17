@@ -1,30 +1,27 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.LocalRelationshipWithSourceTypeHarvester;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceType;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeRepository;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
+import no.fdk.referencedata.referencetypes.ReferenceType;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
-
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -37,8 +34,6 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
     private RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
 
@@ -48,7 +43,7 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
@@ -62,32 +57,46 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
     }
 
     @Test
-    void test_if_relationship_with_source_types_query_returns_all_relationship_with_source_types() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/relationship-with-source-types.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", response.get("$['data']['relationshipWithSourceTypes'][0]['uri']"));
-        assertEquals("derived-from-source", response.get("$['data']['relationshipWithSourceTypes'][0]['code']"));
-        assertEquals("derived from source", response.get("$['data']['relationshipWithSourceTypes'][0]['label']['en']"));
+    void test_if_relationship_with_source_types_query_returns_all_relationship_with_source_types() {
+        List<RelationshipWithSourceType> result = graphQlTester.documentName("relationship-with-source-types")
+                .execute()
+                .path("$['data']['relationshipWithSourceTypes']")
+                .entityList(RelationshipWithSourceType.class)
+                .get();
+
+        assertEquals(3, result.size());
+
+        RelationshipWithSourceType relationshipWithSourceType = result.get(0);
+
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", relationshipWithSourceType.getUri());
+        assertEquals("derived-from-source", relationshipWithSourceType.getCode());
+        assertEquals("basert på kilde", relationshipWithSourceType.getLabel().get("nb"));
+        assertEquals("basert på kjelde", relationshipWithSourceType.getLabel().get("nn"));
+        assertEquals("derived from source", relationshipWithSourceType.getLabel().get("en"));
     }
 
     @Test
-    void test_if_relationship_with_source_type_by_code_derived_from_source_query_returns_derived_from_source_relationship_with_source_type() throws IOException {
-        GraphQLResponse response = template.perform("graphql/relationship-with-source-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "derived-from-source")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", response.get("$['data']['relationshipWithSourceTypeByCode']['uri']"));
-        assertEquals("derived-from-source", response.get("$['data']['relationshipWithSourceTypeByCode']['code']"));
-        assertEquals("derived from source", response.get("$['data']['relationshipWithSourceTypeByCode']['label']['en']"));
+    void test_if_relationship_with_source_type_by_code_derived_from_source_query_returns_derived_from_source_relationship_with_source_type() {
+        RelationshipWithSourceType result = graphQlTester.documentName("relationship-with-source-type-by-code")
+                .variable("code", "derived-from-source")
+                .execute()
+                .path("$['data']['relationshipWithSourceTypeByCode']")
+                .entity(RelationshipWithSourceType.class)
+                .get();
+
+        assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", result.getUri());
+        assertEquals("derived-from-source", result.getCode());
+        assertEquals("basert på kilde", result.getLabel().get("nb"));
+        assertEquals("basert på kjelde", result.getLabel().get("nn"));
+        assertEquals("derived from source", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_relationship_with_source_type_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/relationship-with-source-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['relationshipWithSourceTypeByCode']"));
+    void test_if_relationship_with_source_type_by_code_unknown_query_returns_null() {
+        graphQlTester.documentName("relationship-with-source-type-by-code")
+                .variable("code", "unknown")
+                .execute()
+                .path("$['data']['relationshipWithSourceTypeByCode']")
+                .valueIsNull();
     }
 }

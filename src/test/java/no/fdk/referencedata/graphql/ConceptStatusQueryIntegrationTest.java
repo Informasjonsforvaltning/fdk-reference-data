@@ -1,9 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
-import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.container.AbstractContainerTest;;
+import no.fdk.referencedata.eu.conceptstatus.ConceptStatus;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusRepository;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
 import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
@@ -13,15 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -32,10 +27,8 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Autowired
     private ConceptStatusRepository conceptStatusRepository;
@@ -57,32 +50,48 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_concept_statuses_query_returns_valid_response() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/concept-statuses.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/concept-status/CANDIDATE", response.get("$['data']['conceptStatuses'][0]['uri']"));
-        assertEquals("CANDIDATE", response.get("$['data']['conceptStatuses'][0]['code']"));
-        assertEquals("candidate", response.get("$['data']['conceptStatuses'][0]['label']['en']"));
+    void test_if_concept_statuses_query_returns_valid_response() {
+        List<ConceptStatus> result = graphQlTester.documentName("concept-statuses")
+                .execute()
+                .path("$['data']['conceptStatuses']")
+                .entityList(ConceptStatus.class)
+                .get();
+
+        assertEquals(12, result.size());
+
+        ConceptStatus conceptStatus = result.get(0);
+
+        assertEquals("http://publications.europa.eu/resource/authority/concept-status/CANDIDATE", conceptStatus.getUri());
+        assertEquals("CANDIDATE", conceptStatus.getCode());
+        assertEquals("kandidat", conceptStatus.getLabel().get("no"));
+        assertEquals("kandidat", conceptStatus.getLabel().get("nb"));
+        assertEquals("kandidat", conceptStatus.getLabel().get("nn"));
+        assertEquals("candidate", conceptStatus.getLabel().get("en"));
     }
 
     @Test
-    void test_if_concept_status_by_code_query_returns_valid_response() throws IOException {
-        GraphQLResponse response = template.perform("graphql/concept-status-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "REVISED")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/concept-status/REVISED", response.get("$['data']['conceptStatusByCode']['uri']"));
-        assertEquals("REVISED", response.get("$['data']['conceptStatusByCode']['code']"));
-        assertEquals("revised", response.get("$['data']['conceptStatusByCode']['label']['en']"));
+    void test_if_concept_status_by_code_query_returns_valid_response() {
+        ConceptStatus result = graphQlTester.documentName("concept-status-by-code")
+                .variable("code", "REVISED")
+                .execute()
+                .path("$['data']['conceptStatusByCode']")
+                .entity(ConceptStatus.class)
+                .get();
+
+        assertEquals("http://publications.europa.eu/resource/authority/concept-status/REVISED", result.getUri());
+        assertEquals("REVISED", result.getCode());
+        assertEquals("revidert", result.getLabel().get("no"));
+        assertEquals("revidert", result.getLabel().get("nb"));
+        assertEquals("revidert", result.getLabel().get("nn"));
+        assertEquals("revised", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_concept_status_by_code_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/concept-status-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "INVALID")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['conceptStatusByCode']"));
+    void test_if_concept_status_by_code_query_returns_null() {
+        graphQlTester.documentName("concept-status-by-code")
+                .variable("code", "INVALID")
+                .execute()
+                .path("$['data']['conceptStatusByCode']")
+                .valueIsNull();
     }
 }

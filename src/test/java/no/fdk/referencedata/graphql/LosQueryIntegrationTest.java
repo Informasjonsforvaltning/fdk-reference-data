@@ -1,12 +1,9 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
-import com.jayway.jsonpath.PathNotFoundException;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.los.LocalLosImporter;
+import no.fdk.referencedata.los.LosNode;
 import no.fdk.referencedata.los.LosRepository;
 import no.fdk.referencedata.los.LosService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -15,13 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -33,10 +30,8 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class LosQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Autowired
     private LosRepository losRepository;
@@ -54,30 +49,44 @@ class LosQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_los_themes_and_words_query_returns_all_themes_and_words_as_los_nodes() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/los-themes-and-words.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://psi.norge.no/los/ord/abort", response.get("$['data']['losThemesAndWords'][0]['uri']"));
-        assertEquals("Abortion", response.get("$['data']['losThemesAndWords'][0]['name']['en']"));
+    void test_if_los_themes_and_words_query_returns_all_themes_and_words_as_los_nodes() {
+        List<LosNode> result = graphQlTester.documentName("los-themes-and-words")
+                .execute()
+                .path("$['data']['losThemesAndWords']")
+                .entityList(LosNode.class)
+                .get();
+
+        assertEquals(519, result.size());
+
+        assertEquals("https://psi.norge.no/los/ord/abort", result.get(0).getUri());
+        assertEquals("Abort", result.get(0).getName().get("nb"));
+        assertEquals("Abort", result.get(0).getName().get("nn"));
+        assertEquals("Abortion", result.get(0).getName().get("en"));
     }
 
     @Test
-    void test_if_los_themes_and_words_by_uris_query_returns_abortion_los_node() throws IOException {
-        GraphQLResponse response = template.perform("graphql/los-themes-and-words-by-uris.graphql",
-                mapper.valueToTree(Map.of("uris", List.of("https://psi.norge.no/los/ord/abort"))));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://psi.norge.no/los/ord/abort", response.get("$['data']['losThemesAndWords'][0]['uri']"));
-        assertThrows(PathNotFoundException.class, () -> response.get("$['data']['losThemesAndWords'][0]['name']"));
+    void test_if_los_themes_and_words_by_uris_query_returns_abortion_los_node() {
+        List<LosNode> result = graphQlTester.documentName("los-themes-and-words-by-uris")
+                .variable("uris", List.of("https://psi.norge.no/los/ord/abort"))
+                .execute()
+                .path("$['data']['losThemesAndWords']")
+                .entityList(LosNode.class)
+                .get();
+
+        assertEquals(1, result.size());
+
+        assertEquals("https://psi.norge.no/los/ord/abort", result.get(0).getUri());
     }
 
     @Test
-    void test_if_los_themes_and_words_by_uris_unknown_query_returns_empty_list() throws IOException {
-        GraphQLResponse response = template.perform("graphql/los-themes-and-words-by-uris.graphql",
-                mapper.valueToTree(Map.of("uris", List.of("https://psi.norge.no/los/ord/unknown"))));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertThrows(PathNotFoundException.class, () -> response.get("$['data']['losThemesAndWords'][0]"));
+    void test_if_los_themes_and_words_by_uris_unknown_query_returns_empty_list() {
+            List<LosNode> result = graphQlTester.documentName("los-themes-and-words-by-uris")
+                .variable("uris", List.of("https://psi.norge.no/los/ord/unknown"))
+                .execute()
+                .path("$['data']['losThemesAndWords']")
+                .entityList(LosNode.class)
+                .get();
+
+            assertTrue(result.isEmpty());
     }
 }

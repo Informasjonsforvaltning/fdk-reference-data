@@ -1,31 +1,31 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.Kommune;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneRepository;
 import no.fdk.referencedata.geonorge.administrativeenheter.nasjon.Nasjon;
 import no.fdk.referencedata.geonorge.administrativeenheter.nasjon.NasjonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-@Component
-public class NasjonQuery implements GraphQLQueryResolver {
+@Controller
+public class NasjonQuery {
 
     @Autowired
     private NasjonService nasjonService;
 
-    public List<Nasjon> getNasjoner() {
+    @QueryMapping
+    public List<Nasjon> nasjoner() {
         return nasjonService.getNasjoner().stream()
                 .sorted(Comparator.comparing(Nasjon::getUri))
                 .collect(Collectors.toList());
     }
 
-    public Nasjon getNasjonByNasjonsnummer(String nasjonsnummer) {
+    @QueryMapping
+    public Nasjon nasjonByNasjonsnummer(@Argument String nasjonsnummer) {
         return nasjonService.getNasjonByNasjonsnummer(nasjonsnummer).orElse(null);
     }
 }

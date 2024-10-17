@@ -1,17 +1,18 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.apistatus.ApiStatus;
 import no.fdk.referencedata.apistatus.ApiStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class ApiStatusQuery implements GraphQLQueryResolver {
+@Controller
+public class ApiStatusQuery {
 
     private final ApiStatusService apiStatusService;
 
@@ -20,13 +21,15 @@ public class ApiStatusQuery implements GraphQLQueryResolver {
         this.apiStatusService = apiStatusService;
     }
 
-    public List<ApiStatus> getApiStatuses() {
+    @QueryMapping
+    public List<ApiStatus> apiStatuses() {
         return apiStatusService.getAll().stream()
                 .sorted(Comparator.comparing(ApiStatus::getUri))
                 .collect(Collectors.toList());
     }
 
-    public ApiStatus getApiStatusByCode(String code) {
+    @QueryMapping
+    public ApiStatus apiStatusByCode(@Argument String code) {
         return apiStatusService.getByCode(code).orElse(null);
     }
 }

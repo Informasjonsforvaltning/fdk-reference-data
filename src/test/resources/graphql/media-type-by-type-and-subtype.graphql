@@ -1,5 +1,0 @@
-query GetMediaTypeByTypeAndSubType($type: String!, $subType: String!) {
-    mediaTypeByTypeAndSubType(type: $type, subType: $subType) {
-        uri
-    }
-}

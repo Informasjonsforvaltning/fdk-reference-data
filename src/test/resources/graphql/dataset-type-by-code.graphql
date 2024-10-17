@@ -1,8 +1,0 @@
-query GetDatasetTypeByCode($code: String!) {
-    datasetTypeByCode(code: $code) {
-        uri
-        code
-        label,
-        startUse
-    }
-}

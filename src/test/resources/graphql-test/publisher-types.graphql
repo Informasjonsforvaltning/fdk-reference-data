@@ -1,0 +1,11 @@
+query {
+    publisherTypes {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

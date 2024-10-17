@@ -1,0 +1,7 @@
+query GetAccessRightByCode($code: String!) {
+    accessRightByCode(code: $code) {
+        uri
+        code
+        label { en }
+    }
+}

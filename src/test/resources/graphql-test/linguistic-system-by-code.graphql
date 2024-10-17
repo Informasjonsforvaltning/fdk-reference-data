@@ -1,0 +1,12 @@
+query GetLinguisticSystemByCode($code: String!) {
+    linguisticSystemByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

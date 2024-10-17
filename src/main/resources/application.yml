@@ -3,6 +3,8 @@ application:
   catalog-admin-uri: ${CATALOG_ADMIN_SERVICE_URI:https://catalog-admin-service.staging.fellesdatakatalog.digdir.no}
 
 spring:
+  codec:
+    max-in-memory-size: 2MB
   data:
     mongodb:
       authentication-database: ${MONGODB_AUTH_DATABASE:admin}
