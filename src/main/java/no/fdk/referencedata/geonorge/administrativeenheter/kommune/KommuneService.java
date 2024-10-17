@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
@@ -82,6 +83,11 @@ public class KommuneService implements SearchableReferenceData {
 
     public Stream<SearchHit> search(String query) {
         return kommuneRepository.findByKommunenavnNorskContainingIgnoreCase(query)
+                .map(Kommune::toSearchHit);
+    }
+
+    public Stream<SearchHit> filterByURIs(List<String> uris) {
+        return kommuneRepository.findByUriIn(uris)
                 .map(Kommune::toSearchHit);
     }
 
