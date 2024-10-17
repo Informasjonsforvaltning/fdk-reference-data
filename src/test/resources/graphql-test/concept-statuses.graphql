@@ -1,0 +1,12 @@
+query {
+    conceptStatuses {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

@@ -1,7 +1,0 @@
-query {
-    mainActivities {
-        uri
-        code
-        label
-    }
-}

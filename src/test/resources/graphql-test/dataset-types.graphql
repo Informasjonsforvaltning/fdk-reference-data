@@ -1,0 +1,12 @@
+query {
+    datasetTypes {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

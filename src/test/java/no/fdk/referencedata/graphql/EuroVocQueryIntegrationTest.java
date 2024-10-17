@@ -1,24 +1,25 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
+import no.fdk.referencedata.eu.eurovoc.EuroVoc;
 import no.fdk.referencedata.eu.eurovoc.EuroVocRepository;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -32,10 +33,8 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class EuroVocQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Autowired
     private EuroVocRepository euroVocRepository;
@@ -57,34 +56,44 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_eurovocs_query_returns_all_eurovocs() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/eurovocs.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://eurovoc.europa.eu/1", response.get("$['data']['euroVocs'][0]['uri']"));
-        assertEquals("1", response.get("$['data']['euroVocs'][0]['code']"));
-        assertEquals("Århus (county)", response.get("$['data']['euroVocs'][0]['label']['en']"));
-        assertTrue(response.get("$['data']['euroVocs'][0]['parents'][0]").contains("http://eurovoc.europa.eu/337"));
+    void test_if_eurovocs_query_returns_all_eurovocs() throws URISyntaxException {
+            List<EuroVoc> result = graphQlTester.documentName("eurovocs")
+                    .execute()
+                    .path("$['data']['euroVocs']")
+                    .entityList(EuroVoc.class)
+                    .get();
+
+            Assertions.assertEquals(7403, result.size());
+
+            EuroVoc euroVoc = result.get(0);
+
+        assertEquals("http://eurovoc.europa.eu/1", euroVoc.getUri());
+        assertEquals("1", euroVoc.getCode());
+            assertEquals("Århus (county)", euroVoc.getLabel().get("en"));
+        assertTrue(euroVoc.getParents().contains(new URI(("http://eurovoc.europa.eu/337"))));
     }
 
     @Test
-    void test_if_eurovoc_by_code_5548_query_returns_interinstitutional_cooperation_eu() throws IOException {
-        GraphQLResponse response = template.perform("graphql/eurovoc-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "337")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://eurovoc.europa.eu/337", response.get("$['data']['euroVocByCode']['uri']"));
-        assertEquals("337", response.get("$['data']['euroVocByCode']['code']"));
-        assertEquals("regions of Denmark", response.get("$['data']['euroVocByCode']['label']['en']"));
+    void test_if_eurovoc_by_code_5548_query_returns_interinstitutional_cooperation_eu() {
+            EuroVoc result = graphQlTester.documentName("eurovoc-by-code")
+                    .variable("code", "337")
+                    .execute()
+                    .path("$['data']['euroVocByCode']")
+                    .entity(EuroVoc.class)
+                    .get();
+
+        assertEquals("http://eurovoc.europa.eu/337", result.getUri());
+        assertEquals("337", result.getCode());
+        assertEquals("regions of Denmark", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_eurovoc_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/eurovoc-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['euroVocByCode']"));
+    void test_if_eurovoc_by_code_unknown_query_returns_null() {
+            graphQlTester.documentName("eurovoc-by-code")
+                    .variable("code", "unknown")
+                    .execute()
+                    .path("$['data']['euroVocByCode']")
+                    .valueIsNull();
     }
 
 }

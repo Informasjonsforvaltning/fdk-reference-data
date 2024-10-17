@@ -1,7 +1,0 @@
-query {
-    relationshipWithSourceTypes {
-        uri
-        code
-        label
-    }
-}

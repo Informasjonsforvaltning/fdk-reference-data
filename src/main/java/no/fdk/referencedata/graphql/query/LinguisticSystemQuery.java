@@ -1,17 +1,18 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.linguisticsystem.LinguisticSystem;
 import no.fdk.referencedata.linguisticsystem.LinguisticSystemService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class LinguisticSystemQuery implements GraphQLQueryResolver {
+@Controller
+public class LinguisticSystemQuery {
 
     private final LinguisticSystemService linguisticSystemService;
 
@@ -20,13 +21,15 @@ public class LinguisticSystemQuery implements GraphQLQueryResolver {
         this.linguisticSystemService = linguisticSystemService;
     }
 
-    public List<LinguisticSystem> getLinguisticSystems() {
+    @QueryMapping
+    public List<LinguisticSystem> linguisticSystems() {
         return linguisticSystemService.getAll().stream()
                 .sorted(Comparator.comparing(LinguisticSystem::getUri))
                 .collect(Collectors.toList());
     }
 
-    public LinguisticSystem getLinguisticSystemByCode(String code) {
+    @QueryMapping
+    public LinguisticSystem linguisticSystemByCode(@Argument String code) {
         return linguisticSystemService.getByCode(code).orElse(null);
     }
 }

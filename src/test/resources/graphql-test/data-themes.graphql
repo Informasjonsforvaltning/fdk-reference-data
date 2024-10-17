@@ -1,0 +1,12 @@
+query {
+    dataThemes {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

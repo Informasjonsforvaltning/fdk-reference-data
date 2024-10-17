@@ -1,0 +1,10 @@
+query RoleTypeRightByCode($code: String!) {
+    roleTypeByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

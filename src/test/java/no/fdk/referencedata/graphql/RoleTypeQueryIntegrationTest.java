@@ -1,11 +1,9 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
+import no.fdk.referencedata.digdir.roletype.RoleType;
 import no.fdk.referencedata.digdir.roletype.RoleTypeRepository;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -15,15 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -37,8 +32,6 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
     private RoleTypeRepository roleTypeRepository;
 
@@ -48,7 +41,7 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
@@ -62,33 +55,45 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_access_rights_query_returns_all_access_rights() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/role-types.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/role-type#data-consumer", response.get("$['data']['roleTypes'][0]['uri']"));
-        assertEquals("data-consumer", response.get("$['data']['roleTypes'][0]['code']"));
-        assertEquals("data consumer", response.get("$['data']['roleTypes'][0]['label']['en']"));
+    void test_if_access_rights_query_returns_all_access_rights() {
+        List<RoleType> result = graphQlTester.documentName("role-types")
+                .execute()
+                .path("$['data']['roleTypes']")
+                .entityList(RoleType.class)
+                .get();
+
+        assertEquals(5, result.size());
+
+        RoleType roleType = result.get(0);
+
+        assertEquals("https://data.norge.no/vocabulary/role-type#data-consumer", roleType.getUri());
+        assertEquals("data-consumer", roleType.getCode());
+        assertEquals("datakonsument", roleType.getLabel().get("nb"));
+        assertEquals("data consumer", roleType.getLabel().get("en"));
     }
 
     @Test
-    void test_if_access_right_by_code_public_query_returns_public_access_right() throws IOException {
-        GraphQLResponse response = template.perform("graphql/role-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "service-provider")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/role-type#service-provider", response.get("$['data']['roleTypeByCode']['uri']"));
-        assertEquals("service-provider", response.get("$['data']['roleTypeByCode']['code']"));
-        assertEquals("service provider", response.get("$['data']['roleTypeByCode']['label']['en']"));
+    void test_if_access_right_by_code_public_query_returns_public_access_right() {
+        RoleType result = graphQlTester.documentName("role-type-by-code")
+                .variable("code", "service-provider")
+                .execute()
+                .path("$['data']['roleTypeByCode']")
+                .entity(RoleType.class)
+                .get();
+
+        assertEquals("https://data.norge.no/vocabulary/role-type#service-provider", result.getUri());
+        assertEquals("service-provider", result.getCode());
+        assertEquals("tjenestetilbyder", result.getLabel().get("nb"));
+        assertEquals("service provider", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_access_right_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/role-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['roleTypeByCode']"));
+    void test_if_access_right_by_code_unknown_query_returns_null() {
+        graphQlTester.documentName("role-type-by-code")
+                .variable("code", "unknown")
+                .execute()
+                .path("$['data']['roleTypeByCode']")
+                .valueIsNull();
     }
 
 }

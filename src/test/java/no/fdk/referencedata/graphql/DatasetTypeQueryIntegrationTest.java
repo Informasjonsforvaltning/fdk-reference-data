@@ -1,10 +1,8 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.eu.datasettype.DatasetType;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeRepository;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
 import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
@@ -15,15 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -35,10 +30,8 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Autowired
     private DatasetTypeRepository datasetTypeRepository;
@@ -60,33 +53,49 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_dataset_types_query_returns_all_dataset_types() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/dataset-types.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/APROF", response.get("$['data']['datasetTypes'][0]['uri']"));
-        assertEquals("APROF", response.get("$['data']['datasetTypes'][0]['code']"));
-        assertEquals("Application profile", response.get("$['data']['datasetTypes'][0]['label']['en']"));
+    void test_if_dataset_types_query_returns_all_dataset_types() {
+        List<DatasetType> result = graphQlTester.documentName("dataset-types")
+                .execute()
+                .path("$['data']['datasetTypes']")
+                .entityList(DatasetType.class)
+                .get();
+
+        assertEquals(24, result.size());
+
+        DatasetType datasetType = result.get(0);
+
+        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/APROF", datasetType.getUri());
+        assertEquals("APROF", datasetType.getCode());
+        assertEquals("Applikasjonsprofil", datasetType.getLabel().get("no"));
+        assertEquals("Applikasjonsprofil", datasetType.getLabel().get("nb"));
+        assertEquals("Applikasjonsprofil", datasetType.getLabel().get("nn"));
+        assertEquals("Application profile", datasetType.getLabel().get("en"));
     }
 
     @Test
-    void test_if_dataset_type_by_code_aac_query_returns_econ_dataset_type() throws IOException {
-        GraphQLResponse response = template.perform("graphql/dataset-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "NAL")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/NAL", response.get("$['data']['datasetTypeByCode']['uri']"));
-        assertEquals("NAL", response.get("$['data']['datasetTypeByCode']['code']"));
-        assertEquals("Name authority list", response.get("$['data']['datasetTypeByCode']['label']['en']"));
+    void test_if_dataset_type_by_code_aac_query_returns_econ_dataset_type() {
+        DatasetType result = graphQlTester.documentName("dataset-type-by-code")
+                .variable("code", "NAL")
+                .execute()
+                .path("$['data']['datasetTypeByCode']")
+                .entity(DatasetType.class)
+                .get();
+
+        assertEquals("http://publications.europa.eu/resource/authority/dataset-type/NAL", result.getUri());
+        assertEquals("NAL", result.getCode());
+        assertEquals("Autoritetsliste for entitetsnavn", result.getLabel().get("no"));
+        assertEquals("Autoritetsliste for entitetsnavn", result.getLabel().get("nb"));
+        assertEquals("Autoritetsliste for entitetsnamn", result.getLabel().get("nn"));
+        assertEquals("Name authority list", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_dataset_type_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/dataset-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['datasetTypeByCode']"));
+    void test_if_dataset_type_by_code_unknown_query_returns_null() {
+        graphQlTester.documentName("dataset-type-by-code")
+                .variable("code", "unknown")
+                .execute()
+                .path("$['data']['datasetTypeByCode']")
+                .valueIsNull();
     }
 
 }

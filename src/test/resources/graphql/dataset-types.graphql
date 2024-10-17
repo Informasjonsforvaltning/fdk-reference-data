@@ -1,7 +1,0 @@
-query {
-    datasetTypes {
-        uri
-        code
-        label
-    }
-}

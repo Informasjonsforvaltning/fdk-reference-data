@@ -1,26 +1,25 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
+import no.fdk.referencedata.eu.frequency.Frequency;
 import no.fdk.referencedata.eu.frequency.FrequencyRepository;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -32,8 +31,6 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class FrequencyQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
     private FrequencyRepository frequencyRepository;
 
@@ -43,7 +40,7 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
@@ -57,33 +54,48 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_frequencies_query_returns_all_frequencies() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/frequencies.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/frequency/ANNUAL", response.get("$['data']['frequencies'][0]['uri']"));
-        assertEquals("ANNUAL", response.get("$['data']['frequencies'][0]['code']"));
-        assertEquals("annual", response.get("$['data']['frequencies'][0]['label']['en']"));
+    void test_if_frequencies_query_returns_all_frequencies() {
+            List<Frequency> result = graphQlTester.documentName("frequencies")
+                    .execute()
+                    .path("$['data']['frequencies']")
+                    .entityList(Frequency.class)
+                    .get();
+
+            Assertions.assertEquals(30, result.size());
+
+            Frequency frequency = result.get(0);
+
+        assertEquals("http://publications.europa.eu/resource/authority/frequency/ANNUAL", frequency.getUri());
+        assertEquals("ANNUAL", frequency.getCode());
+        assertEquals("årlig", frequency.getLabel().get("no"));
+            assertEquals("årlig", frequency.getLabel().get("nb"));
+            assertEquals("årleg", frequency.getLabel().get("nn"));
+            assertEquals("annual", frequency.getLabel().get("en"));
     }
 
     @Test
-    void test_if_frequency_by_code_public_query_returns_public_frequency() throws IOException {
-        GraphQLResponse response = template.perform("graphql/frequency-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "WEEKLY_3")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/frequency/WEEKLY_3", response.get("$['data']['frequencyByCode']['uri']"));
-        assertEquals("WEEKLY_3", response.get("$['data']['frequencyByCode']['code']"));
-        assertEquals("three times a week", response.get("$['data']['frequencyByCode']['label']['en']"));
+    void test_if_frequency_by_code_public_query_returns_public_frequency() {
+            Frequency result = graphQlTester.documentName("frequency-by-code")
+                    .variable("code", "WEEKLY_3")
+                    .execute()
+                    .path("$['data']['frequencyByCode']")
+                    .entity(Frequency.class)
+                    .get();
+
+        assertEquals("http://publications.europa.eu/resource/authority/frequency/WEEKLY_3", result.getUri());
+        assertEquals("WEEKLY_3", result.getCode());
+        assertEquals("tre ganger i uken", result.getLabel().get("no"));
+            assertEquals("tre ganger i uken", result.getLabel().get("nb"));
+            assertEquals("tre gongar i veka", result.getLabel().get("nn"));
+            assertEquals("three times a week", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_frequency_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/frequency-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['frequencyByCode']"));
+    void test_if_frequency_by_code_unknown_query_returns_null() {graphQlTester.documentName("frequency-by-code")
+            .variable("code", "unknown")
+            .execute()
+            .path("$['data']['frequencyByCode']")
+            .valueIsNull();
     }
 
 }

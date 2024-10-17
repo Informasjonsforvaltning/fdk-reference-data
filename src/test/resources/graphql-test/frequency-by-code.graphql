@@ -1,0 +1,12 @@
+query GetFrequencyByCode($code: String!) {
+    frequencyByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

@@ -1,0 +1,12 @@
+query {
+    relationshipWithSourceTypes {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

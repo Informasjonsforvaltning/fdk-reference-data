@@ -1,11 +1,9 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
+import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelType;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeRepository;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -15,15 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -37,8 +32,6 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
     private ServiceChannelTypeRepository serviceChannelTypeRepository;
 
@@ -48,7 +41,7 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
@@ -62,33 +55,45 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_service_channel_types_query_returns_all_service_channel_types() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/service-channel-types.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/service-channel-type#assistant", response.get("$['data']['serviceChannelTypes'][0]['uri']"));
-        assertEquals("assistant", response.get("$['data']['serviceChannelTypes'][0]['code']"));
-        assertEquals("assistant", response.get("$['data']['serviceChannelTypes'][0]['label']['en']"));
+    void test_if_service_channel_types_query_returns_all_service_channel_types() {
+        List<ServiceChannelType> result = graphQlTester.documentName("service-channel-types")
+                .execute()
+                .path("$['data']['serviceChannelTypes']")
+                .entityList(ServiceChannelType.class)
+                .get();
+
+        assertEquals(11, result.size());
+
+        ServiceChannelType serviceChannelType = result.get(0);
+
+        assertEquals("https://data.norge.no/vocabulary/service-channel-type#assistant", serviceChannelType.getUri());
+        assertEquals("assistant", serviceChannelType.getCode());
+        assertEquals("assistent", serviceChannelType.getLabel().get("nb"));
+        assertEquals("assistant", serviceChannelType.getLabel().get("en"));
     }
 
     @Test
-    void test_if_service_channel_type_by_code_public_query_returns_public_service_channel_type() throws IOException {
-        GraphQLResponse response = template.perform("graphql/service-channel-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "telephone")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.norge.no/vocabulary/service-channel-type#telephone", response.get("$['data']['serviceChannelTypeByCode']['uri']"));
-        assertEquals("telephone", response.get("$['data']['serviceChannelTypeByCode']['code']"));
-        assertEquals("telephone", response.get("$['data']['serviceChannelTypeByCode']['label']['en']"));
+    void test_if_service_channel_type_by_code_public_query_returns_public_service_channel_type() {
+        ServiceChannelType result = graphQlTester.documentName("service-channel-type-by-code")
+                .variable("code", "telephone")
+                .execute()
+                .path("$['data']['serviceChannelTypeByCode']")
+                .entity(ServiceChannelType.class)
+                .get();
+
+        assertEquals("https://data.norge.no/vocabulary/service-channel-type#telephone", result.getUri());
+        assertEquals("telephone", result.getCode());
+        assertEquals("telefon", result.getLabel().get("nb"));
+        assertEquals("telephone", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_service_channel_type_by_code_unknown_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/service-channel-type-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "unknown")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['serviceChannelTypeByCode']"));
+    void test_if_service_channel_type_by_code_unknown_query_returns_null() {
+        graphQlTester.documentName("service-channel-type-by-code")
+                .variable("code", "unknown")
+                .execute()
+                .path("$['data']['serviceChannelTypeByCode']")
+                .valueIsNull();
     }
 
 }

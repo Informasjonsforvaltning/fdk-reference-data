@@ -1,31 +1,27 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
-import com.jayway.jsonpath.PathNotFoundException;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.geonorge.administrativeenheter.fylke.Fylke;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeRepository;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.LocalFylkeHarvester;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneRepository;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.LocalKommuneHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -36,8 +32,6 @@ import static org.mockito.Mockito.mock;
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class FylkeQueryIntegrationTest extends AbstractContainerTest {
-
-    private final static ObjectMapper mapper = new ObjectMapper();
 
     @Value("${wiremock.host}")
     private String wiremockHost;
@@ -54,7 +48,7 @@ class FylkeQueryIntegrationTest extends AbstractContainerTest {
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
@@ -68,33 +62,41 @@ class FylkeQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_fylke_query_returns_all_fylker() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/fylker.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/123456", response.get("$['data']['fylker'][0]['uri']"));
-        assertEquals("Fylke 1", response.get("$['data']['fylker'][0]['fylkesnavn']"));
-        assertEquals("123456", response.get("$['data']['fylker'][0]['fylkesnummer']"));
-        assertNotNull(response.get("$['data']['fylker'][3]['fylkesnavn']"));
-        assertThrows(PathNotFoundException.class, () -> response.get("$['data']['fylker'][4]"));
+    void test_if_fylke_query_returns_all_fylker() {
+        List<Fylke> result = graphQlTester.documentName("fylker")
+                .execute()
+                .path("$['data']['fylker']")
+                .entityList(Fylke.class)
+                .get();
+
+        Assertions.assertEquals(4, result.size());
+
+        Fylke fylke = result.get(0);
+
+        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/123456", fylke.getUri());
+        assertEquals("Fylke 1", fylke.getFylkesnavn());
+        assertEquals("123456", fylke.getFylkesnummer());
     }
 
     @Test
-    void test_if_fylke_by_fylkesnummer_query_returns_norge() throws IOException {
-        GraphQLResponse response = template.perform("graphql/fylke-by-fylkesnummer.graphql",
-                mapper.valueToTree(Map.of("fylkesnummer", "223456")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/223456", response.get("$['data']['fylkeByFylkesnummer']['uri']"));
-        assertThrows(PathNotFoundException.class, () -> response.get("$['data']['fylkeByFylkesnummer']['fylkesnavn']"));
+    void test_if_fylke_by_fylkesnummer_query_returns_norge() {
+        Fylke result = graphQlTester.documentName("fylke-by-fylkesnummer")
+                .variable("fylkesnummer", "223456")
+                .execute()
+                .path("$['data']['fylkeByFylkesnummer']")
+                .entity(Fylke.class)
+                .get();
+
+        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/223456", result.getUri());
+        assertNull(result.getFylkesnavn());
     }
 
     @Test
-    void test_if_fylke_by_fylkesnummer_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/fylke-by-fylkesnummer.graphql",
-                mapper.valueToTree(Map.of("fylkesnummer", "11111")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['fylkeByFylkesnummer']"));
+    void test_if_fylke_by_fylkesnummer_query_returns_null() {
+        graphQlTester.documentName("fylke-by-fylkesnummer")
+                .variable("fylkesnummer", "11111")
+                .execute()
+                .path("$['data']['fylkeByFylkesnummer']")
+                .valueIsNull();
     }
 }

@@ -1,7 +1,0 @@
-query {
-    linguisticSystems {
-        uri
-        code
-        label
-    }
-}

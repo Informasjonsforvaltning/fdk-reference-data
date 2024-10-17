@@ -1,0 +1,7 @@
+query GetMainActivityByCode($code: String!) {
+    mainActivityByCode(code: $code) {
+        uri
+        code
+        label { en }
+    }
+}

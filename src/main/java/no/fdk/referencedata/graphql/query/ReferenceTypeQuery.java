@@ -1,17 +1,18 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.referencetypes.ReferenceType;
 import no.fdk.referencedata.referencetypes.ReferenceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class ReferenceTypeQuery implements GraphQLQueryResolver {
+@Controller
+public class ReferenceTypeQuery {
 
     private final ReferenceTypeService referenceTypeService;
 
@@ -20,13 +21,15 @@ public class ReferenceTypeQuery implements GraphQLQueryResolver {
         this.referenceTypeService = referenceTypeService;
     }
 
-    public List<ReferenceType> getReferenceTypes() {
+    @QueryMapping
+    public List<ReferenceType> referenceTypes() {
         return referenceTypeService.getAll().stream()
                 .sorted(Comparator.comparing(ReferenceType::getCode))
                 .collect(Collectors.toList());
     }
 
-    public ReferenceType getReferenceTypeByCode(String code) {
+    @QueryMapping
+    public ReferenceType referenceTypeByCode(@Argument String code) {
         return referenceTypeService.getByCode(code).orElse(null);
     }
 }

@@ -1,19 +1,20 @@
 package no.fdk.referencedata.graphql.query;
 
-import graphql.kickstart.tools.GraphQLQueryResolver;
 import no.fdk.referencedata.search.FindByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchRequest;
 import no.fdk.referencedata.search.SearchableReferenceData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
-public class SearchQuery implements GraphQLQueryResolver {
+@Controller
+public class SearchQuery {
 
     private final List<SearchableReferenceData> searchables;
 
@@ -22,7 +23,8 @@ public class SearchQuery implements GraphQLQueryResolver {
         this.searchables = searchables;
     }
 
-    public List<SearchHit> search(SearchRequest req) {
+    @QueryMapping
+    public List<SearchHit> search(@Argument SearchRequest req) {
         String query = req.getQuery();
 
         if (query != null && query.length() > 1) {
@@ -36,7 +38,8 @@ public class SearchQuery implements GraphQLQueryResolver {
         return Collections.emptyList();
     }
 
-    public List<SearchHit> findByURIs(FindByURIsRequest req) {
+    @QueryMapping
+    public List<SearchHit> findByURIs(@Argument FindByURIsRequest req) {
         List<String> uris = req.getUris();
 
         if (uris != null && !uris.isEmpty()) {

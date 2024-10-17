@@ -1,0 +1,12 @@
+query {
+    referenceTypes {
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+        inverseLabel { en }
+    }
+}

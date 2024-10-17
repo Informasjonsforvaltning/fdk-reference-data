@@ -1,7 +1,0 @@
-query {
-    referenceTypes {
-        code
-        label
-        inverseLabel
-    }
-}

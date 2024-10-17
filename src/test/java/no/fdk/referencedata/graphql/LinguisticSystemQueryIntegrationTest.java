@@ -1,21 +1,17 @@
 package no.fdk.referencedata.graphql;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.graphql.spring.boot.test.GraphQLResponse;
-import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.linguisticsystem.LinguisticSystem;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -25,38 +21,52 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 class LinguisticSystemQueryIntegrationTest extends AbstractContainerTest {
 
-    private final static ObjectMapper mapper = new ObjectMapper();
-
     @Autowired
-    private GraphQLTestTemplate template;
+    private GraphQlTester graphQlTester;
 
     @Test
-    void test_if_linguistic_systems_query_returns_valid_response() throws IOException {
-        GraphQLResponse response = template.postForResource("graphql/linguistic-systems.graphql");
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/language/ENG", response.get("$['data']['linguisticSystems'][0]['uri']"));
-        assertEquals("ENG", response.get("$['data']['linguisticSystems'][0]['code']"));
-        assertEquals("English", response.get("$['data']['linguisticSystems'][0]['label']['en']"));
+    void test_if_linguistic_systems_query_returns_valid_response() {
+        List<LinguisticSystem> result = graphQlTester.documentName("linguistic-systems")
+                .execute()
+                .path("$['data']['linguisticSystems']")
+                .entityList(LinguisticSystem.class)
+                .get();
+
+        Assertions.assertEquals(5, result.size());
+
+        LinguisticSystem linguisticSystem = result.get(0);
+
+        assertEquals("http://publications.europa.eu/resource/authority/language/ENG", linguisticSystem.getUri());
+        assertEquals("ENG", linguisticSystem.getCode());
+        assertEquals("Engelsk", linguisticSystem.getLabel().get("no"));
+        assertEquals("Engelsk", linguisticSystem.getLabel().get("nb"));
+        assertEquals("Engelsk", linguisticSystem.getLabel().get("nn"));
+        assertEquals("English", linguisticSystem.getLabel().get("en"));
     }
 
     @Test
-    void test_if_linguistic_system_by_code_query_returns_valid_response() throws IOException {
-        GraphQLResponse response = template.perform("graphql/linguistic-system-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "NOB")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertEquals("http://publications.europa.eu/resource/authority/language/NOB", response.get("$['data']['linguisticSystemByCode']['uri']"));
-        assertEquals("NOB", response.get("$['data']['linguisticSystemByCode']['code']"));
-        assertEquals("Norwegian Bokmål", response.get("$['data']['linguisticSystemByCode']['label']['en']"));
+    void test_if_linguistic_system_by_code_query_returns_valid_response() {
+        LinguisticSystem result = graphQlTester.documentName("linguistic-system-by-code")
+                .variable("code", "NOB")
+                .execute()
+                .path("$['data']['linguisticSystemByCode']")
+                .entity(LinguisticSystem.class)
+                .get();
+
+        assertEquals("http://publications.europa.eu/resource/authority/language/NOB", result.getUri());
+        assertEquals("NOB", result.getCode());
+        assertEquals("Norsk Bokmål", result.getLabel().get("no"));
+        assertEquals("Norsk Bokmål", result.getLabel().get("nb"));
+        assertEquals("Norsk Bokmål", result.getLabel().get("nn"));
+        assertEquals("Norwegian Bokmål", result.getLabel().get("en"));
     }
 
     @Test
-    void test_if_linguistic_system_by_code_query_returns_null() throws IOException {
-        GraphQLResponse response = template.perform("graphql/linguistic-system-by-code.graphql",
-                mapper.valueToTree(Map.of("code", "INVALID")));
-        assertNotNull(response);
-        assertTrue(response.isOk());
-        assertNull(response.get("$['data']['linguisticSystemByCode']"));
+    void test_if_linguistic_system_by_code_query_returns_null() {
+        graphQlTester.documentName("linguistic-system-by-code")
+                .variable("code", "INVALID")
+                .execute()
+                .path("$['data']['linguisticSystemByCode']")
+                .valueIsNull();
     }
 }
