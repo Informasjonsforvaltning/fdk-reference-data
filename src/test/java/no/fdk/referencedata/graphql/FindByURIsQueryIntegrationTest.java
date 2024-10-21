@@ -12,9 +12,8 @@ import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneReposi
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.LocalKommuneHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.search.FilterByURIsRequest;
+import no.fdk.referencedata.search.FindByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
-import no.fdk.referencedata.search.SearchRequest;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ import static org.mockito.Mockito.mock;
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-class FilterByURIsQueryIntegrationTest extends AbstractContainerTest {
+class FindByURIsQueryIntegrationTest extends AbstractContainerTest {
 
     private final static ObjectMapper mapper = new ObjectMapper();
 
@@ -84,7 +83,7 @@ class FilterByURIsQueryIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    void test_if_filter_by_uris_query_returns_combined_location_hits() throws IOException {
+    void test_if_find_by_uris_query_returns_combined_location_hits() throws IOException {
         List<String> expectedURIs = List.of(
                 "https://data.geonorge.no/administrativeEnheter/fylke/id/123456",
                 "https://data.geonorge.no/administrativeEnheter/kommune/id/123456",
@@ -92,12 +91,12 @@ class FilterByURIsQueryIntegrationTest extends AbstractContainerTest {
                 "https://data.geonorge.no/administrativeEnheter/nasjon/id/173163"
         );
 
-        FilterByURIsRequest req = FilterByURIsRequest.builder().uris(expectedURIs).types(List.of(ADMINISTRATIVE_ENHETER)).build();
-        GraphQLResponse response = template.perform("graphql/filter-by-uris.graphql", mapper.valueToTree(Map.of("req", req)));
+        FindByURIsRequest req = FindByURIsRequest.builder().uris(expectedURIs).types(List.of(ADMINISTRATIVE_ENHETER)).build();
+        GraphQLResponse response = template.perform("graphql/find-by-uris.graphql", mapper.valueToTree(Map.of("req", req)));
         assertNotNull(response);
         assertTrue(response.isOk());
 
-        List<SearchHit> actual = response.getList("$['data']['filterByURIs']", SearchHit.class);
+        List<SearchHit> actual = response.getList("$['data']['findByURIs']", SearchHit.class);
 
         assertEquals(4, actual.size());
 

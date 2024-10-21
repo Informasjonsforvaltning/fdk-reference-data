@@ -83,7 +83,7 @@ public class FylkeService implements SearchableReferenceData {
                 .map(Fylke::toSearchHit);
     }
 
-    public Stream<SearchHit> filterByURIs(List<String> uris) {
+    public Stream<SearchHit> findByURIs(List<String> uris) {
         return fylkeRepository.findByUriIn(uris)
                 .map(Fylke::toSearchHit);
     }

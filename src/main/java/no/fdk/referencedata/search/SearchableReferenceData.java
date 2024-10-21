@@ -5,6 +5,6 @@ import java.util.stream.Stream;
 
 public interface SearchableReferenceData {
     Stream<SearchHit> search(String query);
-    Stream<SearchHit> filterByURIs(List<String> uris);
+    Stream<SearchHit> findByURIs(List<String> uris);
     SearchAlternative getSearchType();
 }

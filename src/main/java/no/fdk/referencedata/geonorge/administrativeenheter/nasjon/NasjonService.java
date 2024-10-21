@@ -47,7 +47,7 @@ public class NasjonService implements SearchableReferenceData {
         return Stream.empty();
     }
 
-    public Stream<SearchHit> filterByURIs(List<String> uris) {
+    public Stream<SearchHit> findByURIs(List<String> uris) {
         if (uris.contains(NORGE.uri)) {
             return Stream.of(NORGE.toSearchHit());
         }

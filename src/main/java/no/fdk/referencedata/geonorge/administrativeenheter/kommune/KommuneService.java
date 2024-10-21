@@ -86,7 +86,7 @@ public class KommuneService implements SearchableReferenceData {
                 .map(Kommune::toSearchHit);
     }
 
-    public Stream<SearchHit> filterByURIs(List<String> uris) {
+    public Stream<SearchHit> findByURIs(List<String> uris) {
         return kommuneRepository.findByUriIn(uris)
                 .map(Kommune::toSearchHit);
     }

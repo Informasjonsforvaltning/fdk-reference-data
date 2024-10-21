@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class FilterByURIsRequest {
+public class FindByURIsRequest {
     private List<String> uris;
     private List<SearchAlternative> types;
 }

@@ -94,7 +94,7 @@ type Query {
   kommuneOrganisasjonByKommunenummer(kommunenummer: String!): KommuneOrganisasjon
 
   search(req: SearchRequest!): [SearchHit!]!
-  filterByURIs(req: FilterByURIsRequest!): [SearchHit!]!
+  findByURIs(req: FindByURIsRequest!): [SearchHit!]!
 }
 
 type AccessRight {
@@ -314,7 +314,7 @@ input SearchRequest {
     types: [SearchAlternative!]!
 }
 
-input FilterByURIsRequest {
+input FindByURIsRequest {
     uris: [String!]!
     types: [SearchAlternative!]!
 }
