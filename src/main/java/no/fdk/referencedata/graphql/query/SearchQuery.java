@@ -23,6 +23,24 @@ public class SearchQuery {
         this.searchables = searchables;
     }
 
+    private int compareLabelsForSort(String query, String labelA, String labelB) {
+        boolean aStartsWithQuery = labelA.toLowerCase()
+                .startsWith(query.toLowerCase());
+
+        boolean bStartsWithQuery = labelB.toLowerCase()
+                .startsWith(query.toLowerCase());
+
+        if (aStartsWithQuery && !bStartsWithQuery) {
+            return -1;
+        }
+
+        if (!aStartsWithQuery && bStartsWithQuery) {
+            return 1;
+        }
+
+        return labelA.compareToIgnoreCase(labelB);
+    }
+
     @QueryMapping
     public List<SearchHit> search(@Argument SearchRequest req) {
         String query = req.getQuery();
@@ -31,7 +49,7 @@ public class SearchQuery {
             return searchables.stream()
                     .filter(searchable -> req.getTypes().contains(searchable.getSearchType()))
                     .flatMap(searchable -> searchable.search(query))
-                    .sorted((c1, c2) -> c1.getLabel().get("nb").compareToIgnoreCase(c2.getLabel().get("nb")))
+                    .sorted((c1, c2) -> compareLabelsForSort(query, c1.getLabel().get("nb"), c2.getLabel().get("nb")))
                     .collect(Collectors.toList());
         }
 
