@@ -157,4 +157,32 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("Kommune 2 norsk", result.get(1).getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, result.get(1).getType());
     }
+
+    @Test
+    void test_if_that_hits_that_starts_with_search_query_is_prioritized_in_sort() {
+        SearchRequest req = SearchRequest.builder().query("no").types(List.of(ADMINISTRATIVE_ENHETER, ADMINISTRATIVE_ENHETER)).build();
+        List<SearchHit> result = graphQlTester.documentName("search")
+                .variable("req", req)
+                .execute()
+                .path("$['data']['search']")
+                .entityList(SearchHit.class)
+                .get();
+
+        assertEquals(5, result.size());
+
+        assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", result.get(0).getUri());
+        assertEquals("173163", result.get(0).getCode());
+        assertEquals("Norge", result.get(0).getLabel().get("nb"));
+        assertEquals(ADMINISTRATIVE_ENHETER, result.get(0).getType());
+
+        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/123456", result.get(1).getUri());
+        assertEquals("123456", result.get(1).getCode());
+        assertEquals("Kommune 1 norsk", result.get(1).getLabel().get("nb"));
+        assertEquals(ADMINISTRATIVE_ENHETER, result.get(1).getType());
+
+        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/223456", result.get(2).getUri());
+        assertEquals("223456", result.get(2).getCode());
+        assertEquals("Kommune 2 norsk", result.get(2).getLabel().get("nb"));
+        assertEquals(ADMINISTRATIVE_ENHETER, result.get(2).getType());
+    }
 }
