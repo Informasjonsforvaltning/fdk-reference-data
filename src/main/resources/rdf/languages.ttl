@@ -67,7 +67,7 @@ atold:language  rdf:type         skos:ConceptScheme ;
         atold:op-code      "SMI" ;
         dc:identifier      "SMI" ;
         skos:inScheme      atold:language ;
-        skos:prefLabel     "Sami languages"@en .
+        skos:prefLabel     "Samisk"@no , "Samisk"@nb , "Samisk"@nn ,  "Sami languages"@en .
 
 <http://publications.europa.eu/resource/authority/language/NNO>
         rdf:type           skos:Concept ;
