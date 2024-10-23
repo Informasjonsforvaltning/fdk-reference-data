@@ -45,6 +45,9 @@
         <atold:op-code>SMI</atold:op-code>
         <dc:identifier>SMI</dc:identifier>
         <at:start.use>1950-05-09</at:start.use>
+        <skos:prefLabel xml:lang="no">Samisk</skos:prefLabel>
+        <skos:prefLabel xml:lang="nn">Samisk</skos:prefLabel>
+        <skos:prefLabel xml:lang="nb">Samisk</skos:prefLabel>
         <skos:prefLabel xml:lang="en">Sami languages</skos:prefLabel>
         <at:op-mapped-code>
             <at:MappedCode>
