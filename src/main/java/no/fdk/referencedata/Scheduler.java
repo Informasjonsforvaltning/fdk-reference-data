@@ -15,6 +15,7 @@ import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
+import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
 import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
 import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
@@ -66,6 +67,9 @@ public class Scheduler {
 
     @Autowired
     private DatasetTypeService datasetTypeService;
+
+    @Autowired
+    private EnhetService enhetService;
 
     @Autowired
     private FylkeService fylkeService;
@@ -257,6 +261,14 @@ public class Scheduler {
         audienceTypeService.harvestAndSave(false);
     }
 
+    /**
+     * Run every day 04:00 (at night)
+     */
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void updateAdministrativeEnheter() {
+        enhetService.harvestAndSave();
+    }
+
     @Scheduled(cron = "0 50 3 * * ?")
     public void updateRelationshipWithSourceTypes() {
         relationshipWithSourceTypeService.harvestAndSave(false);
@@ -294,6 +306,10 @@ public class Scheduler {
 
         if(datasetTypeService.firstTime()) {
             datasetTypeService.harvestAndSave(true);
+        }
+
+        if(enhetService.firstTime()) {
+            enhetService.harvestAndSave();
         }
 
         if(fylkeService.firstTime()) {

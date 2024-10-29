@@ -2,12 +2,9 @@ package no.fdk.referencedata.graphql;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeRepository;
-import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
-import no.fdk.referencedata.geonorge.administrativeenheter.fylke.LocalFylkeHarvester;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneRepository;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.LocalKommuneHarvester;
+import no.fdk.referencedata.geonorge.administrativeenheter.EnhetRepository;
+import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
+import no.fdk.referencedata.geonorge.administrativeenheter.LocalEnhetHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchRequest;
@@ -15,7 +12,6 @@ import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
@@ -36,17 +32,8 @@ import static org.mockito.Mockito.mock;
 @ActiveProfiles("test")
 class SearchQueryIntegrationTest extends AbstractContainerTest {
 
-    @Value("${wiremock.host}")
-    private String wiremockHost;
-
-    @Value("${wiremock.port}")
-    private String wiremockPort;
-
     @Autowired
-    private FylkeRepository fylkeRepository;
-
-    @Autowired
-    private KommuneRepository kommuneRepository;
+    private EnhetRepository enhetRepository;
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
@@ -58,21 +45,13 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
 
     @BeforeEach
     public void setup() {
-        FylkeService fylkeService = new FylkeService(
-                new LocalFylkeHarvester(wiremockHost, wiremockPort),
-                fylkeRepository,
+        EnhetService enhetService = new EnhetService(
+                new LocalEnhetHarvester(),
+                enhetRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository);
 
-        fylkeService.harvestAndSave();
-
-        KommuneService kommuneService = new KommuneService(
-                new LocalKommuneHarvester(wiremockHost, wiremockPort),
-                kommuneRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository);
-
-        kommuneService.harvestAndSave();
+        enhetService.harvestAndSave();
     }
 
     @Test
@@ -97,7 +76,7 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
 
     @Test
     void test_if_search_query_returns_geonorge_fylke_hit() {
-        SearchRequest req = SearchRequest.builder().query("FYLKE 4").types(List.of(ADMINISTRATIVE_ENHETER)).build();
+        SearchRequest req = SearchRequest.builder().query("ROGAL").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
                 .variable("req", req)
                 .execute()
@@ -109,15 +88,15 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
 
         SearchHit hit = result.get(0);
 
-        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/423456", hit.getUri());
-        assertEquals("423456", hit.getCode());
-        assertEquals("Fylke 4", hit.getLabel().get("nb"));
+        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/173152", hit.getUri());
+        assertEquals("173152", hit.getCode());
+        assertEquals("Rogaland", hit.getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, hit.getType());
     }
 
     @Test
     void test_if_search_query_returns_geonorge_kommune_hit() {
-        SearchRequest req = SearchRequest.builder().query("kommune 4").types(List.of(ADMINISTRATIVE_ENHETER)).build();
+        SearchRequest req = SearchRequest.builder().query("bambl").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
                 .variable("req", req)
                 .execute()
@@ -129,15 +108,15 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
 
         SearchHit hit = result.get(0);
 
-        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/423456", hit.getUri());
-        assertEquals("423456", hit.getCode());
-        assertEquals("Kommune 4 norsk", hit.getLabel().get("nb"));
+        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/172729", hit.getUri());
+        assertEquals("172729", hit.getCode());
+        assertEquals("Bamble", hit.getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, hit.getType());
     }
 
     @Test
-    void test_if_search_query_returns_cobined_fylke_and_kommune_hits() {
-        SearchRequest req = SearchRequest.builder().query("e 2").types(List.of(ADMINISTRATIVE_ENHETER, ADMINISTRATIVE_ENHETER)).build();
+    void test_if_search_query_returns_combined_fylke_and_nasjon_hits() {
+        SearchRequest req = SearchRequest.builder().query("nor").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
                 .variable("req", req)
                 .execute()
@@ -147,20 +126,20 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
 
         assertEquals(2, result.size());
 
-        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/223456", result.get(0).getUri());
-        assertEquals("223456", result.get(0).getCode());
-        assertEquals("Fylke 2", result.get(0).getLabel().get("nb"));
+        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/173144", result.get(0).getUri());
+        assertEquals("173144", result.get(0).getCode());
+        assertEquals("Nordland", result.get(0).getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, result.get(0).getType());
 
-        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/223456", result.get(1).getUri());
-        assertEquals("223456", result.get(1).getCode());
-        assertEquals("Kommune 2 norsk", result.get(1).getLabel().get("nb"));
+        assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", result.get(1).getUri());
+        assertEquals("173163", result.get(1).getCode());
+        assertEquals("Norge", result.get(1).getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, result.get(1).getType());
     }
 
     @Test
     void test_if_that_hits_that_starts_with_search_query_is_prioritized_in_sort() {
-        SearchRequest req = SearchRequest.builder().query("no").types(List.of(ADMINISTRATIVE_ENHETER, ADMINISTRATIVE_ENHETER)).build();
+        SearchRequest req = SearchRequest.builder().query("la").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
                 .variable("req", req)
                 .execute()
@@ -168,21 +147,21 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
                 .entityList(SearchHit.class)
                 .get();
 
-        assertEquals(5, result.size());
+        assertEquals(6, result.size());
 
-        assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", result.get(0).getUri());
-        assertEquals("173163", result.get(0).getCode());
-        assertEquals("Norge", result.get(0).getLabel().get("nb"));
+        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/172987172681", result.get(0).getUri());
+        assertEquals("172987172681", result.get(0).getCode());
+        assertEquals("Larvik", result.get(0).getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, result.get(0).getType());
 
-        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/123456", result.get(1).getUri());
-        assertEquals("123456", result.get(1).getCode());
-        assertEquals("Kommune 1 norsk", result.get(1).getLabel().get("nb"));
+        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/173154173155", result.get(1).getUri());
+        assertEquals("173154173155", result.get(1).getCode());
+        assertEquals("Innlandet", result.get(1).getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, result.get(1).getType());
 
-        assertEquals("https://data.geonorge.no/administrativeEnheter/kommune/id/223456", result.get(2).getUri());
-        assertEquals("223456", result.get(2).getCode());
-        assertEquals("Kommune 2 norsk", result.get(2).getLabel().get("nb"));
+        assertEquals("https://data.geonorge.no/administrativeEnheter/fylke/id/173144", result.get(2).getUri());
+        assertEquals("173144", result.get(2).getCode());
+        assertEquals("Nordland", result.get(2).getLabel().get("nb"));
         assertEquals(ADMINISTRATIVE_ENHETER, result.get(2).getType());
     }
 }

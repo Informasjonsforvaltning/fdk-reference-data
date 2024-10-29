@@ -1,4 +1,4 @@
-package no.fdk.referencedata.geonorge.administrativeenheter.kommune;
+package no.fdk.referencedata.geonorge.administrativeenheter;
 
 import lombok.Builder;
 import lombok.Data;
@@ -13,11 +13,19 @@ import java.util.Map;
 @Data
 @Builder
 @Document
-public class Kommune {
+public class Enhet {
     @Id
     String uri;
-    String kommunenavn;
-    String kommunenavnNorsk;
+    String name;
     @Indexed
-    String kommunenummer;
+    String code;
+
+    public SearchHit toSearchHit() {
+        return SearchHit.builder()
+                .uri(this.uri)
+                .code(this.code)
+                .label(Map.of("nb", this.name))
+                .type(SearchAlternative.ADMINISTRATIVE_ENHETER)
+                .build();
+    }
 }
