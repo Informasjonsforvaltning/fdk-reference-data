@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -108,6 +109,31 @@ public class EnhetService implements SearchableReferenceData {
         return Stream.concat(hits, variantHits);
     }
 
+    private Stream<EnhetVariant> idVariantsOfEnhet(Enhet enhet) {
+        // do not create variants if it's not possible to split the code into at least 2 chunks of size 6
+        if (enhet.code.length() < 12) {
+            return Stream.empty();
+        }
+
+        String uriBase = enhet.getUri().substring(0, enhet.getUri().lastIndexOf("/") + 1);
+        List<String> codeVariants = new ArrayList<>();
+        StringBuilder sb = new StringBuilder(enhet.code);
+
+        // splits the code into chunks of 6 characters
+        while(sb.length() > 5) {
+            codeVariants.add(sb.substring(0, 6));
+            sb.delete(0, 6);
+        }
+
+        return codeVariants.stream().map(codeVariant ->
+            EnhetVariant.builder()
+                .uri(uriBase + codeVariant)
+                .name(enhet.name)
+                .code(codeVariant)
+                .build()
+        );
+    }
+
     public void harvestAndSave() {
         try {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.ADMINISTRATIVE_ENHETER.name())
@@ -134,10 +160,16 @@ public class EnhetService implements SearchableReferenceData {
                     .toList();
             enhetVariantRepository.saveAll(docVariants);
 
+            final List<EnhetVariant> idVariants = StreamSupport.stream(iterable.spliterator(), false)
+                    .flatMap(this::idVariantsOfEnhet)
+                    .toList();
+            enhetVariantRepository.saveAll(idVariants);
+
             Model model = ModelFactory.createDefaultModel();
             model.setNsPrefix("dct", DCTerms.NS);
             iterable.forEach(item -> addEnhetToModel(item, model));
             docVariants.forEach(item -> addEnhetVariantToModel(item, model));
+            idVariants.forEach(item -> addEnhetVariantToModel(item, model));
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);
