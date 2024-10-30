@@ -19,12 +19,12 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -35,6 +35,8 @@ public class EnhetService implements SearchableReferenceData {
 
     private final EnhetRepository enhetRepository;
 
+    private final EnhetVariantRepository enhetVariantRepository;
+
     private final HarvestSettingsRepository harvestSettingsRepository;
 
     private final RDFSourceRepository rdfSourceRepository;
@@ -42,10 +44,12 @@ public class EnhetService implements SearchableReferenceData {
     @Autowired
     public EnhetService(EnhetHarvester enhetHarvester,
                         EnhetRepository enhetRepository,
+                        EnhetVariantRepository enhetVariantRepository,
                         RDFSourceRepository rdfSourceRepository,
                         HarvestSettingsRepository harvestSettingsRepository) {
         this.enhetHarvester = enhetHarvester;
         this.enhetRepository = enhetRepository;
+        this.enhetVariantRepository = enhetVariantRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
     }
@@ -74,6 +78,17 @@ public class EnhetService implements SearchableReferenceData {
         }
     }
 
+    private void addEnhetVariantToModel(EnhetVariant enhet, Model model) {
+        Resource resource = model.createResource(enhet.getUri());
+        resource.addProperty(RDF.type, DCTerms.Location);
+        if (enhet.name != null) {
+            resource.addProperty(DCTerms.title, enhet.name);
+        }
+        if (enhet.code != null) {
+            resource.addProperty(DCTerms.identifier, enhet.code);
+        }
+    }
+
     public SearchAlternative getSearchType() {
         return SearchAlternative.ADMINISTRATIVE_ENHETER;
     }
@@ -84,8 +99,13 @@ public class EnhetService implements SearchableReferenceData {
     }
 
     public Stream<SearchHit> findByURIs(List<String> uris) {
-        return enhetRepository.findByUriIn(uris)
+        Stream<SearchHit> hits = enhetRepository.findByUriIn(uris)
                 .map(Enhet::toSearchHit);
+
+        Stream<SearchHit> variantHits = enhetVariantRepository.findByUriIn(uris)
+                .map(EnhetVariant::toSearchHit);
+
+        return Stream.concat(hits, variantHits);
     }
 
     public void harvestAndSave() {
@@ -97,6 +117,7 @@ public class EnhetService implements SearchableReferenceData {
                             .build());
 
             enhetRepository.deleteAll();
+            enhetVariantRepository.deleteAll();
 
             final AtomicInteger counter = new AtomicInteger(0);
             final Iterable<Enhet> iterable = enhetHarvester.harvest().toIterable();
@@ -104,9 +125,19 @@ public class EnhetService implements SearchableReferenceData {
             log.info("Harvest and saving {} administrative enheter", counter.get());
             enhetRepository.saveAll(iterable);
 
+            final List<EnhetVariant> docVariants = StreamSupport.stream(iterable.spliterator(), false)
+                    .map(enh -> EnhetVariant.builder()
+                            .uri(enh.getUri().replace("/id/", "/doc/"))
+                            .name(enh.getName())
+                            .code(enh.getCode())
+                            .build())
+                    .toList();
+            enhetVariantRepository.saveAll(docVariants);
+
             Model model = ModelFactory.createDefaultModel();
             model.setNsPrefix("dct", DCTerms.NS);
             iterable.forEach(item -> addEnhetToModel(item, model));
+            docVariants.forEach(item -> addEnhetVariantToModel(item, model));
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);

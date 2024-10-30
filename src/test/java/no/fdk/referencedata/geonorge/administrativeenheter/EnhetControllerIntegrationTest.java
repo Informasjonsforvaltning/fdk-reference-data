@@ -45,6 +45,9 @@ public class EnhetControllerIntegrationTest extends AbstractContainerTest {
     private EnhetRepository enhetRepository;
 
     @Autowired
+    private EnhetVariantRepository enhetVariantRepository;
+
+    @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
@@ -58,6 +61,7 @@ public class EnhetControllerIntegrationTest extends AbstractContainerTest {
         EnhetService enhetService = new EnhetService(
                 new LocalEnhetHarvester(),
                 enhetRepository,
+                enhetVariantRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository);
 

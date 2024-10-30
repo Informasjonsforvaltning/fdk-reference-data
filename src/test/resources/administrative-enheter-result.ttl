@@ -154,3 +154,158 @@ PREFIX dct: <http://purl.org/dc/terms/>
         a               dct:Location;
         dct:identifier  "172796";
         dct:title       "Tokke" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172729>
+        a               dct:Location;
+        dct:identifier  "172729";
+        dct:title       "Bamble" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172940>
+        a               dct:Location;
+        dct:identifier  "172940";
+        dct:title       "Porsgrunn" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173150173151>
+        a               dct:Location;
+        dct:identifier  "173150173151";
+        dct:title       "Vestland" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172907>
+        a               dct:Location;
+        dct:identifier  "172907";
+        dct:title       "Drangedal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172682>
+        a               dct:Location;
+        dct:identifier  "172682";
+        dct:title       "Siljan" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172734>
+        a               dct:Location;
+        dct:identifier  "172734";
+        dct:title       "Beiarn" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/173093>
+        a               dct:Location;
+        dct:identifier  "173093";
+        dct:title       "Sokndal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172782>
+        a               dct:Location;
+        dct:identifier  "172782";
+        dct:title       "Seljord" .
+
+<https://data.geonorge.no/administrativeEnheter/nasjon/doc/173163>
+        a               dct:Location;
+        dct:identifier  "173163";
+        dct:title       "Norge" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173146173145>
+        a               dct:Location;
+        dct:identifier  "173146173145";
+        dct:title       "Trøndelag" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173158173162>
+        a               dct:Location;
+        dct:identifier  "173158173162";
+        dct:title       "Vestfold og Telemark" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172803>
+        a               dct:Location;
+        dct:identifier  "172803";
+        dct:title       "Kragerø" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173144>
+        a               dct:Location;
+        dct:identifier  "173144";
+        dct:title       "Nordland" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173154173155>
+        a               dct:Location;
+        dct:identifier  "173154173155";
+        dct:title       "Innlandet" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172903>
+        a               dct:Location;
+        dct:identifier  "172903";
+        dct:title       "Nissedal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172919172988>
+        a               dct:Location;
+        dct:identifier  "172919172988";
+        dct:title       "Færder" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172676>
+        a               dct:Location;
+        dct:identifier  "172676";
+        dct:title       "Fyresdal" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173159>
+        a               dct:Location;
+        dct:identifier  "173159";
+        dct:title       "Oslo" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173157173156173161>
+        a               dct:Location;
+        dct:identifier  "173157173156173161";
+        dct:title       "Viken" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173147>
+        a               dct:Location;
+        dct:identifier  "173147";
+        dct:title       "Møre og Romsdal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172730>
+        a               dct:Location;
+        dct:identifier  "172730";
+        dct:title       "Hadsel" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172906>
+        a               dct:Location;
+        dct:identifier  "172906";
+        dct:title       "Notodden" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172828>
+        a               dct:Location;
+        dct:identifier  "172828";
+        dct:title       "Skien" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173153173160>
+        a               dct:Location;
+        dct:identifier  "173153173160";
+        dct:title       "Agder" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172786>
+        a               dct:Location;
+        dct:identifier  "172786";
+        dct:title       "Tinn" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173152>
+        a               dct:Location;
+        dct:identifier  "173152";
+        dct:title       "Rogaland" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/doc/173143173142>
+        a               dct:Location;
+        dct:identifier  "173143173142";
+        dct:title       "Troms og Finnmark" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172898>
+        a               dct:Location;
+        dct:identifier  "172898";
+        dct:title       "Hjartdal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172987172681>
+        a               dct:Location;
+        dct:identifier  "172987172681";
+        dct:title       "Larvik" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172904>
+        a               dct:Location;
+        dct:identifier  "172904";
+        dct:title       "Kviteseid" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/doc/172796>
+        a               dct:Location;
+        dct:identifier  "172796";
+        dct:title       "Tokke" .

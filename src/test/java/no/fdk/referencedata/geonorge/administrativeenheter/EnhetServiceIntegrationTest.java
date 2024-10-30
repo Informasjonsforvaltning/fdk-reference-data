@@ -23,6 +23,9 @@ public class EnhetServiceIntegrationTest extends AbstractContainerTest {
     private EnhetRepository enhetRepository;
 
     @Autowired
+    private EnhetVariantRepository enhetVariantRepository;
+
+    @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
@@ -32,6 +35,7 @@ public class EnhetServiceIntegrationTest extends AbstractContainerTest {
         EnhetService enhetService = new EnhetService(
                 new LocalEnhetHarvester(),
                 enhetRepository,
+                enhetVariantRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository);
 
