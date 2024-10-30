@@ -309,3 +309,98 @@ PREFIX dct: <http://purl.org/dc/terms/>
         a               dct:Location;
         dct:identifier  "172796";
         dct:title       "Tokke" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173162>
+        a               dct:Location;
+        dct:identifier  "173162";
+        dct:title       "Vestfold og Telemark" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173155>
+        a               dct:Location;
+        dct:identifier  "173155";
+        dct:title       "Innlandet" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172919>
+        a               dct:Location;
+        dct:identifier  "172919";
+        dct:title       "Færder" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173150>
+        a               dct:Location;
+        dct:identifier  "173150";
+        dct:title       "Vestland" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173143>
+        a               dct:Location;
+        dct:identifier  "173143";
+        dct:title       "Troms og Finnmark" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173158>
+        a               dct:Location;
+        dct:identifier  "173158";
+        dct:title       "Vestfold og Telemark" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173160>
+        a               dct:Location;
+        dct:identifier  "173160";
+        dct:title       "Agder" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173153>
+        a               dct:Location;
+        dct:identifier  "173153";
+        dct:title       "Agder" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173146>
+        a               dct:Location;
+        dct:identifier  "173146";
+        dct:title       "Trøndelag" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173156>
+        a               dct:Location;
+        dct:identifier  "173156";
+        dct:title       "Viken" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172987>
+        a               dct:Location;
+        dct:identifier  "172987";
+        dct:title       "Larvik" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173151>
+        a               dct:Location;
+        dct:identifier  "173151";
+        dct:title       "Vestland" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173161>
+        a               dct:Location;
+        dct:identifier  "173161";
+        dct:title       "Viken" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173154>
+        a               dct:Location;
+        dct:identifier  "173154";
+        dct:title       "Innlandet" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173142>
+        a               dct:Location;
+        dct:identifier  "173142";
+        dct:title       "Troms og Finnmark" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172681>
+        a               dct:Location;
+        dct:identifier  "172681";
+        dct:title       "Larvik" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172988>
+        a               dct:Location;
+        dct:identifier  "172988";
+        dct:title       "Færder" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173157>
+        a               dct:Location;
+        dct:identifier  "173157";
+        dct:title       "Viken" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173145>
+        a               dct:Location;
+        dct:identifier  "173145";
+        dct:title       "Trøndelag" .
