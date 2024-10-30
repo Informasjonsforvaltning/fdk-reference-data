@@ -4,6 +4,7 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetRepository;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
+import no.fdk.referencedata.geonorge.administrativeenheter.EnhetVariantRepository;
 import no.fdk.referencedata.geonorge.administrativeenheter.LocalEnhetHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.SearchHit;
@@ -35,6 +36,9 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private EnhetRepository enhetRepository;
 
+    @Autowired
+    private EnhetVariantRepository enhetVariantRepository;
+
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -48,6 +52,7 @@ class SearchQueryIntegrationTest extends AbstractContainerTest {
         EnhetService enhetService = new EnhetService(
                 new LocalEnhetHarvester(),
                 enhetRepository,
+                enhetVariantRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository);
 
