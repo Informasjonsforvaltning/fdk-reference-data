@@ -1,6 +1,0 @@
-query GetKommuneByKommunenummer($kommunenummer: String!) {
-    kommuneByKommunenummer(kommunenummer: $kommunenummer) {
-        uri
-        kommunenummer
-    }
-}

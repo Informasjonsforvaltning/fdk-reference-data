@@ -1,8 +1,0 @@
-query {
-    kommuner {
-        uri
-        kommunenavn
-        kommunenavnNorsk
-        kommunenummer
-    }
-}

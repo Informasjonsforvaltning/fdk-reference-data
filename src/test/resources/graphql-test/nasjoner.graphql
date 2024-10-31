@@ -1,7 +1,0 @@
-query {
-    nasjoner {
-        uri
-        nasjonsnavn
-        nasjonsnummer
-    }
-}

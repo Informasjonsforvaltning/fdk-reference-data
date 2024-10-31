@@ -2,11 +2,8 @@ package no.fdk.referencedata.geonorge.administrativeenheter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.*;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -14,15 +11,11 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static no.fdk.referencedata.geonorge.administrativeenheter.LocalEnhetHarvester.ADMINISTRATIVE_ENHETER_SIZE;
 import static org.junit.jupiter.api.Assertions.*;

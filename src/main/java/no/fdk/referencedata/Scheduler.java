@@ -16,8 +16,6 @@ import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
-import no.fdk.referencedata.geonorge.administrativeenheter.fylke.FylkeService;
-import no.fdk.referencedata.geonorge.administrativeenheter.kommune.KommuneService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.los.LosService;
 import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonService;
@@ -70,12 +68,6 @@ public class Scheduler {
 
     @Autowired
     private EnhetService enhetService;
-
-    @Autowired
-    private FylkeService fylkeService;
-
-    @Autowired
-    private KommuneService kommuneService;
 
     @Autowired
     private MainActivityService mainActivityService;
@@ -214,14 +206,6 @@ public class Scheduler {
     }
 
     /**
-     * Run every day 03:00 (at night)
-     */
-    @Scheduled(cron = "0 0 3 * * ?")
-    public void updateFylker() {
-        fylkeService.harvestAndSave();
-    }
-
-    /**
      * Run every day 03:10 (at night)
      */
     @Scheduled(cron = "0 10 3 * * ?")
@@ -235,14 +219,6 @@ public class Scheduler {
     @Scheduled(cron = "0 20 3 * * ?")
     public void updateKommuneOrganisasjoner() {
         kommuneOrganisasjonService.harvestAndSave();
-    }
-
-    /**
-     * Run every day 03:30 (at night)
-     */
-    @Scheduled(cron = "0 30 3 * * ?")
-    public void updateKommuner() {
-        kommuneService.harvestAndSave();
     }
 
     /**
@@ -310,14 +286,6 @@ public class Scheduler {
 
         if(enhetService.firstTime()) {
             enhetService.harvestAndSave();
-        }
-
-        if(fylkeService.firstTime()) {
-            fylkeService.harvestAndSave();
-        }
-
-        if(kommuneService.firstTime()) {
-            kommuneService.harvestAndSave();
         }
 
         if(mainActivityService.firstTime()) {
