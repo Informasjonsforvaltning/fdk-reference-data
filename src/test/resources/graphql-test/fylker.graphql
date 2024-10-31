@@ -1,7 +1,0 @@
-query {
-    fylker {
-        uri
-        fylkesnavn
-        fylkesnummer
-    }
-}

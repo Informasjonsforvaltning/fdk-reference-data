@@ -1,6 +1,0 @@
-query GetFylkeByFylkesnummer($fylkesnummer: String!) {
-    fylkeByFylkesnummer(fylkesnummer: $fylkesnummer) {
-        uri
-        fylkesnummer
-    }
-}

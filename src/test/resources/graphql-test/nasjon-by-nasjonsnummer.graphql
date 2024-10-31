@@ -1,6 +1,0 @@
-query GetNasjonByNasjonsnummer($nasjonsnummer: String!) {
-    nasjonByNasjonsnummer(nasjonsnummer: $nasjonsnummer) {
-        uri
-        nasjonsnummer
-    }
-}
