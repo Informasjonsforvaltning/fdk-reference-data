@@ -72,7 +72,7 @@ class MediaTypeSearchableIntegrationTest extends AbstractContainerTest {
 
         assertEquals("https://www.iana.org/assignments/media-types/application/octet-stream", hit.getUri());
         assertEquals("application/octet-stream", hit.getCode());
-        assertEquals("octet-stream", hit.getLabel().get("nb"));
+        assertEquals("octet-stream", hit.getLabel().get("en"));
         assertEquals(IANA_MEDIA_TYPES, hit.getType());
     }
 
@@ -90,17 +90,17 @@ class MediaTypeSearchableIntegrationTest extends AbstractContainerTest {
 
         assertEquals("https://www.iana.org/assignments/media-types/application/json", result.get(0).getUri());
         assertEquals("application/json", result.get(0).getCode());
-        assertEquals("json", result.get(0).getLabel().get("nb"));
+        assertEquals("json", result.get(0).getLabel().get("en"));
         assertEquals(IANA_MEDIA_TYPES, result.get(0).getType());
 
         assertEquals("https://www.iana.org/assignments/media-types/application/json-patch+json", result.get(1).getUri());
         assertEquals("application/json-patch+json", result.get(1).getCode());
-        assertEquals("json-patch+json", result.get(1).getLabel().get("nb"));
+        assertEquals("json-patch+json", result.get(1).getLabel().get("en"));
         assertEquals(IANA_MEDIA_TYPES, result.get(1).getType());
 
         assertEquals("https://www.iana.org/assignments/media-types/application/json-seq", result.get(2).getUri());
         assertEquals("application/json-seq", result.get(2).getCode());
-        assertEquals("json-seq", result.get(2).getLabel().get("nb"));
+        assertEquals("json-seq", result.get(2).getLabel().get("en"));
         assertEquals(IANA_MEDIA_TYPES, result.get(2).getType());
     }
 
