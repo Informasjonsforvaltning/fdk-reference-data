@@ -326,4 +326,5 @@ input FindByURIsRequest {
 
 enum SearchAlternative {
   ADMINISTRATIVE_ENHETER
+  IANA_MEDIA_TYPES
 }
