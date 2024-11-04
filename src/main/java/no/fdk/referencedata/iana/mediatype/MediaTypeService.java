@@ -4,6 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
+import no.fdk.referencedata.search.SearchAlternative;
+import no.fdk.referencedata.search.SearchHit;
+import no.fdk.referencedata.search.SearchableReferenceData;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
@@ -19,11 +22,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
-public class MediaTypeService {
+public class MediaTypeService implements SearchableReferenceData {
     private final String rdfSourceID = "media-types-source";
 
     private final MediaTypeHarvester mediaTypeHarvester;
@@ -69,6 +74,20 @@ public class MediaTypeService {
         } else if (mediaType.type != null) {
             resource.addProperty(DCTerms.identifier, mediaType.type);
         }
+    }
+
+    public SearchAlternative getSearchType() {
+        return SearchAlternative.IANA_MEDIA_TYPES;
+    }
+
+    public Stream<SearchHit> search(String query) {
+        return mediaTypeRepository.findByNameContainingIgnoreCase(query)
+                .map(MediaType::toSearchHit);
+    }
+
+    public Stream<SearchHit> findByURIs(List<String> uris) {
+        return mediaTypeRepository.findByUriIn(uris)
+                .map(MediaType::toSearchHit);
     }
 
     @Transactional

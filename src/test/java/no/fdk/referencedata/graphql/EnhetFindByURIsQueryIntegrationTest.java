@@ -32,7 +32,7 @@ import static org.mockito.Mockito.mock;
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-class FindByURIsQueryIntegrationTest extends AbstractContainerTest {
+class EnhetFindByURIsQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private EnhetRepository enhetRepository;

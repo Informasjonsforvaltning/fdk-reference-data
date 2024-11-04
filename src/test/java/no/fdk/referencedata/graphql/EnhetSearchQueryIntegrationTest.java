@@ -31,7 +31,7 @@ import static org.mockito.Mockito.mock;
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
-class SearchQueryIntegrationTest extends AbstractContainerTest {
+class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private EnhetRepository enhetRepository;
