@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -23,7 +24,26 @@ public class SearchQuery {
         this.searchables = searchables;
     }
 
-    private int compareLabelsForSort(String query, String labelA, String labelB) {
+    private String getPrioritizedLangLabel(Map<String, String> label) {
+        if (label.containsKey("nb")) {
+            return label.get("nb");
+        }
+        if (label.containsKey("no")) {
+            return label.get("no");
+        }
+        if (label.containsKey("nn")) {
+            return label.get("nn");
+        }
+        if (label.containsKey("en")) {
+            return label.get("en");
+        }
+        return "";
+    }
+
+    private int compareLabelsForSort(String query, Map<String, String> labelMapA, Map<String, String> labelMapB) {
+        String labelA = getPrioritizedLangLabel(labelMapA);
+        String labelB = getPrioritizedLangLabel(labelMapB);
+
         boolean aStartsWithQuery = labelA.toLowerCase()
                 .startsWith(query.toLowerCase());
 
@@ -49,7 +69,7 @@ public class SearchQuery {
             return searchables.stream()
                     .filter(searchable -> req.getTypes().contains(searchable.getSearchType()))
                     .flatMap(searchable -> searchable.search(query))
-                    .sorted((c1, c2) -> compareLabelsForSort(query, c1.getLabel().get("nb"), c2.getLabel().get("nb")))
+                    .sorted((c1, c2) -> compareLabelsForSort(query, c1.getLabel(), c2.getLabel()))
                     .collect(Collectors.toList());
         }
 

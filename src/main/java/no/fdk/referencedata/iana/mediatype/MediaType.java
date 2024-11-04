@@ -26,7 +26,7 @@ public class MediaType {
         return SearchHit.builder()
                 .uri(this.uri)
                 .code(this.type + "/" + this.subType)
-                .label(Map.of("nb", this.name))
+                .label(Map.of("en", this.name))
                 .type(SearchAlternative.IANA_MEDIA_TYPES)
                 .build();
     }
