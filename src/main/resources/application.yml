@@ -1,6 +1,7 @@
 application:
   api-key: ${API_KEY:tst}
   catalog-admin-uri: ${CATALOG_ADMIN_SERVICE_URI:https://catalog-admin-service.staging.fellesdatakatalog.digdir.no}
+  cors.originPatterns: ${CORS_ORIGIN_PATTERNS:*}
 
 spring:
   codec:
@@ -74,4 +75,3 @@ management:
     export:
       statsd:
         enabled: false
-
