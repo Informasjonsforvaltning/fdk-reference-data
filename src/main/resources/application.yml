@@ -29,6 +29,7 @@ management:
     web:
       path-mapping:
         info: ping
+        health: ready
       exposure:
         include: health, info, prometheus
   metrics:
