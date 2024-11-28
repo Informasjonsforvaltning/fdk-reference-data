@@ -7,8 +7,8 @@ Source: [Dockerfile](https://github.com/Informasjonsforvaltning/fdk-reference-da
 FDK reference-data is a service that provides metadata for the various applications in this ecosystem. It provides code-lists, concepts and helptexts. 
 
 # Technologies/frameworks
-* Java 15
-* Spring Boot v2.4.5
+* Java 21
+* Spring Boot
 * MongoDB
 
 ## API
