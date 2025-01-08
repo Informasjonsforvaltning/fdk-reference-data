@@ -65,7 +65,7 @@ public class SearchQuery {
     public List<SearchHit> search(@Argument SearchRequest req) {
         String query = req.getQuery();
 
-        if (query != null && query.length() > 1) {
+        if (query != null && !query.isEmpty()) {
             return searchables.stream()
                     .filter(searchable -> req.getTypes().contains(searchable.getSearchType()))
                     .flatMap(searchable -> searchable.search(query))
