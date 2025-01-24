@@ -1,0 +1,13 @@
+query GetDistributionStatusByCode($code: String!) {
+    distributionStatusByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        },
+        startUse
+    }
+}

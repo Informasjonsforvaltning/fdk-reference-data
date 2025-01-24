@@ -1,0 +1,12 @@
+query {
+    distributionStatuses {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

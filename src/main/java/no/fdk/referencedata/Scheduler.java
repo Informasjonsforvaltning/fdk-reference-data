@@ -9,6 +9,7 @@ import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
+import no.fdk.referencedata.eu.distributionstatus.DistributionStatusService;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
@@ -59,6 +60,9 @@ public class Scheduler {
 
     @Autowired
     private ConceptStatusService conceptStatusService;
+
+    @Autowired
+    private DistributionStatusService distributionStatusService;
 
     @Autowired
     private DistributionTypeService distributionTypeService;
@@ -171,6 +175,14 @@ public class Scheduler {
     @Scheduled(cron = "0 20 2 * * ?")
     public void updateFrequencies() {
         frequencyService.harvestAndSave(false);
+    }
+
+    /**
+     * Run every day 02:25 (at night)
+     */
+    @Scheduled(cron = "0 25 2 * * ?")
+    public void updateDistributionStatuses() {
+        distributionStatusService.harvestAndSave(false);
     }
 
     /**

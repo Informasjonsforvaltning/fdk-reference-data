@@ -1,0 +1,39 @@
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/> .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns3:	<http://publications.europa.eu/resource/authority/distribution-status/> .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+
+ns1:distribution-status	owl:versionInfo	"20220615-0" .
+
+ns3:WITHDRAWN	skos:inScheme	ns1:distribution-status ;
+	skos:prefLabel	"trukket tilbake"@nb ,
+		"trekt tilbake"@nn ,
+		"withdrawn"@en ,
+		"trukket tilbake"@no ;
+    dc:identifier	"WITHDRAWN" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-23" .
+
+ns3:COMPLETED	skos:inScheme	ns1:distribution-status ;
+	skos:prefLabel	"completed"@en ,
+		"ferdigstilt"@nb ,
+		"ferdigstilt"@no ,
+		"ferdigstilt"@nn ;
+	dc:identifier	"COMPLETED" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-23" .
+
+ns3:DEPRECATED	skos:inScheme	ns1:distribution-status ;
+	skos:prefLabel	"frar\u00E5det"@nb ,
+		"frar\u00E5dd"@nn ,
+		"frar\u00E5det"@no ,
+		"deprecated"@en ;
+	dc:identifier	"DEPRECATED" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-23" .
+
+ns3:DEVELOP	skos:inScheme	ns1:distribution-status ;
+	skos:prefLabel	"under utvikling"@no ,
+		"under utvikling"@nb ,
+		"under development"@en ,
+		"under utvikling"@nn ;
+	dc:identifier	"DEVELOP" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-23" .
