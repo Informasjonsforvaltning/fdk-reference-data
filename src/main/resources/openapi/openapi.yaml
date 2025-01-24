@@ -193,6 +193,47 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/DataTheme'
+  /eu/distribution-statuses:
+    get:
+      tags:
+        - distribution-status-controller
+      operationId: getDistributionStatuses
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DistributionStatuses'
+    post:
+      tags:
+        - distribution-status-controller
+      operationId: updateDistributionStatuses
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/distribution-statuses/{code}:
+    get:
+      tags:
+        - distribution-status-controller
+      operationId: getDistributionStatus
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/DistributionStatus'
   /eu/distribution-types:
     get:
       tags:
@@ -591,6 +632,27 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/DataTheme'
+    DistributionStatus:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+        startUse:
+          type: string
+          format: date
+    DistributionStatuses:
+      type: object
+      properties:
+        distributionStatuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/DistributionStatus'
     DistributionType:
       type: object
       properties:

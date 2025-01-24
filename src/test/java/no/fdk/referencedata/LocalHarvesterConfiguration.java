@@ -14,6 +14,8 @@ import no.fdk.referencedata.eu.datasettype.DatasetTypeHarvester;
 import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
 import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
 import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
+import no.fdk.referencedata.eu.distributionstatus.DistributionStatusHarvester;
+import no.fdk.referencedata.eu.distributionstatus.LocalDistributionStatusHarvester;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeHarvester;
 import no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester;
 import no.fdk.referencedata.eu.eurovoc.EuroVocHarvester;

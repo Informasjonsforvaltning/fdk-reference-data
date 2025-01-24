@@ -22,6 +22,9 @@ type Query {
   dataThemes: [DataTheme!]!
   dataThemeByCode(code: String!): DataTheme
 
+  distributionStatuses: [DistributionStatus!]!
+  distributionStatusByCode(code: String!): DistributionStatus
+
   distributionTypes: [DistributionType!]!
   distributionTypeByCode(code: String!): DistributionType
 
@@ -146,6 +149,13 @@ type ConceptSubject {
 }
 
 type DataTheme {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+  startUse: String
+}
+
+type DistributionStatus {
   uri: ID!
   code: String
   label: LocalizedStrings
