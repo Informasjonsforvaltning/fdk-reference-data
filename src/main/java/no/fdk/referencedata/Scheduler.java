@@ -16,6 +16,7 @@ import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
+import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.los.LosService;
@@ -96,6 +97,9 @@ public class Scheduler {
 
     @Autowired
     private KommuneOrganisasjonService kommuneOrganisasjonService;
+
+    @Autowired
+    private PlannedAvailabilityService plannedAvailabilityService;
 
     /**
      * Run every hour
@@ -257,9 +261,20 @@ public class Scheduler {
         enhetService.harvestAndSave();
     }
 
-    @Scheduled(cron = "0 50 3 * * ?")
+    /**
+     * Run every day 04:10 (at night)
+     */
+    @Scheduled(cron = "0 10 4 * * ?")
     public void updateRelationshipWithSourceTypes() {
         relationshipWithSourceTypeService.harvestAndSave(false);
+    }
+
+    /**
+     * Run every day 04:20 (at night)
+     */
+    @Scheduled(cron = "0 20 4 * * ?")
+    public void updatePlannedAvailability() {
+        plannedAvailabilityService.harvestAndSave(false);
     }
 
     @EventListener(ApplicationReadyEvent.class)

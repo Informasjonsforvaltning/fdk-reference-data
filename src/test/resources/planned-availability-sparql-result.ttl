@@ -1,0 +1,39 @@
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/> .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns3:	<http://publications.europa.eu/resource/authority/planned-availability/> .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+
+ns1:planned-availability	owl:versionInfo	"20220715-0" .
+
+ns3:AVAILABLE	skos:inScheme	ns1:planned-availability ;
+	skos:prefLabel	"tilgjengelig"@nb ,
+		"available"@en ,
+		"tilgjengelig"@no ,
+		"tilgjengeleg"@nn ;
+    dc:identifier	"AVAILABLE" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-12-08" .
+
+ns3:EXPERIMENTAL	skos:inScheme	ns1:planned-availability ;
+	skos:prefLabel	"experimental"@en ,
+		"eksperimentell"@no ,
+		"eksperimentell"@nb ,
+		"eksperimentell"@nn ;
+	dc:identifier	"EXPERIMENTAL" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-12-08" .
+
+ns3:STABLE	skos:inScheme	ns1:planned-availability ;
+	skos:prefLabel	"stabil"@nb ,
+		"stabil"@nn ,
+		"stable"@en ,
+		"stabil"@no ;
+	dc:identifier	"STABLE" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-12-08" .
+
+ns3:TEMPORARY	skos:inScheme	ns1:planned-availability ;
+	skos:prefLabel	"midlertidig"@nn ,
+		"midlertidig"@no ,
+		"temporary"@en ,
+		"midlertidig"@nb ;
+	dc:identifier	"TEMPORARY" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-12-08" .
