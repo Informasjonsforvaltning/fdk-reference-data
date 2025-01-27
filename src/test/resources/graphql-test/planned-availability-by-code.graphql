@@ -1,0 +1,13 @@
+query GetPlannedAvailabilityByCode($code: String!) {
+    plannedAvailabilityByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        },
+        startUse
+    }
+}

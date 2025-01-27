@@ -357,6 +357,47 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/AccessRight'
+  /eu/planned-availabilities:
+    get:
+      tags:
+        - planned-availability-controller
+      operationId: getPlannedAvailabilities
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PlannedAvailabilities'
+    post:
+      tags:
+        - planned-availability-controller
+      operationId: updatePlannedAvailabilities
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/planned-availabilities/{code}:
+    get:
+      tags:
+        - planned-availability-controller
+      operationId: getPlannedAvailability
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PlannedAvailability'
   /los/themes-and-words:
     get:
       tags:
@@ -713,6 +754,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AccessRight'
+    PlannedAvailability:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+    PlannedAvailabilities:
+      type: object
+      properties:
+        plannedAvailabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlannedAvailability'
     Nasjon:
       type: object
       properties:

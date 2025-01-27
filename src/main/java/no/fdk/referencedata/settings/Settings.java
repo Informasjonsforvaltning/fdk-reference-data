@@ -14,6 +14,7 @@ public enum Settings {
     FILE_TYPE,
     FREQUENCY,
     EURO_VOC,
+    PLANNED_AVAILABILITY,
     MEDIA_TYPE,
     GEONORGE_KOMMUNE,
     GEONORGE_FYLKE,

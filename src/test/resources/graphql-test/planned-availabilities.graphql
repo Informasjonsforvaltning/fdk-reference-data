@@ -1,0 +1,12 @@
+query {
+    plannedAvailabilities {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        }
+    }
+}

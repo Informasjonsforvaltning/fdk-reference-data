@@ -51,6 +51,9 @@ type Query {
   mainActivities: [MainActivity!]!
   mainActivityByCode(code: String!): MainActivity
 
+  plannedAvailabilities: [PlannedAvailability!]!
+  plannedAvailabilityByCode(code: String!): PlannedAvailability
+
   mediaTypes: [MediaType!]!
   mediaTypesByType(type: String!): [MediaType!]!
   mediaTypeByTypeAndSubType(type: String!, subType: String!): MediaType
@@ -224,6 +227,13 @@ type MainActivity {
   uri: ID!
   code: String
   label: LocalizedStrings
+}
+
+type PlannedAvailability {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+  startUse: String
 }
 
 type MediaType {
