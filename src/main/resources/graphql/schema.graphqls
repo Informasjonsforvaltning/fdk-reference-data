@@ -19,6 +19,9 @@ type Query {
 
   conceptSubjects: [ConceptSubject!]!
 
+  currencies: [Currency!]!
+  currencyByCode(code: String!): Currency
+
   dataThemes: [DataTheme!]!
   dataThemeByCode(code: String!): DataTheme
 
@@ -149,6 +152,12 @@ type ConceptSubject {
   uri: ID!
   code: String
   label: LocalizedStrings
+}
+
+type Currency {
+ uri: ID!
+ code: String
+ label: LocalizedStrings
 }
 
 type DataTheme {

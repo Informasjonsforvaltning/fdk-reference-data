@@ -10,6 +10,8 @@ import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
 import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
+import no.fdk.referencedata.eu.currency.CurrencyHarvester;
+import no.fdk.referencedata.eu.currency.LocalCurrencyHarvester;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeHarvester;
 import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
 import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
@@ -101,6 +103,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public RoleTypeHarvester roleTypeHarvester() {
         return new LocalRoleTypeHarvester("1");
+    }
+
+    @Bean
+    public CurrencyHarvester currencyHarvester() {
+        return new LocalCurrencyHarvester("20241211-0");
     }
 
     @Bean

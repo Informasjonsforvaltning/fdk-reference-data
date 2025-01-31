@@ -8,6 +8,7 @@ import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
+import no.fdk.referencedata.eu.currency.CurrencyService;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
 import no.fdk.referencedata.eu.distributionstatus.DistributionStatusService;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
@@ -61,6 +62,9 @@ public class Scheduler {
 
     @Autowired
     private ConceptStatusService conceptStatusService;
+
+    @Autowired
+    private CurrencyService currencyService;
 
     @Autowired
     private DistributionStatusService distributionStatusService;
@@ -275,6 +279,14 @@ public class Scheduler {
     @Scheduled(cron = "0 20 4 * * ?")
     public void updatePlannedAvailability() {
         plannedAvailabilityService.harvestAndSave(false);
+    }
+
+    /**
+     * Run every day 04:30 (at night)
+     */
+    @Scheduled(cron = "0 30 4 * * ?")
+    public void updateCurrencies() {
+        currencyService.harvestAndSave(false);
     }
 
     @EventListener(ApplicationReadyEvent.class)

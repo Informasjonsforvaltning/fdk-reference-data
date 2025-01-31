@@ -398,6 +398,47 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/PlannedAvailability'
+  /eu/currencies:
+    get:
+      tags:
+        - currency-controller
+      operationId: getCurrencies
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Currencies'
+    post:
+      tags:
+        - currency-controller
+      operationId: updateCurrencies
+      security:
+        - ApiKeyAuth: [ ]
+      responses:
+        "200":
+          description: OK
+        "403":
+          description: Forbidden
+  /eu/currencies/{code}:
+    get:
+      tags:
+        - currency-controller
+      operationId: getCurrency
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Currency'
   /los/themes-and-words:
     get:
       tags:
@@ -772,6 +813,24 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PlannedAvailability'
+    Currency:
+      type: object
+      properties:
+        uri:
+          type: string
+        code:
+          type: string
+        label:
+          type: object
+          additionalProperties:
+            type: string
+    Currencies:
+      type: object
+      properties:
+        currencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Currency'
     Nasjon:
       type: object
       properties:

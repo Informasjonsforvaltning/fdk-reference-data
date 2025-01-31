@@ -1,0 +1,11 @@
+query {
+    currencies {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}

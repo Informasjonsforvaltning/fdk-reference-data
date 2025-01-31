@@ -1,0 +1,77 @@
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/currency/> .
+@prefix ns2:	<http://publications.europa.eu/resource/authority/> .
+@prefix dc:	    <http://purl.org/dc/elements/1.1/> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+
+ns2:currency	owl:versionInfo	"20241211-0" .
+
+ns1:AUD	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Australian dollar"@en ;
+	dc:identifier	"AUD" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:CUP	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Cuban peso"@en ;
+	dc:identifier	"CUP" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:DKK	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Danish krone"@en ;
+	dc:identifier	"DKK" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:EUR	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Euro"@en ;
+	dc:identifier	"EUR" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-01-01" .
+
+ns1:GBP	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Pound sterling"@en ;
+	dc:identifier	"GBP" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:ISK	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Iceland kr\u00F3na"@en ;
+	dc:identifier	"ISK" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1982-01-01" .
+
+ns1:JPY	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Yen"@en ;
+	dc:identifier	"JPY" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:NLG	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Netherlands guilder"@en ;
+	dc:identifier	"NLG" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1952-07-25" .
+
+ns1:NOK	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Norwegian krone"@en ;
+	dc:identifier	"NOK" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:SEK	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Swedish krona"@en ;
+	dc:identifier	"SEK" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:USD	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"US dollar"@en ;
+	dc:identifier	"USD" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+
+ns1:XTS	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Code reserved for testing purposes"@en ;
+	dc:identifier	"XTS" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1987-01-01" .
+
+ns1:XXX	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"No currency"@en ;
+	dc:identifier	"XXX" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1987-01-01" .
+
+ns1:XBT	skos:inScheme	ns2:currency ;
+	skos:prefLabel	"Bitcoin"@en ;
+	dc:identifier	"XBT" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2009-01-09" .
