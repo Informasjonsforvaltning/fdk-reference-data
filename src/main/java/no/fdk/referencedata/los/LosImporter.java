@@ -74,7 +74,7 @@ public class LosImporter {
                 .sorted(Comparator.comparing(LosNode::getUri))
                 .collect(Collectors.toList());
 
-        log.debug("Got {} LOSes", allLosNodes.size());
+        log.info("Got {} LOSes", allLosNodes.size());
 
         return allLosNodes;
 
