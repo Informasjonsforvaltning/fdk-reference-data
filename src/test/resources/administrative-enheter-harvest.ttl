@@ -1,159 +1,156 @@
-@prefix res: <http://www.w3.org/2005/sparql-results#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-_:_ a res:ResultSet .
-_:_ res:resultVariable "uri" , "enh_navn" , "enh_type" , "upper_enh" .
-@prefix ns0:	<http://rdf.kartverket.no/onto/adm_enhet_4.0.owl#> .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/nasjon/id/173163> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Norge" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Nasjon ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172676> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Fyresdal" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172682> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Siljan" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172729> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Bamble" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172782> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Seljord" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172786> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Tinn" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172796> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Tokke" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172803> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Krager\u00F8" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172828> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Skien" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172898> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Hjartdal" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172903> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Nissedal" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172904> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Kviteseid" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172906> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Notodden" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172907> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Drangedal" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172919172988> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "F\u00E6rder" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172940> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Porsgrunn" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172987172681> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Larvik" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Vestfold og Telemark" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173158173162> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Vestfold og Telemark" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173144> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Nordland" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173146173145> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Tr\u00F8ndelag" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173147> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "M\u00F8re og Romsdal" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173152> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Rogaland" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173159> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Oslo" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173143173142> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Troms og Finnmark" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173150173151> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Vestland" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173153173160> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Agder" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173154173155> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Innlandet" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/fylke/id/173157173156173161> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Viken" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Fylke ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Norge" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172730> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Hadsel" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Nordland" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/172734> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Beiarn" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Nordland" ] ] .
-_:_ res:solution [
-      res:binding [ res:variable "uri" ; res:value <https://data.geonorge.no/administrativeEnheter/kommune/id/173093> ] ;
-      res:binding [ res:variable "enh_navn" ; res:value "Sokndal" ] ;
-      res:binding [ res:variable "enh_type" ; res:value ns0:Kommune ] ;
-      res:binding [ res:variable "upper_enh" ; res:value "Rogaland" ] ] .
+PREFIX dct: <http://purl.org/dc/terms/>
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172729>
+        a               dct:Location;
+        dct:identifier  "172729";
+        dct:title       "Bamble" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172940>
+        a               dct:Location;
+        dct:identifier  "172940";
+        dct:title       "Porsgrunn" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173150173151>
+        a               dct:Location;
+        dct:identifier  "173150173151";
+        dct:title       "Vestland" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172907>
+        a               dct:Location;
+        dct:identifier  "172907";
+        dct:title       "Drangedal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172682>
+        a               dct:Location;
+        dct:identifier  "172682";
+        dct:title       "Siljan" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172734>
+        a               dct:Location;
+        dct:identifier  "172734";
+        dct:title       "Beiarn" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/173093>
+        a               dct:Location;
+        dct:identifier  "173093";
+        dct:title       "Sokndal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172782>
+        a               dct:Location;
+        dct:identifier  "172782";
+        dct:title       "Seljord" .
+
+<https://data.geonorge.no/administrativeEnheter/nasjon/id/173163>
+        a               dct:Location;
+        dct:identifier  "173163";
+        dct:title       "Norge" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173146173145>
+        a               dct:Location;
+        dct:identifier  "173146173145";
+        dct:title       "Trøndelag" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173158173162>
+        a               dct:Location;
+        dct:identifier  "173158173162";
+        dct:title       "Vestfold og Telemark" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172803>
+        a               dct:Location;
+        dct:identifier  "172803";
+        dct:title       "Kragerø" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173144>
+        a               dct:Location;
+        dct:identifier  "173144";
+        dct:title       "Nordland" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173154173155>
+        a               dct:Location;
+        dct:identifier  "173154173155";
+        dct:title       "Innlandet" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172903>
+        a               dct:Location;
+        dct:identifier  "172903";
+        dct:title       "Nissedal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172919172988>
+        a               dct:Location;
+        dct:identifier  "172919172988";
+        dct:title       "Færder" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172676>
+        a               dct:Location;
+        dct:identifier  "172676";
+        dct:title       "Fyresdal" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173159>
+        a               dct:Location;
+        dct:identifier  "173159";
+        dct:title       "Oslo" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173157173156173161>
+        a               dct:Location;
+        dct:identifier  "173157173156173161";
+        dct:title       "Viken" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173147>
+        a               dct:Location;
+        dct:identifier  "173147";
+        dct:title       "Møre og Romsdal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172730>
+        a               dct:Location;
+        dct:identifier  "172730";
+        dct:title       "Hadsel" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172906>
+        a               dct:Location;
+        dct:identifier  "172906";
+        dct:title       "Notodden" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172828>
+        a               dct:Location;
+        dct:identifier  "172828";
+        dct:title       "Skien" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173153173160>
+        a               dct:Location;
+        dct:identifier  "173153173160";
+        dct:title       "Agder" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172786>
+        a               dct:Location;
+        dct:identifier  "172786";
+        dct:title       "Tinn" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173152>
+        a               dct:Location;
+        dct:identifier  "173152";
+        dct:title       "Rogaland" .
+
+<https://data.geonorge.no/administrativeEnheter/fylke/id/173143173142>
+        a               dct:Location;
+        dct:identifier  "173143173142";
+        dct:title       "Troms og Finnmark" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172898>
+        a               dct:Location;
+        dct:identifier  "172898";
+        dct:title       "Hjartdal" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172987172681>
+        a               dct:Location;
+        dct:identifier  "172987172681";
+        dct:title       "Larvik" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172904>
+        a               dct:Location;
+        dct:identifier  "172904";
+        dct:title       "Kviteseid" .
+
+<https://data.geonorge.no/administrativeEnheter/kommune/id/172796>
+        a               dct:Location;
+        dct:identifier  "172796";
+        dct:title       "Tokke" .
