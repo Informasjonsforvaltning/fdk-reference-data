@@ -58,9 +58,9 @@ server:
     context-path: /
 
 management:
-  metrics:
-    export:
-      statsd:
+  statsd:
+    metrics:
+      export:
         enabled: false
 ---
 
@@ -71,7 +71,7 @@ server:
     context-path: /
 
 management:
-  metrics:
-    export:
-      statsd:
+  statsd:
+    metrics:
+      export:
         enabled: false
