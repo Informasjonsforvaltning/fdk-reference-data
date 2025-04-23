@@ -1,37 +1,47 @@
-# FDK reference-data
+# FDK Reference data
 
-Base image: [openjdk:15-slim](https://hub.docker.com/layers/openjdk/library/openjdk/15-slim/images/sha256-82fc670b1757068d299fb3f860201c5c97625b5ca351f903a6de33857398eb82?context=explore)
-Source: [Dockerfile](https://github.com/Informasjonsforvaltning/fdk-reference-data/blob/master/Dockerfile)
+This application provides a common API (REST & GraphQL) for codelists, concepts, help texts and other kinds of reference
+data that are used by many other applications in the overall architecture. The application imports the reference data
+from various sources as scheduled tasks.
 
-##  Overview
-FDK reference-data is a service that provides metadata for the various applications in this ecosystem. It provides code-lists, concepts and helptexts. 
+For a broader understanding of the system’s context, refer to
+the [architecture documentation](https://github.com/Informasjonsforvaltning/architecture-documentation) wiki.
 
-# Technologies/frameworks
-* Java 21
-* Spring Boot
-* MongoDB
+## Getting Started
 
-## API
-The service provides REST API with following specification: [OpenAPI3](./src/main/resources/openapi/openapi.yaml).
+These instructions will give you a copy of the project up and running on your local machine for development and testing
+purposes.
 
-## Environment variables
+### Prerequisites
+
+Ensure you have the following installed:
+
+- Java 21
+- Maven
+- Docker
+
+### Running locally
+
+Clone the repository
+
+```sh
+git clone https://github.com/Informasjonsforvaltning/fdk-reference-data.git
+cd fdk-reference-data
 ```
-MONGODB_DATABASE=reference-data
-MONGODB_PORT=27017
-MONGODB_HOST=localhost
-MONGODB_USERNAME=root
-MONGODB_PASSWORD=password
-MONGODB_AUTH_DATABASE=admin
 
-API_KEY=my-api-key
+Start MongoDB and the application (either through your IDE using the dev profile, or via CLI):
 
-LOG_LEVEL=DEBUG
+```sh
+docker compose up -d
+mvn spring-boot:run -Dspring-boot.run.profiles=develop
 ```
 
-## Run locally
-```
-docker-compose up -d
+### API Documentation
 
-Start application in IDE of choice.
-```    
-        
+The API documentation is available at ```src/main/resources/openapi``` and ```src/main/resources/graphql```.
+
+### Running tests
+
+```sh
+mvn verify
+```
