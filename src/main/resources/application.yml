@@ -8,12 +8,14 @@ spring:
     max-in-memory-size: 2MB
   data:
     mongodb:
-      authentication-database: ${MONGODB_AUTH_DATABASE:admin}
-      username: ${MONGODB_USERNAME:root}
-      password: ${MONGODB_PASSWORD:password}
-      database: ${MONGODB_DATABASE:reference-data}
-      port: ${MONGODB_PORT:27017}
-      host: ${MONGODB_HOST:localhost}
+      host: ${MONGODB_HOST}
+      username: ${MONGODB_USER}
+      password: ${MONGODB_PASSWORD}
+      authentication-database: ${MONGODB_AUTH}
+      replica-set-name: ${MONGODB_REPLICASET}
+      port: 27017
+      database: referenceData
+      auto-index-creation: true
 
 server:
   port: 8080
@@ -52,6 +54,12 @@ logging:
 
 spring:
   config.activate.on-profile: develop,unit-integration
+  data.mongodb:
+    host: localhost
+    username: root
+    password: password
+    authentication-database: admin
+    replica-set-name: null
 server:
   port: 8113
   servlet:
@@ -66,6 +74,12 @@ management:
 
 spring:
   config.activate.on-profile: test
+  data.mongodb:
+    host: localhost
+    username: root
+    password: password
+    authentication-database: admin
+    replica-set-name: null
 server:
   servlet:
     context-path: /

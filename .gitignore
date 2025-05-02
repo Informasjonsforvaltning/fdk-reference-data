@@ -3,3 +3,4 @@ tdb
 *.iml
 .idea/
 node_modules
+.DS_Store
