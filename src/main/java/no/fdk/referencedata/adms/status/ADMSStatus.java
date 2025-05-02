@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Data
 @Builder
-@Document
+@Document(collection = "admsStatuses")
 public class ADMSStatus {
     @Id
     String uri;

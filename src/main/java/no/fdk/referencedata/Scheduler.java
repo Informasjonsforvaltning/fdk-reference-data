@@ -315,6 +315,10 @@ public class Scheduler {
             frequencyService.harvestAndSave(true);
         }
 
+        if(distributionStatusService.firstTime()) {
+            distributionStatusService.harvestAndSave(true);
+        }
+
         if(distributionTypeService.firstTime()) {
             distributionTypeService.harvestAndSave(true);
         }
@@ -369,6 +373,14 @@ public class Scheduler {
 
         if(relationshipWithSourceTypeService.firstTime()) {
             relationshipWithSourceTypeService.harvestAndSave(true);
+        }
+
+        if(plannedAvailabilityService.firstTime()) {
+            plannedAvailabilityService.harvestAndSave(true);
+        }
+
+        if(currencyService.firstTime()) {
+            currencyService.harvestAndSave(true);
         }
     }
 }
