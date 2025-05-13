@@ -6,6 +6,7 @@ import no.fdk.referencedata.eu.frequency.FrequencyRepository;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
+import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
@@ -61,16 +62,15 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
                     .entityList(Frequency.class)
                     .get();
 
-            Assertions.assertEquals(30, result.size());
+            Assertions.assertEquals(38, result.size());
 
             Frequency frequency = result.get(0);
 
-        assertEquals("http://publications.europa.eu/resource/authority/frequency/ANNUAL", frequency.getUri());
-        assertEquals("ANNUAL", frequency.getCode());
-        assertEquals("årlig", frequency.getLabel().get("no"));
-            assertEquals("årlig", frequency.getLabel().get("nb"));
-            assertEquals("årleg", frequency.getLabel().get("nn"));
-            assertEquals("annual", frequency.getLabel().get("en"));
+            assertEquals("http://publications.europa.eu/resource/authority/frequency/10MIN", frequency.getUri());
+            assertEquals("10MIN", frequency.getCode());
+            assertEquals("hvert tiende minutt", frequency.getLabel().get("nb"));
+            assertEquals("kvart tiande minutt", frequency.getLabel().get("nn"));
+            assertEquals("every ten minutes", frequency.getLabel().get("en"));
     }
 
     @Test

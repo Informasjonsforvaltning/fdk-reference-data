@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static no.fdk.referencedata.i18n.Language.NORWEGIAN_BOKMAAL;
+import static no.fdk.referencedata.i18n.Language.NORWEGIAN_NYNORSK;
+
 @Component
 @Slf4j
 public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
@@ -62,12 +65,48 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
     }
 
     private Frequency mapFrequency(Resource frequency) {
+        String code = frequency.getProperty(DC.identifier).getObject().toString();
         final Map<String, String> label = new HashMap<>();
         Flux.fromIterable(frequency.listProperties(SKOS.prefLabel).toList())
                 .map(stmt -> stmt.getObject().asLiteral())
                 .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
                 .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
                 .subscribe();
+
+        switch (code) {
+            case "1MIN":
+                label.put(NORWEGIAN_BOKMAAL.code(), "hvert minutt");
+                label.put(NORWEGIAN_NYNORSK.code(), "kvart minutt");
+                break;
+            case "5MIN":
+                label.put(NORWEGIAN_BOKMAAL.code(), "hvert femte minutt");
+                label.put(NORWEGIAN_NYNORSK.code(), "kvart femte minutt");
+                break;
+            case "10MIN":
+                label.put(NORWEGIAN_BOKMAAL.code(), "hvert tiende minutt");
+                label.put(NORWEGIAN_NYNORSK.code(), "kvart tiande minutt");
+                break;
+            case "15MIN":
+                label.put(NORWEGIAN_BOKMAAL.code(), "hvert kvarter");
+                label.put(NORWEGIAN_NYNORSK.code(), "kvart kvarter");
+                break;
+            case "30MIN":
+                label.put(NORWEGIAN_BOKMAAL.code(), "hver halvtime");
+                label.put(NORWEGIAN_NYNORSK.code(), "kvar halvtime");
+                break;
+            case "12HRS":
+                label.put(NORWEGIAN_BOKMAAL.code(), "hver tolvte time");
+                label.put(NORWEGIAN_NYNORSK.code(), "kvar tolvte time");
+                break;
+            case "AS_NEEDED":
+                label.put(NORWEGIAN_BOKMAAL.code(), "etter behov");
+                label.put(NORWEGIAN_NYNORSK.code(), "etter behov");
+                break;
+            case "NOT_PLANNED":
+                label.put(NORWEGIAN_BOKMAAL.code(), "ikke planlagt");
+                label.put(NORWEGIAN_NYNORSK.code(), "ikkje planlagt");
+                break;
+        }
 
         return Frequency.builder()
                 .uri(frequency.getURI())

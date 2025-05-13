@@ -5,7 +5,7 @@ import org.springframework.core.io.Resource;
 
 public class LocalFrequencyHarvester extends FrequencyHarvester {
     private final String version;
-    public static final int FREQUENCIES_SIZE = 30;
+    public static final int FREQUENCIES_SIZE = 38;
 
     public LocalFrequencyHarvester(String version) {
         this.version = version;
