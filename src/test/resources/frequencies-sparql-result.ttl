@@ -184,3 +184,27 @@ ns1:TRIDECENNIAL	skos:inScheme	ns2:frequency ;
 		"hvert trettiende \u00E5r"@no ,
 		"hvert trettiende \u00E5r"@nb ;
 	dc:identifier	"TRIDECENNIAL" .
+ns1:1MIN	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"every minute"@en ;
+	dc:identifier	"1MIN" .
+ns1:5MIN	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"every five minutes"@en ;
+	dc:identifier	"5MIN" .
+ns1:10MIN	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"every ten minutes"@en ;
+	dc:identifier	"10MIN" .
+ns1:15MIN	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"every fifteen minutes"@en ;
+	dc:identifier	"15MIN" .
+ns1:30MIN	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"every thirty minutes"@en ;
+	dc:identifier	"30MIN" .
+ns1:12HRS	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"every twelve hours"@en ;
+	dc:identifier	"12HRS" .
+ns1:AS_NEEDED	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"as needed"@en ;
+	dc:identifier	"AS_NEEDED" .
+ns1:NOT_PLANNED	skos:inScheme	ns2:frequency ;
+	skos:prefLabel	"not planned"@en ;
+	dc:identifier	"NOT_PLANNED" .
