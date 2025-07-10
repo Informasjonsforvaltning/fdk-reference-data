@@ -73,45 +73,53 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
                 .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
                 .subscribe();
 
-        switch (code) {
-            case "1MIN":
-                label.put(NORWEGIAN_BOKMAAL.code(), "hvert minutt");
-                label.put(NORWEGIAN_NYNORSK.code(), "kvart minutt");
-                break;
-            case "5MIN":
-                label.put(NORWEGIAN_BOKMAAL.code(), "hvert femte minutt");
-                label.put(NORWEGIAN_NYNORSK.code(), "kvart femte minutt");
-                break;
-            case "10MIN":
-                label.put(NORWEGIAN_BOKMAAL.code(), "hvert tiende minutt");
-                label.put(NORWEGIAN_NYNORSK.code(), "kvart tiande minutt");
-                break;
-            case "15MIN":
-                label.put(NORWEGIAN_BOKMAAL.code(), "hvert kvarter");
-                label.put(NORWEGIAN_NYNORSK.code(), "kvart kvarter");
-                break;
-            case "30MIN":
-                label.put(NORWEGIAN_BOKMAAL.code(), "hver halvtime");
-                label.put(NORWEGIAN_NYNORSK.code(), "kvar halvtime");
-                break;
-            case "12HRS":
-                label.put(NORWEGIAN_BOKMAAL.code(), "hver tolvte time");
-                label.put(NORWEGIAN_NYNORSK.code(), "kvar tolvte time");
-                break;
-            case "AS_NEEDED":
-                label.put(NORWEGIAN_BOKMAAL.code(), "etter behov");
-                label.put(NORWEGIAN_NYNORSK.code(), "etter behov");
-                break;
-            case "NOT_PLANNED":
-                label.put(NORWEGIAN_BOKMAAL.code(), "ikke planlagt");
-                label.put(NORWEGIAN_NYNORSK.code(), "ikkje planlagt");
-                break;
-        }
+        int sortIndex = switch (code) {
+            case "CONT" -> 0;
+            case "UPDATE_CONT" -> 1;
+            case "1MIN" -> 2;
+            case "5MIN" -> 3;
+            case "10MIN" -> 4;
+            case "15MIN" -> 5;
+            case "30MIN" -> 6;
+            case "HOURLY" -> 7;
+            case "BIHOURLY" -> 8;
+            case "TRIHOURLY" -> 9;
+            case "12HRS" -> 10;
+            case "DAILY_2" -> 11;
+            case "DAILY" -> 12;
+            case "WEEKLY_5" -> 13;
+            case "WEEKLY_3" -> 14;
+            case "WEEKLY_2" -> 15;
+            case "WEEKLY" -> 16;
+            case "BIWEEKLY" -> 17;
+            case "MONTHLY_3" -> 18;
+            case "MONTHLY_2" -> 19;
+            case "MONTHLY" -> 20;
+            case "BIMONTHLY" -> 21;
+            case "QUARTERLY" -> 22;
+            case "ANNUAL_3" -> 23;
+            case "ANNUAL_2" -> 24;
+            case "ANNUAL" -> 25;
+            case "BIENNIAL" -> 26;
+            case "TRIENNIAL" -> 27;
+            case "QUADRENNIAL" -> 28;
+            case "QUINQUENNIAL" -> 29;
+            case "DECENNIAL" -> 30;
+            case "BIDECENNIAL" -> 31;
+            case "TRIDECENNIAL" -> 32;
+            case "AS_NEEDED" -> 33;
+            case "IRREG" -> 34;
+            case "OTHER" -> 35;
+            case "NOT_PLANNED" -> 36;
+            case "NEVER" -> 37;
+            default -> 100;
+        };
 
         return Frequency.builder()
                 .uri(frequency.getURI())
                 .code(frequency.getProperty(DC.identifier).getObject().toString())
                 .label(label)
+                .sortIndex(sortIndex)
                 .build();
     }
 

@@ -26,7 +26,7 @@ public class FrequencyController {
     public ResponseEntity<Frequencies> getFrequencies() {
         return ResponseEntity.ok(Frequencies.builder().frequencies(
                 StreamSupport.stream(frequencyRepository.findAll().spliterator(), false)
-                        .sorted(Comparator.comparing(Frequency::getUri))
+                        .sorted(Comparator.comparing(Frequency::getSortIndex))
                         .collect(Collectors.toList())).build());
     }
 
