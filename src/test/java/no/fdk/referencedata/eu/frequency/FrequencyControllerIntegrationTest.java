@@ -71,9 +71,9 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(FREQUENCIES_SIZE, frequencies.getFrequencies().size());
 
         Frequency first = frequencies.getFrequencies().get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/frequency/10MIN", first.getUri());
-        assertEquals("10MIN", first.getCode());
-        assertEquals("kvart tiande minutt", first.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/frequency/CONT", first.getUri());
+        assertEquals("CONT", first.getCode());
+        assertEquals("kontinuerleg", first.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
     }
 
     @Test

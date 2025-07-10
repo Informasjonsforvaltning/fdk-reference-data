@@ -186,25 +186,41 @@ ns1:TRIDECENNIAL	skos:inScheme	ns2:frequency ;
 	dc:identifier	"TRIDECENNIAL" .
 ns1:1MIN	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"every minute"@en ;
+	skos:prefLabel	"hvert minutt"@nb ;
+	skos:prefLabel	"kvart minutt"@nn ;
 	dc:identifier	"1MIN" .
 ns1:5MIN	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"every five minutes"@en ;
+	skos:prefLabel	"hvert femte minutt"@nb ;
+	skos:prefLabel	"kvart femte minutt"@nn ;
 	dc:identifier	"5MIN" .
 ns1:10MIN	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"every ten minutes"@en ;
+	skos:prefLabel	"hvert tiende minutt"@nb ;
+	skos:prefLabel	"kvart tiande minutt"@nn ;
 	dc:identifier	"10MIN" .
 ns1:15MIN	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"every fifteen minutes"@en ;
+	skos:prefLabel	"hvert kvarter"@nb ;
+	skos:prefLabel	"kvart kvarter"@nn ;
 	dc:identifier	"15MIN" .
 ns1:30MIN	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"every thirty minutes"@en ;
+	skos:prefLabel	"hver halvtime"@nb ;
+	skos:prefLabel	"kvar halvtime"@nn ;
 	dc:identifier	"30MIN" .
 ns1:12HRS	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"every twelve hours"@en ;
+	skos:prefLabel	"hver tolvte time"@nb ;
+	skos:prefLabel	"kvar tolvte time"@nn ;
 	dc:identifier	"12HRS" .
 ns1:AS_NEEDED	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"as needed"@en ;
+	skos:prefLabel	"etter behov"@nb ;
+	skos:prefLabel	"etter behov"@nn ;
 	dc:identifier	"AS_NEEDED" .
 ns1:NOT_PLANNED	skos:inScheme	ns2:frequency ;
 	skos:prefLabel	"not planned"@en ;
+	skos:prefLabel	"ikke planlagd"@nb ;
+	skos:prefLabel	"ikkje planlagd"@nn ;
 	dc:identifier	"NOT_PLANNED" .

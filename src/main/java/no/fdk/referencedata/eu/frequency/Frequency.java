@@ -17,4 +17,5 @@ public class Frequency {
     @Indexed
     String code;
     Map<String, String> label;
+    Integer sortIndex;
 }
