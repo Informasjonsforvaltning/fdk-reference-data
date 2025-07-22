@@ -1,0 +1,1092 @@
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/> .
+ns1:licence	owl:versionInfo	"20241211-0" .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+ns1:licence	skos:prefLabel	"Licence"@en .
+@prefix ns3:	<http://publications.europa.eu/resource/authority/licence/> .
+ns3:CC0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons CC0 1.0 Universal"@en ;
+	skos:definition	"Personen, der har tilknyttet et v\u00E6rk disse betingelser, har dedikeret v\u00E6rket til offentligheden ved at give afkald p\u00E5 alle sine rettigheder til v\u00E6rket verden over, indenfor lovgivning om ophavsret, herunder alle relaterede og besl\u00E6gtede rettigheder i det omfang, loven tillader. Du m\u00E5 kopiere, \u00E6ndre, distribuere og fremf\u00F8re v\u00E6rket, selv til kommercielle form\u00E5l, alt sammen uden at sp\u00F8rge om tilladelse."@da ,
+		"La personne qui a associ\u00E9 une \u0153uvre \u00E0 CC0 1.0 a d\u00E9di\u00E9 l\u2019\u0153uvre au domaine public en renon\u00E7ant dans le monde entier \u00E0 ses droits sur l\u2019\u0153uvre selon les lois sur le droit d\u2019auteur, droit voisin et connexes, dans la mesure permise par la loi. On peut copier, modifier, distribuer et repr\u00E9senter l\u2019\u0153uvre, m\u00EAme \u00E0 des fins commerciales, sans avoir besoin de demander l\u2019autorisation."@fr ,
+		"The person who associated a work with CC0 1.0 has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. One can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."@en .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+ns3:CC0	dc:identifier	"CC0" .
+@prefix ns5:	<http://publications.europa.eu/ontology/authority/> .
+ns3:CC0	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2009-03-11" .
+ns3:CC_BY	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 4.0 International"@en ;
+	skos:definition	"Cette licence permet aux autres de distribuer, remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/l\u2019autrice en citant son nom. C\u2019est le contrat le plus souple propos\u00E9. Recommand\u00E9 pour la diffusion et l\u2019utilisation maximales d\u2019\u0153uvres licenci\u00E9es sous CC."@fr ,
+		"This licence lets others distribute, remix, tweak, and build upon the author's work, even commercially, as long as they credit the author for the original creation. This is the most accommodating of licences offered. Recommended for maximum dissemination and use of licenced materials."@en ;
+	dc:identifier	"CC_BY" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-25" .
+ns3:CC_BYNC	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial 4.0 International"@en ;
+	skos:definition	"This licence lets others remix, tweak, and build upon the author's work non-commercially, and although their new works must also acknowledge the author and be non-commercial, they don\u2019t have to licence their derivative works on the same terms."@en ,
+		"Cette licence permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales et, bien que les nouvelles \u0153uvres doivent cr\u00E9diter l\u2019auteur/autrice en citant son nom et ne pas constituer une utilisation commerciale, elles n\u2019ont pas \u00E0 \u00EAtre diffus\u00E9es selon les m\u00EAmes conditions."@fr ;
+	dc:identifier	"CC_BYNC" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-25" .
+ns3:CC_BYNCND	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013NoDerivatives 4.0 International"@en ;
+	skos:definition	"This licence is the most restrictive of the six main licences of Creative Commons, only allowing others to download the works and share them with others as long as they credit the author, but they can\u2019t change them in any way or use them commercially."@en ,
+		"Cette licence est la plus restrictive des six licences principales de Creative Commons, n\u2019autorisant les autres qu\u2019\u00E0 t\u00E9l\u00E9charger les \u0153uvres de l\u2019auteur/autrice et \u00E0 les partager qu\u2019on le/la cr\u00E9dite en citant son nom, mais on ne peut les modifier de quelque fa\u00E7on que ce soit ni les utiliser \u00E0 des fins commerciales."@fr ;
+	dc:identifier	"CC_BYNCND" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-25" .
+ns3:CC_BYNCSA	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013ShareAlike 4.0 International"@en ;
+	skos:definition	"Cette licence permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales tant qu\u2019on le/la cr\u00E9dite en citant son nom et que les nouvelles \u0153uvres sont diffus\u00E9es selon les m\u00EAmes conditions."@fr ,
+		"This licence lets others remix, tweak, and build upon the author\u2019s work non-commercially, as long as they credit the author and licence their new creations under the identical terms."@en ;
+	dc:identifier	"CC_BYNCSA" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-25" .
+ns3:CC_BYND	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NoDerivatives 4.0 International"@en ;
+	skos:definition	"Cette licence autorise la redistribution, \u00E0 des fins commerciales ou non, tant que l\u2019\u0153uvre est diffus\u00E9e sans modification et dans son int\u00E9gralit\u00E9, avec attribution et citation du nom de l\u2019auteur/autrice."@fr ,
+		"This licence allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to the author."@en ;
+	dc:identifier	"CC_BYND" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-25" .
+ns3:CC_BYSA	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013ShareAlike 4.0 International"@en ;
+	skos:definition	"This licence lets others remix, tweak, and build upon the author's work even for commercial purposes, as long as they credit the author and licence their new creations under the identical terms. This licence is often compared to \u201Ccopyleft\u201D free and open source software licences. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use. This is the licence used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licenced projects."@en ,
+		"Cette licence permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/l\u2019autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/l\u2019autrice en citant son nom et qu\u2019on diffuse les nouvelles cr\u00E9ations selon des conditions identiques. Cette licence est souvent compar\u00E9e aux licences de logiciels libres, \u00ABopen source\u00BB ou \u00ABcopyleft\u00BB. Toutes les nouvelles \u0153uvres bas\u00E9es sur celles de l\u2019auteur/autrice auront la m\u00EAme licence, et toute \u0153uvre d\u00E9riv\u00E9e pourra \u00EAtre utilis\u00E9e m\u00EAme \u00E0 des fins commerciales. C\u2019est la licence utilis\u00E9e par Wikip\u00E9dia; elle est recommand\u00E9e pour des \u0153uvres qui pourraient b\u00E9n\u00E9ficier de l\u2019incorporation de contenu depuis Wikip\u00E9dia et d\u2019autres projets sous licence similaire."@fr ;
+	dc:identifier	"CC_BYSA" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-25" .
+ns3:COM_REUSE	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"European Commission reuse notice"@en ;
+	skos:definition	"According to the European Commission reuse notice, reuse is authorised, provided the source is acknowledged. The reuse policy of the European Commission is implemented by the Decision of 12 December 2011. The general principle of reuse can be subject to conditions which may be specified in individual copyright notices. Therefore users are advised to refer to the copyright notices of the individual websites maintained under Europa and of the individual documents. Reuse is not applicable to documents subject to intellectual property rights of third parties."@en ;
+	dc:identifier	"COM_REUSE" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2011-12-14" .
+ns3:GNU_FDL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Free Documentation License"@en ;
+	skos:definition	"GNU Free Documentation License is a form of copyleft intended for use on a manual, textbook or other document to assure everyone the effective freedom to copy and redistribute it, with or without modifications, either commercially or non-commercially."@en ,
+		"GNU Free Documentation License est une forme de copyleft destin\u00E9e aux manuels, aux livres scolaires et autres documents. Son objectif est de garantir \u00E0 tous la possibilit\u00E9 effective de copier et de redistribuer librement le document avec ou sans modification, et que ce soit ou non dans un but commercial."@fr ;
+	dc:identifier	"GNU_FDL" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2008-11-03" .
+ns3:ISA_OML	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"ISA Open Metadata Licence 1.1"@en ;
+	skos:definition	"The ISA Open metadata licence 1.1 is a permissive open licence created by the European Commission to support the publication of technical and semantic specifications. Users are allowed to distribute, copy, adapt or modify the licenced work for any commercial and non-commercial purpose with only a limited set of conditions."@en ;
+	dc:identifier	"ISA_OML" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2011-01-01" .
+ns3:ODC_BL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Data Commons Open Database License v1.0"@en ;
+	skos:definition	"ODbL est un contrat de licence ayant pour objet d\u2019autoriser les utilisateurs \u00E0 partager, modifier et utiliser librement la base de donn\u00E9es initiale tout en maintenant ces m\u00EAmes libert\u00E9s pour les autres. De nombreuses bases de donn\u00E9es \u00E9tant prot\u00E9g\u00E9es par des droits d\u2019auteur, les pr\u00E9sentes r\u00E8gles ont pour objet de c\u00E9der ces droits. Certains \u00C9tats, principalement au sein de l\u2019Union europ\u00E9enne, pr\u00E9voient des droits sp\u00E9cifiques r\u00E9gissant les bases de donn\u00E9es, de ce fait ces droits sont \u00E9galement concern\u00E9s par cette licence. Cette licence est aussi un contrat en ce que les utilisateurs de la base de donn\u00E9es initiale s\u2019engagent \u00E0 respecter certaines obligations en contrepartie de l\u2019autorisation d\u2019acc\u00E9der \u00E0 ladite base de donn\u00E9es initiale."@fr ,
+		"ODbL is a licence agreement intended to allow users to freely share, modify, and use the database concerned while maintaining this same freedom for others. Some jurisdictions, mainly in the European Union, have specific rights that cover databases, and so this licence addresses these rights, too. This licence is also an agreement in contract for users of this database to act in certain ways in return for accessing the database concerned."@en ;
+	dc:identifier	"ODC_BL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2009-01-01" .
+ns3:ODC_BY	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Data Commons Attribution License v1.0"@en ;
+	skos:definition	"ODC-By-1.0 is a licence agreement intended to allow users to freely share, modify, and use the database concerned subject only to the attribution requirements set out in Section 4 (notices, no sublicensing). Databases can contain a wide variety of types of content, and so this licence only governs the rights over the database, and not the contents of the database individually."@en ;
+	dc:identifier	"ODC_BY" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2010-10-24" .
+ns3:ODC_PDDL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Data Commons Public Domain Dedication and License 1.0"@en ;
+	skos:definition	"ODC PDDL is a document intended to allow the user to freely share, modify, and use this work for any purpose and without any restrictions. It is intended for use on databases or their contents (\u201Cdata\u201D), either together or individually."@en ;
+	dc:identifier	"ODC_PDDL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2008-03-01" .
+ns3:CC_BYNCND_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NoDerivs\u2013NonCommercial 1.0 Generic"@en ;
+	skos:definition	"CC BY-ND-NC 1.0 is the most restrictive of the six main licences of Creative Commons, only allowing others to download the works and share them with others as long as they credit the author, but they can\u2019t change them in any way or use them commercially."@en ,
+		"CC BY-ND-NC 1.0 est la plus restrictive des six licences principales de Creative Commons, n\u2019autorisant les autres qu\u2019\u00E0 t\u00E9l\u00E9charger les \u0153uvres de l\u2019auteur/autrice et \u00E0 les partager tant qu\u2019on le/la cr\u00E9dite en citant son nom, mais on ne peut les modifier de quelque fa\u00E7on que ce soit ni les utiliser \u00E0 des fins commerciales."@fr ;
+	dc:identifier	"CC_BYNCND_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-12-15" .
+ns3:CC_BYNCND_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013NoDerivs 2.0 Generic"@en ;
+	skos:definition	"CC BY-ND-NC 2.0 est la plus restrictive des six licences principales de Creative Commons, n\u2019autorisant les autres qu\u2019\u00E0 t\u00E9l\u00E9charger les \u0153uvres de l\u2019auteur/autrice et \u00E0 les partager tant qu\u2019on le/la cr\u00E9dite en citant son nom, mais on ne peut les modifier de quelque fa\u00E7on que ce soit ni les utiliser \u00E0 des fins commerciales."@fr ,
+		"CC BY-ND-NC 2.0 is the most restrictive of the six main licences of Creative Commons, only allowing others to download the works and share them with others as long as they credit the author, but they can\u2019t change them in any way or use them commercially."@en ;
+	dc:identifier	"CC_BYNCND_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-05-25" .
+ns3:CC_BYNCND_2_5	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013NoDerivs 2.5 Generic"@en ;
+	skos:definition	"CC BY-ND-NC 2.5 is the most restrictive of the six main licences of Creative Commons, only allowing others to download the works and share them with others as long as they credit the author, but they can\u2019t change them in any way or use them commercially."@en ,
+		"CC BY-ND-NC 2.5 est la plus restrictive des six licences principales de Creative Commons, n\u2019autorisant les autres qu\u2019\u00E0 t\u00E9l\u00E9charger les \u0153uvres de l\u2019auteur/autrice et \u00E0 les partager tant qu\u2019on le/la cr\u00E9dite en citant son nom, mais on ne peut les modifier de quelque fa\u00E7on que ce soit ni les utiliser \u00E0 des fins commerciales."@fr ;
+	dc:identifier	"CC_BYNCND_2_5" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-06-01" .
+ns3:CC_BYNCSA_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013ShareAlike 3.0 Unported"@en ;
+	skos:definition	"CC BY-NC-SA 3.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, as long as they credit the author and licence their new creations under the identical terms."@en ,
+		"CC BY-NC-SA 3.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales tant qu\u2019on le/la cr\u00E9dite en citant son nom et que les nouvelles \u0153uvres sont diffus\u00E9es selon les m\u00EAmes conditions."@fr ;
+	dc:identifier	"CC_BYNCSA_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CC_BYNCSA_4_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013ShareAlike 4.0 International"@en ;
+	skos:definition	"CC BY-NC-SA 4.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales tant qu\u2019on le/la cr\u00E9dite en citant son nom et que les nouvelles \u0153uvres sont diffus\u00E9es selon les m\u00EAmes conditions."@fr ,
+		"CC BY-NC-SA 4.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, as long as they credit the author and licence their new creations under the identical terms."@en ;
+	dc:identifier	"CC_BYNCSA_4_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-26" .
+ns3:CC_BYNC_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial 3.0 Unported"@en ;
+	skos:definition	"CC BY-NC 3.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales et, bien que les nouvelles \u0153uvres doivent cr\u00E9diter l\u2019auteur/autrice en citant son nom et ne pas constituer une utilisation commerciale, elles n\u2019ont pas \u00E0 \u00EAtre diffus\u00E9es selon les m\u00EAmes conditions."@fr ,
+		"CC BY-NC 3.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, and although their new works must also acknowledge the author and be non-commercial, they don\u2019t have to licence their derivative works on the same terms."@en ;
+	dc:identifier	"CC_BYNC_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CC_BYNC_4_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial 4.0 International"@en ;
+	skos:definition	"CC BY-NC 4.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, and although their new works must also acknowledge the author and be non-commercial, they don\u2019t have to licence their derivative works on the same terms."@en ,
+		"CC BY-NC 4.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales et, bien que les nouvelles \u0153uvres doivent cr\u00E9diter l\u2019auteur/autrice en citant son nom et ne pas constituer une utilisation commerciale, elles n\u2019ont pas \u00E0 \u00EAtre diffus\u00E9es selon les m\u00EAmes conditions."@fr ;
+	dc:identifier	"CC_BYNC_4_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-26" .
+ns3:CC_BYND_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NoDerivs 1.0 Generic"@en ;
+	skos:definition	"CC BY-ND 1.0 autorise la redistribution, \u00E0 des fins commerciales ou non, tant que l\u2019\u0153uvre est diffus\u00E9e sans modification et dans son int\u00E9gralit\u00E9, avec attribution et citation du nom de l\u2019auteur/autrice."@fr ,
+		"CC BY-ND 1.0 allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to the author."@en ;
+	dc:identifier	"CC_BYND_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-12-15" .
+ns3:CC_BYND_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NoDerivs 2.0 Generic"@en ;
+	skos:definition	"CC BY-ND 2.0 autorise la redistribution, \u00E0 des fins commerciales ou non, tant que l\u2019\u0153uvre est diffus\u00E9e sans modification et dans son int\u00E9gralit\u00E9, avec attribution et citation du nom de l\u2019auteur."@fr ,
+		"CC BY-ND 2.0 allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to the author."@en ;
+	dc:identifier	"CC_BYND_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-05-25" .
+ns3:CC_BYND_2_5	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NoDerivs 2.5 Generic"@en ;
+	skos:definition	"CC BY-ND 2.5 allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to the author."@en ,
+		"CC BY-ND 2.5 autorise la redistribution, \u00E0 des fins commerciales ou non, tant que l\u2019\u0153uvre est diffus\u00E9e sans modification et dans son int\u00E9gralit\u00E9, avec attribution et citation du nom de l\u2019auteur/autrice."@fr ;
+	dc:identifier	"CC_BYND_2_5" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-06-01" .
+ns3:CC_BYSA_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013ShareAlike 3.0 Unported"@en ;
+	skos:definition	"CC BY-SA 3.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom et qu\u2019on diffuse les nouvelles cr\u00E9ations selon des conditions identiques. Cette licence est souvent compar\u00E9e aux licences de logiciels libres, \u00ABopen source\u00BB ou \u00ABcopyleft\u00BB. Toutes les nouvelles \u0153uvres bas\u00E9es sur les \u0153uvres de l\u2019auteur/autrice auront la m\u00EAme licence, et toute \u0153uvre d\u00E9riv\u00E9e pourra \u00EAtre utilis\u00E9e m\u00EAme \u00E0 des fins commerciales. C\u2019est la licence utilis\u00E9e par Wikip\u00E9dia; elle est recommand\u00E9e pour des \u0153uvres qui pourraient b\u00E9n\u00E9ficier de l\u2019incorporation de contenu depuis Wikip\u00E9dia et d\u2019autres projets sous licence similaire."@fr ,
+		"CC BY-SA 3.0 lets others remix, tweak, and build upon the author\u2019s work even for commercial purposes, as long as they credit the author and licence their new creations under the identical terms. This licence is often compared to \u201Ccopyleft\u201D free and open source software licences. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use. This is the licence used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licenced projects."@en ;
+	dc:identifier	"CC_BYSA_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CC_BY_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 1.0 Generic"@en ;
+	skos:definition	"CC BY 1.0 lets others distribute, remix, tweak, and build upon the author\u2019s work, even commercially, as long as they credit the author for the original creation. This is the most accommodating of licences offered. Recommended for maximum dissemination and use of licenced materials."@en ,
+		"CC BY 1.0 permet aux autres de distribuer, remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom. C\u2019est le contrat le plus souple propos\u00E9. Recommand\u00E9 pour la diffusion et l\u2019utilisation maximales d\u2019\u0153uvres licenci\u00E9es sous CC."@fr ;
+	dc:identifier	"CC_BY_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-12-15" .
+ns3:CC_BY_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 2.0 Generic"@en ;
+	skos:definition	"CC BY 2.0 lets others distribute, remix, tweak, and build upon the author\u2019s work, even commercially, as long as they credit the author for the original creation. This is the most accommodating of licences offered. Recommended for maximum dissemination and use of licenced materials."@en ,
+		"CC BY 2.0 permet aux autres de distribuer, remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom. C\u2019est le contrat le plus souple propos\u00E9. Recommand\u00E9 pour la diffusion et l\u2019utilisation maximales d\u2019\u0153uvres licenci\u00E9es sous CC."@fr ;
+	dc:identifier	"CC_BY_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-05-25" .
+ns3:CC_BY_2_5	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 2.5 Generic"@en ;
+	skos:definition	"CC BY 2.5 lets others distribute, remix, tweak, and build upon the author\u2019s work, even commercially, as long as they credit the author for the original creation. This is the most accommodating of licences offered. Recommended for maximum dissemination and use of licenced materials."@en ,
+		"CC BY 2.5 permet aux autres de distribuer, remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom. C\u2019est le contrat le plus souple propos\u00E9. Recommand\u00E9 pour la diffusion et l\u2019utilisation maximales d\u2019\u0153uvres licenci\u00E9es sous CC."@fr ;
+	dc:identifier	"CC_BY_2_5" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-06-01" .
+ns3:EUPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"European Union Public Licence v.1.0"@en ;
+	skos:definition	"Created as a tool for publishing any copyrighted work as open source on the initiative of the European Commission, EUPL v.1.0 is the first European Free/Open Source Software (F/OSS) licence. The final version (v.1.0) was officially approved on 9 January 2007 in three linguistic versions. By a second Decision of 9 January 2008, the European Commission validated the EUPL in all the official languages of the European Union."@en ;
+	dc:identifier	"EUPL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-01-09" .
+ns3:CC_BYNCND_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013NoDerivs 3.0 Unported"@en ;
+	skos:definition	"CC BY-ND-NC 3.0 est la plus restrictive des six licences principales de Creative Commons, n\u2019autorisant les autres qu\u2019\u00E0 t\u00E9l\u00E9charger les \u0153uvres de l\u2019auteur/autrice et \u00E0 les partager tant qu\u2019on le/la cr\u00E9dite en citant son nom, mais on ne peut les modifier de quelque fa\u00E7on que ce soit ni les utiliser \u00E0 des fins commerciales."@fr ,
+		"CC BY-ND-NC 3.0 is the most restrictive of the six main licences of Creative Commons, only allowing others to download the works and share them with others as long as they credit the author, but they can\u2019t change them in any way or use them commercially."@en ;
+	dc:identifier	"CC_BYNCND_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CC_BYNCSA_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013ShareAlike 1.0 Generic"@en ;
+	skos:definition	"CC BY-NC-SA 1.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, as long as they credit the author and licence their new creations under the identical terms."@en ,
+		"CC BY-NC-SA 1.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales tant qu\u2019on le/la cr\u00E9dite en citant son nom et que les nouvelles \u0153uvres sont diffus\u00E9es selon les m\u00EAmes conditions."@fr ;
+	dc:identifier	"CC_BYNCSA_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-12-15" .
+ns3:CC_BYNCSA_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013ShareAlike 2.0 Generic"@en ;
+	skos:definition	"CC BY-NC-SA 2.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, as long as they credit the author and licence their new creations under the identical terms."@en ,
+		"CC BY-NC-SA 2.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales tant qu\u2019on le/la cr\u00E9dite en citant son nom et que les nouvelles \u0153uvres sont diffus\u00E9es selon les m\u00EAmes conditions."@fr ;
+	dc:identifier	"CC_BYNCSA_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-05-25" .
+ns3:CC_BYNC_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial 1.0 Generic"@en ;
+	skos:definition	"CC BY-NC 1.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales et, bien que les nouvelles \u0153uvres doivent cr\u00E9diter l\u2019auteur/autrice en citant son nom et ne pas constituer une utilisation commerciale, elles n\u2019ont pas \u00E0 \u00EAtre diffus\u00E9es selon les m\u00EAmes conditions."@fr ,
+		"CC BY-NC 1.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, and although their new works must also acknowledge the author and be non-commercial, they don\u2019t have to licence their derivative works on the same terms."@en ;
+	dc:identifier	"CC_BYNC_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-12-15" .
+ns3:CC_BYNC_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial 2.0 Generic"@en ;
+	skos:definition	"CC BY-NC 2.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales et, bien que les nouvelles \u0153uvres doivent cr\u00E9diter l\u2019auteur/autrice en citant son nom et ne pas constituer une utilisation commerciale, elles n\u2019ont pas \u00E0 \u00EAtre diffus\u00E9es selon les m\u00EAmes conditions."@fr ,
+		"CC BY-NC 2.0 lets others remix, tweak, and build upon the author\u2019s work non-commercially, and although their new works must also acknowledge the author and be non-commercial, they don\u2019t have to licence their derivative works on the same terms."@en ;
+	dc:identifier	"CC_BYNC_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-05-25" .
+ns3:CC_BYND_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NoDerivs 3.0 Unported"@en ;
+	skos:definition	"CC BY-ND 3.0 autorise la redistribution, \u00E0 des fins commerciales ou non, tant que l\u2019\u0153uvre est diffus\u00E9e sans modification et dans son int\u00E9gralit\u00E9, avec attribution et citation du nom de l\u2019auteur/autrice."@fr ,
+		"CC BY-ND 3.0 allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to the author."@en ;
+	dc:identifier	"CC_BYND_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CC_BYSA_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013ShareAlike 1.0 Generic"@en ;
+	skos:definition	"CC BY-SA 1.0 lets others remix, tweak, and build upon the author\u2019s work even for commercial purposes, as long as they credit the author and licence their new creations under the identical terms. This licence is often compared to \u201Ccopyleft\u201D free and open source software licences. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use. This is the licence used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licenced projects."@en ,
+		"CC BY-SA 1.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom et qu\u2019on diffuse les nouvelles cr\u00E9ations selon des conditions identiques. Cette licence est souvent compar\u00E9e aux licences de logiciels libres, \u00ABopen source\u00BB ou \u00ABcopyleft\u00BB. Toutes les nouvelles \u0153uvres bas\u00E9es sur celles de l\u2019auteur/autrice auront la m\u00EAme licence, et toute \u0153uvre d\u00E9riv\u00E9e pourra \u00EAtre utilis\u00E9e m\u00EAme \u00E0 des fins commerciales. C\u2019est la licence utilis\u00E9e par Wikip\u00E9dia; elle est recommand\u00E9e pour des \u0153uvres qui pourraient b\u00E9n\u00E9ficier de l\u2019incorporation de contenu depuis Wikip\u00E9dia et d\u2019autres projets sous licence similaire."@fr ;
+	dc:identifier	"CC_BYSA_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-12-15" .
+ns3:CC_BYSA_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013ShareAlike 2.0 Generic"@en ;
+	skos:definition	"CC BY-SA 2.0 lets others remix, tweak, and build upon the author\u2019s work even for commercial purposes, as long as they credit the author and licence their new creations under the identical terms. This licence is often compared to \u201Ccopyleft\u201D free and open source software licences. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use. This is the licence used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licenced projects."@en ,
+		"CC BY-SA 2.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom et qu\u2019on diffuse les nouvelles cr\u00E9ations selon des conditions identiques. Cette licence est souvent compar\u00E9e aux licences de logiciels libres, \u00ABopen source\u00BB ou \u00ABcopyleft\u00BB. Toutes les nouvelles \u0153uvres bas\u00E9es sur celles de l\u2019auteur/autrice auront la m\u00EAme licence, et toute \u0153uvre d\u00E9riv\u00E9e pourra \u00EAtre utilis\u00E9e m\u00EAme \u00E0 des fins commerciales. C\u2019est la licence utilis\u00E9e par Wikip\u00E9dia; elle est recommand\u00E9e pour des \u0153uvres qui pourraient b\u00E9n\u00E9ficier de l\u2019incorporation de contenu depuis Wikip\u00E9dia et d\u2019autres projets sous licence similaire."@fr ;
+	dc:identifier	"CC_BYSA_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-05-25" .
+ns3:CC_BYSA_4_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013ShareAlike 4.0 International"@en ;
+	skos:definition	"CC BY-SA 4.0 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom et qu\u2019on diffuse les nouvelles cr\u00E9ations selon des conditions identiques. Cette licence est souvent compar\u00E9e aux licences de logiciels libres, \u00ABopen source\u00BB ou \u00ABcopyleft\u00BB. Toutes les nouvelles \u0153uvres bas\u00E9es sur celles de l\u2019auteur/autrice auront la m\u00EAme licence, et toute \u0153uvre d\u00E9riv\u00E9e pourra \u00EAtre utilis\u00E9e m\u00EAme \u00E0 des fins commerciales. C\u2019est la licence utilis\u00E9e par Wikip\u00E9dia; elle est recommand\u00E9e pour des \u0153uvres qui pourraient b\u00E9n\u00E9ficier de l\u2019incorporation de contenu depuis Wikip\u00E9dia et d\u2019autres projets sous licence similaire."@fr ,
+		"CC BY-SA 4.0 lets others remix, tweak, and build upon the author\u2019s work even for commercial purposes, as long as they credit the author and licence their new creations under the identical terms. This licence is often compared to \u201Ccopyleft\u201D free and open source software licences. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use. This is the licence used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licenced projects."@en ;
+	dc:identifier	"CC_BYSA_4_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-26" .
+ns3:CC_BY_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 3.0 Unported"@en ;
+	skos:definition	"CC BY 3.0 lets others distribute, remix, tweak, and build upon the author\u2019s work, even commercially, as long as they credit the author for the original creation. This is the most accommodating of licences offered. Recommended for maximum dissemination and use of licenced materials."@en ,
+		"CC BY 3.0 permet aux autres de distribuer, remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom. C\u2019est le contrat le plus souple propos\u00E9. Recommand\u00E9 pour la diffusion et l\u2019utilisation maximales d\u2019\u0153uvres licenci\u00E9es sous CC."@fr ;
+	dc:identifier	"CC_BY_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CC_BYNCND_4_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013NoDerivs 4.0 International"@en ;
+	skos:definition	"CC BY-ND-NC 4.0 est la plus restrictive des six licences principales de Creative Commons, n\u2019autorisant les autres qu\u2019\u00E0 t\u00E9l\u00E9charger les \u0153uvres de l\u2019auteur/autrice et \u00E0 les partager tant qu\u2019on le/la cr\u00E9dite en citant son nom, mais on ne peut les modifier de quelque fa\u00E7on que ce soit ni les utiliser \u00E0 des fins commerciales."@fr ,
+		"CC BY-ND-NC 4.0 is the most restrictive of the six main licences of Creative Commons, only allowing others to download the works and share them with others as long as they credit the author, but they can\u2019t change them in any way or use them commercially."@en ;
+	dc:identifier	"CC_BYNCND_4_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-26" .
+ns3:CC_BYNCSA_2_5	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial\u2013ShareAlike 2.5 Generic"@en ;
+	skos:definition	"CC BY-NC-SA 2.5 lets others remix, tweak, and build upon the author\u2019s work non-commercially, as long as they credit the author and licence their new creations under the identical terms."@en ,
+		"CC BY-NC-SA 2.5 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales tant qu\u2019on le/la cr\u00E9dite en citant son nom et que les nouvelles \u0153uvres sont diffus\u00E9es selon les m\u00EAmes conditions."@fr ;
+	dc:identifier	"CC_BYNCSA_2_5" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-06-01" .
+ns3:CC_BYNC_2_5	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NonCommercial 2.5 Generic"@en ;
+	skos:definition	"CC BY-NC 2.5 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice \u00E0 des fins non commerciales et, bien que les nouvelles \u0153uvres doivent cr\u00E9diter l\u2019auteur/autrice en citant son nom et ne pas constituer une utilisation commerciale, elles n\u2019ont pas \u00E0 \u00EAtre diffus\u00E9es selon les m\u00EAmes conditions."@fr ,
+		"CC BY-NC 2.5 lets others remix, tweak, and build upon the author\u2019s work non-commercially, and although their new works must also acknowledge the author and be non-commercial, they don\u2019t have to licence their derivative works on the same terms."@en ;
+	dc:identifier	"CC_BYNC_2_5" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-06-01" .
+ns3:CC_BYND_4_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013NoDerivs 4.0 International"@en ;
+	skos:definition	"CC BY-ND 4.0 autorise la redistribution, \u00E0 des fins commerciales ou non, tant que l\u2019\u0153uvre est diffus\u00E9e sans modification et dans son int\u00E9gralit\u00E9, avec attribution et citation du nom de l\u2019auteur/autrice."@fr ,
+		"CC BY-ND 4.0 allows for redistribution, commercial and non-commercial, as long as it is passed along unchanged and in whole, with credit to the author."@en ;
+	dc:identifier	"CC_BYND_4_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-26" .
+ns3:CC_BYSA_2_5	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution\u2013ShareAlike 2.5 Generic"@en ;
+	skos:definition	"CC BY-SA 2.5 lets others remix, tweak, and build upon the author\u2019s work even for commercial purposes, as long as they credit the author and licence their new creations under the identical terms. This licence is often compared to \u201Ccopyleft\u201D free and open source software licences. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use. This is the licence used by Wikipedia, and is recommended for materials that would benefit from incorporating content from Wikipedia and similarly licenced projects."@en ,
+		"CC BY-SA 2.5 permet aux autres de remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom et qu\u2019on diffuse les nouvelles cr\u00E9ations selon des conditions identiques. Cette licence est souvent compar\u00E9e aux licences de logiciels libres, \u00ABopen source\u00BB ou \u00ABcopyleft\u00BB. Toutes les nouvelles \u0153uvres bas\u00E9es sur celles de l\u2019auteur/autrice auront la m\u00EAme licence, et toute \u0153uvre d\u00E9riv\u00E9e pourra \u00EAtre utilis\u00E9e m\u00EAme \u00E0 des fins commerciales. C\u2019est la licence utilis\u00E9e par Wikip\u00E9dia; elle est recommand\u00E9e pour des \u0153uvres qui pourraient b\u00E9n\u00E9ficier de l\u2019incorporation de contenu depuis Wikip\u00E9dia et d\u2019autres projets sous licence similaire."@fr ;
+	dc:identifier	"CC_BYSA_2_5" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-06-01" .
+ns3:CC_BY_4_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 4.0 International"@en ;
+	skos:definition	"Denne licens tillader andre at videredistribuere, omarbejde, tilpasse og bygge videre p\u00E5 materialet, ogs\u00E5 kommercielt, s\u00E5 l\u00E6nge de krediterer skaberen af det oprindelige materiale. Dette er den mindst restriktive licens, creative commons udbyder. Anbefalet hvis man \u00F8nsker mest mulig videreformidling og brug af det licenserede materiale."@da ,
+		"CC BY 4.0 permet aux autres de distribuer, remixer, arranger, et adapter l\u2019\u0153uvre de l\u2019auteur/autrice, m\u00EAme \u00E0 des fins commerciales, tant qu\u2019on accorde le m\u00E9rite de la cr\u00E9ation originale \u00E0 l\u2019auteur/autrice en citant son nom. C\u2019est le contrat le plus souple propos\u00E9. Recommand\u00E9 pour la diffusion et l\u2019utilisation maximales d\u2019\u0153uvres licenci\u00E9es sous CC."@fr ,
+		"CC BY 4.0 lets others distribute, remix, tweak, and build upon the author\u2019s work, even commercially, as long as they credit the author for the original creation. This is the most accommodating of licences offered. Recommended for maximum dissemination and use of licenced materials."@en ;
+	dc:identifier	"CC_BY_4_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-11-26" .
+ns3:EUPL_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"European Union Public Licence v. 1.1"@en ;
+	skos:definition	"Created as a tool for publishing any copyrighted work as open source on the initiative of the European Commission, EUPL v.1.1 is the first European Free/Open Source Software (F/OSS) licence. The European Commission published the version 1.1 in all the official languages of the European Union by the Decision of 9 January 2009."@en ;
+	dc:identifier	"EUPL_1_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2009-01-09" .
+ns3:EUPL_1_2	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"European Union Public Licence v. 1.2"@en ;
+	skos:definition	"EUPL v.1.2 a \u00E9t\u00E9 cr\u00E9\u00E9e par la Commission en 2007. Elle a pour but de constituer une licence libre valable dans toutes les langues de l\u2019Union, en tenant compte de ses sp\u00E9cificit\u00E9s juridiques et des questions de compatibilit\u00E9 entre licences libres. Il s\u2019agit d\u2019une licence dite \u00ABcopyleft\u00BB dont le but est de garantir la nature \u00ABopen source\u00BB des d\u00E9riv\u00E9s des logiciels."@fr ,
+		"Created as a tool for publishing any copyrighted work as open source, EUPL v.1.2 is legally consistent with the copyright law of all EU countries and is especially well-suited for public administrations sharing IT solutions. It is also widely used by the private sector. The text of the EUPL version 1.2 was published on 19 May 2017."@en ;
+	dc:identifier	"EUPL_1_2" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2017-05-19" .
+ns3:CDDL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Common Development and Distribution License 1.0"@en ;
+	skos:definition	"CDDL-1.0 is a free software licence approved by the Open Source Initiative. A moderated (or weak) copyleft licence used by SUN, including explicit patent grants, it is similar to MPL and EPL. Compiled object code can be distributed under any licence, but the original source code (and modified derivatives) must be made available, under the CDDL."@en ;
+	dc:identifier	"CDDL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-01-24" .
+ns3:DLDE_BY_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Data licence Germany \u2013 attribution \u2013 Version 1.0"@en ;
+	skos:definition	"Published by Germany, DL-DE BY 1.0 is a data licence permitting any use commercially and non-commercially, as long as credit is given to the author for the original creation. Changes must be marked as such in the source note. The provider mus make available the data, contents and services with the diligence necessary for the discharge of its public tasks."@en ;
+	dc:identifier	"DLDE_BY_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-01-31" .
+ns3:DLDE_ZERO_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Data licence Germany \u2013 Zero \u2013 Version 2.0"@en ;
+	skos:definition	"Published by Germany, DL-DE ZERO 2.0 is a data licence permitting any use without restrictions or conditions. The data and meta-data provided may be for commercial and non-commercial use."@en ;
+	dc:identifier	"DLDE_ZERO_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2014-07-01" .
+ns3:ECL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Educational Community License version 1.0 (ECL-1.0)"@en ;
+	skos:definition	"ECL-1.0 is a permissive free software licence approved by the Open Source Initiative. It is similar to the Apache 1.2. It is superseded by ECL-2.0."@en ;
+	dc:identifier	"ECL_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-03-15" .
+ns3:ECL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Educational Community License version 2.0 (ECL-2.0)"@en ;
+	skos:definition	"ECL-2.0 is a permissive free software licence approved by the Open Source Initiative. It is similar to the Apache 1.2. Nothing in the licence prohibits re-licencing of a larger work under the EUPL."@en ;
+	dc:identifier	"ECL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-04-15" .
+ns3:LILIQ_P_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Qu\u00E9bec Free and Open-Source Licence \u2013 Permissive (LiLiQ-P) version 1.1"@en ;
+	skos:definition	"Approved by the Open Source Initiative, LiLiQ-P-1.1 is a permissive licence produced by the State of Quebec (Canada)."@en ;
+	dc:identifier	"LILIQ_P_1_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2016-01-31" .
+ns3:LPPL_1_3C	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"LaTeX Project Public License v1.3c (LPPL-1.3c)"@en ;
+	skos:definition	"LPPL-1.3c is a very specific, non-copyleft licence. It organises rights of the \u201Dmaintainer\u201D of a work V/S other distributors who have to comply with documentation requirements and to communicate the original code (or report where it can be available)."@en ;
+	dc:identifier	"LPPL_1_3C" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2008-05-04" .
+ns3:OGTSL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Open Group Test Suite License (OGTSL)"@en ;
+	skos:definition	"OGTSL was meant to facilitate software testing, without placing severe restrictions on use of the software except in terms of including original versions of the software. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"OGTSL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-04-01" .
+ns3:OSL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Software License, version 1.0 (OSL-1.0)"@en ;
+	skos:definition	"Open Software License 1.0 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"OSL_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-08-31" .
+ns3:OSL_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Software License, version 3.0 (OSL-3.0)"@en ;
+	skos:definition	"Open Software License 3.0 is a copyleft-style, free software licence approved by the Open Source Initiative. Similar to the AGPL, the OSL requires the user to disclose the source code when communicating software."@en ;
+	dc:identifier	"OSL_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-12-01" .
+ns3:PYTHON_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Python License (Python-2.0)"@en ;
+	skos:definition	"Python 2.0 is a permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"PYTHON_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2000-09-01" .
+ns3:RPL_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Reciprocal Public License, version 1.1"@en ;
+	skos:definition	"The Reciprocal Public License, version 1.1 is a copyleft-style, free software licence approved by the Open Source Initiative. It contains rules on redistribution."@en ;
+	dc:identifier	"RPL_1_1" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-11-01" .
+ns3:RPL_1_5	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Reciprocal Public License 1.5 (RPL-1.5)"@en ;
+	skos:definition	"The Reciprocal Public License 1.5 is a copyleft-style, free software licence approved by the Open Source Initiative with detailed liability protection and numerous requirements, created to close a loophole in the GPL which let users sell modified software without \u201Dfairly\u201D distributing it."@en ;
+	dc:identifier	"RPL_1_5" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-07-15" .
+ns3:UCL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Upstream Compatibility License v1.0"@en ;
+	skos:definition	"Upstream Compatibility License v1.0 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"UCL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2017-02-01" .
+ns3:ZPL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Zope Public License Version 2.0 (ZPL-2.0)"@en ;
+	skos:definition	"The Zope Public License Version 2.0 is a free software licence approved by the Open Source Initiative, used primarily for the Zope application server software. It is similar to the well-known BSD license, however the ZPL also adds clauses prohibiting trademark use and requiring documentation of all changes."@en ;
+	dc:identifier	"ZPL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-02-01" .
+ns3:BSL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Boost Software License 1.0"@en ;
+	skos:definition	"BSL-1.0 is a simple permissive licence only requiring preservation of copyright and licence notices for source (and not binary) distribution. Licenced works, modifications, and larger works may be distributed under different terms and without source code."@en ;
+	dc:identifier	"BSL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-08-17" .
+ns3:CC_BY_3_0_NL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 3.0 Netherlands"@en ;
+	skos:definition	"Published by Creative Commons for Netherlands, Naamsvermelding 3.0 Nederland (CC BY 3.0 NL) is a licence permitting any commercial and non-commercial use as long as credit is given to the author for the original creation."@en ;
+	dc:identifier	"CC_BY_3_0_NL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CECILL_2_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"CEA CNRS Inria Free Software License Agreement, v2.1 (CECILL-2.1)"@en ;
+	skos:definition	"CECILL-2.1 is a moderate copyleft licence initiated in France by CEA, CNRS and Inria and approved by the Open Source Initiative. It has a working value in English/French. It is widely compatible, since only the specific files source code must stay covered, and not the other files or components of a solution. It is therefore designed for components or libraries. Governed by French law."@en ;
+	dc:identifier	"CECILL_2_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-06-21" .
+ns3:CPAL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Common Public Attribution License Version 1.0 (CPAL-1.0)"@en ;
+	skos:definition	"CPAL-1.0 is a copyleft-style, free software licence approved by the Open Source Initiative. Under this licence, it is possible to create a larger work by combining the program with other software code not governed by the terms of this licence, and distribute the larger work as a single product."@en ;
+	dc:identifier	"CPAL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-07-26" .
+ns3:CPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Common Public License, version 1.0 (CPL-1.0)"@en ;
+	skos:definition	"CPL-1.0 is a copyleft-style, free software licence approved by the Open Source Initiative. It is superseded by EPL-1.0."@en ;
+	dc:identifier	"CPL_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2001-05-01" .
+ns3:EFL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Eiffel Forum License, version 1 (EFL-1.0)"@en ;
+	skos:definition	"EFL-1.0 is a BSD-style, permissive free software licence approved by the Open Source Initiative. It is superseded by 2.0."@en ;
+	dc:identifier	"EFL_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-07-01" .
+ns3:EFL_2	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Eiffel Forum License, version 2"@en ;
+	skos:definition	"EFL-2.0 is a BSD-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"EFL_2" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2008-01-02" .
+ns3:EPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Eclipse Public License 1.0 (EPL-1.0)"@en ;
+	skos:definition	"EPL 1.0 is a copyleft-style, free software licence approved by the Open Source Initiative. Made and mainly used by the Eclipse Foundation, it is similar to GPL but does not submit linking of the covered code to conditions or \u201Dviral\u201D extension of licence coverage to the other linked software. It is superseded by EPL 2.0."@en ;
+	dc:identifier	"EPL_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-06-28" .
+ns3:EPL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Eclipse Public License version 2.0"@en ;
+	skos:definition	"EPL 2.0 is a copyleft-style, free software licence approved by the Open Source Initiative. Made and mainly used by the Eclipse Foundation, it is similar to GPL but does not submit linking of the covered code to conditions or \u201Dviral\u201D extension of licence coverage to the other linked software."@en ;
+	dc:identifier	"EPL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2017-08-24" .
+ns3:FAIR	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Fair License (Fair)"@en ;
+	skos:definition	"Fair is a permissive free software licence approved by the Open Source Initiative. It gives complete freedom to use the given works, as long as this licence is included and a warranty is not placed."@en ;
+	dc:identifier	"FAIR" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-01-31" .
+ns3:FRAMEWORX_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Frameworx License 1.0 (Frameworx-1.0)"@en ;
+	skos:definition	"Frameworx-1.0 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"FRAMEWORX_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-07-01" .
+ns3:GNU_FDL_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Free Documentation License 1.1"@en ;
+	skos:definition	"GNU FDL 1.1 is a form of copyleft intended for use on a manual, textbook or other document to assure everyone the effective freedom to copy and redistribute it, with or without modifications, either commercially or non-commercially."@en ;
+	dc:identifier	"GNU_FDL_1_1" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2000-03-01" .
+ns3:GNU_FDL_1_2	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Free Documentation License 1.2"@en ;
+	skos:definition	"GNU FDL 1.2 is a form of copyleft intended for use on a manual, textbook or other document to assure everyone the effective freedom to copy and redistribute it, with or without modifications, either commercially or non-commercially."@en ;
+	dc:identifier	"GNU_FDL_1_2" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-11-01" .
+ns3:GPL_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU General Public License v3.0 only"@en ;
+	skos:definition	"GPL-3.0 is supported by the Free Software Foundation. Under this licence, software can be copied, distributed and modified as long as changes/dates are tracked in source files. Any derivative including (i.e. via compiler) GPL-licenced code must also be made available under the GPL-3.0 along with build and install instructions."@en ;
+	dc:identifier	"GPL_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-06-29" .
+ns3:LPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Lucent Public License, Plan 9, version 1.0 (LPL-1.0)"@en ;
+	skos:definition	"LPL-1.0 is a copyleft-style, free software licence approved by the Open Source Initiative. It is superseded by LPL-1.02."@en ;
+	dc:identifier	"LPL_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-01-01" .
+ns3:LPL_1_02	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Lucent Public License Version 1.02 (LPL-1.02)"@en ;
+	skos:definition	"LPL-1.02 is a copyleft-style, free software licence approved by the Open Source Initiative. Similar to the Common Public License, this licence makes liability rules very clear."@en ;
+	dc:identifier	"LPL_1_02" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-07-01" .
+ns3:MPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Mozilla Public License (MPL), version 1.0 (MPL-1.0)"@en ;
+	skos:definition	"MPL-1.0 is a weak copyleft licence, characterised as a middle ground between permissive free software licences and the GNU General Public License that seeks to balance the concerns of proprietary and open source developers. As such, it allows re-licencing. It is approved by the Open Source Initiative. It has been superseded by v2.0."@en ;
+	dc:identifier	"MPL_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1998-01-01" .
+ns3:MPL_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Mozilla Public License (MPL), version 1.1 (MPL-1.1)"@en ;
+	skos:definition	"MPL-1.1 is a weak copyleft licence, characterised as a middle ground between permissive free software licences and the GNU General Public License that seeks to balance the concerns of proprietary and open source developers. As such, it allows re-licencing. It is approved by the Open Source Initiative. It has been superseded by v2.0."@en ;
+	dc:identifier	"MPL_1_1" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-01-01" .
+ns3:MPL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Mozilla Public License (MPL), version 2.0 (MPL-2.0)"@en ;
+	skos:definition	"MPL-2.0 is a weak copyleft licence, characterised as a middle ground between permissive free software licences and the GNU General Public License that seeks to balance the concerns of proprietary and open source developers. As such, it allows re-licencing. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"MPL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2012-01-03" .
+ns3:NTP	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"NTP License (NTP)"@en ;
+	skos:definition	"Approved by the Open Source Initiative, NTP is a simple licence, written as a template, that provides protection for the author while giving users full rights to the software."@en ;
+	dc:identifier	"NTP" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2008-08-01" .
+ns3:OFL_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"SIL Open Font License (OFL-1.1)"@en ;
+	skos:definition	"The SIL Open Font License 1.1 is one of the major open font licences, which allows embedding of the font in commercially sold products. It is a free and open source licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"OFL_1_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-26" .
+ns3:OPL_2_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"OSET Public License version 2.1"@en ;
+	skos:definition	"OSET Public License 2.1 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"OPL_2_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-08-31" .
+ns3:OSL_2_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Open Software License, version 2.1 (OSL-2.1)"@en ;
+	skos:definition	"Open Software License 2.1 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"OSL_2_1" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-10-31" .
+ns3:SIMPL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Simple Public License (SimPL-2.0)"@en ;
+	skos:definition	"Simple Public License 2.0 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"SIMPL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-11-01" .
+ns3:WXWINDOWS	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The wxWindows Library Licence (wxWindows)"@en ;
+	skos:definition	"Approved by the Open Source Initiative, wxWindows is a copyleft-style, free software licence created for wxWidgets."@en ;
+	dc:identifier	"WXWINDOWS" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1998-07-01" .
+ns3:APACHE_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Apache Software License, version 1.1 (Apache-1.1)"@en ;
+	skos:definition	"Apache-1.1 is a permissive free software licence approved by the Open Source Initiative. It is superseded by Apache-2.0."@en ;
+	dc:identifier	"APACHE_1_1" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2000-01-01" .
+ns3:APACHE_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Apache License, Version 2.0"@en ;
+	skos:definition	"Apache-2.0 is a permissive free software licence approved by the Open Source Initiative. It gives complete freedom to use the given works, as long as the required notices are included. Compared with the MIT, recipients receive a patent licence from the contributors of the code."@en ;
+	dc:identifier	"APACHE_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-01-02" .
+ns3:APSL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Apple Public Source License 2.0"@en ;
+	skos:definition	"APSL-2.0 is a copyleft-style, free software licence approved by the Open Source Initiative. Under this licence, it is possible to create a larger work by combining covered code with other code not governed by the terms of this licence and distribute the larger work as a single product. In each such instance, it must be ensured that requirements of this licence are fulfilled for the covered code or any portion thereof."@en ;
+	dc:identifier	"APSL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-08-06" .
+ns3:ARTISTIC_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Artistic License 1.0 (Artistic-1.0)"@en ;
+	skos:definition	"Artistic-1.0 is a copyleft-style, free software licence approved by the Open Source Initiative. It is superseded by Artistic 2.0."@en ;
+	dc:identifier	"ARTISTIC_1_0" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1997-08-15" .
+ns3:ARTISTIC_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Artistic License 2.0"@en ;
+	skos:definition	"Artistic-2.0 is a copyleft-style, free software licence approved by the Open Source Initiative. It preserves control of the original copyright holder: recipient can use, modify and distribute the original versions but other modified versions must document how far they are different and be reported to the original author, or be distributed under a different name, or otherwise be available under the Artistic licence or any other licence granting similar rights."@en ;
+	dc:identifier	"ARTISTIC_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2000-07-01" .
+ns3:BSD_2_CLAUSE	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"2-Clause BSD License"@en ;
+	skos:definition	"BSD-2-Clause permits redistribution and use in source and binary forms, with or without modification, provided that the certain conditions are met: redistributions of source code must retain the copyright notice, the specific list of conditions and the disclaimer."@en ;
+	dc:identifier	"BSD_2_CLAUSE" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-04-01" .
+ns3:CC_BYSA_3_0_NL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution-ShareAlike 3.0 Netherlands"@en ;
+	skos:definition	"Published by Creative Commons for Netherlands, Naamsvermelding-GelijkDelen 3.0 Nederland (CC BY-SA 3.0 NL) is a licence permitting any commercial and non-commercial use, as long as credit is given to the author for the original creation and new creations are licenced under the identical terms. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use."@en ;
+	dc:identifier	"CC_BYSA_3_0_NL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:ECOS_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"eCos License version 2.0"@en ;
+	skos:definition	"Owned by the Free Software Foundation, eCos-2.0 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"ECOS_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-05-15" .
+ns3:ENTESSA	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Entessa Public License Version 1.0 (Entessa)"@en ;
+	skos:definition	"Entessa 1.0 is a BSD-style, permissive free software licence approved by the Open Source Initiative. It imposes copyright acknowledgements that are compatible with the EUPL."@en ;
+	dc:identifier	"ENTESSA" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-07-01" .
+ns3:HPND	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Historical Permission Notice and Disclaimer (HPND)"@en ;
+	skos:definition	"Deprecated by the author, HPND is a template that provides some protection for the author. The work itself is not restricted by the permissive licence."@en ;
+	dc:identifier	"HPND" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-11-29" .
+ns3:IODL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Italian Open Data License v2.0"@en ;
+	skos:definition	"Published by Italy, IODL 2.0 aims at providing the Italian public sector with a licence facilitating the re-use of public sector information. It allows distribution and building upon the author\u2019s work, even commercially, as long as credit is given to the author for the original creation."@en ;
+	dc:identifier	"IODL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2012-03-02" .
+ns3:LGPL_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Lesser General Public License v3.0 only"@en ;
+	skos:definition	"The Free Software Foundation (FSF) produced LGPL for libraries. Works made by using the covered software could be distributed under any licence. Distribution of derivatives (code modifications) must be done under LGPL. Reverse engineering must be allowed (= a general permission in EU law). FSF assimilates static linking to producing derivatives (which is not the case in EU law when made for interoperability)."@en ;
+	dc:identifier	"LGPL_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-06-29" .
+ns3:MOTOSOTO	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Motosoto Open Source License \u2013 Version 0.9.1 (Motosoto)"@en ;
+	skos:definition	"Motosoto is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"MOTOSOTO" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1995-01-01" .
+ns3:OGL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Government Licence v1.0"@en ;
+	skos:definition	"Developed and maintained by the National Archives, OGL-1.0 is a copyright licence for Crown Copyright works published by the UK government consisting of a simple set of terms and conditions facilitating the re-use of a wide range of public sector information free of charge. The OGL terms are compatible with the latest versions of the Creative Commons Attribution Licence and the Open Data Commons Attribution Licence. The OGL is a perpetual licence so any past and continuing use of information authorised under v1.0 or v2.0 may continue."@en ;
+	dc:identifier	"OGL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2010-09-01" .
+ns3:OGL_NC	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Non-Commercial Government Licence 1.0"@en ;
+	skos:definition	"Developed and maintained by the National Archives, the Non-Commercial Government Licence (OGL-NC) may be used by public sector bodies that have a Delegation of Authority to licence Crown copyright material non-commercially. It may also be used by public sector bodies holding non-Crown copyright information in accordance with the PSI Regulations 2015."@en ;
+	dc:identifier	"OGL_NC" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2010-09-30" .
+ns3:QPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Q Public License Version (QPL-1.0)"@en ;
+	skos:definition	"The Q Public License Version 1.0 is a copyleft-style, free software licence approved by the Open Source Initiative. It was designed by the Norwegian firm Trolltech to govern the distribution of its software, the Qt Toolkit."@en ;
+	dc:identifier	"QPL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-03-04" .
+ns3:SLEEPYCAT	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Sleepycat License (Sleepycat)"@en ;
+	skos:definition	"The Sleepycat License is a BSD plus-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"SLEEPYCAT" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1990-01-01" .
+ns3:XNET	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The X.Net, Inc. License (Xnet)"@en ;
+	skos:definition	"Xnet is a MIT-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"XNET" ;
+	ns5:deprecated	"true" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2000-07-01" .
+<http://publications.europa.eu/resource/authority/licence/0BSD>	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Zero-Clause BSD / Free Public License 1.0.0 (0BSD)"@en ;
+	skos:definition	"The BSD 0-clause licence, 0BSD, goes further than the 2-clause licence by dropping the requirements to include the copyright notice, licence text or disclaimer in either source or binary forms. Doing so forms a public-domain-equivalent licence. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"0BSD" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2006-07-01" .
+ns3:BSD_3_CLAUSE	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"3-Clause BSD License"@en ;
+	skos:definition	"BSD-3-Clause permits redistribution and use in source and binary forms, with or without modification, provided that the certain conditions are met: redistributions of source code and in binary forms must retain the copyright notice, the specific list of conditions and the disclaimer. Neither the name of the copyright holder nor of its contributors may be used to promote derived products without prior written permission."@en ;
+	dc:identifier	"BSD_3_CLAUSE" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-07-22" .
+ns3:BSD_PLUS_PATENT	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"BSD+Patent"@en ;
+	skos:definition	"BSD+Patent is a free software licence approved by the Open Source Initiative. It is a 2-clause license in which nothing restricts redistribution under any other license, but it requests to retain copyright notices and restrict the use of the BSD licensor name to promote derivative products."@en ;
+	dc:identifier	"BSD_PLUS_PATENT" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2017-07-01" .
+ns3:ISC	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"ISC License (ISC)"@en ;
+	skos:definition	"ISC is a short and permissive software permissive licence (like MIT and BSD). Main obligation is to include the original copyright notice. For reducing licence proliferation, it is advised to use the MIT licence instead."@en ;
+	dc:identifier	"ISC" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1995-06-30" .
+ns3:NASA_1_3	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"NASA Open Source Agreement v1.3 (NASA-1.3)"@en ;
+	skos:definition	"Approved by the Open Source Initiative, NASA-1.3 is a licence used by NASA containing an obligation to register with the government when receiving the software and to tell a specified agency how the modifications are used."@en ;
+	dc:identifier	"NASA_1_3" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2012-01-01" .
+ns3:NLOD_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Norwegian Licence for Open Government Data 1.0"@en ;
+	skos:definition	"Published by Norway, NLOD 1.0 grants the user the right to copy, use and distribute information, provided the user acknowledges the contributors and complies with the terms and conditions stipulated in this licence."@en ;
+	dc:identifier	"NLOD_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2012-01-01" .
+ns3:NPOSL_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Non-Profit Open Software License version 3.0 (NPOSL-3.0)"@en ;
+	skos:definition	"A variant of the Open Software License 3.0, NPOSL-3.0 requires that the organisation using it is a non-profit and that no revenue is generated from sale of the software, support or services. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"NPOSL_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-09-20" .
+ns3:OGL_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Government Licence v3.0"@en ;
+	skos:definition	"Developed and maintained by the National Archives, OGL-3.0 is a copyright licence for Crown Copyright works published by the UK government consisting of a simple set of terms and conditions facilitating the re-use of a wide range of public sector information free of charge. The OGL terms are compatible with the latest versions of the Creative Commons Attribution Licence and the Open Data Commons Attribution Licence. The OGL is a perpetual licence so any past and continuing use of information authorised under v1.0 or v2.0 may continue."@en ;
+	dc:identifier	"OGL_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2014-10-31" .
+ns3:VSL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Vovida Software License v. 1.0 (VSL-1.0)"@en ;
+	skos:definition	"The Vovida Software License v. 1.0 is a BSD plus-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"VSL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2000-01-01" .
+ns3:APL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Adaptive Public License 1.0"@en ;
+	skos:definition	"APL-1.0 is a copyleft-style, free software licence approved by the Open Source Initiative. It allows combining the covered code with other components not governed by the APL licence provided the APL requirements are fulfilled for the covered portion of the larger work."@en ;
+	dc:identifier	"APL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2003-07-01" .
+ns3:BSD_3_CLAUSE_LBNL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Lawrence Berkeley National Labs BSD Variant License (BSD-3-Clause-LBNL)"@en ;
+	skos:definition	"BSD-3-Clause-LBNL is a BSD-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"BSD_3_CLAUSE_LBNL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-07-01" .
+ns3:CC_PDM_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Public Domain Mark 1.0 Universal"@en ;
+	skos:definition	"Published by Creative Commons, Public Domain Mark (CC PDM 1.0) identifies a work as being free of known restrictions under copyright law, including all related and neighboring rights. The user can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission."@en ;
+	dc:identifier	"CC_PDM_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2010-10-01" .
+ns3:DLDE_BY_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Data licence Germany \u2013 attribution \u2013 Version 2.0"@en ;
+	skos:definition	"Published by Germany, DL-DE BY 2.0 is a data licence permitting any use commercially and non-commercially, as long as credit is given to the author for the original creation. Changes must be marked as such in the source note."@en ;
+	dc:identifier	"DLDE_BY_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2014-07-01" .
+ns3:GPL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU General Public License v2.0 only"@en ;
+	skos:definition	"GPL-2.0 is the \u2018historical\u2019 free software licence. Supported by a strong community (the Free Software Foundation - FSF). Copy, modification and distribution authorised. Changes/dates must be traced in source files. Any derivative must also be made available under the GPL along with build & install instructions. Compatibility / interoperability are known sources of tension when a project combines the covered code with non-GPL sources from other stakeholders, because according to the FSF linking other software to GPLed works extends the GPL coverage to these other programs. Licensing under \"GPL-2.0 or later\" is advised (otherwise it is \u2018GPL-2.0-only\u2019 - not compatible with GPL-3.0)."@en ;
+	dc:identifier	"GPL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1991-06-02" .
+ns3:HROD	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Licence \u2013 The Republic of Croatia"@en ;
+	skos:definition	"Published by the Republic of Croatia, HR-OD grants the re-user any re-use of the Information subject to the licence, including a spatially and temporally unrestricted, free-of-charge, non-exclusive and personal right to re-use the Information under this licence."@en ;
+	dc:identifier	"HROD" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2017-07-01" .
+ns3:LILIQ_RPLUS_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Qu\u00E9bec Free and Open-Source Licence \u2013 Strong Reciprocity (LiLiQ-R+) version 1.1"@en ;
+	skos:definition	"LiLiQ-Rplus-1.1 is a reciprocate (copyleft) licence produced by the State of Quebec (Canada). Other reciprocal licences GPL-2.0-or-later and the EUPL are expressly listed as compatible, meaning that the covered code can be reused in other projects covered by these licences. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"LILIQ_RPLUS_1_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2016-01-31" .
+ns3:MS_PL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Microsoft Public License (MS-PL)"@en ;
+	skos:definition	"MS-PL is a BSD-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"MS_PL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-10-12" .
+ns3:NAUMEN	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"NAUMEN Public License (Naumen)"@en ;
+	skos:definition	"Approved by the Open Source Initiative, Naumen is a fairly restrictive free software licence, but provides good protection for the author of the software."@en ;
+	dc:identifier	"NAUMEN" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2001-12-01" .
+ns3:W3C	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The W3C Software Notice and License (W3C)"@en ;
+	skos:definition	"The W3C Software Notice and License is a permissive free software licence used by software released by the World Wide Web Consortium. It is a permissive licence, compatible with the GNU General Public License and approved by the Open Source Initiative."@en ;
+	dc:identifier	"W3C" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-12-31" .
+ns3:WATCOM_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Sybase Open Source Licence (Watcom-1.0)"@en ;
+	skos:definition	"Watcom-1.0 is a proprietary+patent-style, strong copyleft software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"WATCOM_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-05-19" .
+ns3:IODL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Italian Open Data License v1.0"@en ;
+	skos:definition	"Published by Italy, IODL 1.0 aims at providing the Italian public sector with a licence facilitating the re-use of public sector information. Even commercial reuse of data is allowed, as long as credit is given to the author and new creations are licenced under the identical terms. All new works based on the original work will carry the same licence, so any derivatives will also allow commercial use."@en ;
+	dc:identifier	"IODL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2010-10-01" .
+ns3:IPA	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"IPA Font License (IPA)"@en ;
+	skos:definition	"The IPA licence applies only to font programs and allows for a great deal of freedom in distributing them, both commercially and non-commercially. The name of redistributed versions of the original software cannot be changed and must include a copy of the license."@en ;
+	dc:identifier	"IPA" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2014-09-30" .
+ns3:LILIQ_R_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Qu\u00E9bec Free and Open-Source Licence \u2013 Reciprocity (LiLiQ-R) version 1.1"@en ;
+	skos:definition	"LiLiQ-R 1.1 is a moderately reciprocate licence produced by the State of Quebec (Canada). A list of liences with similar level of reciprocity is declared compatible, including GPL, EUPL, MPL, LGPL etc., meaning that the covered code can be reused in other projects covered by these licences. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"LILIQ_R_1_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2016-01-31" .
+ns3:MIROS	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"MirOS License (MirOS)"@en ;
+	skos:definition	"MirOS is a BSD-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"MIROS" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2006-12-11" .
+ns3:MIT	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The MIT License"@en ;
+	skos:definition	"Approved by the Open Source Initiative, MIT is the most recommended permissive licence: short and very popular. Everything is allowed as long as the original copyright and licence notice is included in any copy of the software/source."@en ;
+	dc:identifier	"MIT" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1988-08-14" .
+ns3:MULTICS	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Multics License (Multics)"@en ;
+	skos:definition	"Multics is a permissive free software licence approved by the Open Source Initiative. The legal text of this licence is only a paragraph long and both protects the authors' trademarks and requires users to include this licence."@en ;
+	dc:identifier	"MULTICS" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2006-07-01" .
+ns3:NCSA	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The University of Illinois/NCSA Open Source License (NCSA)"@en ;
+	skos:definition	"NCSA Open Source License is a BSD-style, permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"NCSA" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-03-28" .
+ns3:NGPL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Nethack General Public License (NGPL)"@en ;
+	skos:definition	"Approved by the Open Source Initiative, NGPL is a very old licence used for the game NetHack. It allows users to freely share their modifications, in exchange for several restrictions and little protection for the authors."@en ;
+	dc:identifier	"NGPL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1989-07-31" .
+ns3:NOKIA	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Nokia Open Source License Version 1.0a (NOKIA)"@en ;
+	skos:definition	"Approved by the Open Source Initiative, NOKIA is a slightly altered variant on the Mozilla Public License specified for Nokia. It requires including a notice in each source file. Disputes must be settled through a Finnish arbitration process."@en ;
+	dc:identifier	"NOKIA" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2006-01-01" .
+ns3:OCLC_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The OCLC Research Public License 2.0 License (OCLC-2.0)"@en ;
+	skos:definition	"While OCLC Research now uses the Apache 2.0 licence, OCLC-2.0 is a relatively strong copyleft licence with fairly lenient restrictions and built-in protection for the author. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"OCLC_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-05-31" .
+ns3:OGL_ROU_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Government Licence v1.0"@en ;
+	skos:definition	"Having a working value in Romanian, the Open Government Licence 1.0 (OGL-ROU 1.0) consists of a simple set of terms and conditions facilitating the re-use of a wide range of public sector information free of charge. The OGL terms are compatible with the latest versions of the Creative Commons Attribution Licence and the Open Data Commons Attribution Licence."@en ;
+	dc:identifier	"OGL_ROU_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2010-09-01" .
+ns3:POSTGRE_SQL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The PostgreSQL Licence (PostgreSQL)"@en ;
+	skos:definition	"PostgreSQL is a BSD-style permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"POSTGRE_SQL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1996-07-08" .
+ns3:RPSL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"RealNetworks Public Source License Version 1.0 (RPSL-1.0)"@en ;
+	skos:definition	"Published by RealNetworks, RPSL-1.0 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"RPSL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-10-28" .
+ns3:RSCPL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Ricoh Source Code Public License (RSCPL)"@en ;
+	skos:definition	"The Ricoh Source Code Public License (RSCPL) is a copyleft-style, free software licence approved by the Open Source Initiative with much built-in protection for the author."@en ;
+	dc:identifier	"RSCPL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1995-12-01" .
+ns3:UPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Universal Permissive License (UPL), Version 1.0"@en ;
+	skos:definition	"The Universal Permissive License 1.0 is an attribution+patent-style, permissive free software licence issued by Oracle and approved by the Open Source Initiative."@en ;
+	dc:identifier	"UPL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2015-02-01" .
+ns3:ZLIB	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The zlib/libpng License (Zlib)"@en ;
+	skos:definition	"Zlib is designed to be a free, general-purpose, legally unencumbered \u2013 not covered by any patents \u2013 lossless data-compression library for use on virtually any computer hardware and operating system. It is approved by the Open Source Initiative."@en ;
+	dc:identifier	"ZLIB" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1995-05-01" .
+ns3:CC_BY_3_0_AT	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Creative Commons Attribution 3.0 Austria"@en ;
+	skos:definition	"Published by Creative Commons for Austria, Namensnennung 3.0 \u00D6sterreich (CC BY 3.0 AT) is a licence permitting any commercial and non-commercial use as long as credit is given to the author for the original creation."@en ;
+	dc:identifier	"CC_BY_3_0_AT" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-02-23" .
+ns3:CNRI_PYTHON	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The CNRI portion of the multi-part Python License (CNRI-Python)"@en ;
+	skos:definition	"CNRI-Python is a permissive free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"CNRI_PYTHON" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2001-03-06" .
+ns3:DLDE_BYNC_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Data licence Germany \u2013 attribution \u2013 non-commercial \u2013 Version 1.0"@en ;
+	skos:definition	"Published by Germany, DL-DE BY-NC 1.0 is a data licence permitting any non-commercial use, as long as credit is given to the author for the original creation. Changes must be marked as such in the source note. The provider mus make available the data, contents and services with the diligence necessary for the discharge of its public tasks."@en ;
+	dc:identifier	"DLDE_BYNC_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2012-01-01" .
+ns3:EU_DATAGRID	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"EU DataGrid Software License (EUDatagrid)"@en ;
+	skos:definition	"EUDatagrid is a permissive free software licence approved by the Open Source Initiative. It is a classic 3-clause licence. Nothing in this licence restricts redistribution of larger works under the EUPL."@en ;
+	dc:identifier	"EU_DATAGRID" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2001-06-30" .
+ns3:IPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"IBM Public License Version 1.0 (IPL-1.0)"@en ;
+	skos:definition	"The IPL-1.0 is the open-source licence IBM uses for some of its software. Supposed to facilitate commercial use of said software, is very clear on the specifics of liability. It also grants explicit patent rights."@en ;
+	dc:identifier	"IPL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-08-31" .
+ns3:LGPL_2_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Lesser General Public License v2.1 only"@en ;
+	skos:definition	"The Free Software Foundation (FSF) produced LGPL for libraries. Works made by using the covered software could be distributed under any licence. Distribution of derivatives (after code modification) must be done under LGPL. Reverse engineering must be allowed (= a general permission in EU law). FSF assimilates static linking to producing derivatives (which may not be the case under EU law)."@en ;
+	dc:identifier	"LGPL_2_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-02-15" .
+ns3:MS_RL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Microsoft Reciprocal License (MS-RL)"@en ;
+	skos:definition	"MS-RL is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"MS_RL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-08-10" .
+ns3:OGL_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Open Government Licence v2.0"@en ;
+	skos:definition	"Developed and maintained by the National Archives, OGL-2.0 is a copyright licence for Crown Copyright works published by the UK government consisting of a simple set of terms and conditions facilitating the re-use of a wide range of public sector information free of charge. The OGL terms are compatible with the latest versions of the Creative Commons Attribution Licence and the Open Data Commons Attribution Licence. The OGL is a perpetual licence so any past and continuing use of information authorised under v1.0 or v2.0 may continue."@en ;
+	dc:identifier	"OGL_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-06-28" .
+ns3:PSEUL	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"EU INSPIRE End User Licence"@en ;
+	skos:definition	"The INSPIRE End User Licence (PSEUL) aims to enable the sharing of environmental spatial information amongst public sector organisations. Licenced data under PSEUL is limited to data created (derived) by the user using Ordnance Survey (OS) licenced data."@en ;
+	dc:identifier	"PSEUL" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-08-01" .
+ns3:SPL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Sun Public License Version 1.0 (SPL-1.0)"@en ;
+	skos:definition	"Sun Public License 1.0 is a copyleft-style, free software licence approved by the Open Source Initiative."@en ;
+	dc:identifier	"SPL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1995-01-01" .
+ns3:AGPL_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Affero General Public License v3.0 only"@en ;
+	skos:definition	"AGPL-3.0 is a modified GPL-3.0 extended to network or Web services distribution (SaaS). The licence is copyleft: copies and derivatives may be distributed under the same AGPL only. Need to document derivatives\u2019 changes and dates. Incompatible with other licences except linking with code covered by the original GPL-3.0."@en ;
+	dc:identifier	"AGPL_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-11-19" .
+ns3:CATOSL_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Computer Associates Trusted Open Source License 1.1 (CATOSL-1.1)"@en ;
+	skos:definition	"CATOSL-1.1 is a copyleft-style, free software licence approved by the Open Source Initiative. Under this licence, it is possible to create a larger work by combining the program with other software code not governed by the terms of this licence, and distribute the larger work as a single product."@en ;
+	dc:identifier	"CATOSL_1_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-07-31" .
+ns3:PHP_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The PHP License 3.0 (PHP-3.0)"@en ;
+	skos:definition	"The PHP License 3.0 is a permissive free software licence approved by the Open Source Initiative. It has minimal, clear requirements, and explicitly bars the use of the PHP name to endorse the software."@en ;
+	dc:identifier	"PHP_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2002-07-21" .
+ns3:CLARIN_ACA_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Clarin Academic End-User Licence (ACA) 1.0"@en ;
+	skos:definition	"The copyright holder grants the end-user a free, non-exclusive and perpetual (for the duration of the copyright) right to use and make copies of the resource for educational, teaching or research purposes as such, as modified, or as part of a compilation or derived work."@en ;
+	dc:identifier	"CLARIN_ACA_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2014-12-12" .
+ns3:NLOD_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Norwegian Licence for Open Government Data (NLOD) 2.0"@en ;
+	skos:definition	"Published by Norway, NLOD 2.0 grants the user the right to copy, use and distribute information, provided the user acknowledges the contributors and complies with the terms and conditions stipulated in this licence."@en ;
+	dc:identifier	"NLOD_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2016-09-01" .
+ns3:GNU_FDL_1_3	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Free Documentation License v1.3 only"@en ;
+	skos:definition	"GNU FDL 1.3 is a form of copyleft intended for use on a manual, textbook or other document to assure everyone the effective freedom to copy and redistribute it, with or without modifications, either commercially or non-commercially. Incompatible with later GFDL licence versions."@en ;
+	dc:identifier	"GNU_FDL_1_3" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2008-11-04" .
+ns3:GNU_FDL_1_3_OR_LATER	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Free Documentation License v1.3 or later"@en ;
+	skos:definition	"GNU FDL 1.3 is a form of copyleft intended for use on a manual, textbook or other document to assure everyone the effective freedom to copy and redistribute it, with or without modifications, either commercially or non-commercially. Compatible with later GFDL licence versions."@en ;
+	dc:identifier	"GNU_FDL_1_3_OR_LATER" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2008-11-04" .
+ns3:GPL_3_0_OR_LATER	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU General Public License v3.0 or later"@en ;
+	skos:definition	"GPL-3.0 was forged in 2007. It is a copyleft licence. OSI states GPL (without indicating version number) as supported by a strong community (the Free Software Fundation - FSF). You may copy, distribute and modify the software as long as you track changes/dates in source files. Any derivative including (i.e. via compiler) GPL-licensed code must also be made available under the GPL-3.0 along with build & install instructions."@en ;
+	dc:identifier	"GPL_3_0_OR_LATER" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-06-29" .
+ns3:AFL_3_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Academic Free License v3.0"@en ;
+	skos:definition	"Written by Lawrence Rosen, AFL-3.0 gives recipients a copyright and allows for a patent on the software so long as they include the original software, any of its copyrights or trademarks and a note saying that you modified it. Nearly identical as the Open Software License, but not reciprocal: it is permissive, interoperable and doesn't force derivative works to use the same licence."@en ;
+	dc:identifier	"AFL_3_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2005-01-01" .
+ns3:DFSL_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"German Free Software License"@en ;
+	skos:definition	"Die d-fsl ist eine GPL-kompatible Open Source Lizenz. Sie ist auf das deutsche und europ\u00E4ische Recht zugeschnitten und unterscheidet sich dadurch von den bisherigen freien Software Lizenzen. Die d-fsl ist in deutscher und englischer Sprache verfasst. Sie ist in beiden Versionen verbindlich und damit auch f\u00FCr den internationalen Gebrauch geeignet."@de ,
+		"D-FSL-1.0 is a GPL-compatible open source license. It is tailored to German and European law and therefore differs from previous free software licenses. The D-FSL is written in German and English. It is binding in both versions and is therefore also suitable for international use."@en ;
+	dc:identifier	"DFSL_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2004-01-01" .
+ns3:UNLICENCE	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"The Unlicense"@en ;
+	skos:definition	"The Unlicense is a template for disclaiming copyright monopoly interest in software you\u2019ve written; in other words, it is a template for dedicating your software to the public domain. It combines a copyright waiver patterned after the very successful public domain SQLite project with the no-warranty statement from the widely-used MIT/X11 license."@en ;
+	dc:identifier	"UNLICENCE" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2010-01-01" .
+ns3:AGPL_3_0_OR_LATER	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Affero General Public License v3.0 or later"@en ;
+	skos:definition	"AGPL-3.0 is A modified GPL-3.0 extended to network or Web services distribution (SaaS). Similar to the EUPL on that point. The licence is copyleft: copies and derivatives may be distributed under the same AGPL only. Need to document derivatives' changes and dates. AGPL-3.0-or later is compatible with later AGPL versions."@en ;
+	dc:identifier	"AGPL_3_0_OR_LATER" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-11-19" .
+ns3:BSD_3_CLAUSECLEAR	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"BSD 3-Clause Clear License"@en ;
+	skos:definition	"BSD-3-Clause Clear permits redistribution and use in source and binary forms, with or without modification, provided that the certain conditions are met: redistributions of source code and in binary forms must retain the copyright notice, the specific list of conditions and the disclaimer. Neither the name of the copyright holder nor of its contributors may be used to promote derived products without prior written permission. As additional protection, BSD 3 Clause Clear, unlike BSD 3, states that it does not allow express or implied licences to any party\u2019s patent rights."@en ;
+	dc:identifier	"BSD_3_CLAUSECLEAR" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-07-22" .
+ns3:CECILL_B_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"CeCILL-B Free Software License Agreement"@en ;
+	skos:definition	"CeCILL-B suit largement le mod\u00E8le de la populaire licence BSD et de ses variantes (licences Apache, X11 ou W3C, parmi d'autres). En \u00E9change d'une forte obligation de citation (dans tout logiciel incorporant un logiciel sous CeCILL-B, mais aussi \u00E0 travers un site Web dans ce cas), l'auteur autorise la r\u00E9utilisation de son logiciel sans aucune autre contrainte."@fr ,
+		"CeCILL-B follows the principle of the popular BSD license and its variants (Apache, X11 or W3C among others). In exchange for strong citation obligations (in all software incorporating a program covered by CeCILL-B and also through a Web site), the author authorizes the reuse of its software without any other constraints."@en ;
+	dc:identifier	"CECILL_B_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2006-09-05" .
+ns3:CECILL_C_1_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"CeCILL-C Free Software License Agreement"@en ;
+	skos:definition	"CeCILL-C est une licence bien adapt\u00E9e \u00E0 la distribution de biblioth\u00E8ques et plus g\u00E9n\u00E9ralement de composants logiciels. Tout distributeur d'une application incorporant des logiciels r\u00E9gis par CeCILL-C doit mettre \u00E0 disposition de la communaut\u00E9 et soumettre \u00E0 cette licence les modifications apport\u00E9es \u00E0 leur code source tout en gardant la libert\u00E9 de choisir une autre licence pour le reste de son application."@fr ,
+		"CeCILL-C is well suited to libraries and more generally software components. Anyone distributing an application which includes components under the CeCILL-C license must mention this fact and make any changes to the source code of these components available to the community under CECILL-C while being free to choose the licence of its application."@en ;
+	dc:identifier	"CECILL_C_1_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2006-09-05" .
+ns3:GPL_2_0_OR_LATER	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU General Public License v2.0 or later"@en ;
+	skos:definition	"Covers both the GPL-2.0 (the \u2018historical\u2019 free software license), the GPL-3.0 and possible later versions. Supported by a strong community (the Free Software Foundation - FSF). Copy, modification and distribution authorised. Changes/dates must be traced in source files. Any derivative must also be made available under one or more of these GPL versions."@en ;
+	dc:identifier	"GPL_2_0_OR_LATER" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1991-06-02" .
+ns3:LGPL_2_1_OR_LATER	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Lesser General Public License v2.1 or later"@en ;
+	skos:definition	"The Free Software Foundation (FSF) produced LGPL for libraries. Works made by using the covered software could be distributed under any licence. Distribution of derivatives (after code modification) must be done under LGPL. Reverse engineering must be allowed (= a general permission in EU law). FSF assimilates static linking to producing derivatives (which may not be the case under EU law). GLPL-2.1-or later is compatible with later GLPL versions."@en ;
+	dc:identifier	"LGPL_2_1_OR_LATER" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1999-02-15" .
+ns3:LGPL_3_0_OR_LATER	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"GNU Lesser General Public License v3.0 or later"@en ;
+	skos:definition	"The Free Software Foundation (FSF) produced LGPL for libraries. Works made by using the covered software could be distributed under any licence. Distribution of derivatives (code modifications) must be done under LGPL. Reverse engineering must be allowed (= a general permission in EU law). FSF assimilates static linking to producing derivatives (which is not the case in EU law when made for interoperability). GLPL-3.0-or later is compatible with later GLPL versions."@en ;
+	dc:identifier	"LGPL_3_0_OR_LATER" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2007-06-29" .
+ns3:ISA_OML_1_1	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"ISA Open Metadata Licence 1.1"@en ;
+	skos:definition	"The ISA Open metadata licence 1.1 is a permissive open licence created by the European Commission to support the publication of technical and semantic specifications. Users are allowed to distribute, copy, adapt or modify the licenced work for any commercial and non-commercial purpose with only a limited set of conditions."@en ;
+	dc:identifier	"ISA_OML_1_1" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2012-04-18" .
+ns3:EUROGEO_2022	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"EuroGeographics Open Data Licence v.2022"@en ;
+	skos:definition	"free software licence approved by the EuroGeographics AISBL, letting others to reuse the work as long as credit is given to the author and new creations are licenced under the identical terms"@en ;
+	dc:identifier	"EUROGEO_2022" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-01-01" .
+ns3:ETALAB_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Etalab Open Licence V 2.0"@en ;
+	skos:definition	"La Licence ouverte / Open Licence, aussi appel\u00E9e Licence Ouverte Etalab, est une licence libre fran\u00E7aise cr\u00E9\u00E9e par la mission Etalab afin d\u2019encadrer l\u2019ouverture des donn\u00E9es de l\u2019\u00C9tat fran\u00E7ais. Cette licence a \u00E9t\u00E9 voulue comme une licence compatible avec les licences Open Government Licence du Royaume-Uni, Open Data Commons Attribution de l\u2019Open Knowledge Foundation et Creative Commons Attribution 2.0 de Creative Commons."@fr ,
+		"The Licence Ouverte / Open Licence is a French open licence published by Etalab for open data from the State of France. The licence was designed to be compatible with Creative Commons Licences, Open Government Licence and the Open Data Commons Attribution License."@en ;
+	dc:identifier	"ETALAB_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2011-10-18" .
+ns3:EUROGEO_2024	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"EuroGeographics Open Data Licence v.2024"@en ;
+	skos:definition	"Open data license approved by the members of EuroGeographics AISBL. This license allows end users to access and use the data, as long as accreditation is provided and that derived datasets are not licensed under any additional and different conditions."@en ;
+	dc:identifier	"EUROGEO_2024" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2024-06-01" .
+ns3:OGL_NC_2_0	skos:inScheme	ns1:licence ;
+	skos:prefLabel	"Non-Commercial Government Licence 2.0"@en ;
+	skos:definition	"Developed and maintained by the National Archives, the Non-Commercial Government Licence 2.0 may be used by public sector bodies that have a Delegation of Authority to licence Crown copyright material non-commercially. It may also be used by public sector bodies holding non-Crown copyright information in accordance with the PSI Regulations 2015. Version 2.0 is more in line with other open-access licenses."@en ;
+	dc:identifier	"OGL_NC_2_0" ;
+	ns5:deprecated	"false" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2013-06-28" .

@@ -1,0 +1,36 @@
+@prefix at:   <http://publications.europa.eu/ontology/authority/> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<http://publications.europa.eu/resource/authority/licence>
+    rdf:type skos:ConceptScheme ;
+    rdfs:label "Licence"@en ;
+    owl:versionInfo "20241211-0" .
+
+<http://publications.europa.eu/resource/authority/licence/CC_BY_4_0>
+    rdf:type skos:Concept ;
+    at:authority-code "CC_BY_4_0" ;
+    dc:identifier "CC_BY_4_0" ;
+    skos:inScheme <http://publications.europa.eu/resource/authority/licence> ;
+    skos:prefLabel "Creative Commons Attribution 4.0 International"@en , "Creative Commons Navngivelse 4.0 Internasjonal"@no ;
+    skos:definition "A license that allows reusers to distribute, remix, adapt, and build upon the material in any medium or format, even for commercial purposes, as long as attribution is given to the creator."@en .
+
+<http://publications.europa.eu/resource/authority/licence/CC0>
+    rdf:type skos:Concept ;
+    at:authority-code "CC0" ;
+    dc:identifier "CC0" ;
+    skos:inScheme <http://publications.europa.eu/resource/authority/licence> ;
+    skos:prefLabel "Creative Commons Universal Public Domain Dedication"@en , "Creative Commons Universal Fristatus-erklæring"@no ;
+    skos:definition "A tool that enables creators to waive all their copyright and related rights in their works and dedicate them to the public domain."@en .
+
+<http://publications.europa.eu/resource/authority/licence/NLOD_2_0>
+    rdf:type skos:Concept ;
+    at:authority-code "NLOD_2_0" ;
+    dc:identifier "NLOD_2_0" ;
+    skos:inScheme <http://publications.europa.eu/resource/authority/licence> ;
+    skos:prefLabel "Norwegian Licence for Open Government Data"@en , "Norsk lisens for offentlige data"@no ;
+    skos:definition "A Norwegian license for open government data, version 2.0."@en . 
