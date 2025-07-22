@@ -16,6 +16,7 @@ import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
+import no.fdk.referencedata.eu.licence.LicenceService;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
@@ -104,6 +105,9 @@ public class Scheduler {
 
     @Autowired
     private PlannedAvailabilityService plannedAvailabilityService;
+
+    @Autowired
+    private LicenceService licenceService;
 
     /**
      * Run every hour
@@ -289,6 +293,14 @@ public class Scheduler {
         currencyService.harvestAndSave(false);
     }
 
+    /**
+     * Run every day 04:40 (at night)
+     */
+    @Scheduled(cron = "0 40 4 * * ?")
+    public void updateLicences() {
+        licenceService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -381,6 +393,10 @@ public class Scheduler {
 
         if(currencyService.firstTime()) {
             currencyService.harvestAndSave(true);
+        }
+
+        if(licenceService.firstTime()) {
+            licenceService.harvestAndSave(true);
         }
     }
 }
