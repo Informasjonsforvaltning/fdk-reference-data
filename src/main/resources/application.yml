@@ -4,8 +4,7 @@ application:
   cors.originPatterns: ${CORS_ORIGIN_PATTERNS:*}
 
 spring:
-  codec:
-    max-in-memory-size: 2MB
+  http.codecs.max-in-memory-size: 2MB
   data:
     mongodb:
       host: ${MONGODB_HOST}
@@ -38,7 +37,7 @@ management:
   metrics:
     tags:
       application: reference-data
-
+springdoc.api-docs.version: openapi_3_0
 graphiql:
   cdn:
     enabled: true
