@@ -1,5 +1,6 @@
 package no.fdk.referencedata.los;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.riot.Lang;
@@ -47,6 +48,7 @@ public class LosController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping(path = "themes-and-words")
     public ResponseEntity<Void> updateLos() {
         losService.importLosNodes();

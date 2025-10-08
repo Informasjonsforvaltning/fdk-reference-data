@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class EvidenceTypeController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateEvidenceTypes() {
         evidenceTypeService.harvestAndSave(true);

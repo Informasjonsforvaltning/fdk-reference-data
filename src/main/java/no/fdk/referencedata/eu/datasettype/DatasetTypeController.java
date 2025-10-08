@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.datasettype;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class DatasetTypeController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateDatasetTypes() {
         datasetTypeService.harvestAndSave(true);
