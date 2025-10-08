@@ -1,5 +1,6 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,7 @@ public class FylkeOrganisasjonController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateFylkeOrganisasjoner() {
         fylkeOrganisasjonService.harvestAndSave();

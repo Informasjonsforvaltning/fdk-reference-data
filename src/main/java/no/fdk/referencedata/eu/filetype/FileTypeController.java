@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.filetype;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import org.apache.jena.riot.RDFFormat;
@@ -32,6 +33,7 @@ public class FileTypeController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateFileTypes() {
         fileTypeService.harvestAndSave(true);

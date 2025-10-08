@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.mainactivity;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class MainActivityController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateMainActivities() {
         mainActivityService.harvestAndSave(true);

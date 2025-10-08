@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class AudienceTypeController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateAudienceTypes() {
         audienceTypeService.harvestAndSave(true);

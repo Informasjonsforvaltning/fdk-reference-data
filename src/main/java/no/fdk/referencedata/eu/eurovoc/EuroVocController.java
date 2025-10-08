@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -38,6 +39,7 @@ public class EuroVocController {
     }
 
     @CrossOrigin
+    @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateEuroVocs() {
         euroVocService.harvestAndSave(true);
