@@ -26,6 +26,8 @@ import no.fdk.referencedata.eu.filetype.FileTypeHarvester;
 import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
 import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
+import no.fdk.referencedata.eu.licence.LicenceHarvester;
+import no.fdk.referencedata.eu.licence.LocalLicenceHarvester;
 import no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester;
 import no.fdk.referencedata.eu.mainactivity.MainActivityHarvester;
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
@@ -108,6 +110,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public CurrencyHarvester currencyHarvester() {
         return new LocalCurrencyHarvester("20241211-0");
+    }
+
+    @Bean
+    public LicenceHarvester licenceHarvester() {
+        return new LocalLicenceHarvester("20241211-0");
     }
 
     @Bean
