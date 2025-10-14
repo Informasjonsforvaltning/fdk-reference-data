@@ -94,6 +94,9 @@ type Query {
   weekDays: [DayOfWeek!]!
   dayOfWeekByCode(code: String!): DayOfWeek
 
+  mobilityThemes: [MobilityTheme!]!
+  mobilityThemeByCode(code: String!): MobilityTheme
+
   fylkeOrganisasjoner: [FylkeOrganisasjon!]!
   fylkeOrganisasjonByFylkesnummer(fylkesnummer: String!): FylkeOrganisasjon
 
@@ -315,6 +318,12 @@ type PublisherType {
 }
 
 type DayOfWeek {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type MobilityTheme {
   uri: ID!
   code: String
   label: LocalizedStrings

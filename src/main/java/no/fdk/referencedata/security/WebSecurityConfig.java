@@ -63,6 +63,7 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher(HttpMethod.POST, "/geonorge/**")).authenticated()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/digdir/**")).authenticated()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/los/**")).authenticated()
+                        .requestMatchers(antMatcher(HttpMethod.POST, "/mobility/**")).authenticated()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/ssb/**")).authenticated()
                         .anyRequest().permitAll()
                 );

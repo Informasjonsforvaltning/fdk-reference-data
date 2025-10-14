@@ -1,0 +1,9 @@
+query MobilityThemeByCode($code: String!) {
+    mobilityThemeByCode(code: $code) {
+        uri
+        code
+        label {
+            en
+        }
+    }
+}
