@@ -1,0 +1,9 @@
+query {
+    mobilityThemes {
+        uri
+        code
+        label {
+            en
+        }
+    }
+}

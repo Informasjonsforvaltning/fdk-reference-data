@@ -22,6 +22,7 @@ import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.los.LosService;
+import no.fdk.referencedata.mobility.theme.MobilityThemeService;
 import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonService;
 import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,9 @@ public class Scheduler {
 
     @Autowired
     private LicenceService licenceService;
+
+    @Autowired
+    private MobilityThemeService mobilityThemeService;
 
     /**
      * Run every hour
@@ -301,6 +305,14 @@ public class Scheduler {
         licenceService.harvestAndSave(false);
     }
 
+    /**
+     * Run every day 04:50 (at night)
+     */
+    @Scheduled(cron = "0 50 4 * * ?")
+    public void updateMobilityThemes() {
+        mobilityThemeService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -397,6 +409,10 @@ public class Scheduler {
 
         if(licenceService.firstTime()) {
             licenceService.harvestAndSave(true);
+        }
+
+        if(mobilityThemeService.firstTime()) {
+            mobilityThemeService.harvestAndSave(true);
         }
     }
 }
