@@ -94,6 +94,9 @@ type Query {
   weekDays: [DayOfWeek!]!
   dayOfWeekByCode(code: String!): DayOfWeek
 
+  mobilityConditions: [MobilityCondition!]!
+  mobilityConditionByCode(code: String!): MobilityCondition
+
   mobilityDataStandards: [MobilityDataStandard!]!
   mobilityDataStandardByCode(code: String!): MobilityDataStandard
 
@@ -321,6 +324,12 @@ type PublisherType {
 }
 
 type DayOfWeek {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type MobilityCondition {
   uri: ID!
   code: String
   label: LocalizedStrings

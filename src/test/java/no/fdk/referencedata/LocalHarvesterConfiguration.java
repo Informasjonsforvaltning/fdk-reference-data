@@ -34,6 +34,8 @@ import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaTypeHarvester;
 import no.fdk.referencedata.los.LocalLosImporter;
 import no.fdk.referencedata.los.LosImporter;
+import no.fdk.referencedata.mobility.conditions.LocalMobilityConditionHarvester;
+import no.fdk.referencedata.mobility.conditions.MobilityConditionHarvester;
 import no.fdk.referencedata.mobility.datastandard.LocalMobilityDataStandardHarvester;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardHarvester;
 import no.fdk.referencedata.mobility.theme.LocalMobilityThemeHarvester;
@@ -129,6 +131,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public MobilityDataStandardHarvester mobilityDataStandardHarvester() {
         return new LocalMobilityDataStandardHarvester("1.1.0");
+    }
+
+    @Bean
+    public MobilityConditionHarvester mobilityConditionHarvester() {
+        return new LocalMobilityConditionHarvester("1.1.0");
     }
 
     @Bean
