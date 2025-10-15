@@ -1,0 +1,9 @@
+query MobilityConditionByCode($code: String!) {
+    mobilityConditionByCode(code: $code) {
+        uri
+        code
+        label {
+            en
+        }
+    }
+}
