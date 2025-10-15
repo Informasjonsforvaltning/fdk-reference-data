@@ -1,0 +1,9 @@
+query {
+    mobilityDataStandards {
+        uri
+        code
+        label {
+            en
+        }
+    }
+}
