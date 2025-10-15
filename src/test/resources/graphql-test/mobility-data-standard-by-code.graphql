@@ -1,0 +1,9 @@
+query MobilityDataStandardByCode($code: String!) {
+    mobilityDataStandardByCode(code: $code) {
+        uri
+        code
+        label {
+            en
+        }
+    }
+}
