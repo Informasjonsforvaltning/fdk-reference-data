@@ -1,0 +1,9 @@
+query {
+    mobilityConditions {
+        uri
+        code
+        label {
+            en
+        }
+    }
+}

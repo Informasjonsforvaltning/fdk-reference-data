@@ -22,6 +22,7 @@ import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.los.LosService;
+import no.fdk.referencedata.mobility.conditions.MobilityConditionService;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardService;
 import no.fdk.referencedata.mobility.theme.MobilityThemeService;
 import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonService;
@@ -116,6 +117,9 @@ public class Scheduler {
 
     @Autowired
     private MobilityDataStandardService mobilityDataStandardService;
+
+    @Autowired
+    private MobilityConditionService mobilityConditionService;
 
     /**
      * Run every hour
@@ -318,6 +322,14 @@ public class Scheduler {
     }
 
     /**
+     * Run every day 04:55 (at night)
+     */
+    @Scheduled(cron = "0 55 4 * * ?")
+    public void updateMobilityCondition() {
+        mobilityConditionService.harvestAndSave(false);
+    }
+
+    /**
      * Run every day 05:00 (at night)
      */
     @Scheduled(cron = "0 0 5 * * ?")
@@ -425,6 +437,10 @@ public class Scheduler {
 
         if(mobilityThemeService.firstTime()) {
             mobilityThemeService.harvestAndSave(true);
+        }
+
+        if(mobilityConditionService.firstTime()) {
+            mobilityConditionService.harvestAndSave(true);
         }
 
         if(mobilityDataStandardService.firstTime()) {
