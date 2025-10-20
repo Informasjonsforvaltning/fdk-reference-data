@@ -27,7 +27,7 @@
         <maven.exec.skip>false</maven.exec.skip>
         <!--end standard properties-->
 
-        <jena.version>5.5.0</jena.version>
+        <jena.version>5.6.0</jena.version>
     </properties>
 
     <dependencies>
