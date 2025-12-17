@@ -46,7 +46,7 @@ public class EuroVocService {
     }
 
     public boolean firstTime() {
-        return euroVocRepository.count() == 0;
+        return true;
     }
 
     public String getRdf(RDFFormat rdfFormat) {
