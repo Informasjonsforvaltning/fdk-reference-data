@@ -10,6 +10,7 @@ import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.mock;
                 "spring.main.allow-bean-definition-overriding=true",
                 "scheduling.enabled=false",
         })
+@AutoConfigureGraphQlTester
 @ActiveProfiles("test")
 class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
 

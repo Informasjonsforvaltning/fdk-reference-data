@@ -10,6 +10,7 @@ import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.mock;
                 "spring.main.allow-bean-definition-overriding=true",
                 "scheduling.enabled=false",
         })
+@AutoConfigureGraphQlTester
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class LosQueryIntegrationTest extends AbstractContainerTest {

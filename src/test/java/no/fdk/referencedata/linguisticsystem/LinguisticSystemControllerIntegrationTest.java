@@ -6,12 +6,13 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -28,13 +29,22 @@ public class LinguisticSystemControllerIntegrationTest extends AbstractContainer
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
+
+    @BeforeEach
+    public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+    }
 
     @Test
     public void test_if_get_all_linguistic_systems_returns_valid_response() {
         LinguisticSystems languages =
-                this.restTemplate.getForObject("http://localhost:" + port + "/linguistic-systems", LinguisticSystems.class);
+                restClient.get()
+                        .uri("/linguistic-systems")
+                        .retrieve()
+                        .body(LinguisticSystems.class);
 
         assertEquals(5, languages.getLinguisticSystems().size());
 
@@ -47,7 +57,10 @@ public class LinguisticSystemControllerIntegrationTest extends AbstractContainer
     @Test
     public void test_if_get_linguistic_system_by_code_returns_valid_response() {
         LinguisticSystem language =
-                this.restTemplate.getForObject("http://localhost:" + port + "/linguistic-systems/NOB", LinguisticSystem.class);
+                restClient.get()
+                        .uri("/linguistic-systems/NOB")
+                        .retrieve()
+                        .body(LinguisticSystem.class);
 
         assertNotNull(language);
         assertEquals("http://publications.europa.eu/resource/authority/language/NOB", language.getUri());

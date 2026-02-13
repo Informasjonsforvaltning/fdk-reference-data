@@ -15,10 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -49,11 +51,14 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         CurrencyService currencyService = new CurrencyService(
                 new LocalCurrencyHarvester("1"),
                 currencyRepository,
@@ -66,7 +71,7 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_currencies_returns_valid_response() {
         Currencies currencies =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/currencies", Currencies.class);
+                restClient.get().uri("/eu/currencies").retrieve().body(Currencies.class);
 
         assertEquals(CURRENCY_SIZE, currencies.getCurrencies().size());
 
@@ -79,7 +84,7 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_currency_by_code_returns_valid_response() {
         Currency currency =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/currencies/ISK", Currency.class);
+                restClient.get().uri("/eu/currencies/ISK").retrieve().body(Currency.class);
 
         assertNotNull(currency);
         assertEquals("http://publications.europa.eu/resource/authority/currency/ISK", currency.getUri());
@@ -99,8 +104,8 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/currencies",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/currencies")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
@@ -120,8 +125,8 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/currencies",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/currencies")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(CURRENCY_SIZE, currencyRepository.count());

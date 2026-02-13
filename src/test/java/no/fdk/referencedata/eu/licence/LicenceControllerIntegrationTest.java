@@ -15,11 +15,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
@@ -48,11 +48,14 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         LicenceService licenceService = new LicenceService(
                 new LocalLicenceHarvester("1"),
                 licenceRepository,
@@ -65,7 +68,10 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_licences_returns_valid_response() {
         Licences licences =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/licences", Licences.class);
+                restClient.get()
+                        .uri("/eu/licences")
+                        .retrieve()
+                        .body(Licences.class);
 
         assertEquals(LICENCES_SIZE, licences.getLicences().size());
 
@@ -78,7 +84,10 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_licence_by_code_returns_valid_response() {
         Licence licence =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/licences/CC0", Licence.class);
+                restClient.get()
+                        .uri("/eu/licences/CC0")
+                        .retrieve()
+                        .body(Licence.class);
 
         assertNotNull(licence);
         assertEquals("http://publications.europa.eu/resource/authority/licence/CC0", licence.getUri());
@@ -96,8 +105,10 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/licences",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/eu/licences")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(LICENCES_SIZE, licenceRepository.count());
@@ -117,8 +128,10 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/licences",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/eu/licences")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(LICENCES_SIZE, licenceRepository.count());

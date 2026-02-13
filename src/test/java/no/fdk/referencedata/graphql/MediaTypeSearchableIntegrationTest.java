@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
@@ -13,12 +14,14 @@ import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static no.fdk.referencedata.search.SearchAlternative.IANA_MEDIA_TYPES;
@@ -30,6 +33,7 @@ import static org.mockito.Mockito.mock;
                 "spring.main.allow-bean-definition-overriding=true",
                 "scheduling.enabled=false",
         })
+@AutoConfigureGraphQlTester
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class MediaTypeSearchableIntegrationTest extends AbstractContainerTest {
@@ -44,6 +48,8 @@ class MediaTypeSearchableIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private GraphQlTester graphQlTester;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -60,7 +66,7 @@ class MediaTypeSearchableIntegrationTest extends AbstractContainerTest {
     void test_if_search_query_returns_iana_media_type_hit() {
         SearchRequest req = SearchRequest.builder().query("OCTET-STREAM").types(List.of(IANA_MEDIA_TYPES)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['search']")
                 .entityList(SearchHit.class)
@@ -80,7 +86,7 @@ class MediaTypeSearchableIntegrationTest extends AbstractContainerTest {
     void test_if_that_hits_that_starts_with_search_query_is_prioritized_in_sort() {
         SearchRequest req = SearchRequest.builder().query("json").types(List.of(IANA_MEDIA_TYPES)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['search']")
                 .entityList(SearchHit.class)
@@ -113,7 +119,7 @@ class MediaTypeSearchableIntegrationTest extends AbstractContainerTest {
         FindByURIsRequest req = FindByURIsRequest.builder().uris(expectedURIs).types(List.of(IANA_MEDIA_TYPES)).build();
 
         List<SearchHit> actual = graphQlTester.documentName("find-by-uris")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['findByURIs']")
                 .entityList(SearchHit.class)

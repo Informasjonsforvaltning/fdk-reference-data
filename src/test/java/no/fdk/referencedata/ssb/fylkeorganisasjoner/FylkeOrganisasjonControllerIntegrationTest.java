@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,8 +32,7 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
     @Autowired
     private FylkeOrganisasjonRepository fylkeOrganisasjonRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @Value("${wiremock.host}")
     private String wiremockHost;
@@ -43,6 +42,10 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository);
@@ -53,7 +56,7 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
     @Test
     public void test_if_get_all_fylker_returns_valid_response() {
         FylkeOrganisasjoner fylkeOrganisasjonr =
-                this.restTemplate.getForObject("http://localhost:" + port + "/ssb/fylke-organisasjoner", FylkeOrganisasjoner.class);
+                restClient.get().uri("/ssb/fylke-organisasjoner").retrieve().body(FylkeOrganisasjoner.class);
 
         assertEquals(2, fylkeOrganisasjonr.getFylkeOrganisasjoner().size());
 
@@ -68,7 +71,7 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
     @Test
     public void test_if_get_fylke_by_fylkenr_returns_valid_response() {
         FylkeOrganisasjon fylkeOrganisasjon =
-                this.restTemplate.getForObject("http://localhost:" + port + "/ssb/fylke-organisasjoner/38", FylkeOrganisasjon.class);
+                restClient.get().uri("/ssb/fylke-organisasjoner/38").retrieve().body(FylkeOrganisasjon.class);
 
         assertNotNull(fylkeOrganisasjon);
         assertEquals("https://data.brreg.no/enhetsregisteret/api/enheter/821227062", fylkeOrganisasjon.getUri());

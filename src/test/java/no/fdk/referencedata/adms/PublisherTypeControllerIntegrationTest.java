@@ -8,10 +8,10 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -30,13 +30,19 @@ public class PublisherTypeControllerIntegrationTest extends AbstractContainerTes
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
+
+    @BeforeEach
+    public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+    }
 
     @Test
     public void test_if_get_all_publisher_types_returns_valid_response() {
         PublisherTypes publisherTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/adms/publisher-types", PublisherTypes.class);
+                restClient.get().uri("/adms/publisher-types").retrieve().body(PublisherTypes.class);
 
         assertEquals(11, publisherTypes.getPublisherTypes().size());
 
@@ -49,7 +55,7 @@ public class PublisherTypeControllerIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_get_by_code_returns_valid_response() {
         PublisherType publisherType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/adms/publisher-types/IndustryConsortium", PublisherType.class);
+                restClient.get().uri("/adms/publisher-types/IndustryConsortium").retrieve().body(PublisherType.class);
 
         assertNotNull(publisherType);
         assertEquals("http://purl.org/adms/publishertype/IndustryConsortium", publisherType.getUri());

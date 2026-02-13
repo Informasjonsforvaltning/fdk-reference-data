@@ -15,10 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -50,11 +52,14 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         EuroVocService EuroVocService = new EuroVocService(
                 new LocalEuroVocHarvester("1"),
                 euroVocRepository,
@@ -67,7 +72,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_eurovocs_returns_valid_response() {
         EuroVocs euroVocs =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/eurovocs", EuroVocs.class);
+                restClient.get().uri("/eu/eurovocs").retrieve().body(EuroVocs.class);
 
         assertEquals(EUROVOCS_SIZE, euroVocs.getEuroVocs().size());
 
@@ -80,7 +85,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_eurovoc_by_code_returns_valid_response() {
         EuroVoc euroVoc =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/eurovocs/337", EuroVoc.class);
+                restClient.get().uri("/eu/eurovocs/337").retrieve().body(EuroVoc.class);
 
         assertNotNull(euroVoc);
         assertEquals("http://eurovoc.europa.eu/337", euroVoc.getUri());
@@ -98,8 +103,8 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/eurovocs",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/eurovocs")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
@@ -119,8 +124,8 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/eurovocs",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/eurovocs")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());

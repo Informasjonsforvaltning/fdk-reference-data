@@ -89,6 +89,11 @@ public class LocalHarvesterConfiguration {
     }
 
     @Bean
+    public DistributionStatusHarvester distributionStatusHarvester() {
+        return new LocalDistributionStatusHarvester("20220615-0");
+    }
+
+    @Bean
     public DistributionTypeHarvester distributionTypeHarvester() {
         return new LocalDistributionTypeHarvester("1");
     }

@@ -16,10 +16,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -51,11 +53,14 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("1"),
                 dataThemeRepository,
@@ -68,7 +73,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_datathemes_returns_valid_response() {
         DataThemes dataThemes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/data-themes", DataThemes.class);
+                restClient.get().uri("/eu/data-themes").retrieve().body(DataThemes.class);
 
         assertEquals(DATA_THEMES_SIZE, dataThemes.getDataThemes().size());
 
@@ -84,7 +89,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_datatheme_by_code_returns_valid_response() {
         DataTheme dataTheme =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/data-themes/AGRI", DataTheme.class);
+                restClient.get().uri("/eu/data-themes/AGRI").retrieve().body(DataTheme.class);
 
         assertNotNull(dataTheme);
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", dataTheme.getUri());
@@ -105,8 +110,8 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/data-themes",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/data-themes")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
@@ -126,8 +131,8 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/data-themes",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/data-themes")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());

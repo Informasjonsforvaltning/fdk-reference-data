@@ -13,12 +13,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -47,11 +45,14 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
                 rdfSourceRepository,
@@ -63,7 +64,7 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
     @Test
     public void test_if_get_all_concept_subjects_returns_valid_response() {
         ConceptSubjects conceptSubjects =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/concept-subjects", ConceptSubjects.class);
+                restClient.get().uri("/digdir/concept-subjects").retrieve().body(ConceptSubjects.class);
 
         assertEquals(4, conceptSubjects.getConceptSubjects().size());
 
@@ -79,8 +80,8 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/concept-subjects",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/concept-subjects")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(4, conceptSubjectRepository.count());
@@ -92,8 +93,8 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/concept-subjects",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/concept-subjects")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, conceptSubjectRepository.count());

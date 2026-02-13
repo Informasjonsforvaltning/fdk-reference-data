@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
                 "spring.main.allow-bean-definition-overriding=true",
                 "scheduling.enabled=false",
         })
+@AutoConfigureGraphQlTester
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class FylkeOrganisasjonQueryIntegrationTest extends AbstractContainerTest {

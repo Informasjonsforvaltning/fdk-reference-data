@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetRepository;
@@ -13,12 +14,14 @@ import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static no.fdk.referencedata.search.SearchAlternative.ADMINISTRATIVE_ENHETER;
@@ -30,6 +33,7 @@ import static org.mockito.Mockito.mock;
                 "spring.main.allow-bean-definition-overriding=true",
                 "scheduling.enabled=false",
         })
+@AutoConfigureGraphQlTester
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class EnhetFindByURIsQueryIntegrationTest extends AbstractContainerTest {
@@ -47,6 +51,8 @@ class EnhetFindByURIsQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private GraphQlTester graphQlTester;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
     public void setup() {
@@ -71,7 +77,7 @@ class EnhetFindByURIsQueryIntegrationTest extends AbstractContainerTest {
         FindByURIsRequest req = FindByURIsRequest.builder().uris(expectedURIs).types(List.of(ADMINISTRATIVE_ENHETER)).build();
 
         List<SearchHit> actual = graphQlTester.documentName("find-by-uris")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['findByURIs']")
                 .entityList(SearchHit.class)

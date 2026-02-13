@@ -15,11 +15,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
@@ -48,11 +48,14 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
                 new LocalMobilityThemeHarvester("1.0.0"),
                 mobilityThemeRepository,
@@ -65,7 +68,10 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_get_all_mobility_themes_returns_valid_response() {
         MobilityThemes mobilityThemes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/mobility/themes", MobilityThemes.class);
+                restClient.get()
+                        .uri("/mobility/themes")
+                        .retrieve()
+                        .body(MobilityThemes.class);
 
         assertEquals(123, mobilityThemes.getMobilityThemes().size());
 
@@ -78,7 +84,10 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_get_mobility_theme_by_code_returns_valid_response() {
         MobilityTheme theme =
-                this.restTemplate.getForObject("http://localhost:" + port + "/mobility/themes/speed-limits", MobilityTheme.class);
+                restClient.get()
+                        .uri("/mobility/themes/speed-limits")
+                        .retrieve()
+                        .body(MobilityTheme.class);
 
         assertNotNull(theme);
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-theme/speed-limits", theme.getUri());
@@ -96,8 +105,10 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/mobility/themes",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/mobility/themes")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(123, mobilityThemeRepository.count());
@@ -117,8 +128,10 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/mobility/themes",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/mobility/themes")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(123, mobilityThemeRepository.count());

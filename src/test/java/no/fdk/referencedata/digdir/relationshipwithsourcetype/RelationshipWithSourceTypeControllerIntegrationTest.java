@@ -15,10 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -48,11 +50,14 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
                 new LocalRelationshipWithSourceTypeHarvester("1"),
                 relationshipWithSourceTypeRepository,
@@ -65,7 +70,7 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
     @Test
     public void test_if_get_all_relationshipWithSource_types_returns_valid_response() {
         RelationshipWithSourceTypes relationshipWithSourceTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/relationship-with-source-types", RelationshipWithSourceTypes.class);
+                restClient.get().uri("/digdir/relationship-with-source-types").retrieve().body(RelationshipWithSourceTypes.class);
 
         assertEquals(3, relationshipWithSourceTypes.getRelationshipWithSourceTypes().size());
 
@@ -78,7 +83,7 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
     @Test
     public void test_if_get_relationshipWithSource_type_by_code_returns_valid_response() {
         RelationshipWithSourceType relationshipWithSourceType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/relationship-with-source-types/derived-from-source", RelationshipWithSourceType.class);
+                restClient.get().uri("/digdir/relationship-with-source-types/derived-from-source").retrieve().body(RelationshipWithSourceType.class);
 
         assertNotNull(relationshipWithSourceType);
         assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", relationshipWithSourceType.getUri());
@@ -96,8 +101,8 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/relationship-with-source-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/relationship-with-source-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(3, relationshipWithSourceTypeRepository.count());
@@ -117,8 +122,8 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/relationship-with-source-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/relationship-with-source-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(3, relationshipWithSourceTypeRepository.count());

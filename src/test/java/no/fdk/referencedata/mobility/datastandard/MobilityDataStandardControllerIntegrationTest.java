@@ -15,11 +15,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
@@ -48,11 +48,14 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
                 new LocalMobilityDataStandardHarvester("1.0.0"),
                 mobilityDataStandardRepository,
@@ -65,7 +68,10 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
     @Test
     public void test_if_get_all_mobility_data_standards_returns_valid_response() {
         MobilityDataStandards mobilityDataStandards =
-                this.restTemplate.getForObject("http://localhost:" + port + "/mobility/data-standards", MobilityDataStandards.class);
+                restClient.get()
+                        .uri("/mobility/data-standards")
+                        .retrieve()
+                        .body(MobilityDataStandards.class);
 
         assertEquals(15, mobilityDataStandards.getMobilityDataStandards().size());
 
@@ -78,7 +84,10 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
     @Test
     public void test_if_get_mobility_data_standard_by_code_returns_valid_response() {
         MobilityDataStandard standard =
-                this.restTemplate.getForObject("http://localhost:" + port + "/mobility/data-standards/gml", MobilityDataStandard.class);
+                restClient.get()
+                        .uri("/mobility/data-standards/gml")
+                        .retrieve()
+                        .body(MobilityDataStandard.class);
 
         assertNotNull(standard);
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-data-standard/gml", standard.getUri());
@@ -96,8 +105,10 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/mobility/data-standards",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/mobility/data-standards")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(15, mobilityDataStandardRepository.count());
@@ -117,8 +128,10 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/mobility/data-standards",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/mobility/data-standards")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(15, mobilityDataStandardRepository.count());

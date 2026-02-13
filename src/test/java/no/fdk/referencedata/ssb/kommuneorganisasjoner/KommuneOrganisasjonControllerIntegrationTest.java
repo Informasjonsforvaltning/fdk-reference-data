@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,8 +32,7 @@ public class KommuneOrganisasjonControllerIntegrationTest extends AbstractContai
     @Autowired
     private KommuneOrganisasjonRepository kommuneOrganisasjonRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @Value("${wiremock.host}")
     private String wiremockHost;
@@ -43,6 +42,10 @@ public class KommuneOrganisasjonControllerIntegrationTest extends AbstractContai
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         KommuneOrganisasjonService kommuneOrganisasjonService = new KommuneOrganisasjonService(
                 new LocalKommuneOrganisasjonHarvester(wiremockHost, wiremockPort),
                 kommuneOrganisasjonRepository);
@@ -53,7 +56,7 @@ public class KommuneOrganisasjonControllerIntegrationTest extends AbstractContai
     @Test
     public void test_if_get_all_kommuner_returns_valid_response() {
         KommuneOrganisasjoner kommuneOrganisasjonr =
-                this.restTemplate.getForObject("http://localhost:" + port + "/ssb/kommune-organisasjoner", KommuneOrganisasjoner.class);
+                restClient.get().uri("/ssb/kommune-organisasjoner").retrieve().body(KommuneOrganisasjoner.class);
 
         assertEquals(2, kommuneOrganisasjonr.getKommuneOrganisasjoner().size());
 
@@ -68,7 +71,7 @@ public class KommuneOrganisasjonControllerIntegrationTest extends AbstractContai
     @Test
     public void test_if_get_kommune_by_kommunenr_returns_valid_response() {
         KommuneOrganisasjon kommuneOrganisasjon =
-                this.restTemplate.getForObject("http://localhost:" + port + "/ssb/kommune-organisasjoner/5053", KommuneOrganisasjon.class);
+                restClient.get().uri("/ssb/kommune-organisasjoner/5053").retrieve().body(KommuneOrganisasjon.class);
 
         assertNotNull(kommuneOrganisasjon);
         assertEquals("https://data.brreg.no/enhetsregisteret/api/enheter/997391853", kommuneOrganisasjon.getUri());

@@ -15,12 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -55,11 +53,14 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 new LocalConceptStatusHarvester("1"),
                 conceptStatusRepository,
@@ -72,7 +73,7 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_get_all_statuses_returns_valid_response() {
         ConceptStatuses statuses =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/concept-statuses", ConceptStatuses.class);
+                restClient.get().uri("/eu/concept-statuses").retrieve().body(ConceptStatuses.class);
 
         assertEquals(CONCEPT_STATUSES_SIZE, statuses.getConceptStatuses().size());
 
@@ -85,7 +86,7 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_get_status_by_code_returns_valid_response() {
         ConceptStatus status =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/concept-statuses/CURRENT", ConceptStatus.class);
+                restClient.get().uri("/eu/concept-statuses/CURRENT").retrieve().body(ConceptStatus.class);
 
         assertNotNull(status);
         assertEquals("http://publications.europa.eu/resource/authority/concept-status/CURRENT", status.getUri());
@@ -103,8 +104,8 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/concept-statuses",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/concept-statuses")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
@@ -124,8 +125,8 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/concept-statuses",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/concept-statuses")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());

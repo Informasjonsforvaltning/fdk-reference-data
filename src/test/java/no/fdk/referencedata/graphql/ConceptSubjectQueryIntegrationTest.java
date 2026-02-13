@@ -11,6 +11,7 @@ import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.mock;
                 "wiremock.host=dummy",
                 "wiremock.port=0"
         })
+@AutoConfigureGraphQlTester
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class ConceptSubjectQueryIntegrationTest extends AbstractContainerTest {
