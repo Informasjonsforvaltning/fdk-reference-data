@@ -46,6 +46,9 @@ type Query {
   frequencies: [Frequency!]!
   frequencyByCode(code: String!): Frequency
 
+  highValueCategories: [HighValueCategory!]!
+  highValueCategoryByCode(code: String!): HighValueCategory
+
   linguisticSystems: [LinguisticSystem!]!
   linguisticSystemByCode(code: String!): LinguisticSystem
 
@@ -218,6 +221,12 @@ type FileType {
 }
 
 type Frequency {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type HighValueCategory {
   uri: ID!
   code: String
   label: LocalizedStrings

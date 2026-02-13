@@ -26,6 +26,8 @@ import no.fdk.referencedata.eu.filetype.FileTypeHarvester;
 import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
 import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
+import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoriesHarvester;
+import no.fdk.referencedata.eu.highvaluecategories.LocalHighValueCategoryHarvester;
 import no.fdk.referencedata.eu.licence.LicenceHarvester;
 import no.fdk.referencedata.eu.licence.LocalLicenceHarvester;
 import no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester;
@@ -151,5 +153,10 @@ public class LocalHarvesterConfiguration {
     @Bean
     public ServiceChannelTypeHarvester serviceChannelTypeHarvester() {
         return new LocalServiceChannelTypeHarvester("1");
+    }
+
+    @Bean
+    public HighValueCategoriesHarvester highValueCategoriesHarvester() {
+        return new LocalHighValueCategoryHarvester("2.1");
     }
 }
