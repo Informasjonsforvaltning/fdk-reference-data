@@ -16,6 +16,7 @@ public enum Settings {
     FREQUENCY,
     GEONORGE_FYLKE,
     GEONORGE_KOMMUNE,
+    HIGH_VALUE_CATEGORY,
     LICENCE,
     MAIN_ACTIVITY,
     MEDIA_TYPE,

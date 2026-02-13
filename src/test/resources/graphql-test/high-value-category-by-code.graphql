@@ -1,0 +1,7 @@
+query GetHighValueCategoryByCode($code: String!) {
+    highValueCategoryByCode(code: $code) {
+        uri
+        code
+        label { en }
+    }
+}

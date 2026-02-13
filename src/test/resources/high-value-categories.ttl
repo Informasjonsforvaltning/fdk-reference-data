@@ -1,0 +1,390 @@
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+
+<http://data.europa.eu/bna/asd487ae75>
+	owl:versionInfo	"2.1" .
+<http://data.europa.eu/bna/c_164e0bf5>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Meteorological"@en ;
+	dc:identifier	"c_164e0bf5" .
+<http://data.europa.eu/bna/c_a9135398>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Companies and company ownership"@en ;
+	dc:identifier	"c_a9135398" .
+<http://data.europa.eu/bna/c_ac64a52d>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Geospatial"@en ;
+	dc:identifier	"c_ac64a52d" .
+<http://data.europa.eu/bna/c_b79e35eb>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Mobility"@en ;
+	dc:identifier	"c_b79e35eb" .
+<http://data.europa.eu/bna/c_dd313021>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Earth observation and environment"@en ;
+	dc:identifier	"c_dd313021" .
+<http://data.europa.eu/bna/c_e1da4e07>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Statistics"@en ;
+	dc:identifier	"c_e1da4e07" .
+<http://data.europa.eu/bna/c_03ba8d92>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Regular lock and bridge operating times"@en ;
+	dc:identifier	"c_03ba8d92" .
+<http://data.europa.eu/bna/c_04bf94a3>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Poverty"@en ;
+	dc:identifier	"c_04bf94a3" .
+<http://data.europa.eu/bna/c_06b1eec4>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Hydrography"@en ;
+	dc:identifier	"c_06b1eec4" .
+<http://data.europa.eu/bna/c_1226dc1a>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Bank of waterway at mean water level"@en ;
+	dc:identifier	"c_1226dc1a" .
+<http://data.europa.eu/bna/c_13e3cf16>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"NWP model data"@en ;
+	dc:identifier	"c_13e3cf16" .
+<http://data.europa.eu/bna/c_1e787364>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Reference data for water level gauges relevant to navigation"@en ;
+	dc:identifier	"c_1e787364" .
+<http://data.europa.eu/bna/c_2037ada4>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Navigation rules and recommendations"@en ;
+	dc:identifier	"c_2037ada4" .
+<http://data.europa.eu/bna/c_20cd11bb>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"EU International trade in goods statistics \u2013 exports and imports breakdowns simultaneously by partner, product and flow"@en ;
+	dc:identifier	"c_20cd11bb" .
+<http://data.europa.eu/bna/c_23385471>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Potential labour force"@en ;
+	dc:identifier	"c_23385471" .
+<http://data.europa.eu/bna/c_25f43866>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Rates of waterway infrastructure charges"@en ;
+	dc:identifier	"c_25f43866" .
+<http://data.europa.eu/bna/c_298ffb73>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Links to the external xml-files with operation times of restricting structures"@en ;
+	dc:identifier	"c_298ffb73" .
+<http://data.europa.eu/bna/c_2aed31f9>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Industrial producer price index breakdowns by activity"@en ;
+	dc:identifier	"c_2aed31f9" .
+<http://data.europa.eu/bna/c_315692ad>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Elevation"@en ;
+	dc:identifier	"c_315692ad" .
+<http://data.europa.eu/bna/c_317b9493>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Population, Fertility, Mortality"@en ;
+	dc:identifier	"c_317b9493" .
+<http://data.europa.eu/bna/c_34abf8c1>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Industrial production"@en ;
+	dc:identifier	"c_34abf8c1" .
+<http://data.europa.eu/bna/c_36807466>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Climate data: validated observations"@en ;
+	dc:identifier	"c_36807466" .
+<http://data.europa.eu/bna/c_38933a65>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Waste"@en ;
+	dc:identifier	"c_38933a65" .
+<http://data.europa.eu/bna/c_3af3368c>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Observations data measured by weather stations"@en ;
+	dc:identifier	"c_3af3368c" .
+<http://data.europa.eu/bna/c_3e8e3bf7>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Location and characteristics of ports and transhipment sites"@en ;
+	dc:identifier	"c_3e8e3bf7" .
+<http://data.europa.eu/bna/c_407951ff>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Location of ports and transhipment sites"@en ;
+	dc:identifier	"c_407951ff" .
+<http://data.europa.eu/bna/c_424bb0b4>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Current healthcare expenditure"@en ;
+	dc:identifier	"c_424bb0b4" .
+<http://data.europa.eu/bna/c_43f88346>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Water"@en ;
+	dc:identifier	"c_43f88346" .
+<http://data.europa.eu/bna/c_4ac557e7>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Government expenditure and revenue"@en ;
+	dc:identifier	"c_4ac557e7" .
+<http://data.europa.eu/bna/c_4acb6bf3>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Mortality"@en ;
+	dc:identifier	"c_4acb6bf3" .
+<http://data.europa.eu/bna/c_4b74ea13>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Transport networks"@en ;
+	dc:identifier	"c_4b74ea13" .
+<http://data.europa.eu/bna/c_4ba9548e>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Emissions"@en ;
+	dc:identifier	"c_4ba9548e" .
+<http://data.europa.eu/bna/c_4d63300b>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Horizontal legislation"@en ;
+	dc:identifier	"c_4d63300b" .
+<http://data.europa.eu/bna/c_4dd389c5>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Mineral resources"@en ;
+	dc:identifier	"c_4dd389c5" .
+<http://data.europa.eu/bna/c_56a1bf47>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Basic company information: key attributes"@en ;
+	dc:identifier	"c_56a1bf47" .
+<http://data.europa.eu/bna/c_593bc53d>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Short term changes of aids to navigation"@en ;
+	dc:identifier	"c_593bc53d" .
+<http://data.europa.eu/bna/c_59627af3>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"National accounts \u2013 key indicators on households"@en ;
+	dc:identifier	"c_59627af3" .
+<http://data.europa.eu/bna/c_59c93ba5>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Production and industrial facilities"@en ;
+	dc:identifier	"c_59c93ba5" .
+<http://data.europa.eu/bna/c_59e64dd4>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Climate"@en ;
+	dc:identifier	"c_59e64dd4" .
+<http://data.europa.eu/bna/c_60182062>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Buildings"@en ;
+	dc:identifier	"c_60182062" .
+<http://data.europa.eu/bna/c_63b37dd4>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Air"@en ;
+	dc:identifier	"c_63b37dd4" .
+<http://data.europa.eu/bna/c_63be22bd>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Natural risk zones"@en ;
+	dc:identifier	"c_63be22bd" .
+<http://data.europa.eu/bna/c_642643e6>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Agricultural parcels"@en ;
+	dc:identifier	"c_642643e6" .
+<http://data.europa.eu/bna/c_664c9e5a>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Boundaries of the fairway/navigation channel"@en ;
+	dc:identifier	"c_664c9e5a" .
+<http://data.europa.eu/bna/c_66b946cb>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Short term changes of lock and bridge operating times"@en ;
+	dc:identifier	"c_66b946cb" .
+<http://data.europa.eu/bna/c_6a3f6896>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Cadastral parcels"@en ;
+	dc:identifier	"c_6a3f6896" .
+<http://data.europa.eu/bna/c_6a7250c1>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Fertility"@en ;
+	dc:identifier	"c_6a7250c1" .
+<http://data.europa.eu/bna/c_6c2bb82d>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Geographical names"@en ;
+	dc:identifier	"c_6c2bb82d" .
+<http://data.europa.eu/bna/c_793164b6>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Species distribution"@en ;
+	dc:identifier	"c_793164b6" .
+<http://data.europa.eu/bna/c_7b8fbb64>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Environmental monitoring facilities"@en ;
+	dc:identifier	"c_7b8fbb64" .
+<http://data.europa.eu/bna/c_7e19ef26>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Other physical limitations on waterways"@en ;
+	dc:identifier	"c_7e19ef26" .
+<http://data.europa.eu/bna/c_83aa10a6>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Protected sites"@en ;
+	dc:identifier	"c_83aa10a6" .
+<http://data.europa.eu/bna/c_87a129d9>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Soil"@en ;
+	dc:identifier	"c_87a129d9" .
+<http://data.europa.eu/bna/c_883d0205>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Contours of locks and dams"@en ;
+	dc:identifier	"c_883d0205" .
+<http://data.europa.eu/bna/c_8f0fac04>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Company documents and accounts"@en ;
+	dc:identifier	"c_8f0fac04" .
+<http://data.europa.eu/bna/c_91185a85>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Orthoimagery"@en ;
+	dc:identifier	"c_91185a85" .
+<http://data.europa.eu/bna/c_92874eb2>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Environmental accounts and statistics"@en ;
+	dc:identifier	"c_92874eb2" .
+<http://data.europa.eu/bna/c_9427236f>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Administrative units"@en ;
+	dc:identifier	"c_9427236f" .
+<http://data.europa.eu/bna/c_95da87c7>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"National accounts \u2013 key indicators on corporations"@en ;
+	dc:identifier	"c_95da87c7" .
+<http://data.europa.eu/bna/c_99bc517f>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Isolated dangers in the fairway/navigation channel under and above water"@en ;
+	dc:identifier	"c_99bc517f" .
+<http://data.europa.eu/bna/c_9cbe4435>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"List of navigation aids and traffic signs"@en ;
+	dc:identifier	"c_9cbe4435" .
+<http://data.europa.eu/bna/c_a2c6dcd8>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Employment"@en ;
+	dc:identifier	"c_a2c6dcd8" .
+<http://data.europa.eu/bna/c_a3767648>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Tourism flows in Europe"@en ;
+	dc:identifier	"c_a3767648" .
+<http://data.europa.eu/bna/c_a49ec591>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Volume of sales by activity"@en ;
+	dc:identifier	"c_a49ec591" .
+<http://data.europa.eu/bna/c_a8b937c4>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Inequality"@en ;
+	dc:identifier	"c_a8b937c4" .
+<http://data.europa.eu/bna/c_ad9ae929>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Land use"@en ;
+	dc:identifier	"c_ad9ae929" .
+<http://data.europa.eu/bna/c_af646f5b>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Area management / restriction / regulation zones & reporting units"@en ;
+	dc:identifier	"c_af646f5b" .
+<http://data.europa.eu/bna/c_b121e2f6>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Temporary obstructions in the fairway"@en ;
+	dc:identifier	"c_b121e2f6" .
+<http://data.europa.eu/bna/c_b151a0ba>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Inland waterways datasets"@en ;
+	dc:identifier	"c_b151a0ba" .
+<http://data.europa.eu/bna/c_b21e1296>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Land cover"@en ;
+	dc:identifier	"c_b21e1296" .
+<http://data.europa.eu/bna/c_b24028d7>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Official aids-to-navigation (e.g. buoys, beacons, lights, notice marks)"@en ;
+	dc:identifier	"c_b24028d7" .
+<http://data.europa.eu/bna/c_b40e6d46>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Oceanographic geographical features"@en ;
+	dc:identifier	"c_b40e6d46" .
+<http://data.europa.eu/bna/c_b72b721f>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"National accounts \u2013 GDP main aggregates"@en ;
+	dc:identifier	"c_b72b721f" .
+<http://data.europa.eu/bna/c_b7de66cd>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Energy resources"@en ;
+	dc:identifier	"c_b7de66cd" .
+<http://data.europa.eu/bna/c_b7f6a4f3>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Nature preservation and biodiversity"@en ;
+	dc:identifier	"c_b7f6a4f3" .
+<http://data.europa.eu/bna/c_bc8941d9>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Shoreline construction"@en ;
+	dc:identifier	"c_bc8941d9" .
+<http://data.europa.eu/bna/c_be47b010>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Weather alerts"@en ;
+	dc:identifier	"c_be47b010" .
+<http://data.europa.eu/bna/c_c0022235>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Harmonised Indices of consumer prices"@en ;
+	dc:identifier	"c_c0022235" .
+<http://data.europa.eu/bna/c_c19af83a>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Waterway axis with kilometres indication"@en ;
+	dc:identifier	"c_c19af83a" .
+<http://data.europa.eu/bna/c_c3919aec>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Habitats and biotopes"@en ;
+	dc:identifier	"c_c3919aec" .
+<http://data.europa.eu/bna/c_c3de25e4>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Addresses"@en ;
+	dc:identifier	"c_c3de25e4" .
+<http://data.europa.eu/bna/c_c873f344>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Bio-geographical regions"@en ;
+	dc:identifier	"c_c873f344" .
+<http://data.europa.eu/bna/c_d13a4420>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Radar data"@en ;
+	dc:identifier	"c_d13a4420" .
+<http://data.europa.eu/bna/c_dd8f4797>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Consolidated government gross debt"@en ;
+	dc:identifier	"c_dd8f4797" .
+<http://data.europa.eu/bna/c_e3f55603>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Geology"@en ;
+	dc:identifier	"c_e3f55603" .
+<http://data.europa.eu/bna/c_e4358335>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Noise"@en ;
+	dc:identifier	"c_e4358335" .
+<http://data.europa.eu/bna/c_e50004c6>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"State of the rivers, canals, locks and bridges"@en ;
+	dc:identifier	"c_e50004c6" .
+<http://data.europa.eu/bna/c_e5f69a04>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Present and future water levels at gauges"@en ;
+	dc:identifier	"c_e5f69a04" .
+<http://data.europa.eu/bna/c_f2b50efd>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Population"@en ;
+	dc:identifier	"c_f2b50efd" .
+<http://data.europa.eu/bna/c_f399050e>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Sea regions"@en ;
+	dc:identifier	"c_f399050e" .
+<http://data.europa.eu/bna/c_f6886b00>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Restrictions caused by flood and ice"@en ;
+	dc:identifier	"c_f6886b00" .
+<http://data.europa.eu/bna/c_f76b01e6>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Fairway characteristics"@en ;
+	dc:identifier	"c_f76b01e6" .
+<http://data.europa.eu/bna/c_fa2a1c3a>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Long-time obstructions in the fairway and reliability"@en ;
+	dc:identifier	"c_fa2a1c3a" .
+<http://data.europa.eu/bna/c_fbd2fc3f>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Reference parcels"@en ;
+	dc:identifier	"c_fbd2fc3f" .
+<http://data.europa.eu/bna/c_fd4e881c>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Unemployment"@en ;
+	dc:identifier	"c_fd4e881c" .
+<http://data.europa.eu/bna/c_fef208ab>
+	skos:inScheme	<http://data.europa.eu/bna/asd487ae75> ;
+	skos:prefLabel	"Water depths contours in the navigation channel"@en ;
+	dc:identifier	"c_fef208ab" .
