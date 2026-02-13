@@ -16,6 +16,7 @@ import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
+import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryService;
 import no.fdk.referencedata.eu.licence.LicenceService;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
@@ -120,6 +121,9 @@ public class Scheduler {
 
     @Autowired
     private MobilityConditionService mobilityConditionService;
+
+    @Autowired
+    private HighValueCategoryService highValueCategoryService;
 
     /**
      * Run every hour
@@ -337,6 +341,14 @@ public class Scheduler {
         mobilityDataStandardService.harvestAndSave(false);
     }
 
+    /**
+     * Run every day 05:05 (at night)
+     */
+    @Scheduled(cron = "0 5 5 * * ?")
+    public void updateHighValueCategories() {
+        highValueCategoryService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -445,6 +457,10 @@ public class Scheduler {
 
         if(mobilityDataStandardService.firstTime()) {
             mobilityDataStandardService.harvestAndSave(true);
+        }
+
+        if(highValueCategoryService.firstTime()) {
+            highValueCategoryService.harvestAndSave(true);
         }
     }
 }
