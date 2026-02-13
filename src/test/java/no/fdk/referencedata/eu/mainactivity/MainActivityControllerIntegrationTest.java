@@ -15,12 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -55,11 +53,14 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         MainActivityService mainActivityService = new MainActivityService(
                 new LocalMainActivityHarvester("1"),
                 mainActivityRepository,
@@ -72,7 +73,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
     @Test
     public void test_if_get_all_access_rights_returns_valid_response() {
         MainActivities mainActivities =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/main-activities", MainActivities.class);
+                restClient.get().uri("/eu/main-activities").retrieve().body(MainActivities.class);
 
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivities.getMainActivities().size());
 
@@ -85,7 +86,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
     @Test
     public void test_if_get_access_right_by_code_returns_valid_response() {
         MainActivity mainActivity =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/main-activities/health", MainActivity.class);
+                restClient.get().uri("/eu/main-activities/health").retrieve().body(MainActivity.class);
 
         assertNotNull(mainActivity);
         assertEquals("http://publications.europa.eu/resource/authority/main-activity/health", mainActivity.getUri());
@@ -103,8 +104,8 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/main-activities",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/main-activities")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
@@ -124,8 +125,8 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/main-activities",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/main-activities")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());

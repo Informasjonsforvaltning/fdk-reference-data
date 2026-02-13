@@ -8,12 +8,13 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,13 +31,22 @@ public class DayOfWeekControllerIntegrationTest extends AbstractContainerTest {
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
+
+    @BeforeEach
+    public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+    }
 
     @Test
     public void test_if_get_week_days_returns_valid_response() {
         WeekDays weekDays =
-                this.restTemplate.getForObject("http://localhost:" + port + "/schema/week-days", WeekDays.class);
+                restClient.get()
+                        .uri("/schema/week-days")
+                        .retrieve()
+                        .body(WeekDays.class);
 
         assertEquals(8, weekDays.getWeekDays().size());
 
@@ -49,7 +59,10 @@ public class DayOfWeekControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_day_of_week_returns_valid_response() {
         DayOfWeek dayOfWeek =
-                this.restTemplate.getForObject("http://localhost:" + port + "/schema/week-days/Saturday", DayOfWeek.class);
+                restClient.get()
+                        .uri("/schema/week-days/Saturday")
+                        .retrieve()
+                        .body(DayOfWeek.class);
 
         assertNotNull(dayOfWeek);
         assertEquals("https://schema.org/Saturday", dayOfWeek.getUri());

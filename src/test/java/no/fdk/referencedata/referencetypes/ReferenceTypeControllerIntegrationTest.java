@@ -2,12 +2,13 @@ package no.fdk.referencedata.referencetypes;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,13 +24,22 @@ public class ReferenceTypeControllerIntegrationTest extends AbstractContainerTes
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
+
+    @BeforeEach
+    public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+    }
 
     @Test
     public void test_if_get_all_reference_types_returns_valid_response() {
         ReferenceTypes referenceTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/reference-types", ReferenceTypes.class);
+                restClient.get()
+                        .uri("/reference-types")
+                        .retrieve()
+                        .body(ReferenceTypes.class);
 
         assertEquals(27, referenceTypes.getReferenceTypes().size());
 
@@ -42,7 +52,10 @@ public class ReferenceTypeControllerIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_get_reference_type_by_code_returns_valid_response() {
         ReferenceType referenceType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/reference-types/isRequiredBy", ReferenceType.class);
+                restClient.get()
+                        .uri("/reference-types/isRequiredBy")
+                        .retrieve()
+                        .body(ReferenceType.class);
 
         assertNotNull(referenceType);
         assertEquals("isRequiredBy", referenceType.getCode());

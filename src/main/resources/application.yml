@@ -7,14 +7,15 @@ spring:
   http.codecs.max-in-memory-size: 2MB
   data:
     mongodb:
-      host: ${MONGODB_HOST}
-      username: ${MONGODB_USER}
-      password: ${MONGODB_PASSWORD}
-      authentication-database: ${MONGODB_AUTH}
-      replica-set-name: ${MONGODB_REPLICASET}
-      port: 27017
-      database: referenceData
       auto-index-creation: true
+  mongodb:
+    host: ${MONGODB_HOST}
+    username: ${MONGODB_USER}
+    password: ${MONGODB_PASSWORD}
+    authentication-database: ${MONGODB_AUTH}
+    replica-set-name: ${MONGODB_REPLICASET}
+    port: 27017
+    database: referenceData
 
 server:
   port: 8080
@@ -53,7 +54,7 @@ logging:
 
 spring:
   config.activate.on-profile: develop,unit-integration
-  data.mongodb:
+  mongodb:
     host: localhost
     username: root
     password: password
@@ -73,7 +74,7 @@ management:
 
 spring:
   config.activate.on-profile: test
-  data.mongodb:
+  mongodb:
     host: localhost
     username: root
     password: password

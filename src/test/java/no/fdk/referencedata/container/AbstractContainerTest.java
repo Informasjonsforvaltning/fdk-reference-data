@@ -38,8 +38,8 @@ public class AbstractContainerTest {
             wiremock.start();
 
             // Override configuration
-            String mongoDbContainerIP = "spring.data.mongodb.host=" + mongodb.getContainerIpAddress();
-            String mongoDbContainerPort = "spring.data.mongodb.port=" + mongodb.getMappedPort(MONGO_PORT); // <- This is how you get the random port.
+            String mongoDbContainerIP = "spring.mongodb.host=" + mongodb.getContainerIpAddress();
+            String mongoDbContainerPort = "spring.mongodb.port=" + mongodb.getMappedPort(MONGO_PORT); // <- This is how you get the random port.
             String wiremockContainerIP = "wiremock.host=" + wiremock.getContainerIpAddress();
             String wiremockContainerPort = "wiremock.port=" + wiremock.getMappedPort(WIREMOCK_PORT); // <- This is how you get the random port.
 

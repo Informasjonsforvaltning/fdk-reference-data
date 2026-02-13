@@ -12,14 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -43,11 +42,14 @@ public class LosControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         LosService losService = new LosService(
                 new LocalLosImporter(),
                 losRepository,
@@ -59,7 +61,7 @@ public class LosControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_los_nodes_returns_valid_response() {
         LosNodes losNodes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/los/themes-and-words", LosNodes.class);
+                restClient.get().uri("/los/themes-and-words").retrieve().body(LosNodes.class);
 
         assertEquals(519, losNodes.getLosNodes().size());
 
@@ -75,8 +77,8 @@ public class LosControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_los_nodes_by_uri_returns_valid_response() {
         LosNodes losNodes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/los/themes-and-words?uris={uris}",
-                        LosNodes.class, Map.of("uris", "https://psi.norge.no/los/ord/abort"));
+                restClient.get().uri(uriBuilder -> uriBuilder.path("/los/themes-and-words").queryParam("uris", "https://psi.norge.no/los/ord/abort").build())
+                        .retrieve().body(LosNodes.class);
 
         assertEquals(1, losNodes.getLosNodes().size());
         final LosNode first = losNodes.getLosNodes().get(0);

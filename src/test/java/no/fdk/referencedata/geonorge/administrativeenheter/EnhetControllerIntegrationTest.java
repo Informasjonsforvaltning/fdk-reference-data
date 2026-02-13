@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
@@ -46,11 +46,14 @@ public class EnhetControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         EnhetService enhetService = new EnhetService(
                 new LocalEnhetHarvester(),
                 enhetRepository,
@@ -64,7 +67,7 @@ public class EnhetControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_administrative_enheter_returns_valid_response() {
         Enheter enheter =
-                this.restTemplate.getForObject("http://localhost:" + port + "/geonorge/administrative-enheter", Enheter.class);
+                restClient.get().uri("/geonorge/administrative-enheter").retrieve().body(Enheter.class);
 
         assertEquals(ADMINISTRATIVE_ENHETER_SIZE, enheter.getEnheter().size());
 
@@ -77,7 +80,7 @@ public class EnhetControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_enhet_by_code_returns_valid_response() {
         Enhet norge =
-                this.restTemplate.getForObject("http://localhost:" + port + "/geonorge/administrative-enheter/173163", Enhet.class);
+                restClient.get().uri("/geonorge/administrative-enheter/173163").retrieve().body(Enhet.class);
 
         assertNotNull(norge);
         assertEquals("https://data.geonorge.no/administrativeEnheter/nasjon/id/173163", norge.getUri());

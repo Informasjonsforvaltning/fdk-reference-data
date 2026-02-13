@@ -19,10 +19,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -52,11 +54,14 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         AudienceTypeService audienceTypeService = new AudienceTypeService(
                 new LocalAudienceTypeHarvester("1"),
                 audienceTypeRepository,
@@ -69,7 +74,7 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
     @Test
     public void test_if_get_all_audience_types_returns_valid_response() {
         AudienceTypes audienceTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/audience-types", AudienceTypes.class);
+                restClient.get().uri("/digdir/audience-types").retrieve().body(AudienceTypes.class);
 
         assertEquals(2, audienceTypes.getAudienceTypes().size());
 
@@ -82,7 +87,7 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
     @Test
     public void test_if_get_audience_type_by_code_returns_valid_response() {
         AudienceType audienceType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/audience-types/public", AudienceType.class);
+                restClient.get().uri("/digdir/audience-types/public").retrieve().body(AudienceType.class);
 
         assertNotNull(audienceType);
         assertEquals("https://data.norge.no/vocabulary/audience-type#public", audienceType.getUri());
@@ -100,8 +105,8 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/audience-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/audience-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(2, audienceTypeRepository.count());
@@ -121,8 +126,8 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/audience-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/audience-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, audienceTypeRepository.count());

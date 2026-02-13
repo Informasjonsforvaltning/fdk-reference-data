@@ -15,10 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -49,11 +51,14 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         DistributionTypeService distributionTypeService = new DistributionTypeService(
                 new LocalDistributionTypeHarvester("1"),
                 distributionTypeRepository,
@@ -66,7 +71,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
     @Test
     public void test_if_get_all_distribution_types_returns_valid_response() {
         DistributionTypes distributionTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/distribution-types", DistributionTypes.class);
+                restClient.get().uri("/eu/distribution-types").retrieve().body(DistributionTypes.class);
 
         assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypes.getDistributionTypes().size());
 
@@ -79,7 +84,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
     @Test
     public void test_if_get_distribution_type_by_code_returns_valid_response() {
         DistributionType distributionType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/distribution-types/DOWNLOADABLE_FILE", DistributionType.class);
+                restClient.get().uri("/eu/distribution-types/DOWNLOADABLE_FILE").retrieve().body(DistributionType.class);
 
         assertNotNull(distributionType);
         assertEquals("http://publications.europa.eu/resource/authority/distribution-type/DOWNLOADABLE_FILE", distributionType.getUri());
@@ -97,8 +102,8 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/distribution-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/distribution-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
@@ -118,8 +123,8 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/distribution-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/distribution-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());

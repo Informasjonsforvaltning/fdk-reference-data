@@ -15,11 +15,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
@@ -48,11 +48,14 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         MobilityConditionService mobilityConditionService = new MobilityConditionService(
                 new LocalMobilityConditionHarvester("1.0.0"),
                 mobilityConditionRepository,
@@ -65,7 +68,10 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
     @Test
     public void test_if_get_all_mobility_conditions_returns_valid_response() {
         MobilityConditions mobilityConditions =
-                this.restTemplate.getForObject("http://localhost:" + port + "/mobility/conditions-for-access-and-usage", MobilityConditions.class);
+                restClient.get()
+                        .uri("/mobility/conditions-for-access-and-usage")
+                        .retrieve()
+                        .body(MobilityConditions.class);
 
         assertEquals(10, mobilityConditions.getMobilityConditions().size());
 
@@ -78,7 +84,10 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
     @Test
     public void test_if_get_mobility_condition_by_code_returns_valid_response() {
         MobilityCondition condition =
-                this.restTemplate.getForObject("http://localhost:" + port + "/mobility/conditions-for-access-and-usage/other", MobilityCondition.class);
+                restClient.get()
+                        .uri("/mobility/conditions-for-access-and-usage/other")
+                        .retrieve()
+                        .body(MobilityCondition.class);
 
         assertNotNull(condition);
         assertEquals("https://w3id.org/mobilitydcat-ap/conditions-for-access-and-usage/other", condition.getUri());
@@ -96,8 +105,10 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/mobility/conditions-for-access-and-usage",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/mobility/conditions-for-access-and-usage")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(10, mobilityConditionRepository.count());
@@ -117,8 +128,10 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/mobility/conditions-for-access-and-usage",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post()
+                .uri("/mobility/conditions-for-access-and-usage")
+                .headers(h -> h.addAll(headers))
+                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(10, mobilityConditionRepository.count());

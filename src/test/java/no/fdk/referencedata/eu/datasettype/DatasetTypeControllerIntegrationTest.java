@@ -16,10 +16,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -50,11 +52,14 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         DatasetTypeService datasetTypeService = new DatasetTypeService(
                 new LocalDatasetTypeHarvester("1"),
                 datasetTypeRepository,
@@ -67,7 +72,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
     @Test
     public void test_if_get_all_dataset_types_returns_valid_response() {
         DatasetTypes datasetTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types", DatasetTypes.class);
+                restClient.get().uri("/eu/dataset-types").retrieve().body(DatasetTypes.class);
 
         assertEquals(DATASET_TYPES_SIZE, datasetTypes.getDatasetTypes().size());
 
@@ -80,7 +85,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
     @Test
     public void test_if_get_dataset_type_by_code_returns_valid_response() {
         DatasetType datasetType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/NAL", DatasetType.class);
+                restClient.get().uri("/eu/dataset-types/NAL").retrieve().body(DatasetType.class);
 
         assertNotNull(datasetType);
         assertEquals("http://publications.europa.eu/resource/authority/dataset-type/NAL", datasetType.getUri());
@@ -91,7 +96,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
     @Test
     public void test_if_all_translated_dataset_types_has_correct_value() {
         DatasetType hvdType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/HVD", DatasetType.class);
+                restClient.get().uri("/eu/dataset-types/HVD").retrieve().body(DatasetType.class);
 
         assertNotNull(hvdType);
         assertEquals("http://publications.europa.eu/resource/authority/dataset-type/HVD", hvdType.getUri());
@@ -102,7 +107,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals("Datasett med høy verdi", hvdType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
 
         DatasetType releaseType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/RELEASE", DatasetType.class);
+                restClient.get().uri("/eu/dataset-types/RELEASE").retrieve().body(DatasetType.class);
 
         assertNotNull(releaseType);
         assertEquals("http://publications.europa.eu/resource/authority/dataset-type/RELEASE", releaseType.getUri());
@@ -113,7 +118,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals("Versjon", releaseType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
 
         DatasetType statisticalType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/STATISTICAL", DatasetType.class);
+                restClient.get().uri("/eu/dataset-types/STATISTICAL").retrieve().body(DatasetType.class);
 
         assertNotNull(statisticalType);
         assertEquals("http://publications.europa.eu/resource/authority/dataset-type/STATISTICAL", statisticalType.getUri());
@@ -124,7 +129,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals("Statistiske data", statisticalType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
 
         DatasetType syntheticType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/dataset-types/SYNTHETIC_DATA", DatasetType.class);
+                restClient.get().uri("/eu/dataset-types/SYNTHETIC_DATA").retrieve().body(DatasetType.class);
 
         assertNotNull(syntheticType);
         assertEquals("http://publications.europa.eu/resource/authority/dataset-type/SYNTHETIC_DATA", syntheticType.getUri());
@@ -145,8 +150,8 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/dataset-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/dataset-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
@@ -166,8 +171,8 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/dataset-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/dataset-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());

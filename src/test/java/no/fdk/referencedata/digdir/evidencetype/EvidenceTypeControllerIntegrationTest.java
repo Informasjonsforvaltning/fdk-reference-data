@@ -15,12 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
@@ -54,11 +52,14 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("1"),
                 evidenceTypeRepository,
@@ -71,7 +72,7 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
     @Test
     public void test_if_get_all_evidence_types_returns_valid_response() {
         EvidenceTypes evidenceTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/evidence-types", EvidenceTypes.class);
+                restClient.get().uri("/digdir/evidence-types").retrieve().body(EvidenceTypes.class);
 
         assertEquals(4, evidenceTypes.getEvidenceTypes().size());
 
@@ -84,7 +85,7 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
     @Test
     public void test_if_get_evidence_type_by_code_returns_valid_response() {
         EvidenceType evidenceType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/digdir/evidence-types/certificate", EvidenceType.class);
+                restClient.get().uri("/digdir/evidence-types/certificate").retrieve().body(EvidenceType.class);
 
         assertNotNull(evidenceType);
         assertEquals("https://data.norge.no/vocabulary/evidence-type#certificate", evidenceType.getUri());
@@ -102,8 +103,8 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/evidence-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/evidence-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(4, evidenceTypeRepository.count());
@@ -123,8 +124,8 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/digdir/evidence-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/digdir/evidence-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(4, evidenceTypeRepository.count());

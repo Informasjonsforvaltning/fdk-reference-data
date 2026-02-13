@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetRepository;
@@ -13,12 +14,14 @@ import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.Map;
 
 import static no.fdk.referencedata.search.SearchAlternative.ADMINISTRATIVE_ENHETER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,6 +32,7 @@ import static org.mockito.Mockito.mock;
                 "spring.main.allow-bean-definition-overriding=true",
                 "scheduling.enabled=false",
         })
+@AutoConfigureGraphQlTester
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
@@ -47,6 +51,8 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private GraphQlTester graphQlTester;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @BeforeEach
     public void setup() {
         EnhetService enhetService = new EnhetService(
@@ -63,7 +69,7 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
     void test_if_search_query_returns_geonorge_nasjon_hit() {
         SearchRequest req = SearchRequest.builder().query("norg").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['search']")
                 .entityList(SearchHit.class)
@@ -83,7 +89,7 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
     void test_if_search_query_returns_geonorge_fylke_hit() {
         SearchRequest req = SearchRequest.builder().query("ROGAL").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['search']")
                 .entityList(SearchHit.class)
@@ -103,7 +109,7 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
     void test_if_search_query_returns_geonorge_kommune_hit() {
         SearchRequest req = SearchRequest.builder().query("bambl").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['search']")
                 .entityList(SearchHit.class)
@@ -123,7 +129,7 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
     void test_if_search_query_returns_combined_fylke_and_nasjon_hits() {
         SearchRequest req = SearchRequest.builder().query("nor").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['search']")
                 .entityList(SearchHit.class)
@@ -146,7 +152,7 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
     void test_if_that_hits_that_starts_with_search_query_is_prioritized_in_sort() {
         SearchRequest req = SearchRequest.builder().query("la").types(List.of(ADMINISTRATIVE_ENHETER)).build();
         List<SearchHit> result = graphQlTester.documentName("search")
-                .variable("req", req)
+                .variable("req", objectMapper.convertValue(req, Map.class))
                 .execute()
                 .path("$['data']['search']")
                 .entityList(SearchHit.class)

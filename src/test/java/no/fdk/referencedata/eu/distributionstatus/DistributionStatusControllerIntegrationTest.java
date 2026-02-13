@@ -15,10 +15,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -49,11 +51,14 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         DistributionStatusService distributionStatusService = new DistributionStatusService(
                 new LocalDistributionStatusHarvester("1"),
                 distributionStatusRepository,
@@ -66,7 +71,7 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
     @Test
     public void test_if_get_all_distribution_statuses_returns_valid_response() {
         DistributionStatuses distributionStatuses =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/distribution-statuses", DistributionStatuses.class);
+                restClient.get().uri("/eu/distribution-statuses").retrieve().body(DistributionStatuses.class);
 
         assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatuses.getDistributionStatuses().size());
 
@@ -79,7 +84,7 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
     @Test
     public void test_if_get_distribution_status_by_code_returns_valid_response() {
         DistributionStatus distributionStatus =
-                this.restTemplate.getForObject("http://localhost:" + port + "/eu/distribution-statuses/DEVELOP", DistributionStatus.class);
+                restClient.get().uri("/eu/distribution-statuses/DEVELOP").retrieve().body(DistributionStatus.class);
 
         assertNotNull(distributionStatus);
         assertEquals("http://publications.europa.eu/resource/authority/distribution-status/DEVELOP", distributionStatus.getUri());
@@ -97,8 +102,8 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/distribution-statuses",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/distribution-statuses")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
@@ -118,8 +123,8 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/eu/distribution-statuses",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/eu/distribution-statuses")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());

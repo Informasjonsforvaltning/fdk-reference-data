@@ -5,6 +5,7 @@ import no.fdk.referencedata.linguisticsystem.LinguisticSystem;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
                 "spring.main.allow-bean-definition-overriding=true",
                 "scheduling.enabled=false",
         })
+@AutoConfigureGraphQlTester
 @ActiveProfiles("test")
 class LinguisticSystemQueryIntegrationTest extends AbstractContainerTest {
 

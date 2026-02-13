@@ -14,10 +14,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
@@ -45,14 +47,17 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HarvestSettingsRepository harvestSettingsRepository;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
 
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     @BeforeEach
     public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
@@ -65,7 +70,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_mediatypes_returns_valid_response() {
         MediaTypes mediaTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/iana/media-types", MediaTypes.class);
+                restClient.get().uri("/iana/media-types").retrieve().body(MediaTypes.class);
 
         assertEquals(1441, mediaTypes.getMediaTypes().size());
 
@@ -79,7 +84,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_mediatypes_by_type_returns_valid_response() {
         MediaTypes mediaTypes =
-                this.restTemplate.getForObject("http://localhost:" + port + "/iana/media-types/text", MediaTypes.class);
+                restClient.get().uri("/iana/media-types/text").retrieve().body(MediaTypes.class);
 
         assertEquals(1, mediaTypes.getMediaTypes().size());
 
@@ -93,7 +98,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_get_mediatype_by_type_and_subtype_returns_valid_response() {
         MediaType mediaType =
-                this.restTemplate.getForObject("http://localhost:" + port + "/iana/media-types/application/1d-interleaved-parityfec", MediaType.class);
+                restClient.get().uri("/iana/media-types/application/1d-interleaved-parityfec").retrieve().body(MediaType.class);
 
         assertNotNull(mediaType);
         assertEquals("https://www.iana.org/assignments/media-types/application/1d-interleaved-parityfec", mediaType.getUri());
@@ -111,8 +116,8 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/iana/media-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/iana/media-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(1441, mediaTypeRepository.count());
@@ -130,8 +135,8 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = this.restTemplate.exchange("http://localhost:" + port + "/iana/media-types",
-                HttpMethod.POST, new HttpEntity<>(headers), Void.class);
+        ResponseEntity<Void> response = restClient.post().uri("/iana/media-types")
+                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1441, mediaTypeRepository.count());

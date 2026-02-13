@@ -6,10 +6,10 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -28,13 +28,19 @@ public class ApiSpecificationControllerIntegrationTest extends AbstractContainer
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private RestClient restClient;
+
+    @BeforeEach
+    public void setup() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+    }
 
     @Test
     public void test_if_get_all_api_specifications_returns_valid_response() {
         ApiSpecifications apiSpecifications =
-                this.restTemplate.getForObject("http://localhost:" + port + "/api-specifications", ApiSpecifications.class);
+                restClient.get().uri("/api-specifications").retrieve().body(ApiSpecifications.class);
 
         assertEquals(2, apiSpecifications.getApiSpecifications().size());
 
@@ -48,7 +54,7 @@ public class ApiSpecificationControllerIntegrationTest extends AbstractContainer
     @Test
     public void test_if_get_api_specification_by_code_returns_valid_response() {
         ApiSpecification apiSpecification =
-                this.restTemplate.getForObject("http://localhost:" + port + "/api-specifications/account", ApiSpecification.class);
+                restClient.get().uri("/api-specifications/account").retrieve().body(ApiSpecification.class);
 
         assertNotNull(apiSpecification);
         assertEquals("https://data.norge.no/reference-data/api-specifications/account", apiSpecification.getUri());
