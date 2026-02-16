@@ -1,0 +1,10 @@
+query {
+    legalResourceTypes {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}
