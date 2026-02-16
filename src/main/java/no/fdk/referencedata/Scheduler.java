@@ -4,6 +4,7 @@ import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSo
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
+import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionService;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
@@ -124,6 +125,9 @@ public class Scheduler {
 
     @Autowired
     private HighValueCategoryService highValueCategoryService;
+
+    @Autowired
+    private QualityDimensionService qualityDimensionService;
 
     /**
      * Run every hour
@@ -349,6 +353,14 @@ public class Scheduler {
         highValueCategoryService.harvestAndSave(false);
     }
 
+    /**
+     * Run every day 05:10 (at night)
+     */
+    @Scheduled(cron = "0 10 5 * * ?")
+    public void updateQualityDimensions() {
+        qualityDimensionService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -461,6 +473,10 @@ public class Scheduler {
 
         if(highValueCategoryService.firstTime()) {
             highValueCategoryService.harvestAndSave(true);
+        }
+
+        if(qualityDimensionService.firstTime()) {
+            qualityDimensionService.harvestAndSave(true);
         }
     }
 }
