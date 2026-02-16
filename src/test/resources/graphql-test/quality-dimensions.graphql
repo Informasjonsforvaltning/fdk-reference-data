@@ -1,0 +1,10 @@
+query {
+    qualityDimensions {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

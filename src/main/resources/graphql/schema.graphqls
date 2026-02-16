@@ -60,6 +60,9 @@ type Query {
   plannedAvailabilities: [PlannedAvailability!]!
   plannedAvailabilityByCode(code: String!): PlannedAvailability
 
+  qualityDimensions: [QualityDimension!]!
+  qualityDimensionByCode(code: String!): QualityDimension
+
   mediaTypes: [MediaType!]!
   mediaTypesByType(type: String!): [MediaType!]!
   mediaTypeByTypeAndSubType(type: String!, subType: String!): MediaType
@@ -261,6 +264,12 @@ type PlannedAvailability {
   code: String
   label: LocalizedStrings
   startUse: String
+}
+
+type QualityDimension {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
 }
 
 type MediaType {

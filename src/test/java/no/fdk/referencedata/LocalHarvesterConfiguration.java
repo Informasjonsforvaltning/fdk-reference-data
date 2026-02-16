@@ -2,6 +2,8 @@ package no.fdk.referencedata;
 
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeHarvester;
 import no.fdk.referencedata.digdir.evidencetype.LocalEvidenceTypeHarvester;
+import no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester;
+import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionHarvester;
 import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
 import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
@@ -158,5 +160,10 @@ public class LocalHarvesterConfiguration {
     @Bean
     public HighValueCategoriesHarvester highValueCategoriesHarvester() {
         return new LocalHighValueCategoryHarvester("2.1");
+    }
+
+    @Bean
+    public QualityDimensionHarvester qualityDimensionHarvester() {
+        return new LocalQualityDimensionHarvester("2023-01-30");
     }
 }
