@@ -1,0 +1,10 @@
+query GetLegalResourceTypeByCode($code: String!) {
+    legalResourceTypeByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

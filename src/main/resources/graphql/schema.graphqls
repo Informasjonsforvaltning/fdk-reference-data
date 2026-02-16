@@ -49,6 +49,9 @@ type Query {
   highValueCategories: [HighValueCategory!]!
   highValueCategoryByCode(code: String!): HighValueCategory
 
+  legalResourceTypes: [LegalResourceType!]!
+  legalResourceTypeByCode(code: String!): LegalResourceType
+
   linguisticSystems: [LinguisticSystem!]!
   linguisticSystemByCode(code: String!): LinguisticSystem
 
@@ -230,6 +233,12 @@ type Frequency {
 }
 
 type HighValueCategory {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type LegalResourceType {
   uri: ID!
   code: String
   label: LocalizedStrings
