@@ -38,8 +38,8 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
     private static final List<String> SUPPORTED_LANGUAGES =
             Arrays.stream(Language.values())
                     .map(Language::code)
-                    .collect(Collectors.toList());
-    private static String VERSION = "0";
+                    .toList();
+    private static final String VERSION = "0";
 
     public EuroVocHarvester() {
         super();
@@ -57,17 +57,9 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
         }
 
         return Mono.justOrEmpty(loadModel(source, true))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, SKOS.Concept).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapEuroVoc);
-    }
-
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/ontology/euvoc#EuroVoc"),
-                OWL.versionInfo
-        ).getString();
     }
 
     private List<URI> uriListFromStatements(List<Statement> statements) {
@@ -104,23 +96,15 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
     public String sparqlQuery() {
         String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +
-            "PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#> " +
+            "PREFIX cdm: <http://publications.europa.eu/ontology/cdm#> " +
             "CONSTRUCT { " +
-                "euvoc:EuroVoc owl:versionInfo ?version . " +
                 "?euroVoc a skos:Concept . " +
+                "?euroVoc a cdm:concept_eurovoc . " +
                 "?euroVoc skos:broader ?vocBroader . " +
                 "?euroVoc skos:narrower ?vocNarrower . " +
                 "?euroVoc skos:prefLabel ?vocLabel . " +
-                "?domain a skos:Concept . " +
-                "?domain skos:broader ?domainBroader . " +
-                "?domain skos:narrower ?domainNarrower . " +
-                "?domain skos:prefLabel ?domainLabel . " +
             "} WHERE { " +
-                "euvoc:EuroVoc owl:equivalentClass ?eqClass . " +
-                "?eqClass owl:hasValue ?eqVoc . " +
-                "?eqVoc owl:versionInfo ?version . " +
-                "?euroVoc skos:inScheme ?eqVoc . " +
-                "?euroVoc a skos:Concept . " +
+                "?euroVoc a cdm:concept_eurovoc . " +
                 "OPTIONAL { ?euroVoc skos:broader ?vocBroader } . " +
                 "OPTIONAL { ?euroVoc skos:narrower ?vocNarrower } . " +
                 "?euroVoc skos:prefLabel ?vocLabel . " +
@@ -129,17 +113,6 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
                     "LANG(?vocLabel) = 'no' || " +
                     "LANG(?vocLabel) = 'nb' || " +
                     "LANG(?vocLabel) = 'nn'" +
-                ") . " +
-                "?domain skos:inScheme <http://eurovoc.europa.eu/domains> . " +
-                "?domain a skos:Concept . " +
-                "OPTIONAL { ?domain skos:broader ?domainBroader } . " +
-                "OPTIONAL { ?domain skos:narrower ?domainNarrower } . " +
-                "?domain skos:prefLabel ?domainLabel . " +
-                "FILTER(" +
-                    "LANG(?domainLabel) = 'en' || " +
-                    "LANG(?domainLabel) = 'no' || " +
-                    "LANG(?domainLabel) = 'nb' || " +
-                    "LANG(?domainLabel) = 'nn'" +
                 ") . " +
             "}";
         return URLEncoder.encode(query, StandardCharsets.UTF_8);
