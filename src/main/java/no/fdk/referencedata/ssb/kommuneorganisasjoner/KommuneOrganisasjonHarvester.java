@@ -27,13 +27,12 @@ public class KommuneOrganisasjonHarvester {
             final RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-            final String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            final String url = getApiUrl() + "/classifications/582/correspondsAt?targetClassificationId=131&date=" + today;
+            final String url = getApiUrl() + "/correspondencetables/1236";
             final ResponseEntity<String> response
                     = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
             final ObjectMapper mapper = new ObjectMapper();
-            final JsonNode root = mapper.readTree(response.getBody()).path("correspondenceItems");
+            final JsonNode root = mapper.readTree(response.getBody()).path("correspondenceMaps");
 
             final List<KommuneOrganisasjon> kommuner = new ArrayList<>();
             if (root.isArray()) {
