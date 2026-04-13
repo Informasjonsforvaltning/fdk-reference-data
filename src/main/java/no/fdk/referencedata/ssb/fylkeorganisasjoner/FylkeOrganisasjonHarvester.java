@@ -27,13 +27,12 @@ public class FylkeOrganisasjonHarvester {
             final RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-            final String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            final String url = getApiUrl() + "/classifications/589/correspondsAt?targetClassificationId=104&date=" + today;
+            final String url = getApiUrl() + "/correspondencetables/1289";
             final ResponseEntity<String> response
                     = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
 
             final ObjectMapper mapper = new ObjectMapper();
-            final JsonNode root = mapper.readTree(response.getBody()).path("correspondenceItems");
+            final JsonNode root = mapper.readTree(response.getBody()).path("correspondenceMaps");
 
             final List<FylkeOrganisasjon> fylkeskommuner = new ArrayList<>();
             if (root.isArray()) {

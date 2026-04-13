@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "urlPattern": "/classifications/589/correspondsAt.*"
+    "urlPattern": "/correspondencetables/1289"
   },
   "response": {
     "status": 200,
