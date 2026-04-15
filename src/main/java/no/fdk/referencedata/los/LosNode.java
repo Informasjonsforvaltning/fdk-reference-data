@@ -62,4 +62,8 @@ public class LosNode {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "related_terms", columnDefinition = "jsonb")
     private List<URI> relatedTerms;
+
+    public boolean getIsTheme() {
+        return isTheme;
+    }
 }

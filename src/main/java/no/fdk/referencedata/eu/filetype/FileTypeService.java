@@ -65,11 +65,13 @@ public class FileTypeService implements SearchableReferenceData {
 
     public Stream<SearchHit> search(String query) {
         return fileTypeRepository.findByCodeContainingIgnoreCase(query)
+                .stream()
                 .map(FileType::toSearchHit);
     }
 
     public Stream<SearchHit> findByURIs(List<String> uris) {
         return fileTypeRepository.findByUriIn(uris)
+                .stream()
                 .map(FileType::toSearchHit);
     }
 

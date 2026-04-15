@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -32,7 +33,9 @@ public class LosService {
     }
 
     public List<LosNode> getByURIs(List<String> uris) {
-        return losRepository.findByUriIn(uris);
+        return losRepository.findByUriIn(uris).stream()
+                .sorted(Comparator.comparing(LosNode::getUri))
+                .toList();
     }
 
     public String getRdf(RDFFormat rdfFormat) {
@@ -45,7 +48,9 @@ public class LosService {
     }
 
     public List<LosNode> getAll() {
-        return losRepository.findAll();
+        return losRepository.findAll().stream()
+                .sorted(Comparator.comparing(LosNode::getUri))
+                .toList();
     }
 
     public boolean firstTime() { return losRepository.count() == 0; }
