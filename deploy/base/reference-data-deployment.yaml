@@ -20,26 +20,26 @@ spec:
       containers:
         - name: reference-data
           env:
-            - name: POSTGRES_HOST
+            - name: POSTGRESQL_HOST
               valueFrom:
                 secretKeyRef:
                   name: postgres
-                  key: POSTGRES_HOST
-            - name: POSTGRES_DB
+                  key: POSTGRESQL_HOST
+            - name: POSTGRESQL_DB
               valueFrom:
                 secretKeyRef:
                   name: reference-data
-                  key: POSTGRES_DB
-            - name: POSTGRES_USERNAME
+                  key: POSTGRESQL_DB
+            - name: POSTGRESQL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: reference-data
-                  key: POSTGRES_USERNAME
-            - name: POSTGRES_PASSWORD
+                  key: POSTGRESQL_USERNAME
+            - name: POSTGRESQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: reference-data
-                  key: POSTGRES_PASSWORD
+                  key: POSTGRESQL_PASSWORD
             - name: API_KEY
               valueFrom:
                 secretKeyRef:
