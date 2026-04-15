@@ -29,7 +29,7 @@ git clone https://github.com/Informasjonsforvaltning/fdk-reference-data.git
 cd fdk-reference-data
 ```
 
-Start MongoDB and the application (either through your IDE using the dev profile, or via CLI):
+Start PostgreSQL and the application (either through your IDE using the dev profile, or via CLI):
 
 ```sh
 docker compose up -d

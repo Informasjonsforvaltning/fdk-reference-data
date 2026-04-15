@@ -20,31 +20,26 @@ spec:
       containers:
         - name: reference-data
           env:
-            - name: MONGODB_USER
+            - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
                   name: reference-data
-                  key: MONGODB_USER
-            - name: MONGODB_PASSWORD
+                  key: POSTGRES_HOST
+            - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
                   name: reference-data
-                  key: MONGODB_PASSWORD
-            - name: MONGODB_HOST
+                  key: POSTGRES_DB
+            - name: POSTGRES_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mongodb
-                  key: MONGODB_HOST
-            - name: MONGODB_REPLICASET
+                  name: reference-data
+                  key: POSTGRES_USERNAME
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mongodb
-                  key: MONGODB_REPLICASET
-            - name: MONGODB_AUTH
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb
-                  key: MONGODB_AUTH
+                  name: reference-data
+                  key: POSTGRES_PASSWORD
             - name: API_KEY
               valueFrom:
                 secretKeyRef:

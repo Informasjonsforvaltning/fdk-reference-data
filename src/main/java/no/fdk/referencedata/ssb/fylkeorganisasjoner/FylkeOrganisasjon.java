@@ -1,21 +1,34 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@Document
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "fylke_organisasjoner")
 public class FylkeOrganisasjon {
     @Id
+    @Column(name = "uri")
     String uri;
-    @Indexed
+
+    @Column(name = "organisasjonsnummer")
     String organisasjonsnummer;
+
+    @Column(name = "organisasjonsnavn")
     String organisasjonsnavn;
+
+    @Column(name = "fylkesnavn")
     String fylkesnavn;
-    @Indexed
+
+    @Column(name = "fylkesnummer")
     String fylkesnummer;
 }

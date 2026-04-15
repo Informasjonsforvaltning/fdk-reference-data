@@ -1,23 +1,33 @@
 package no.fdk.referencedata.eu.filetype;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Map;
 
 @Data
 @Builder
-@Document
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "file_types")
 public class FileType {
     @Id
+    @Column(name = "uri")
     String uri;
-    @Indexed
+
+    @Column(name = "code")
     String code;
+
+    @Column(name = "media_type")
     String mediaType;
 
     public SearchHit toSearchHit() {
