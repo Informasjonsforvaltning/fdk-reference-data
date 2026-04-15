@@ -24,7 +24,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres
-                  key: POSTGRESQL_HOST
+                  key: HOST
             - name: POSTGRESQL_DB
               valueFrom:
                 secretKeyRef:
