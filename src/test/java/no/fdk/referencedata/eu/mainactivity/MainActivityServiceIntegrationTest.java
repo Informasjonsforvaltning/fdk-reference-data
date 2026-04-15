@@ -127,7 +127,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
 
         when(mainActivityRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        MainActivityService mainActivityService = new MainActivityService(
+        new MainActivityService(
                 new LocalMainActivityHarvester("123"),
                 mainActivityRepositorySpy,
                 rdfSourceRepository,

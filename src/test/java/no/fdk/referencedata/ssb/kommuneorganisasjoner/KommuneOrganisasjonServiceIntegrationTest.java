@@ -62,7 +62,7 @@ public class KommuneOrganisasjonServiceIntegrationTest extends AbstractContainer
 
         when(kommuneOrganisasjonRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        KommuneOrganisasjonService kommuneOrganisasjonService = new KommuneOrganisasjonService(
+        new KommuneOrganisasjonService(
                 new LocalKommuneOrganisasjonHarvester(wiremockHost, wiremockPort),
                 kommuneOrganisasjonRepositorySpy);
 

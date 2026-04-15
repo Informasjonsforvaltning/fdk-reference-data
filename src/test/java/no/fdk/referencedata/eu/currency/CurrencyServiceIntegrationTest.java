@@ -123,7 +123,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
 
         when(currencyRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        CurrencyService currencyService = new CurrencyService(
+        new CurrencyService(
                 new LocalCurrencyHarvester("20200924-2"),
                 currencyRepository,
                 rdfSourceRepository,

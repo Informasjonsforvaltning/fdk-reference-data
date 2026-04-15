@@ -126,7 +126,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
 
         when(licenceRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        LicenceService licenceService = new LicenceService(
+        new LicenceService(
                 new LocalLicenceHarvester("20240611-2"),
                 licenceRepositorySpy,
                 rdfSourceRepository,

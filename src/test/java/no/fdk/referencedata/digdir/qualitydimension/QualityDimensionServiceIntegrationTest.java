@@ -134,7 +134,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
 
         when(qualityDimensionRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        QualityDimensionService qualityDimensionService = new QualityDimensionService(
+        new QualityDimensionService(
                 new LocalQualityDimensionHarvester("2023-01-30"),
                 qualityDimensionRepositorySpy,
                 rdfSourceRepository,

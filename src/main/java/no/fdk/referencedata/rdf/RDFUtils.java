@@ -6,7 +6,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.SKOS;
-import org.springframework.data.util.Pair;
 
 import java.io.StringWriter;
 import java.util.Collection;

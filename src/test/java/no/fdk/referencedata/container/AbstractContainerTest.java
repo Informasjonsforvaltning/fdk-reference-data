@@ -3,7 +3,6 @@ package no.fdk.referencedata.container;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.lang.NonNull;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.testcontainers.containers.BindMode;
@@ -20,19 +19,21 @@ public class AbstractContainerTest {
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
+        @SuppressWarnings("resource")
         static final PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16")
             .withDatabaseName("reference_data")
             .withUsername("root")
             .withPassword("password")
             .withReuse(true);
 
+        @SuppressWarnings("resource")
         static final GenericContainer<?> wiremock = new GenericContainer<>("wiremock/wiremock")
                 .withExposedPorts(WIREMOCK_PORT)
                 .withClasspathResourceMapping("wiremock", "/home/wiremock", BindMode.READ_ONLY)
                 .withReuse(true);
 
         @Override
-        public void initialize(@NonNull ConfigurableApplicationContext context) {
+        public void initialize(ConfigurableApplicationContext context) {
             postgres.start();
             wiremock.start();
 

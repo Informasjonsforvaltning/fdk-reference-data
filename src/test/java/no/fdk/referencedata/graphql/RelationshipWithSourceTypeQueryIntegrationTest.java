@@ -8,7 +8,6 @@ import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSo
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeRepository;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.referencetypes.ReferenceType;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

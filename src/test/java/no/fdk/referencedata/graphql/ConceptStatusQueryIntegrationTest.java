@@ -1,6 +1,6 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.container.AbstractContainerTest;;
+import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatus;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusRepository;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;

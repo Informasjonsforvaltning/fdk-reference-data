@@ -2,7 +2,6 @@ package no.fdk.referencedata.eu.filetype;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

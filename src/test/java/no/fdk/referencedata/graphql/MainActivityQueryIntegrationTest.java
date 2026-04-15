@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.mainactivity.MainActivityRepository;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

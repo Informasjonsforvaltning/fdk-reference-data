@@ -125,7 +125,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
 
         when(distrubutionTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        DistributionTypeService accessRightService = new DistributionTypeService(
+        new DistributionTypeService(
                 new LocalDistributionTypeHarvester("20200924-2"),
                 distributionTypeRepository,
                 rdfSourceRepository,

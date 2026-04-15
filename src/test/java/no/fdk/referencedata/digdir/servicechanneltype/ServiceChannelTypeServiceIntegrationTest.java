@@ -126,7 +126,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
 
         when(serviceChannelTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
+        new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("123-2"),
                 serviceChannelTypeRepositorySpy,
                 rdfSourceRepository,

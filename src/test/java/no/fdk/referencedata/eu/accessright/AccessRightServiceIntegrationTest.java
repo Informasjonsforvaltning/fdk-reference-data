@@ -125,7 +125,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
 
         when(accessRightRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        AccessRightService accessRightService = new AccessRightService(
+        new AccessRightService(
                 new LocalAccessRightHarvester("20200924-2"),
                 accessRightRepositorySpy,
                 rdfSourceRepository,

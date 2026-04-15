@@ -122,7 +122,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
 
         when(mobilityDataStandardRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
+        new MobilityDataStandardService(
                 new LocalMobilityDataStandardHarvester("1.2.0"),
                 mobilityDataStandardRepositorySpy,
                 rdfSourceRepository,

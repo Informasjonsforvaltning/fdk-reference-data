@@ -137,7 +137,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
 
         when(frequencyRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        FrequencyService frequencyService = new FrequencyService(
+        new FrequencyService(
                 new LocalFrequencyHarvester("20200924-2"),
                 frequencyRepositorySpy,
                 rdfSourceRepository,

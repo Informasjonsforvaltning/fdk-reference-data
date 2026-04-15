@@ -8,16 +8,13 @@ import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.util.Version;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -123,7 +123,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
 
         when(plannedAvailabilityRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
+        new PlannedAvailabilityService(
                 new LocalPlannedAvailabilityHarvester("20200924-2"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,

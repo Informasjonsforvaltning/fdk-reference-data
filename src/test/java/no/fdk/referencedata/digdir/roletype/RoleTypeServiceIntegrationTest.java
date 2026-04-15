@@ -126,7 +126,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
 
         when(roleTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        RoleTypeService roleTypeService = new RoleTypeService(
+        new RoleTypeService(
                 new LocalRoleTypeHarvester("123-2"),
                 roleTypeRepositorySpy,
                 rdfSourceRepository,

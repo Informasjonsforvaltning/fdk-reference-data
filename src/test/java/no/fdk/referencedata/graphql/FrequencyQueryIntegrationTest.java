@@ -6,7 +6,6 @@ import no.fdk.referencedata.eu.frequency.FrequencyRepository;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;

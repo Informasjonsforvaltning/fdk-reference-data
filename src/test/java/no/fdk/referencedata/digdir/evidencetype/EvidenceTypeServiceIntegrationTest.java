@@ -126,7 +126,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
 
         when(evidenceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
+        new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("123-2"),
                 evidenceTypeRepositorySpy,
                 rdfSourceRepository,
