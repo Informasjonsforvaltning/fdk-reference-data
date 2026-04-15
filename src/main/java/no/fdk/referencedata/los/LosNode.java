@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -17,7 +16,6 @@ import java.util.Map;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "los_nodes")
 public class LosNode {
@@ -62,6 +60,10 @@ public class LosNode {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "related_terms", columnDefinition = "jsonb")
     private List<URI> relatedTerms;
+
+    public boolean isTheme() {
+        return isTheme;
+    }
 
     public boolean getIsTheme() {
         return isTheme;
