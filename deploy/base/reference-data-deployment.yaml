@@ -23,7 +23,7 @@ spec:
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
-                  name: reference-data
+                  name: postgres
                   key: POSTGRES_HOST
             - name: POSTGRES_DB
               valueFrom:
