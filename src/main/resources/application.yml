@@ -7,7 +7,7 @@ spring:
   http.codecs.max-in-memory-size: 2MB
   datasource:
     url: jdbc:postgresql://${POSTGRESQL_HOST}:5432/${POSTGRESQL_DB:reference_data}
-    username: ${POSTGRESQL_USERNAME}
+    username: ${POSTGRESQL_USER}
     password: ${POSTGRESQL_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:

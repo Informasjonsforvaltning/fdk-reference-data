@@ -30,11 +30,11 @@ spec:
                 secretKeyRef:
                   name: reference-data
                   key: POSTGRESQL_DB
-            - name: POSTGRESQL_USERNAME
+            - name: POSTGRESQL_USER
               valueFrom:
                 secretKeyRef:
                   name: reference-data
-                  key: POSTGRESQL_USERNAME
+                  key: POSTGRESQL_USER
             - name: POSTGRESQL_PASSWORD
               valueFrom:
                 secretKeyRef:
