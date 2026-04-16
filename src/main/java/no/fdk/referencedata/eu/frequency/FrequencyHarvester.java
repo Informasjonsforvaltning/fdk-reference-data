@@ -21,9 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static no.fdk.referencedata.i18n.Language.NORWEGIAN_BOKMAAL;
-import static no.fdk.referencedata.i18n.Language.NORWEGIAN_NYNORSK;
-
 @Component
 @Slf4j
 public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {

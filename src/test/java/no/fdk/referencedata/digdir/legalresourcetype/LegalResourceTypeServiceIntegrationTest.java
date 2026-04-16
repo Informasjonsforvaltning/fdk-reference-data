@@ -132,7 +132,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
 
         when(legalResourceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
+        new LegalResourceTypeService(
                 new LocalLegalResourceTypeHarvester("2023-08-17"),
                 legalResourceTypeRepositorySpy,
                 rdfSourceRepository,

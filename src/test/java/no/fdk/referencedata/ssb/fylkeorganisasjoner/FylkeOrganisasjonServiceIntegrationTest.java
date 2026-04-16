@@ -62,7 +62,7 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
 
         when(fylkeOrganisasjonRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
+        new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepositorySpy);
 

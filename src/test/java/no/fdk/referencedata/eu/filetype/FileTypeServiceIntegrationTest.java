@@ -121,7 +121,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
 
         when(fileTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        FileTypeService fileTypeService = new FileTypeService(
+        new FileTypeService(
                 new LocalFileTypeHarvester("20210514-2"),
                 fileTypeRepositorySpy,
                 rdfSourceRepository,

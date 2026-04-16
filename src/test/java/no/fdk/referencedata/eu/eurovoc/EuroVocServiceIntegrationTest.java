@@ -127,7 +127,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
 
         when(EuroVocRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        EuroVocService EuroVocService = new EuroVocService(
+        new EuroVocService(
                 new LocalEuroVocHarvester("20200924-2"),
                 EuroVocRepositorySpy,
                 rdfSourceRepository,

@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 
@@ -69,7 +68,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
 
         when(mediaTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        MediaTypeService mediaTypeService = new MediaTypeService(
+        new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepositorySpy,
                 rdfSourceRepository,

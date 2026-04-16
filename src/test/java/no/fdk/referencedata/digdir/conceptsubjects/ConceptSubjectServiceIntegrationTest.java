@@ -65,7 +65,7 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
 
         when(conceptSubjectRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
+        new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
                 rdfSourceRepository,
                 conceptSubjectRepositorySpy);

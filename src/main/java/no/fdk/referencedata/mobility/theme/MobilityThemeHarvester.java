@@ -6,7 +6,6 @@ import no.fdk.referencedata.mobility.AbstractMobilityHarvester;
 import no.fdk.referencedata.mobility.vocabulary.MobilityThemeVocabulary;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;

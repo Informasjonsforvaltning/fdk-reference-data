@@ -124,7 +124,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
 
         when(highValueCategoryRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
+        new HighValueCategoryService(
                 new LocalHighValueCategoryHarvester("20200924-2"),
                 highValueCategoryRepositorySpy,
                 rdfSourceRepository,

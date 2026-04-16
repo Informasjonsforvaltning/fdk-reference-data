@@ -123,7 +123,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
 
         when(relationshipWithSourceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
+        new RelationshipWithSourceTypeService(
                 new LocalRelationshipWithSourceTypeHarvester("123-2"),
                 relationshipWithSourceTypeRepositorySpy,
                 rdfSourceRepository,

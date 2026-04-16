@@ -122,7 +122,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
 
         when(mobilityThemeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        MobilityThemeService mobilityThemeService = new MobilityThemeService(
+        new MobilityThemeService(
                 new LocalMobilityThemeHarvester("1.2.0"),
                 mobilityThemeRepositorySpy,
                 rdfSourceRepository,

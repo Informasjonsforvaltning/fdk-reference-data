@@ -1,7 +1,6 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;

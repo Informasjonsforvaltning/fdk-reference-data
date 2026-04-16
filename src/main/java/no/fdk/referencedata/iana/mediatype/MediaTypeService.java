@@ -82,11 +82,13 @@ public class MediaTypeService implements SearchableReferenceData {
 
     public Stream<SearchHit> search(String query) {
         return mediaTypeRepository.findByNameContainingIgnoreCase(query)
+                .stream()
                 .map(MediaType::toSearchHit);
     }
 
     public Stream<SearchHit> findByURIs(List<String> uris) {
         return mediaTypeRepository.findByUriIn(uris)
+                .stream()
                 .map(MediaType::toSearchHit);
     }
 

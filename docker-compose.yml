@@ -1,10 +1,11 @@
 version: "3"
 services:
 
-  mongodb:
-    image: mongo:latest
+  postgres:
+    image: postgres:16
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: password
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: reference_data
     ports:
-      - "27017:27017"
+      - "5432:5432"

@@ -96,14 +96,17 @@ public class EnhetService implements SearchableReferenceData {
 
     public Stream<SearchHit> search(String query) {
         return enhetRepository.findByNameContainingIgnoreCase(query)
+                .stream()
                 .map(Enhet::toSearchHit);
     }
 
     public Stream<SearchHit> findByURIs(List<String> uris) {
         Stream<SearchHit> hits = enhetRepository.findByUriIn(uris)
+                .stream()
                 .map(Enhet::toSearchHit);
 
         Stream<SearchHit> variantHits = enhetVariantRepository.findByUriIn(uris)
+                .stream()
                 .map(EnhetVariant::toSearchHit);
 
         return Stream.concat(hits, variantHits);

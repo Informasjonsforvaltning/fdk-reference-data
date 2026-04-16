@@ -127,7 +127,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
 
         when(dataThemeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        DataThemeService dataThemeService = new DataThemeService(
+        new DataThemeService(
                 new LocalDataThemeHarvester("20200924-2"),
                 dataThemeRepositorySpy,
                 rdfSourceRepository,

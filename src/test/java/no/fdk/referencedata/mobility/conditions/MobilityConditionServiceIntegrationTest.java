@@ -122,7 +122,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
 
         when(mobilityConditionRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        MobilityConditionService mobilityConditionService = new MobilityConditionService(
+        new MobilityConditionService(
                 new LocalMobilityConditionHarvester("1.2.0"),
                 mobilityConditionRepositorySpy,
                 rdfSourceRepository,

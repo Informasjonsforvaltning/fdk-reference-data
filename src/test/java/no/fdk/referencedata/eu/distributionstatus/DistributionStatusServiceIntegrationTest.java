@@ -123,7 +123,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
 
         when(distributionStatusRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        DistributionStatusService distributionStatusService = new DistributionStatusService(
+        new DistributionStatusService(
                 new LocalDistributionStatusHarvester("20200924-2"),
                 distributionStatusRepository,
                 rdfSourceRepository,

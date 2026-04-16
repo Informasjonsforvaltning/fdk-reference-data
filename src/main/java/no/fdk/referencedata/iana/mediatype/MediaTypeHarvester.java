@@ -65,9 +65,10 @@ public class MediaTypeHarvester implements IanaHarvester {
 
     private Flux<Pair<String, String>> extractMediaTypeRegistryPairs(IanaSource ianaSource) {
         try {
-            CSVFormat format = CSVFormat.DEFAULT
-                .withFirstRecordAsHeader()
-                .withSkipHeaderRecord();
+            CSVFormat format = CSVFormat.DEFAULT.builder()
+                .setHeader()
+                .setSkipHeaderRecord(true)
+                .get();
             Charset charset = Charset.defaultCharset();
 
             List<CSVRecord> records = CSVParser.parse(ianaSource.getResource().getInputStream(),

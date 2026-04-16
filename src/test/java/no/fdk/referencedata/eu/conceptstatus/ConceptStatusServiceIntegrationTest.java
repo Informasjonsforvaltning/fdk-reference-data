@@ -139,7 +139,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
 
         when(conceptStatusRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        ConceptStatusService conceptStatusService = new ConceptStatusService(
+        new ConceptStatusService(
                 new LocalConceptStatusHarvester("20200924-2"),
                 conceptStatusRepositorySpy,
                 rdfSourceRepository,

@@ -82,7 +82,9 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
                         .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
                 .startUse(dataTheme.hasProperty(EUAuthorityOntology.startUse) ?
                         LocalDate.parse(dataTheme.getProperty(EUAuthorityOntology.startUse).getString()) : null)
-                .conceptSchema(conceptSchema)
+                .conceptSchemaUri(conceptSchema != null ? conceptSchema.getUri() : null)
+                .conceptSchemaLabel(conceptSchema != null ? conceptSchema.getLabel() : null)
+                .conceptSchemaVersion(conceptSchema != null ? conceptSchema.getVersionNumber() : null)
                 .build();
     }
 

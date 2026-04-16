@@ -1,13 +1,23 @@
 package no.fdk.referencedata.rdf;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import lombok.NoArgsConstructor;
 
 @Data
-@Document(collection = "rdfSources")
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "rdf_sources")
 public class RDFSource {
     @Id
+    @Column(name = "id")
     String id;
+
+    @Column(name = "turtle", columnDefinition = "text")
     String turtle;
 }

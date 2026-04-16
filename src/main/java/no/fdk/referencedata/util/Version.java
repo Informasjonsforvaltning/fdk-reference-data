@@ -1,6 +1,6 @@
 package no.fdk.referencedata.util;
 
-import org.springframework.lang.NonNull;
+import java.util.Objects;
 
 public class Version implements Comparable<Version> {
 
@@ -18,7 +18,8 @@ public class Version implements Comparable<Version> {
         this.version = version;
     }
 
-    @Override public int compareTo(@NonNull Version that) {
+    @Override public int compareTo(Version that) {
+        Objects.requireNonNull(that, "Version can not be null");
         String[] thisParts = this.get().split("\\.");
         String[] thatParts = that.get().split("\\.");
         int length = Math.max(thisParts.length, thatParts.length);

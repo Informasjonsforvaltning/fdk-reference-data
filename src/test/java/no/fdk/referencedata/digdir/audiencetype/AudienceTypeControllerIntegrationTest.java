@@ -2,10 +2,6 @@ package no.fdk.referencedata.digdir.audiencetype;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.digdir.audiencetype.AudienceType;
-import no.fdk.referencedata.digdir.audiencetype.AudienceTypeRepository;
-import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
-import no.fdk.referencedata.digdir.audiencetype.AudienceTypes;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;

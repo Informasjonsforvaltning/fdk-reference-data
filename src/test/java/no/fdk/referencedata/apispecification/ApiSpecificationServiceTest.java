@@ -1,18 +1,13 @@
 package no.fdk.referencedata.apispecification;
 
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.los.LosImporter;
-import no.fdk.referencedata.los.LosNode;
-import no.fdk.referencedata.los.LosService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 

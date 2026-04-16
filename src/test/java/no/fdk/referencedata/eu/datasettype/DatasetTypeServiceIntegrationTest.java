@@ -1,10 +1,6 @@
 package no.fdk.referencedata.eu.datasettype;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.eu.datasettype.DatasetType;
-import no.fdk.referencedata.eu.datasettype.DatasetTypeRepository;
-import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
-import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
@@ -127,7 +123,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
 
         when(datasetTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        DatasetTypeService accessRightService = new DatasetTypeService(
+        new DatasetTypeService(
                 new LocalDatasetTypeHarvester("20200924-2"),
                 datasetTypeRepository,
                 rdfSourceRepository,

@@ -1,9 +1,6 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.digdir.audiencetype.AudienceType;
-import no.fdk.referencedata.digdir.audiencetype.AudienceTypeRepository;
-import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
@@ -18,7 +15,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.settings.Settings.AUDIENCE_TYPE;
-import static no.fdk.referencedata.settings.Settings.EVIDENCE_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -127,7 +123,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
 
         when(audienceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
-        AudienceTypeService audienceTypeService = new AudienceTypeService(
+        new AudienceTypeService(
                 new LocalAudienceTypeHarvester("123-2"),
                 audienceTypeRepositorySpy,
                 rdfSourceRepository,
