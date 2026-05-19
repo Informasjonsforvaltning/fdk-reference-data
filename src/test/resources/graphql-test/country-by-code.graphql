@@ -1,0 +1,7 @@
+query GetCountryByCode($code: String!) {
+    countryByCode(code: $code) {
+        uri
+        code
+        label { en }
+    }
+}

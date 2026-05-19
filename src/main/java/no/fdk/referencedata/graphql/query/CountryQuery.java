@@ -1,0 +1,32 @@
+package no.fdk.referencedata.graphql.query;
+
+import no.fdk.referencedata.eu.country.Country;
+import no.fdk.referencedata.eu.country.CountryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+@Controller
+public class CountryQuery {
+
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @QueryMapping
+    public List<Country> countries() {
+        return StreamSupport.stream(countryRepository.findAll().spliterator(), false)
+                .sorted(Comparator.comparing(Country::getUri))
+                .collect(Collectors.toList());
+    }
+
+    @QueryMapping
+    public Country countryByCode(@Argument String code) {
+        return countryRepository.findByCode(code).orElse(null);
+    }
+}

@@ -10,6 +10,8 @@ import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
+import no.fdk.referencedata.eu.continent.ContinentService;
+import no.fdk.referencedata.eu.country.CountryService;
 import no.fdk.referencedata.eu.currency.CurrencyService;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
 import no.fdk.referencedata.eu.distributionstatus.DistributionStatusService;
@@ -132,6 +134,12 @@ public class Scheduler {
 
     @Autowired
     private LegalResourceTypeService legalResourceTypeService;
+
+    @Autowired
+    private ContinentService continentService;
+
+    @Autowired
+    private CountryService countryService;
 
     /**
      * Run every hour
@@ -373,6 +381,22 @@ public class Scheduler {
         legalResourceTypeService.harvestAndSave(false);
     }
 
+    /**
+     * Run every month at 05:20 (at night) on the 5th
+     */
+    @Scheduled(cron = "0 20 5 5 * ?")
+    public void updateContinents() {
+        continentService.harvestAndSave(false);
+    }
+
+    /**
+     * Run every month at 05:25 (at night) on the 5th
+     */
+    @Scheduled(cron = "0 25 5 5 * ?")
+    public void updateCountries() {
+        countryService.harvestAndSave(false);
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -493,6 +517,14 @@ public class Scheduler {
 
         if(legalResourceTypeService.firstTime()) {
             legalResourceTypeService.harvestAndSave(true);
+        }
+
+        if(continentService.firstTime()) {
+            continentService.harvestAndSave(true);
+        }
+
+        if(countryService.firstTime()) {
+            countryService.harvestAndSave(true);
         }
     }
 }
