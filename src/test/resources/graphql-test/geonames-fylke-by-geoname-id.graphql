@@ -1,0 +1,7 @@
+query GetGeonamesFylkeByGeonameId($geonameId: String!) {
+    geonamesFylkeByGeonameId(geonameId: $geonameId) {
+        uri
+        geonameId
+        name
+    }
+}

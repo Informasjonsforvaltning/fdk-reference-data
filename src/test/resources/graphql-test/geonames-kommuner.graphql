@@ -1,0 +1,8 @@
+query {
+    geonamesKommuner {
+        uri
+        geonameId
+        name
+        fylkeGeonameId
+    }
+}

@@ -18,6 +18,8 @@ import no.fdk.referencedata.eu.continent.ContinentHarvester;
 import no.fdk.referencedata.eu.continent.LocalContinentHarvester;
 import no.fdk.referencedata.eu.country.CountryHarvester;
 import no.fdk.referencedata.eu.country.LocalCountryHarvester;
+import no.fdk.referencedata.geonames.GeonamesHarvester;
+import no.fdk.referencedata.geonames.LocalGeonamesHarvester;
 import no.fdk.referencedata.eu.currency.CurrencyHarvester;
 import no.fdk.referencedata.eu.currency.LocalCurrencyHarvester;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeHarvester;
@@ -186,5 +188,10 @@ public class LocalHarvesterConfiguration {
     @Bean
     public ContinentHarvester continentHarvester() {
         return new LocalContinentHarvester("1");
+    }
+
+    @Bean
+    public GeonamesHarvester geonamesHarvester() {
+        return new LocalGeonamesHarvester(wiremockHost, wiremockPort);
     }
 }

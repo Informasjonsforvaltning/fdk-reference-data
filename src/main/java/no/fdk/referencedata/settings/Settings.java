@@ -16,6 +16,7 @@ public enum Settings {
     EVIDENCE_TYPE,
     FILE_TYPE,
     FREQUENCY,
+    GEONAMES,
     GEONORGE_FYLKE,
     GEONORGE_KOMMUNE,
     HIGH_VALUE_CATEGORY,
