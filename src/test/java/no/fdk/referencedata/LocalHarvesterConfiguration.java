@@ -14,6 +14,10 @@ import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
 import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
+import no.fdk.referencedata.eu.continent.ContinentHarvester;
+import no.fdk.referencedata.eu.continent.LocalContinentHarvester;
+import no.fdk.referencedata.eu.country.CountryHarvester;
+import no.fdk.referencedata.eu.country.LocalCountryHarvester;
 import no.fdk.referencedata.eu.currency.CurrencyHarvester;
 import no.fdk.referencedata.eu.currency.LocalCurrencyHarvester;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeHarvester;
@@ -172,5 +176,15 @@ public class LocalHarvesterConfiguration {
     @Bean
     public LegalResourceTypeHarvester legalResourceTypeHarvester() {
         return new LocalLegalResourceTypeHarvester("2023-08-17");
+    }
+
+    @Bean
+    public CountryHarvester countryHarvester() {
+        return new LocalCountryHarvester("1");
+    }
+
+    @Bean
+    public ContinentHarvester continentHarvester() {
+        return new LocalContinentHarvester("1");
     }
 }

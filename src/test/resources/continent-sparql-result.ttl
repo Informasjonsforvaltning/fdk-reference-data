@@ -1,0 +1,14 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix ns1: <http://publications.europa.eu/resource/authority/continent/> .
+
+ns1:EUROPE a dct:Location ;
+    dct:identifier "EUROPE" ;
+    dct:title "Europe"@en .
+
+ns1:AFRICA a dct:Location ;
+    dct:identifier "AFRICA" ;
+    dct:title "Africa"@en .
+
+ns1:ASIA a dct:Location ;
+    dct:identifier "ASIA" ;
+    dct:title "Asia"@en .

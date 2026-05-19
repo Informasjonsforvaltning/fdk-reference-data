@@ -2,6 +2,12 @@ type Query {
   accessRights: [AccessRight!]!
   accessRightByCode(code: String!): AccessRight
 
+  countries: [Country!]!
+  countryByCode(code: String!): Country
+
+  continents: [Continent!]!
+  continentByCode(code: String!): Continent
+
   apiSpecifications: [ApiSpecification!]!
   apiSpecificationByCode(code: String!): ApiSpecification
 
@@ -130,6 +136,18 @@ type LocalizedStrings {
 }
 
 type AccessRight {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type Country {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type Continent {
   uri: ID!
   code: String
   label: LocalizedStrings
