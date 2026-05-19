@@ -1,0 +1,7 @@
+query {
+    geonamesFylker {
+        uri
+        geonameId
+        name
+    }
+}

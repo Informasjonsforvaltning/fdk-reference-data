@@ -55,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: reference-data
                   key: CORS_ORIGIN_PATTERNS
+            - name: GEONAMES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: reference-data
+                  key: GEONAMES_USER
           image: reference-data
           imagePullPolicy: Always
           ports:

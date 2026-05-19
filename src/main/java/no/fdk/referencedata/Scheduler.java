@@ -24,6 +24,7 @@ import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryService;
 import no.fdk.referencedata.eu.licence.LicenceService;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
+import no.fdk.referencedata.geonames.GeonamesService;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.los.LosService;
@@ -140,6 +141,9 @@ public class Scheduler {
 
     @Autowired
     private CountryService countryService;
+
+    @Autowired
+    private GeonamesService geonamesService;
 
     /**
      * Run every hour
@@ -397,6 +401,14 @@ public class Scheduler {
         countryService.harvestAndSave(false);
     }
 
+    /**
+     * Run every month at 05:30 (at night) on the 10th
+     */
+    @Scheduled(cron = "0 30 5 10 * ?")
+    public void updateGeonames() {
+        geonamesService.harvestAndSave();
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if(accessRightService.firstTime()) {
@@ -525,6 +537,10 @@ public class Scheduler {
 
         if(countryService.firstTime()) {
             countryService.harvestAndSave(true);
+        }
+
+        if(geonamesService.firstTime()) {
+            geonamesService.harvestAndSave();
         }
     }
 }

@@ -63,6 +63,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/los/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/mobility/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/ssb/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/geonames/**").authenticated()
                         .anyRequest().permitAll()
                 );
         return http.build();

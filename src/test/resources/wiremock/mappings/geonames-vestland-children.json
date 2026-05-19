@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/childrenJSON.*geonameId=3162656.*"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "geonames-vestland-kommuner.json"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/childrenJSON.*geonameId=7626836.*"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "geonames-agder-kommuner.json"
+  }
+}

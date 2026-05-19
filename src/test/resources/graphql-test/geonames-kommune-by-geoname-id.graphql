@@ -1,0 +1,8 @@
+query GetGeonamesKommuneByGeonameId($geonameId: String!) {
+    geonamesKommuneByGeonameId(geonameId: $geonameId) {
+        uri
+        geonameId
+        name
+        fylkeGeonameId
+    }
+}
