@@ -17,10 +17,9 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @Service
@@ -32,16 +31,19 @@ public class GeonamesService implements SearchableReferenceData {
     private final GeonamesFylkeRepository geonamesFylkeRepository;
     private final GeonamesKommuneRepository geonamesKommuneRepository;
     private final RDFSourceRepository rdfSourceRepository;
+    private final GeonamesWriter geonamesWriter;
 
     @Autowired
     public GeonamesService(GeonamesHarvester geonamesHarvester,
                            GeonamesFylkeRepository geonamesFylkeRepository,
                            GeonamesKommuneRepository geonamesKommuneRepository,
-                           RDFSourceRepository rdfSourceRepository) {
+                           RDFSourceRepository rdfSourceRepository,
+                           GeonamesWriter geonamesWriter) {
         this.geonamesHarvester = geonamesHarvester;
         this.geonamesFylkeRepository = geonamesFylkeRepository;
         this.geonamesKommuneRepository = geonamesKommuneRepository;
         this.rdfSourceRepository = rdfSourceRepository;
+        this.geonamesWriter = geonamesWriter;
     }
 
     public boolean firstTime() {
@@ -97,48 +99,41 @@ public class GeonamesService implements SearchableReferenceData {
         }
     }
 
-    @Transactional
     public void harvestAndSave() {
         try {
-            geonamesKommuneRepository.deleteAll();
-            geonamesFylkeRepository.deleteAll();
-
-            Model model = ModelFactory.createDefaultModel();
-            model.setNsPrefix("dct", DCTerms.NS);
-
             List<GeonamesFylke> fylker = geonamesHarvester.harvestFylker().collectList().block();
             if (fylker == null || fylker.isEmpty()) {
                 log.warn("No Norwegian counties harvested from GeoNames");
                 return;
             }
 
-            geonamesFylkeRepository.saveAll(fylker);
-            log.info("Harvested and saved {} Norwegian counties from GeoNames", fylker.size());
-            fylker.forEach(item -> addLocationToModel(item, model));
-
-            AtomicInteger kommuneCount = new AtomicInteger(0);
+            List<GeonamesKommune> kommuner = new ArrayList<>();
             for (GeonamesFylke fylke : fylker) {
                 try {
-                    List<GeonamesKommune> kommuner = geonamesHarvester
+                    List<GeonamesKommune> result = geonamesHarvester
                             .harvestKommunerForFylke(fylke.getGeonameId())
                             .collectList()
                             .block();
-                    if (kommuner != null && !kommuner.isEmpty()) {
-                        geonamesKommuneRepository.saveAll(kommuner);
-                        kommuner.forEach(item -> addLocationToModel(item, model));
-                        kommuneCount.addAndGet(kommuner.size());
+                    if (result != null) {
+                        kommuner.addAll(result);
                     }
                 } catch (Exception e) {
                     log.error("Failed to harvest districts for county {} ({})", fylke.getName(), fylke.getGeonameId(), e);
                 }
             }
 
-            log.info("Harvested and saved {} Norwegian districts from GeoNames", kommuneCount.get());
+            Model model = ModelFactory.createDefaultModel();
+            model.setNsPrefix("dct", DCTerms.NS);
+            fylker.forEach(item -> addLocationToModel(item, model));
+            kommuner.forEach(item -> addLocationToModel(item, model));
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-            rdfSourceRepository.save(rdfSource);
+
+            geonamesWriter.replaceAll(fylker, kommuner, rdfSource);
+
+            log.info("Harvested and saved {} Norwegian counties and {} Norwegian districts from GeoNames", fylker.size(), kommuner.size());
         } catch (Exception e) {
             log.error("Unable to harvest GeoNames data", e);
         }

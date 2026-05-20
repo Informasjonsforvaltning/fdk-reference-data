@@ -41,7 +41,8 @@ public class GeonamesServiceIntegrationTest extends AbstractContainerTest {
                 new LocalGeonamesHarvester(wiremockHost, wiremockPort),
                 geonamesFylkeRepository,
                 geonamesKommuneRepository,
-                rdfSourceRepository);
+                rdfSourceRepository,
+                new GeonamesWriter(geonamesFylkeRepository, geonamesKommuneRepository, rdfSourceRepository));
 
         geonamesService.harvestAndSave();
 
@@ -78,7 +79,8 @@ public class GeonamesServiceIntegrationTest extends AbstractContainerTest {
                 new LocalGeonamesHarvester(wiremockHost, wiremockPort),
                 geonamesFylkeRepositorySpy,
                 geonamesKommuneRepository,
-                rdfSourceRepository);
+                rdfSourceRepository,
+                new GeonamesWriter(geonamesFylkeRepositorySpy, geonamesKommuneRepository, rdfSourceRepository));
 
         assertEquals(count, geonamesFylkeRepositorySpy.count());
     }
@@ -89,7 +91,8 @@ public class GeonamesServiceIntegrationTest extends AbstractContainerTest {
                 new LocalGeonamesHarvester(wiremockHost, wiremockPort),
                 geonamesFylkeRepository,
                 geonamesKommuneRepository,
-                rdfSourceRepository);
+                rdfSourceRepository,
+                new GeonamesWriter(geonamesFylkeRepository, geonamesKommuneRepository, rdfSourceRepository));
 
         geonamesService.harvestAndSave();
 

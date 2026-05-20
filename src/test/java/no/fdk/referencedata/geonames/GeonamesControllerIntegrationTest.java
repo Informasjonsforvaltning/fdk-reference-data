@@ -16,8 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -59,7 +58,8 @@ public class GeonamesControllerIntegrationTest extends AbstractContainerTest {
                 new LocalGeonamesHarvester(wiremockHost, wiremockPort),
                 geonamesFylkeRepository,
                 geonamesKommuneRepository,
-                rdfSourceRepository);
+                rdfSourceRepository,
+                new GeonamesWriter(geonamesFylkeRepository, geonamesKommuneRepository, rdfSourceRepository));
 
         geonamesService.harvestAndSave();
     }
@@ -147,6 +147,6 @@ public class GeonamesControllerIntegrationTest extends AbstractContainerTest {
                 .body(String.class);
 
         assertNotNull(rdf);
-        assertNotNull(rdf.contains("sws.geonames.org"));
+        assertTrue(rdf.contains("sws.geonames.org"));
     }
 }
