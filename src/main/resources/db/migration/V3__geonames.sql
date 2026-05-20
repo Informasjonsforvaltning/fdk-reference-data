@@ -1,13 +1,13 @@
 CREATE TABLE geonames_fylker (
-    uri        VARCHAR(500) PRIMARY KEY,
-    geoname_id VARCHAR(20),
+    geoname_id VARCHAR(20) PRIMARY KEY,
+    uri        VARCHAR(500),
     name       VARCHAR(500)
 );
 CREATE INDEX idx_geonames_fylker_geoname_id ON geonames_fylker (geoname_id);
 
 CREATE TABLE geonames_kommuner (
-    uri               VARCHAR(500) PRIMARY KEY,
-    geoname_id        VARCHAR(20),
+    geoname_id        VARCHAR(20) PRIMARY KEY,
+    uri               VARCHAR(500),
     name              VARCHAR(500),
     fylke_geoname_id  VARCHAR(20)
 );
