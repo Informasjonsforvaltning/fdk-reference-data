@@ -432,6 +432,7 @@ type SearchHit {
   code: String
   label: LocalizedStrings
   type: String
+  subType: String
 }
 
 input SearchRequest {

@@ -39,6 +39,7 @@ public class GeonamesKommune {
                 .code(this.geonameId)
                 .label(this.name != null ? Map.of("no", this.name) : Map.of())
                 .type(SearchAlternative.GEONAMES)
+                .subType("KOMMUNE")
                 .build();
     }
 }

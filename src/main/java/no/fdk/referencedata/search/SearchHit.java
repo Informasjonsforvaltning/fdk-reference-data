@@ -12,4 +12,5 @@ public class SearchHit {
     String code;
     Map<String, String> label;
     SearchAlternative type;
+    String subType;
 }
