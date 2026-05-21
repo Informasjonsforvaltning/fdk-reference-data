@@ -40,6 +40,7 @@ public class Continent {
                 .code(this.code)
                 .label(this.label)
                 .type(SearchAlternative.EU_LOCATIONS)
+                .subType("CONTINENT")
                 .build();
     }
 }

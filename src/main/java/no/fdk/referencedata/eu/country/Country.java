@@ -40,6 +40,7 @@ public class Country {
                 .code(this.code)
                 .label(this.label)
                 .type(SearchAlternative.EU_LOCATIONS)
+                .subType("COUNTRY")
                 .build();
     }
 }
