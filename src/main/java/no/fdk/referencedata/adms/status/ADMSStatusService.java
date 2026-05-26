@@ -24,16 +24,20 @@ public class ADMSStatusService {
 
     private final RDFSourceRepository rdfSourceRepository;
 
+    private final ADMSStatusWriter admsStatusWriter;
+
     public ADMSStatusImporter admsStatusImporter;
 
     @Autowired
     public ADMSStatusService(
             ADMSStatusImporter admsStatusImporter,
             ADMSStatusRepository admsStatusRepository,
-            RDFSourceRepository rdfSourceRepository) {
+            RDFSourceRepository rdfSourceRepository,
+            ADMSStatusWriter admsStatusWriter) {
         this.admsStatusImporter = admsStatusImporter;
         this.admsStatusRepository = admsStatusRepository;
         this.rdfSourceRepository = rdfSourceRepository;
+        this.admsStatusWriter = admsStatusWriter;
     }
 
     public List<ADMSStatus> getAll() {
@@ -46,7 +50,7 @@ public class ADMSStatusService {
 
     public String getRdf(RDFFormat rdfFormat) {
         StringWriter stringWriter = new StringWriter();
-        RDFDataMgr.write(stringWriter, admsStatusImporter.getModel(), rdfFormat) ;
+        RDFDataMgr.write(stringWriter, admsStatusImporter.getModel(), rdfFormat);
         return stringWriter.toString();
     }
 
@@ -55,14 +59,13 @@ public class ADMSStatusService {
         log.debug("Importing adms statuses");
         try {
             final List<ADMSStatus> admsStatuses = admsStatusImporter.importFromSource();
-            admsStatusRepository.deleteAll();
-            admsStatusRepository.saveAll(admsStatuses);
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(admsStatusImporter.getModel(), RDFFormat.TURTLE));
-            rdfSourceRepository.save(rdfSource);
-        } catch(Exception e) {
+
+            admsStatusWriter.replaceAll(admsStatuses, rdfSource);
+        } catch (Exception e) {
             log.error("Unable to harvest adms statuses", e);
         }
     }

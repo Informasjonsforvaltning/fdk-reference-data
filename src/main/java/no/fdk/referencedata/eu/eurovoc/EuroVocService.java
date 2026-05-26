@@ -1,22 +1,22 @@
 package no.fdk.referencedata.eu.eurovoc;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.util.Version;
-import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class EuroVocService {
 
     private final EuroVocHarvester euroVocHarvester;
 
+    private final EuroVocWriter euroVocWriter;
+
     private final EuroVocRepository euroVocRepository;
 
     private final RDFSourceRepository rdfSourceRepository;
@@ -32,14 +34,17 @@ public class EuroVocService {
     private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
-    public EuroVocService(EuroVocHarvester euroVocHarvester,
-                          EuroVocRepository euroVocRepository,
-                          RDFSourceRepository rdfSourceRepository,
-                          HarvestSettingsRepository harvestSettingsRepository) {
+    public EuroVocService(
+            EuroVocHarvester euroVocHarvester,
+            EuroVocRepository euroVocRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            EuroVocWriter euroVocWriter) {
         this.euroVocHarvester = euroVocHarvester;
         this.euroVocRepository = euroVocRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.euroVocWriter = euroVocWriter;
     }
 
     public boolean firstTime() {
@@ -55,7 +60,6 @@ public class EuroVocService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(euroVocHarvester.getVersion().replace("-", ""));
@@ -68,26 +72,22 @@ public class EuroVocService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                euroVocRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<EuroVoc> iterable = euroVocHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} eurovocs", counter.get());
-                euroVocRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<EuroVoc> items = new ArrayList<>();
+                euroVocHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} eurovocs", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(euroVocHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(euroVocHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                euroVocWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest eurovoc", e);
         }
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
+import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -42,7 +43,8 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new LocalServiceChannelTypeHarvester("123-0"),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         serviceChannelTypeService.harvestAndSave(false);
 
@@ -62,7 +64,8 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new LocalServiceChannelTypeHarvester("132-0"),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         serviceChannelTypeService.harvestAndSave(false);
@@ -79,7 +82,8 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new LocalServiceChannelTypeHarvester("132-2"),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         serviceChannelTypeService.harvestAndSave(false);
@@ -96,7 +100,8 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new LocalServiceChannelTypeHarvester("132-1"),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         serviceChannelTypeService.harvestAndSave(false);
@@ -130,7 +135,8 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new LocalServiceChannelTypeHarvester("123-2"),
                 serviceChannelTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, serviceChannelTypeRepositorySpy.count());
     }

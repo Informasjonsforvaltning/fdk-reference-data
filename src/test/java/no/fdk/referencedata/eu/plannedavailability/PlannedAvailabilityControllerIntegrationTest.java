@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -63,7 +64,8 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
                 new LocalPlannedAvailabilityHarvester("1"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         plannedAvailabilityService.harvestAndSave(true);
     }

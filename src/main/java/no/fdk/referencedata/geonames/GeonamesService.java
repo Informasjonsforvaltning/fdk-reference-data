@@ -34,11 +34,12 @@ public class GeonamesService implements SearchableReferenceData {
     private final GeonamesWriter geonamesWriter;
 
     @Autowired
-    public GeonamesService(GeonamesHarvester geonamesHarvester,
-                           GeonamesFylkeRepository geonamesFylkeRepository,
-                           GeonamesKommuneRepository geonamesKommuneRepository,
-                           RDFSourceRepository rdfSourceRepository,
-                           GeonamesWriter geonamesWriter) {
+    public GeonamesService(
+            GeonamesHarvester geonamesHarvester,
+            GeonamesFylkeRepository geonamesFylkeRepository,
+            GeonamesKommuneRepository geonamesKommuneRepository,
+            RDFSourceRepository rdfSourceRepository,
+            GeonamesWriter geonamesWriter) {
         this.geonamesHarvester = geonamesHarvester;
         this.geonamesFylkeRepository = geonamesFylkeRepository;
         this.geonamesKommuneRepository = geonamesKommuneRepository;

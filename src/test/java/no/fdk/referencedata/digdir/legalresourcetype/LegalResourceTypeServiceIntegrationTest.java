@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -50,7 +51,8 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 new LocalLegalResourceTypeHarvester("2023-08-17"),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         legalResourceTypeService.harvestAndSave(false);
 
@@ -70,7 +72,8 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 new LocalLegalResourceTypeHarvester("2023-08-17"),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         legalResourceTypeService.harvestAndSave(false);
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
@@ -86,7 +89,8 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 new LocalLegalResourceTypeHarvester("2023-08-18"),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         legalResourceTypeService.harvestAndSave(false);
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
@@ -103,7 +107,8 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 new LocalLegalResourceTypeHarvester("2023-08-16"),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         legalResourceTypeService.harvestAndSave(false);
 
@@ -136,7 +141,8 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 new LocalLegalResourceTypeHarvester("2023-08-17"),
                 legalResourceTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, legalResourceTypeRepositorySpy.count());
     }

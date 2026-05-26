@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.eu.eurovoc.EuroVocWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -42,7 +43,8 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester("20200923-0"),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
         euroVocService.harvestAndSave(false);
 
@@ -64,7 +66,8 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester("20200923-1"),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         euroVocService.harvestAndSave(false);
@@ -81,7 +84,8 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester("20200924-0"),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         euroVocService.harvestAndSave(false);
@@ -98,7 +102,8 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester("20200924-0"),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         euroVocService.harvestAndSave(false);
@@ -131,7 +136,8 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester("20200924-2"),
                 EuroVocRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, EuroVocRepositorySpy.count());
     }

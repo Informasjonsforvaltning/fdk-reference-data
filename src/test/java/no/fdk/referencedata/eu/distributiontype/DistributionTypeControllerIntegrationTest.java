@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import no.fdk.referencedata.eu.distributiontype.DistributionTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -63,7 +64,8 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
                 new LocalDistributionTypeHarvester("1"),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         distributionTypeService.harvestAndSave(true);
     }

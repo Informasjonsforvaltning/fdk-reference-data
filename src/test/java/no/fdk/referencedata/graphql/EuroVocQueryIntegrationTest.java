@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.eurovoc.EuroVocWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.eurovoc.EuroVoc;
 import no.fdk.referencedata.eu.eurovoc.EuroVocRepository;
@@ -52,7 +53,8 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester("1"),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
         EuroVocService.harvestAndSave(false);
     }

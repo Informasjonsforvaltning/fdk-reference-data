@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class QualityDimensionService {
 
     private final QualityDimensionHarvester qualityDimensionHarvester;
 
+    private final QualityDimensionWriter qualityDimensionWriter;
+
     private final QualityDimensionRepository qualityDimensionRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
@@ -32,12 +34,15 @@ public class QualityDimensionService {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public QualityDimensionService(QualityDimensionHarvester qualityDimensionHarvester,
-                                   QualityDimensionRepository qualityDimensionRepository,
-                                   RDFSourceRepository rdfSourceRepository,
-                                   HarvestSettingsRepository harvestSettingsRepository) {
+    public QualityDimensionService(
+            QualityDimensionHarvester qualityDimensionHarvester,
+            QualityDimensionRepository qualityDimensionRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            QualityDimensionWriter qualityDimensionWriter) {
         this.qualityDimensionHarvester = qualityDimensionHarvester;
         this.qualityDimensionRepository = qualityDimensionRepository;
+        this.qualityDimensionWriter = qualityDimensionWriter;
         this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
     }
@@ -55,7 +60,6 @@ public class QualityDimensionService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(qualityDimensionHarvester.getVersion().replace("-", ""));
@@ -68,26 +72,22 @@ public class QualityDimensionService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                qualityDimensionRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<QualityDimension> iterable = qualityDimensionHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} quality-dimensions", counter.get());
-                qualityDimensionRepository.saveAll(iterable);
-
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(qualityDimensionHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<QualityDimension> items = new ArrayList<>();
+                qualityDimensionHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} quality-dimensions", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(qualityDimensionHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
+
+                settings.setLatestHarvestDate(LocalDateTime.now());
+                settings.setLatestVersion(qualityDimensionHarvester.getVersion());
+
+                qualityDimensionWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest quality-dimensions", e);
         }
     }

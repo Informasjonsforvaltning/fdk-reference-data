@@ -1,5 +1,6 @@
 package no.fdk.referencedata.ssb.kommuneorganisasjoner;
 
+import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class KommuneOrganisasjonServiceIntegrationTest extends AbstractContainer
     public void test_if_harvest_persists_kommune_organisasjoner() {
         KommuneOrganisasjonService kommuneOrganisasjonService = new KommuneOrganisasjonService(
                 new LocalKommuneOrganisasjonHarvester(wiremockHost, wiremockPort),
-                kommuneOrganisasjonRepository);
+                kommuneOrganisasjonRepository,
+                new KommuneOrganisasjonWriter(kommuneOrganisasjonRepository));
 
         kommuneOrganisasjonService.harvestAndSave();
 
@@ -64,7 +66,8 @@ public class KommuneOrganisasjonServiceIntegrationTest extends AbstractContainer
 
         new KommuneOrganisasjonService(
                 new LocalKommuneOrganisasjonHarvester(wiremockHost, wiremockPort),
-                kommuneOrganisasjonRepositorySpy);
+                kommuneOrganisasjonRepositorySpy,
+                new KommuneOrganisasjonWriter(kommuneOrganisasjonRepositorySpy));
 
         assertEquals(count, kommuneOrganisasjonRepositorySpy.count());
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -39,7 +40,8 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 new LocalPlannedAvailabilityHarvester("20220715-0"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         plannedAvailabilityService.harvestAndSave(true);
 
@@ -59,7 +61,8 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 new LocalPlannedAvailabilityHarvester("2"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         plannedAvailabilityService.harvestAndSave(true);
@@ -76,7 +79,8 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 new LocalPlannedAvailabilityHarvester("20220715-1"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         plannedAvailabilityService.harvestAndSave(false);
@@ -93,7 +97,8 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 new LocalPlannedAvailabilityHarvester("20210715-0"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         plannedAvailabilityService.harvestAndSave(false);
@@ -127,7 +132,8 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 new LocalPlannedAvailabilityHarvester("20200924-2"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, plannedAvailabilityRepositorySpy.count());
     }

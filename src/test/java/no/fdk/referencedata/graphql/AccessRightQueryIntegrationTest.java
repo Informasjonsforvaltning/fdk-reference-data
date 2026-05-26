@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.accessright.AccessRightWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.eu.accessright.AccessRightRepository;
@@ -49,7 +50,8 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester("1"),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         accessRightService.harvestAndSave(false);
     }

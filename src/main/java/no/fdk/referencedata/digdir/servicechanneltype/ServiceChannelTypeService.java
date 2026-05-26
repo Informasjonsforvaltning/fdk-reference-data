@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class ServiceChannelTypeService {
 
     private final ServiceChannelTypeHarvester serviceChannelTypeHarvester;
 
+    private final ServiceChannelTypeWriter serviceChannelTypeWriter;
+
     private final ServiceChannelTypeRepository serviceChannelTypeRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
@@ -32,12 +34,15 @@ public class ServiceChannelTypeService {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public ServiceChannelTypeService(ServiceChannelTypeHarvester serviceChannelTypeHarvester,
-                                     ServiceChannelTypeRepository serviceChannelTypeRepository,
-                                     RDFSourceRepository rdfSourceRepository,
-                                     HarvestSettingsRepository harvestSettingsRepository) {
+    public ServiceChannelTypeService(
+            ServiceChannelTypeHarvester serviceChannelTypeHarvester,
+            ServiceChannelTypeRepository serviceChannelTypeRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            ServiceChannelTypeWriter serviceChannelTypeWriter) {
         this.serviceChannelTypeHarvester = serviceChannelTypeHarvester;
         this.serviceChannelTypeRepository = serviceChannelTypeRepository;
+        this.serviceChannelTypeWriter = serviceChannelTypeWriter;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
@@ -55,7 +60,6 @@ public class ServiceChannelTypeService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(serviceChannelTypeHarvester.getVersion().replace("-", ""));
@@ -68,26 +72,22 @@ public class ServiceChannelTypeService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                serviceChannelTypeRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<ServiceChannelType> iterable = serviceChannelTypeHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} service-channel-types", counter.get());
-                serviceChannelTypeRepository.saveAll(iterable);
-
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(serviceChannelTypeHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<ServiceChannelType> items = new ArrayList<>();
+                serviceChannelTypeHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} service-channel-types", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(serviceChannelTypeHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
+
+                settings.setLatestHarvestDate(LocalDateTime.now());
+                settings.setLatestVersion(serviceChannelTypeHarvester.getVersion());
+
+                serviceChannelTypeWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest service-channel-types", e);
         }
     }

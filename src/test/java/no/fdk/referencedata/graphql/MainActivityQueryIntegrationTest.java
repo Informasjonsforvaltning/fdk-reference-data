@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.mainactivity.MainActivityWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester;
@@ -51,7 +52,8 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester("1"),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mainActivityService.harvestAndSave(false);
     }

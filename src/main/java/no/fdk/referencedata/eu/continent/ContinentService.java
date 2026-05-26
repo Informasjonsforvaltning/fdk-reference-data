@@ -16,11 +16,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @Service
@@ -30,20 +29,25 @@ public class ContinentService implements SearchableReferenceData {
 
     private final ContinentHarvester continentHarvester;
 
+    private final ContinentWriter continentWriter;
+
     private final ContinentRepository continentRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public ContinentService(ContinentHarvester continentHarvester,
-                            ContinentRepository continentRepository,
-                            RDFSourceRepository rdfSourceRepository,
-                            HarvestSettingsRepository harvestSettingsRepository) {
+    public ContinentService(
+            ContinentHarvester continentHarvester,
+            ContinentRepository continentRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            ContinentWriter continentWriter) {
         this.continentHarvester = continentHarvester;
         this.continentRepository = continentRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.continentWriter = continentWriter;
     }
 
     public boolean firstTime() {
@@ -75,7 +79,6 @@ public class ContinentService implements SearchableReferenceData {
                 .map(Continent::toSearchHit);
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(continentHarvester.getVersion().replace("-", ""));
@@ -88,26 +91,22 @@ public class ContinentService implements SearchableReferenceData {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                continentRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<Continent> iterable = continentHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} continents", counter.get());
-                continentRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<Continent> items = new ArrayList<>();
+                continentHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} continents", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(continentHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(continentHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                continentWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest continents", e);
         }
     }

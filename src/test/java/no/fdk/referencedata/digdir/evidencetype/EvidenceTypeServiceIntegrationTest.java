@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
+import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -42,7 +43,8 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester("123-0"),
                 evidenceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         evidenceTypeService.harvestAndSave(false);
 
@@ -62,7 +64,8 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester("132-0"),
                 evidenceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         evidenceTypeService.harvestAndSave(false);
@@ -79,7 +82,8 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester("132-2"),
                 evidenceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         evidenceTypeService.harvestAndSave(false);
@@ -96,7 +100,8 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester("132-1"),
                 evidenceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         evidenceTypeService.harvestAndSave(false);
@@ -130,7 +135,8 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester("123-2"),
                 evidenceTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, evidenceTypeRepositorySpy.count());
     }

@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,20 +25,25 @@ public class AccessRightService {
 
     private final AccessRightHarvester accessRightHarvester;
 
+    private final AccessRightWriter accessRightWriter;
+
     private final AccessRightRepository accessRightRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public AccessRightService(AccessRightHarvester accessRightHarvester,
-                              AccessRightRepository accessRightRepository,
-                              RDFSourceRepository rdfSourceRepository,
-                              HarvestSettingsRepository harvestSettingsRepository) {
+    public AccessRightService(
+            AccessRightHarvester accessRightHarvester,
+            AccessRightRepository accessRightRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            AccessRightWriter accessRightWriter) {
         this.accessRightHarvester = accessRightHarvester;
         this.accessRightRepository = accessRightRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.accessRightWriter = accessRightWriter;
     }
 
     public boolean firstTime() {
@@ -54,7 +59,6 @@ public class AccessRightService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(accessRightHarvester.getVersion().replace("-", ""));
@@ -67,26 +71,22 @@ public class AccessRightService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                accessRightRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<AccessRight> iterable = accessRightHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} access-rights", counter.get());
-                accessRightRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<AccessRight> items = new ArrayList<>();
+                accessRightHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} access-rights", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(accessRightHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(accessRightHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                accessRightWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest access-rights", e);
         }
     }

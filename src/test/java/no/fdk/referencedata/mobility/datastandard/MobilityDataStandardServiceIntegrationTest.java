@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -38,7 +39,8 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester("1.0.1"),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mobilityDataStandardService.harvestAndSave(false);
 
@@ -58,7 +60,8 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester("1.1.1"),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         mobilityDataStandardService.harvestAndSave(false);
@@ -75,7 +78,8 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester("1.1.2"),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         mobilityDataStandardService.harvestAndSave(false);
@@ -92,7 +96,8 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester("1.0.0"),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         mobilityDataStandardService.harvestAndSave(false);
@@ -126,7 +131,8 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester("1.2.0"),
                 mobilityDataStandardRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, mobilityDataStandardRepositorySpy.count());
     }

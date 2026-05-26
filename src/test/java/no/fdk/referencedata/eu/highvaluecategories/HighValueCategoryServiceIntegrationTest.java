@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -41,7 +42,8 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
                 new LocalHighValueCategoryHarvester("20200923-0"),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         highValueCategoryService.harvestAndSave(false);
 
@@ -61,7 +63,8 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
                 new LocalHighValueCategoryHarvester("20200923-1"),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         highValueCategoryService.harvestAndSave(false);
@@ -78,7 +81,8 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
                 new LocalHighValueCategoryHarvester("20200924-0"),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         highValueCategoryService.harvestAndSave(false);
@@ -95,7 +99,8 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
                 new LocalHighValueCategoryHarvester("20200924-0"),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         highValueCategoryService.harvestAndSave(false);
@@ -128,7 +133,8 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
                 new LocalHighValueCategoryHarvester("20200924-2"),
                 highValueCategoryRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, highValueCategoryRepositorySpy.count());
     }

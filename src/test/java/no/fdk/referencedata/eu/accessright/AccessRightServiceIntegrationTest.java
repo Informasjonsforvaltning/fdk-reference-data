@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.accessright;
 
+import no.fdk.referencedata.eu.accessright.AccessRightWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -41,7 +42,8 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester("20200923-0"),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         accessRightService.harvestAndSave(false);
 
@@ -61,7 +63,8 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester("20200923-1"),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -78,7 +81,8 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester("20200924-0"),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -95,7 +99,8 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester("20200924-0"),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -129,7 +134,8 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester("20200924-2"),
                 accessRightRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, accessRightRepositorySpy.count());
     }

@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,18 +25,23 @@ public class PlannedAvailabilityService {
 
     private final PlannedAvailabilityHarvester plannedAvailabilityHarvester;
 
+    private final PlannedAvailabilityWriter plannedAvailabilityWriter;
+
     private final PlannedAvailabilityRepository plannedAvailabilityRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public PlannedAvailabilityService(PlannedAvailabilityHarvester plannedAvailabilityHarvester,
-                                      PlannedAvailabilityRepository plannedAvailabilityRepository,
-                                      RDFSourceRepository rdfSourceRepository,
-                                      HarvestSettingsRepository harvestSettingsRepository) {
+    public PlannedAvailabilityService(
+            PlannedAvailabilityHarvester plannedAvailabilityHarvester,
+            PlannedAvailabilityRepository plannedAvailabilityRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            PlannedAvailabilityWriter plannedAvailabilityWriter) {
         this.plannedAvailabilityHarvester = plannedAvailabilityHarvester;
         this.plannedAvailabilityRepository = plannedAvailabilityRepository;
+        this.plannedAvailabilityWriter = plannedAvailabilityWriter;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
@@ -54,7 +59,6 @@ public class PlannedAvailabilityService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(plannedAvailabilityHarvester.getVersion().replace("-", ""));
@@ -67,26 +71,22 @@ public class PlannedAvailabilityService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                plannedAvailabilityRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<PlannedAvailability> iterable = plannedAvailabilityHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} planned availabilities", counter.get());
-                plannedAvailabilityRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<PlannedAvailability> items = new ArrayList<>();
+                plannedAvailabilityHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} planned availabilities", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(plannedAvailabilityHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(plannedAvailabilityHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                plannedAvailabilityWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest planned availabilities", e);
         }
     }

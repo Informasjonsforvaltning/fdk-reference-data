@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.iana.mediatype.MediaTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaType;
@@ -50,7 +51,8 @@ class MediaTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mediaTypeService.harvestAndSave();
     }

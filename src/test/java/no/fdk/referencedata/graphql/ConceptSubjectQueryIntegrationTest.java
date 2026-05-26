@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectWriter;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -47,7 +48,8 @@ class ConceptSubjectQueryIntegrationTest extends AbstractContainerTest {
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
                 rdfSourceRepository,
-                conceptSubjectRepository);
+                conceptSubjectRepository,
+                new ConceptSubjectWriter(conceptSubjectRepository, rdfSourceRepository));
 
         conceptSubjectService.harvestAndSave();
     }

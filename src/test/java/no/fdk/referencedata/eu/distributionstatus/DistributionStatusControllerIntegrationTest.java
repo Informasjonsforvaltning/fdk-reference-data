@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.distributionstatus;
 
+import no.fdk.referencedata.eu.distributionstatus.DistributionStatusWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -63,7 +64,8 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
                 new LocalDistributionStatusHarvester("1"),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         distributionStatusService.harvestAndSave(true);
     }

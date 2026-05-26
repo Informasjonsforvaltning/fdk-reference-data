@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
+import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -50,7 +51,8 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester("2023-01-30"),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         qualityDimensionService.harvestAndSave(false);
 
@@ -70,7 +72,8 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester("2023-01-31"),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         qualityDimensionService.harvestAndSave(false);
@@ -87,7 +90,8 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester("2023-02-01"),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         qualityDimensionService.harvestAndSave(false);
@@ -104,7 +108,8 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester("2023-01-29"),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         qualityDimensionService.harvestAndSave(false);
@@ -138,7 +143,8 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester("2023-01-30"),
                 qualityDimensionRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, qualityDimensionRepositorySpy.count());
     }

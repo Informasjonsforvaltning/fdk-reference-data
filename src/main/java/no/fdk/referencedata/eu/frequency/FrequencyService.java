@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,20 +25,25 @@ public class FrequencyService {
 
     private final FrequencyHarvester frequencyHarvester;
 
+    private final FrequencyWriter frequencyWriter;
+
     private final FrequencyRepository frequencyRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public FrequencyService(FrequencyHarvester frequencyHarvester,
-                            FrequencyRepository frequencyRepository,
-                            RDFSourceRepository rdfSourceRepository,
-                            HarvestSettingsRepository harvestSettingsRepository) {
+    public FrequencyService(
+            FrequencyHarvester frequencyHarvester,
+            FrequencyRepository frequencyRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            FrequencyWriter frequencyWriter) {
         this.frequencyHarvester = frequencyHarvester;
         this.frequencyRepository = frequencyRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.frequencyWriter = frequencyWriter;
     }
 
     public boolean firstTime() {
@@ -54,7 +59,6 @@ public class FrequencyService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(frequencyHarvester.getVersion().replace("-", ""));
@@ -67,26 +71,22 @@ public class FrequencyService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                frequencyRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<Frequency> iterable = frequencyHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} frequencies", counter.get());
-                frequencyRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<Frequency> items = new ArrayList<>();
+                frequencyHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} frequencies", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(frequencyHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(frequencyHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                frequencyWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest frequencies", e);
         }
     }

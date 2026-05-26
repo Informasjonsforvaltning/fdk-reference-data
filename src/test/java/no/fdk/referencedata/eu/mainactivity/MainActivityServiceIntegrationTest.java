@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.mainactivity;
 
+import no.fdk.referencedata.eu.mainactivity.MainActivityWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -43,7 +44,8 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester("123"),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mainActivityService.harvestAndSave(false);
 
@@ -63,7 +65,8 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester("123-0"),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         mainActivityService.harvestAndSave(false);
@@ -80,7 +83,8 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester("123-2"),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         mainActivityService.harvestAndSave(false);
@@ -97,7 +101,8 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester("123-1"),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         mainActivityService.harvestAndSave(false);
@@ -131,7 +136,8 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester("123"),
                 mainActivityRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, mainActivityRepositorySpy.count());
     }

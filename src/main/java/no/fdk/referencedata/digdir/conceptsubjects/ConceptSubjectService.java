@@ -9,9 +9,9 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -20,17 +20,22 @@ public class ConceptSubjectService {
 
     private final ConceptSubjectHarvester conceptSubjectHarvester;
 
+    private final ConceptSubjectWriter conceptSubjectWriter;
+
     private final ConceptSubjectRepository conceptSubjectRepository;
 
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public ConceptSubjectService(ConceptSubjectHarvester conceptSubjectHarvester,
-                                 RDFSourceRepository rdfSourceRepository,
-                                 ConceptSubjectRepository conceptSubjectRepository) {
+    public ConceptSubjectService(
+            ConceptSubjectHarvester conceptSubjectHarvester,
+            RDFSourceRepository rdfSourceRepository,
+            ConceptSubjectRepository conceptSubjectRepository,
+            ConceptSubjectWriter conceptSubjectWriter) {
         this.conceptSubjectHarvester = conceptSubjectHarvester;
         this.rdfSourceRepository = rdfSourceRepository;
         this.conceptSubjectRepository = conceptSubjectRepository;
+        this.conceptSubjectWriter = conceptSubjectWriter;
     }
 
     public boolean firstTime() {
@@ -46,23 +51,19 @@ public class ConceptSubjectService {
         }
     }
 
-    @Transactional
     public void harvestAndSave() {
         try {
-            conceptSubjectRepository.deleteAll();
-
-            final AtomicInteger counter = new AtomicInteger(0);
-            final Iterable<ConceptSubject> iterable = conceptSubjectHarvester.harvest().toIterable();
-            iterable.forEach(item -> counter.getAndIncrement());
-            log.info("Harvest and saving {} concept subjects", counter.get());
-            conceptSubjectRepository.saveAll(iterable);
+            final List<ConceptSubject> items = new ArrayList<>();
+            conceptSubjectHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} concept subjects", items.size());
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(conceptSubjectHarvester.getModel(), RDFFormat.TURTLE));
-            rdfSourceRepository.save(rdfSource);
 
-        } catch(Exception e) {
+            conceptSubjectWriter.replaceAll(items, rdfSource);
+
+        } catch (Exception e) {
             log.error("Unable to harvest concept subjects", e);
         }
     }

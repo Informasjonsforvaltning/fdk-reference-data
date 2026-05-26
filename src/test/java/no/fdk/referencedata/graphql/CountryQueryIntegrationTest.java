@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.country.CountryWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.country.Country;
 import no.fdk.referencedata.eu.country.CountryRepository;
@@ -49,7 +50,8 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester("1"),
                 countryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         countryService.harvestAndSave(false);
     }

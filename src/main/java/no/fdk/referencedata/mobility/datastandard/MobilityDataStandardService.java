@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class MobilityDataStandardService {
 
     private final MobilityDataStandardHarvester mobilityDataStandardHarvester;
 
+    private final MobilityDataStandardWriter mobilityDataStandardWriter;
+
     private final MobilityDataStandardRepository mobilityDataStandardRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
@@ -32,12 +34,15 @@ public class MobilityDataStandardService {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public MobilityDataStandardService(MobilityDataStandardHarvester mobilityDataStandardHarvester,
-                                       MobilityDataStandardRepository mobilityDataStandardRepository,
-                                       RDFSourceRepository rdfSourceRepository,
-                                       HarvestSettingsRepository harvestSettingsRepository) {
+    public MobilityDataStandardService(
+            MobilityDataStandardHarvester mobilityDataStandardHarvester,
+            MobilityDataStandardRepository mobilityDataStandardRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            MobilityDataStandardWriter mobilityDataStandardWriter) {
         this.mobilityDataStandardHarvester = mobilityDataStandardHarvester;
         this.mobilityDataStandardRepository = mobilityDataStandardRepository;
+        this.mobilityDataStandardWriter = mobilityDataStandardWriter;
         this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
     }
@@ -55,7 +60,6 @@ public class MobilityDataStandardService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(mobilityDataStandardHarvester.getVersion());
@@ -68,26 +72,22 @@ public class MobilityDataStandardService {
 
             final Version currentVersion = new Version(settings.getLatestVersion());
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                mobilityDataStandardRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<MobilityDataStandard> iterable = mobilityDataStandardHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} mobility data standards", counter.get());
-                mobilityDataStandardRepository.saveAll(iterable);
-
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(mobilityDataStandardHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<MobilityDataStandard> items = new ArrayList<>();
+                mobilityDataStandardHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} mobility data standards", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityDataStandardHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
+
+                settings.setLatestHarvestDate(LocalDateTime.now());
+                settings.setLatestVersion(mobilityDataStandardHarvester.getVersion());
+
+                mobilityDataStandardWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest mobility data standards", e);
         }
     }

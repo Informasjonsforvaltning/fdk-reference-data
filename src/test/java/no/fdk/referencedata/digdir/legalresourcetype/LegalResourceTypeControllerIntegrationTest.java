@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -65,7 +66,8 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
                 new LocalLegalResourceTypeHarvester("2023-08-17"),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         legalResourceTypeService.harvestAndSave(true);
     }

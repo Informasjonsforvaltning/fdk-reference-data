@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.eu.currency.CurrencyWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -63,7 +64,8 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester("1"),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         currencyService.harvestAndSave(true);
     }

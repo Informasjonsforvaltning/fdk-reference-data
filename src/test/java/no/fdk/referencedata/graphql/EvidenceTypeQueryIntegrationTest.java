@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceType;
@@ -53,7 +54,8 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester("1"),
                 evidenceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         evidenceTypeService.harvestAndSave(false);
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.accessright;
 
+import no.fdk.referencedata.eu.accessright.AccessRightWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -63,7 +64,8 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
                 new LocalAccessRightHarvester("1"),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         accessRightService.harvestAndSave(true);
     }

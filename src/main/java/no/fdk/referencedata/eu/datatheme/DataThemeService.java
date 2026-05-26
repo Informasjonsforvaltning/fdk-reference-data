@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class DataThemeService {
 
     private final DataThemeHarvester dataThemeHarvester;
 
+    private final DataThemeWriter dataThemeWriter;
+
     private final DataThemeRepository dataThemeRepository;
 
     private final RDFSourceRepository rdfSourceRepository;
@@ -32,14 +34,17 @@ public class DataThemeService {
     private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
-    public DataThemeService(DataThemeHarvester dataThemeHarvester,
-                            DataThemeRepository dataThemeRepository,
-                            RDFSourceRepository rdfSourceRepository,
-                            HarvestSettingsRepository harvestSettingsRepository) {
+    public DataThemeService(
+            DataThemeHarvester dataThemeHarvester,
+            DataThemeRepository dataThemeRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            DataThemeWriter dataThemeWriter) {
         this.dataThemeHarvester = dataThemeHarvester;
         this.dataThemeRepository = dataThemeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.dataThemeWriter = dataThemeWriter;
     }
 
     public boolean firstTime() {
@@ -55,7 +60,6 @@ public class DataThemeService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(dataThemeHarvester.getVersion().replace("-", ""));
@@ -68,26 +72,22 @@ public class DataThemeService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                dataThemeRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<DataTheme> iterable = dataThemeHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} data-themes", counter.get());
-                dataThemeRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<DataTheme> items = new ArrayList<>();
+                dataThemeHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} data-themes", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(dataThemeHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(dataThemeHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                dataThemeWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest data-themes", e);
         }
     }

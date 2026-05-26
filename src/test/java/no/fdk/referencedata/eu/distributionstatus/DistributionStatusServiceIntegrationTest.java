@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.distributionstatus;
 
+import no.fdk.referencedata.eu.distributionstatus.DistributionStatusWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -39,7 +40,8 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester("20200923-0"),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         distributionStatusService.harvestAndSave(false);
 
@@ -59,7 +61,8 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester("20220615-0"),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         distributionStatusService.harvestAndSave(false);
@@ -76,7 +79,8 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester("20220615-1"),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         distributionStatusService.harvestAndSave(false);
@@ -93,7 +97,8 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester("20210615-0"),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         distributionStatusService.harvestAndSave(false);
@@ -127,7 +132,8 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester("20200924-2"),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, distributionStatusRepositorySpy.count());
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
@@ -51,7 +52,8 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalServiceChannelTypeHarvester("1"),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         serviceChannelTypeService.harvestAndSave(false);
     }

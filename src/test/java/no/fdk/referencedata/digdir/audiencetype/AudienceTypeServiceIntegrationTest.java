@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
+import no.fdk.referencedata.digdir.audiencetype.AudienceTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -38,7 +39,8 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester("123-0"),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         audienceTypeService.harvestAndSave(false);
 
@@ -59,7 +61,8 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester("132-0"),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         audienceTypeService.harvestAndSave(false);
@@ -76,7 +79,8 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester("132-2"),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         audienceTypeService.harvestAndSave(false);
@@ -93,7 +97,8 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester("132-1"),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         audienceTypeService.harvestAndSave(false);
@@ -127,7 +132,8 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester("123-2"),
                 audienceTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, audienceTypeRepositorySpy.count());
     }

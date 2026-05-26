@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.eu.country.CountryWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -62,7 +63,8 @@ public class CountryControllerIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester("1"),
                 countryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         countryService.harvestAndSave(true);
     }

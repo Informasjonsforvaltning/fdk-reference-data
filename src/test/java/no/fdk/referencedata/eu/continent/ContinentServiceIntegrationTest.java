@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.continent;
 
+import no.fdk.referencedata.eu.continent.ContinentWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -41,7 +42,8 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester("1"),
                 continentRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         continentService.harvestAndSave(true);
 
@@ -61,7 +63,8 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester("20200923-1"),
                 continentRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         continentService.harvestAndSave(false);
@@ -76,7 +79,8 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester("20200924-0"),
                 continentRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         continentService.harvestAndSave(false);
@@ -91,7 +95,8 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester("20200924-0"),
                 continentRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         continentService.harvestAndSave(false);
@@ -123,7 +128,8 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester("20200924-2"),
                 continentRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, continentRepositorySpy.count());
     }

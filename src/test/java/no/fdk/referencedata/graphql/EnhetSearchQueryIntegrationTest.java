@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.geonorge.administrativeenheter.EnhetWriter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -60,7 +61,8 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
                 enhetRepository,
                 enhetVariantRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository, harvestSettingsRepository));
 
         enhetService.harvestAndSave();
     }

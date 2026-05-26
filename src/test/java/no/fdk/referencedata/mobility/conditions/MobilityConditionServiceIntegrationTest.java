@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.conditions;
 
+import no.fdk.referencedata.mobility.conditions.MobilityConditionWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -38,7 +39,8 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester("1.0.1"),
                 mobilityConditionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mobilityConditionService.harvestAndSave(true);
 
@@ -58,7 +60,8 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester("1.1.1"),
                 mobilityConditionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         mobilityConditionService.harvestAndSave(false);
@@ -75,7 +78,8 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester("1.1.2"),
                 mobilityConditionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         mobilityConditionService.harvestAndSave(false);
@@ -92,7 +96,8 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester("1.0.0"),
                 mobilityConditionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         mobilityConditionService.harvestAndSave(false);
@@ -126,7 +131,8 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester("1.2.0"),
                 mobilityConditionRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, mobilityConditionRepositorySpy.count());
     }

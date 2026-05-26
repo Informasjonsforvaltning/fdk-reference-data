@@ -23,9 +23,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -33,6 +31,8 @@ public class EnhetService implements SearchableReferenceData {
     private final String rdfSourceID = "administrative-enheter-source";
 
     private final EnhetHarvester enhetHarvester;
+
+    private final EnhetWriter enhetWriter;
 
     private final EnhetRepository enhetRepository;
 
@@ -43,16 +43,19 @@ public class EnhetService implements SearchableReferenceData {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public EnhetService(EnhetHarvester enhetHarvester,
-                        EnhetRepository enhetRepository,
-                        EnhetVariantRepository enhetVariantRepository,
-                        RDFSourceRepository rdfSourceRepository,
-                        HarvestSettingsRepository harvestSettingsRepository) {
+    public EnhetService(
+            EnhetHarvester enhetHarvester,
+            EnhetRepository enhetRepository,
+            EnhetVariantRepository enhetVariantRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            EnhetWriter enhetWriter) {
         this.enhetHarvester = enhetHarvester;
         this.enhetRepository = enhetRepository;
         this.enhetVariantRepository = enhetVariantRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
+        this.enhetWriter = enhetWriter;
     }
 
     public boolean firstTime() {
@@ -123,17 +126,17 @@ public class EnhetService implements SearchableReferenceData {
         StringBuilder sb = new StringBuilder(enhet.code);
 
         // splits the code into chunks of 6 characters
-        while(sb.length() > 5) {
+        while (sb.length() > 5) {
             codeVariants.add(sb.substring(0, 6));
             sb.delete(0, 6);
         }
 
         return codeVariants.stream().map(codeVariant ->
-            EnhetVariant.builder()
-                .uri(uriBase + codeVariant)
-                .name(enhet.name)
-                .code(codeVariant)
-                .build()
+                EnhetVariant.builder()
+                        .uri(uriBase + codeVariant)
+                        .name(enhet.name)
+                        .code(codeVariant)
+                        .build()
         );
     }
 
@@ -145,43 +148,36 @@ public class EnhetService implements SearchableReferenceData {
                             .latestVersion("0")
                             .build());
 
-            enhetRepository.deleteAll();
-            enhetVariantRepository.deleteAll();
+            final List<Enhet> enheter = new ArrayList<>();
+            enhetHarvester.harvest().toIterable().forEach(enheter::add);
+            log.info("Harvest and saving {} administrative enheter", enheter.size());
 
-            final AtomicInteger counter = new AtomicInteger(0);
-            final Iterable<Enhet> iterable = enhetHarvester.harvest().toIterable();
-            iterable.forEach(item -> counter.getAndIncrement());
-            log.info("Harvest and saving {} administrative enheter", counter.get());
-            enhetRepository.saveAll(iterable);
-
-            final List<EnhetVariant> docVariants = StreamSupport.stream(iterable.spliterator(), false)
+            final List<EnhetVariant> docVariants = enheter.stream()
                     .map(enh -> EnhetVariant.builder()
                             .uri(enh.getUri().replace("/id/", "/doc/"))
                             .name(enh.getName())
                             .code(enh.getCode())
                             .build())
                     .toList();
-            enhetVariantRepository.saveAll(docVariants);
 
-            final List<EnhetVariant> idVariants = StreamSupport.stream(iterable.spliterator(), false)
+            final List<EnhetVariant> idVariants = enheter.stream()
                     .flatMap(this::idVariantsOfEnhet)
                     .toList();
-            enhetVariantRepository.saveAll(idVariants);
 
             Model model = ModelFactory.createDefaultModel();
             model.setNsPrefix("dct", DCTerms.NS);
-            iterable.forEach(item -> addEnhetToModel(item, model));
+            enheter.forEach(item -> addEnhetToModel(item, model));
             docVariants.forEach(item -> addEnhetVariantToModel(item, model));
             idVariants.forEach(item -> addEnhetVariantToModel(item, model));
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-            rdfSourceRepository.save(rdfSource);
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            harvestSettingsRepository.save(settings);
-        } catch(Exception e) {
+
+            enhetWriter.replaceAll(enheter, docVariants, idVariants, rdfSource, settings);
+        } catch (Exception e) {
             log.error("Unable to harvest administrative enheter", e);
         }
     }

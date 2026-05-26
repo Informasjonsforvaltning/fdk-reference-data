@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.eu.licence.LicenceWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -60,7 +61,8 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester("1"),
                 licenceRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         licenceService.harvestAndSave(true);
     }

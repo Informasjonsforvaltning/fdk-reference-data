@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.continent.ContinentWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.continent.Continent;
 import no.fdk.referencedata.eu.continent.ContinentRepository;
@@ -49,7 +50,8 @@ class ContinentQueryIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester("1"),
                 continentRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         continentService.harvestAndSave(false);
     }

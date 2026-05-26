@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.filetype.FileTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.filetype.FileType;
 import no.fdk.referencedata.eu.filetype.FileTypeRepository;
@@ -50,7 +51,8 @@ class FileTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester("1"),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         fileTypeService.harvestAndSave(false);
     }

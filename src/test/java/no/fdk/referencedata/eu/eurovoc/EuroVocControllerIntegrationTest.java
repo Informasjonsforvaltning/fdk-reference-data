@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.eu.eurovoc.EuroVocWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -64,7 +65,8 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester("1"),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
         EuroVocService.harvestAndSave(true);
     }

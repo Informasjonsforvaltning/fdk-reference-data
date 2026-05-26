@@ -4,6 +4,7 @@ import no.fdk.referencedata.adms.publishertype.PublisherType;
 import no.fdk.referencedata.adms.publishertype.PublisherTypeImporter;
 import no.fdk.referencedata.adms.publishertype.PublisherTypeRepository;
 import no.fdk.referencedata.adms.publishertype.PublisherTypeService;
+import no.fdk.referencedata.adms.publishertype.PublisherTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -32,7 +33,8 @@ public class PublisherTypeServiceTest extends AbstractContainerTest {
 
     @Test
     public void test_if_get_all_returns_all_publisher_types() {
-        PublisherTypeService service = new PublisherTypeService(new PublisherTypeImporter(), publisherTypeRepository, rdfSourceRepository);
+        PublisherTypeService service = new PublisherTypeService(new PublisherTypeImporter(), publisherTypeRepository, rdfSourceRepository,
+                new PublisherTypeWriter(publisherTypeRepository, rdfSourceRepository));
         service.importPublisherTypes();
 
         List<PublisherType> publisherTypes = service.getAll();
@@ -46,7 +48,8 @@ public class PublisherTypeServiceTest extends AbstractContainerTest {
 
     @Test
     public void test_if_get_by_code_returns_correct_publisher_type() {
-        PublisherTypeService service = new PublisherTypeService(new PublisherTypeImporter(), publisherTypeRepository, rdfSourceRepository);
+        PublisherTypeService service = new PublisherTypeService(new PublisherTypeImporter(), publisherTypeRepository, rdfSourceRepository,
+                new PublisherTypeWriter(publisherTypeRepository, rdfSourceRepository));
         service.importPublisherTypes();
 
         Optional<PublisherType> publisherTypeOptional = service.getByCode("NonProfitOrganisation");

@@ -3,40 +3,42 @@ package no.fdk.referencedata.ssb.kommuneorganisasjoner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
 public class KommuneOrganisasjonService {
 
     private final KommuneOrganisasjonHarvester kommuneOrganisasjonHarvester;
+
+    private final KommuneOrganisasjonWriter kommuneOrganisasjonWriter;
     private final KommuneOrganisasjonRepository kommuneOrganisasjonRepository;
 
     @Autowired
-    public KommuneOrganisasjonService(KommuneOrganisasjonHarvester kommuneOrganisasjonHarvester,
-                                      KommuneOrganisasjonRepository kommuneOrganisasjonRepository) {
+    public KommuneOrganisasjonService(
+            KommuneOrganisasjonHarvester kommuneOrganisasjonHarvester,
+            KommuneOrganisasjonRepository kommuneOrganisasjonRepository,
+            KommuneOrganisasjonWriter kommuneOrganisasjonWriter) {
         this.kommuneOrganisasjonHarvester = kommuneOrganisasjonHarvester;
         this.kommuneOrganisasjonRepository = kommuneOrganisasjonRepository;
+        this.kommuneOrganisasjonWriter = kommuneOrganisasjonWriter;
     }
 
     public boolean firstTime() {
         return kommuneOrganisasjonRepository.count() == 0;
     }
 
-    @Transactional
     public void harvestAndSave() {
         try {
-            kommuneOrganisasjonRepository.deleteAll();
+            final List<KommuneOrganisasjon> items = new ArrayList<>();
+            kommuneOrganisasjonHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} kommunale organisasjoner", items.size());
 
-            final AtomicInteger counter = new AtomicInteger(0);
-            final Iterable<KommuneOrganisasjon> iterable = kommuneOrganisasjonHarvester.harvest().toIterable();
-            iterable.forEach(item -> counter.getAndIncrement());
-            log.info("Harvest and saving {} kommunale organisasjoner", counter.get());
-            kommuneOrganisasjonRepository.saveAll(iterable);
+            kommuneOrganisasjonWriter.replaceAll(items);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest kommunale organisasjoner", e);
         }
     }

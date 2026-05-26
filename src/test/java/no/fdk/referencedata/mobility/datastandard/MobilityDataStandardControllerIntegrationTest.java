@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -60,7 +61,8 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
                 new LocalMobilityDataStandardHarvester("1.0.0"),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mobilityDataStandardService.harvestAndSave(true);
     }

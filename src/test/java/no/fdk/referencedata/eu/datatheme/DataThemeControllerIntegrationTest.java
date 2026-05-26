@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.eu.datatheme.DataThemeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.eurovoc.EuroVocControllerIntegrationTest;
 import no.fdk.referencedata.i18n.Language;
@@ -65,7 +66,8 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester("1"),
                 dataThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         dataThemeService.harvestAndSave(true);
     }

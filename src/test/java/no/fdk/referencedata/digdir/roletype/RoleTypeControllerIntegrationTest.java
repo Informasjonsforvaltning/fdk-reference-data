@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.roletype;
 
+import no.fdk.referencedata.digdir.roletype.RoleTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -64,7 +65,8 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester("1"),
                 roleTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         roleTypeService.harvestAndSave(true);
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.datasettype.DatasetTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.datasettype.DatasetType;
@@ -49,7 +50,8 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester("1"),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         datasetTypeService.harvestAndSave(false);
     }

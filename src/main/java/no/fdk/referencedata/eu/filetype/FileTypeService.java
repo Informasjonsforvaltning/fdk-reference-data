@@ -16,11 +16,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @Service
@@ -30,20 +29,25 @@ public class FileTypeService implements SearchableReferenceData {
 
     private final FileTypeHarvester fileTypeHarvester;
 
+    private final FileTypeWriter fileTypeWriter;
+
     private final FileTypeRepository fileTypeRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public FileTypeService(FileTypeHarvester fileTypeHarvester,
-                           FileTypeRepository fileTypeRepository,
-                           RDFSourceRepository rdfSourceRepository,
-                           HarvestSettingsRepository harvestSettingsRepository) {
+    public FileTypeService(
+            FileTypeHarvester fileTypeHarvester,
+            FileTypeRepository fileTypeRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            FileTypeWriter fileTypeWriter) {
         this.fileTypeHarvester = fileTypeHarvester;
         this.fileTypeRepository = fileTypeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.fileTypeWriter = fileTypeWriter;
     }
 
     public boolean firstTime() {
@@ -75,7 +79,6 @@ public class FileTypeService implements SearchableReferenceData {
                 .map(FileType::toSearchHit);
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(fileTypeHarvester.getVersion().replace("-", ""));
@@ -88,26 +91,22 @@ public class FileTypeService implements SearchableReferenceData {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                fileTypeRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<FileType> iterable = fileTypeHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} file-types", counter.get());
-                fileTypeRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<FileType> items = new ArrayList<>();
+                fileTypeHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} file-types", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(fileTypeHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(fileTypeHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                fileTypeWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest file-types", e);
         }
     }

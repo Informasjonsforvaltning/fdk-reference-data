@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -38,7 +39,8 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester("123-0"),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         relationshipWithSourceTypeService.harvestAndSave(false);
 
@@ -59,7 +61,8 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester("132-0"),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         relationshipWithSourceTypeService.harvestAndSave(false);
@@ -76,7 +79,8 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester("132-2"),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         relationshipWithSourceTypeService.harvestAndSave(false);
@@ -93,7 +97,8 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester("132-1"),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         relationshipWithSourceTypeService.harvestAndSave(false);
@@ -127,7 +132,8 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester("123-2"),
                 relationshipWithSourceTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, relationshipWithSourceTypeRepositorySpy.count());
     }
