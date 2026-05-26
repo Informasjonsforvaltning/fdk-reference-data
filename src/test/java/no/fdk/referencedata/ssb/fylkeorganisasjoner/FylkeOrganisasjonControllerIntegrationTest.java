@@ -1,5 +1,6 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +49,8 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
 
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
-                fylkeOrganisasjonRepository);
+                fylkeOrganisasjonRepository,
+                new FylkeOrganisasjonWriter(fylkeOrganisasjonRepository));
 
         fylkeOrganisasjonService.harvestAndSave();
     }

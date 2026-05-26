@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.theme;
 
+import no.fdk.referencedata.mobility.theme.MobilityThemeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -38,7 +39,8 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester("1.0.1"),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mobilityThemeService.harvestAndSave(false);
 
@@ -58,7 +60,8 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester("1.0.3"),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         mobilityThemeService.harvestAndSave(false);
@@ -75,7 +78,8 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester("1.1.0"),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         mobilityThemeService.harvestAndSave(false);
@@ -92,7 +96,8 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester("1.0.0"),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         mobilityThemeService.harvestAndSave(false);
@@ -126,7 +131,8 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester("1.2.0"),
                 mobilityThemeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, mobilityThemeRepositorySpy.count());
     }

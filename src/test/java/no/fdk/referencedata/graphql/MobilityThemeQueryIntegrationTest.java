@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.mobility.theme.MobilityThemeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.mobility.theme.LocalMobilityThemeHarvester;
@@ -51,7 +52,8 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester("1.0.0"),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mobilityThemeService.harvestAndSave(false);
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 
@@ -52,7 +53,8 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
                 new LocalRelationshipWithSourceTypeHarvester("1"),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         relationshipWithSourceTypeService.harvestAndSave(false);
     }

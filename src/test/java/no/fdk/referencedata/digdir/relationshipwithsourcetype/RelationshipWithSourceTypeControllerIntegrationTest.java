@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -62,7 +63,8 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
                 new LocalRelationshipWithSourceTypeHarvester("1"),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         relationshipWithSourceTypeService.harvestAndSave(true);
     }

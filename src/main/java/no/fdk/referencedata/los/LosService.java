@@ -9,7 +9,6 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,18 +17,18 @@ import java.util.List;
 @Service
 public class LosService {
     private final String rdfSourceID = "los-source";
-
+    private final LosRepository losRepository;
+    private final RDFSourceRepository rdfSourceRepository;
+    private final LosWriter losWriter;
     public LosImporter losImporter;
 
-    private final LosRepository losRepository;
-
-    private final RDFSourceRepository rdfSourceRepository;
-
     @Autowired
-    public LosService(LosImporter losImporter, LosRepository losRepository, RDFSourceRepository rdfSourceRepository) {
+    public LosService(LosImporter losImporter, LosRepository losRepository, RDFSourceRepository rdfSourceRepository,
+                      LosWriter losWriter) {
         this.losImporter = losImporter;
         this.losRepository = losRepository;
         this.rdfSourceRepository = rdfSourceRepository;
+        this.losWriter = losWriter;
     }
 
     public List<LosNode> getByURIs(List<String> uris) {
@@ -53,20 +52,20 @@ public class LosService {
                 .toList();
     }
 
-    public boolean firstTime() { return losRepository.count() == 0; }
+    public boolean firstTime() {
+        return losRepository.count() == 0;
+    }
 
-    @Transactional
     public void importLosNodes() {
         try {
             final List<LosNode> losList = losImporter.importFromLosSource();
-            losRepository.deleteAll();
-            losRepository.saveAll(losList);
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(losImporter.getModel(), RDFFormat.TURTLE));
-            rdfSourceRepository.save(rdfSource);
-        } catch(Exception e) {
+
+            losWriter.replaceAll(losList, rdfSource);
+        } catch (Exception e) {
             log.error("Unable to harvest LOS", e);
         }
     }

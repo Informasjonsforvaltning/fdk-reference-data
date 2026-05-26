@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import no.fdk.referencedata.eu.distributiontype.DistributionTypeWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -41,7 +42,8 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
                 new LocalDistributionTypeHarvester("20200923-0"),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         accessRightService.harvestAndSave(false);
 
@@ -61,7 +63,8 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
                 new LocalDistributionTypeHarvester("20200923-1"),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -78,7 +81,8 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
                 new LocalDistributionTypeHarvester("20200924-0"),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -95,7 +99,8 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
                 new LocalDistributionTypeHarvester("20200924-0"),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -129,7 +134,8 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
                 new LocalDistributionTypeHarvester("20200924-2"),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, distrubutionTypeRepositorySpy.count());
     }

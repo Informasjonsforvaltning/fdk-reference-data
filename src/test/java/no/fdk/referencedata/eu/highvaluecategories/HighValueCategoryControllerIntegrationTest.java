@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -60,7 +61,8 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
                 new LocalHighValueCategoryHarvester("2.1"),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         highValueCategoryService.harvestAndSave(true);
     }

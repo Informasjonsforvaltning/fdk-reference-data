@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.conceptstatus.ConceptStatusWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatus;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusRepository;
@@ -46,7 +47,8 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
                 new LocalConceptStatusHarvester("1"),
                 conceptStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         conceptStatusService.harvestAndSave(false);
     }

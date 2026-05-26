@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.filetype.FileTypeWriter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -57,7 +58,8 @@ class FileTypeSearchableIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester("1"),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         fileTypeService.harvestAndSave(false);
     }

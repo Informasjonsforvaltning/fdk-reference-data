@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.roletype;
 
+import no.fdk.referencedata.digdir.roletype.RoleTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -42,7 +43,8 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester("123-0"),
                 roleTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         roleTypeService.harvestAndSave(false);
 
@@ -62,7 +64,8 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester("132-0"),
                 roleTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         roleTypeService.harvestAndSave(false);
@@ -79,7 +82,8 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester("132-2"),
                 roleTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         roleTypeService.harvestAndSave(false);
@@ -96,7 +100,8 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester("132-1"),
                 roleTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         roleTypeService.harvestAndSave(false);
@@ -130,7 +135,8 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester("123-2"),
                 roleTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, roleTypeRepositorySpy.count());
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.filetype;
 
+import no.fdk.referencedata.eu.filetype.FileTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettings;
@@ -38,7 +39,8 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester("20210512-0"),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         fileTypeService.harvestAndSave(false);
 
@@ -58,7 +60,8 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester("20210512-6"),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         fileTypeService.harvestAndSave(false);
@@ -75,7 +78,8 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester("20210513-0"),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         fileTypeService.harvestAndSave(false);
@@ -92,7 +96,8 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester("20210512-6"),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         fileTypeService.harvestAndSave(false);
@@ -125,7 +130,8 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester("20210514-2"),
                 fileTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, fileTypeRepositorySpy.count());
     }

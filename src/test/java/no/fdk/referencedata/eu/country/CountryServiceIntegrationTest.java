@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.eu.country.CountryWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -41,7 +42,8 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester("1"),
                 countryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         countryService.harvestAndSave(false);
 
@@ -61,7 +63,8 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester("20200923-1"),
                 countryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         countryService.harvestAndSave(false);
@@ -76,7 +79,8 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester("20200924-0"),
                 countryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         countryService.harvestAndSave(false);
@@ -91,7 +95,8 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester("20200924-0"),
                 countryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         countryService.harvestAndSave(false);
@@ -123,7 +128,8 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester("20200924-2"),
                 countryRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, countryRepositorySpy.count());
     }

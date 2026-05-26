@@ -1,5 +1,6 @@
 package no.fdk.referencedata.geonames;
 
+import no.fdk.referencedata.geonames.GeonamesWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;

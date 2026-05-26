@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.eu.datatheme.DataThemeWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -41,7 +42,8 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester("20200923-0"),
                 dataThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         fileTypeService.harvestAndSave(false);
 
@@ -64,7 +66,8 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester("20200923-1"),
                 dataThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         dataThemeService.harvestAndSave(false);
@@ -81,7 +84,8 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester("20200924-0"),
                 dataThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         dataThemeService.harvestAndSave(false);
@@ -98,7 +102,8 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester("20200924-0"),
                 dataThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         dataThemeService.harvestAndSave(false);
@@ -131,7 +136,8 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester("20200924-2"),
                 dataThemeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, dataThemeRepositorySpy.count());
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.distributiontype.DistributionTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.distributiontype.DistributionType;
@@ -50,7 +51,8 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalDistributionTypeHarvester("1"),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         distributionTypeService.harvestAndSave(false);
     }

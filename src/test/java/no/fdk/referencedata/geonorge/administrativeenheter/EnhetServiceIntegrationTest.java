@@ -1,5 +1,6 @@
 package no.fdk.referencedata.geonorge.administrativeenheter;
 
+import no.fdk.referencedata.geonorge.administrativeenheter.EnhetWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
@@ -37,7 +38,8 @@ public class EnhetServiceIntegrationTest extends AbstractContainerTest {
                 enhetRepository,
                 enhetVariantRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository, harvestSettingsRepository));
 
         enhetService.harvestAndSave();
 

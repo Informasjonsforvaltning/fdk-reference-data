@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.eu.currency.CurrencyWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -39,7 +40,8 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester("20220715-0"),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         currencyService.harvestAndSave(true);
 
@@ -59,7 +61,8 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester("2"),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         currencyService.harvestAndSave(true);
@@ -76,7 +79,8 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester("20220715-1"),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         currencyService.harvestAndSave(false);
@@ -93,7 +97,8 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester("20210715-0"),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         currencyService.harvestAndSave(false);
@@ -127,7 +132,8 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester("20200924-2"),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, currencyRepositorySpy.count());
     }

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectWriter;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -34,7 +35,8 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
                 rdfSourceRepository,
-                conceptSubjectRepository);
+                conceptSubjectRepository,
+                new ConceptSubjectWriter(conceptSubjectRepository, rdfSourceRepository));
 
         conceptSubjectService.harvestAndSave();
 
@@ -68,7 +70,8 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
         new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
                 rdfSourceRepository,
-                conceptSubjectRepositorySpy);
+                conceptSubjectRepositorySpy,
+                new ConceptSubjectWriter(conceptSubjectRepositorySpy, rdfSourceRepository));
 
         assertEquals(count, conceptSubjectRepositorySpy.count());
     }

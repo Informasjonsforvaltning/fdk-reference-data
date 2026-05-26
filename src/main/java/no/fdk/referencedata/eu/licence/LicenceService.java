@@ -16,11 +16,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @Service
@@ -30,20 +29,25 @@ public class LicenceService implements SearchableReferenceData {
 
     private final LicenceHarvester licenceHarvester;
 
+    private final LicenceWriter licenceWriter;
+
     private final LicenceRepository licenceRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public LicenceService(LicenceHarvester licenceHarvester,
-                          LicenceRepository licenceRepository,
-                          RDFSourceRepository rdfSourceRepository,
-                          HarvestSettingsRepository harvestSettingsRepository) {
+    public LicenceService(
+            LicenceHarvester licenceHarvester,
+            LicenceRepository licenceRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            LicenceWriter licenceWriter) {
         this.licenceHarvester = licenceHarvester;
         this.licenceRepository = licenceRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.licenceWriter = licenceWriter;
     }
 
     public boolean firstTime() {
@@ -59,7 +63,6 @@ public class LicenceService implements SearchableReferenceData {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(licenceHarvester.getVersion().replace("-", ""));
@@ -72,26 +75,22 @@ public class LicenceService implements SearchableReferenceData {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                licenceRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<Licence> iterable = licenceHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} licences", counter.get());
-                licenceRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<Licence> items = new ArrayList<>();
+                licenceHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} licences", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(licenceHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(licenceHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                licenceWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest licences", e);
         }
     }

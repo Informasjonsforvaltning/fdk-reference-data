@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjon;
@@ -47,7 +48,8 @@ class KommuneOrganisasjonQueryIntegrationTest extends AbstractContainerTest {
     public void setup() {
         KommuneOrganisasjonService kommuneOrganisasjonService = new KommuneOrganisasjonService(
                 new LocalKommuneOrganisasjonHarvester(wiremockHost, wiremockPort),
-                kommuneOrganisasjonRepository);
+                kommuneOrganisasjonRepository,
+                new KommuneOrganisasjonWriter(kommuneOrganisasjonRepository));
 
         kommuneOrganisasjonService.harvestAndSave();
     }

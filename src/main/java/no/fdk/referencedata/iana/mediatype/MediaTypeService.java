@@ -19,11 +19,10 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @Service
@@ -33,6 +32,8 @@ public class MediaTypeService implements SearchableReferenceData {
 
     private final MediaTypeHarvester mediaTypeHarvester;
 
+    private final MediaTypeWriter mediaTypeWriter;
+
     private final MediaTypeRepository mediaTypeRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
@@ -40,13 +41,16 @@ public class MediaTypeService implements SearchableReferenceData {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public MediaTypeService(MediaTypeHarvester mediaTypeHarvester,
-                            MediaTypeRepository mediaTypeRepository,
-                            RDFSourceRepository rdfSourceRepository,
-                            HarvestSettingsRepository harvestSettingsRepository) {
+    public MediaTypeService(
+            MediaTypeHarvester mediaTypeHarvester,
+            MediaTypeRepository mediaTypeRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            MediaTypeWriter mediaTypeWriter) {
         this.mediaTypeHarvester = mediaTypeHarvester;
         this.mediaTypeRepository = mediaTypeRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.mediaTypeWriter = mediaTypeWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -92,7 +96,6 @@ public class MediaTypeService implements SearchableReferenceData {
                 .map(MediaType::toSearchHit);
     }
 
-    @Transactional
     public void harvestAndSave() {
         try {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MEDIA_TYPE.name())
@@ -101,26 +104,22 @@ public class MediaTypeService implements SearchableReferenceData {
                             .latestVersion("0")
                             .build());
 
-            mediaTypeRepository.deleteAll();
-
-            final AtomicInteger counter = new AtomicInteger(0);
-            final Iterable<MediaType> iterable = mediaTypeHarvester.harvest().toIterable();
-            iterable.forEach(item -> counter.getAndIncrement());
-            log.info("Harvest and saving {} media-types", counter.get());
-            mediaTypeRepository.saveAll(iterable);
-
-            settings.setLatestHarvestDate(LocalDateTime.now());
-            harvestSettingsRepository.save(settings);
+            final List<MediaType> items = new ArrayList<>();
+            mediaTypeHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} media-types", items.size());
 
             Model model = ModelFactory.createDefaultModel();
             model.setNsPrefix("dct", DCTerms.NS);
-            iterable.forEach(item -> addMediaTypeToModel(item, model));
+            items.forEach(item -> addMediaTypeToModel(item, model));
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-            rdfSourceRepository.save(rdfSource);
-        } catch(Exception e) {
+
+            settings.setLatestHarvestDate(LocalDateTime.now());
+
+            mediaTypeWriter.replaceAll(items, rdfSource, settings);
+        } catch (Exception e) {
             log.error("Unable to harvest media-types", e);
         }
     }

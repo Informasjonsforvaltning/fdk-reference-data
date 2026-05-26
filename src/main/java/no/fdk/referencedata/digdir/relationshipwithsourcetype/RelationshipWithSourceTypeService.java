@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class RelationshipWithSourceTypeService {
 
     private final RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester;
 
+    private final RelationshipWithSourceTypeWriter relationshipWithSourceTypeWriter;
+
     private final RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
@@ -32,12 +34,15 @@ public class RelationshipWithSourceTypeService {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public RelationshipWithSourceTypeService(RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester,
-                                             RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository,
-                                             RDFSourceRepository rdfSourceRepository,
-                                             HarvestSettingsRepository harvestSettingsRepository) {
+    public RelationshipWithSourceTypeService(
+            RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester,
+            RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            RelationshipWithSourceTypeWriter relationshipWithSourceTypeWriter) {
         this.relationshipWithSourceTypeHarvester = relationshipWithSourceTypeHarvester;
         this.relationshipWithSourceTypeRepository = relationshipWithSourceTypeRepository;
+        this.relationshipWithSourceTypeWriter = relationshipWithSourceTypeWriter;
         this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
     }
@@ -55,7 +60,6 @@ public class RelationshipWithSourceTypeService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(relationshipWithSourceTypeHarvester.getVersion().replace("-", ""));
@@ -68,26 +72,22 @@ public class RelationshipWithSourceTypeService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                relationshipWithSourceTypeRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<RelationshipWithSourceType> iterable = relationshipWithSourceTypeHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} relationship-with-source-types", counter.get());
-                relationshipWithSourceTypeRepository.saveAll(iterable);
-
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(relationshipWithSourceTypeHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<RelationshipWithSourceType> items = new ArrayList<>();
+                relationshipWithSourceTypeHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} relationship-with-source-types", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(relationshipWithSourceTypeHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
+
+                settings.setLatestHarvestDate(LocalDateTime.now());
+                settings.setLatestVersion(relationshipWithSourceTypeHarvester.getVersion());
+
+                relationshipWithSourceTypeWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest relationship-with-source-types", e);
         }
     }

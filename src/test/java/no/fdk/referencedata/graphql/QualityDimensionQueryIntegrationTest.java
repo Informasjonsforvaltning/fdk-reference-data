@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester;
@@ -53,7 +54,8 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
                 new LocalQualityDimensionHarvester("2023-01-30"),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         qualityDimensionService.harvestAndSave(false);
     }

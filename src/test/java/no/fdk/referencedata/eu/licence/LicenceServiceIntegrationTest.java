@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.eu.licence.LicenceWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -41,7 +42,8 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester("20240610-0"),
                 licenceRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         licenceService.harvestAndSave(false);
 
@@ -63,7 +65,8 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester("20240610-1"),
                 licenceRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         licenceService.harvestAndSave(false);
@@ -80,7 +83,8 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester("20240611-0"),
                 licenceRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         licenceService.harvestAndSave(false);
@@ -97,7 +101,8 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester("20240611-0"),
                 licenceRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         licenceService.harvestAndSave(false);
@@ -130,7 +135,8 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester("20240611-2"),
                 licenceRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, licenceRepositorySpy.count());
     }

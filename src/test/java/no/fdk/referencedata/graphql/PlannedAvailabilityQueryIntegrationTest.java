@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.plannedavailability.LocalPlannedAvailabilityHarvester;
@@ -50,7 +51,8 @@ class PlannedAvailabilityQueryIntegrationTest extends AbstractContainerTest {
                 new LocalPlannedAvailabilityHarvester("1"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         plannedAvailabilityService.harvestAndSave(false);
     }

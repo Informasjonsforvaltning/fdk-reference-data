@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.datasettype;
 
+import no.fdk.referencedata.eu.datasettype.DatasetTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -39,7 +40,8 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester("20200923-0"),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         accessRightService.harvestAndSave(false);
 
@@ -59,7 +61,8 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester("20200923-1"),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -76,7 +79,8 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester("20200924-0"),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -93,7 +97,8 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester("20200924-0"),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
         accessRightService.harvestAndSave(false);
@@ -127,7 +132,8 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester("20200924-2"),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, datasetTypeRepositorySpy.count());
     }

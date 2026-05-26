@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.los.LosWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.los.LocalLosImporter;
@@ -45,7 +46,8 @@ class LosQueryIntegrationTest extends AbstractContainerTest {
         LosService losService = new LosService(
                 new LocalLosImporter(),
                 losRepository,
-                rdfSourceRepository);
+                rdfSourceRepository,
+                new LosWriter(losRepository, rdfSourceRepository));
 
         losService.importLosNodes();
     }

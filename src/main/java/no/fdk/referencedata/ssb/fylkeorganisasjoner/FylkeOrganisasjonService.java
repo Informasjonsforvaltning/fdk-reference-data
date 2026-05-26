@@ -3,40 +3,42 @@ package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
 public class FylkeOrganisasjonService {
 
     private final FylkeOrganisasjonHarvester fylkeOrganisasjonHarvester;
+
+    private final FylkeOrganisasjonWriter fylkeOrganisasjonWriter;
     private final FylkeOrganisasjonRepository fylkeOrganisasjonRepository;
 
     @Autowired
-    public FylkeOrganisasjonService(FylkeOrganisasjonHarvester fylkeOrganisasjonHarvester,
-                                    FylkeOrganisasjonRepository fylkeOrganisasjonRepository) {
+    public FylkeOrganisasjonService(
+            FylkeOrganisasjonHarvester fylkeOrganisasjonHarvester,
+            FylkeOrganisasjonRepository fylkeOrganisasjonRepository,
+            FylkeOrganisasjonWriter fylkeOrganisasjonWriter) {
         this.fylkeOrganisasjonHarvester = fylkeOrganisasjonHarvester;
         this.fylkeOrganisasjonRepository = fylkeOrganisasjonRepository;
+        this.fylkeOrganisasjonWriter = fylkeOrganisasjonWriter;
     }
 
     public boolean firstTime() {
         return fylkeOrganisasjonRepository.count() == 0;
     }
 
-    @Transactional
     public void harvestAndSave() {
         try {
-            fylkeOrganisasjonRepository.deleteAll();
+            final List<FylkeOrganisasjon> items = new ArrayList<>();
+            fylkeOrganisasjonHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} fylkeskommunale organisasjoner", items.size());
 
-            final AtomicInteger counter = new AtomicInteger(0);
-            final Iterable<FylkeOrganisasjon> iterable = fylkeOrganisasjonHarvester.harvest().toIterable();
-            iterable.forEach(item -> counter.getAndIncrement());
-            log.info("Harvest and saving {} fylkeskommunale organisasjoner", counter.get());
-            fylkeOrganisasjonRepository.saveAll(iterable);
+            fylkeOrganisasjonWriter.replaceAll(items);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest fylkeskommunale organisasjoner", e);
         }
     }

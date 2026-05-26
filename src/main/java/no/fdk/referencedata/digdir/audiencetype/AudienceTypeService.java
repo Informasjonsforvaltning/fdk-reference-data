@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class AudienceTypeService {
 
     private final AudienceTypeHarvester audienceTypeHarvester;
 
+    private final AudienceTypeWriter audienceTypeWriter;
+
     private final AudienceTypeRepository audienceTypeRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
@@ -32,13 +34,16 @@ public class AudienceTypeService {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public AudienceTypeService(AudienceTypeHarvester audienceTypeHarvester,
-                               AudienceTypeRepository audienceTypeRepository,
-                               RDFSourceRepository rdfSourceRepository,
-                               HarvestSettingsRepository harvestSettingsRepository) {
+    public AudienceTypeService(
+            AudienceTypeHarvester audienceTypeHarvester,
+            AudienceTypeRepository audienceTypeRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            AudienceTypeWriter audienceTypeWriter) {
         this.audienceTypeHarvester = audienceTypeHarvester;
         this.audienceTypeRepository = audienceTypeRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.audienceTypeWriter = audienceTypeWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -55,7 +60,6 @@ public class AudienceTypeService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(audienceTypeHarvester.getVersion().replace("-", ""));
@@ -68,26 +72,22 @@ public class AudienceTypeService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                audienceTypeRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<AudienceType> iterable = audienceTypeHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} audience-types", counter.get());
-                audienceTypeRepository.saveAll(iterable);
-
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(audienceTypeHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<AudienceType> items = new ArrayList<>();
+                audienceTypeHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} audience-types", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(audienceTypeHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
+
+                settings.setLatestHarvestDate(LocalDateTime.now());
+                settings.setLatestVersion(audienceTypeHarvester.getVersion());
+
+                audienceTypeWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest audience-types", e);
         }
     }

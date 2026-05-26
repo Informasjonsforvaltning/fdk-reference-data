@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,18 +25,23 @@ public class DistributionStatusService {
 
     private final DistributionStatusHarvester distributionStatusHarvester;
 
+    private final DistributionStatusWriter distributionStatusWriter;
+
     private final DistributionStatusRepository distributionStatusRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public DistributionStatusService(DistributionStatusHarvester distributionStatusHarvester,
-                                     DistributionStatusRepository distributionStatusRepository,
-                                     RDFSourceRepository rdfSourceRepository,
-                                     HarvestSettingsRepository harvestSettingsRepository) {
+    public DistributionStatusService(
+            DistributionStatusHarvester distributionStatusHarvester,
+            DistributionStatusRepository distributionStatusRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            DistributionStatusWriter distributionStatusWriter) {
         this.distributionStatusHarvester = distributionStatusHarvester;
         this.distributionStatusRepository = distributionStatusRepository;
+        this.distributionStatusWriter = distributionStatusWriter;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
     }
@@ -54,7 +59,6 @@ public class DistributionStatusService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(distributionStatusHarvester.getVersion().replace("-", ""));
@@ -67,26 +71,22 @@ public class DistributionStatusService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                distributionStatusRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<DistributionStatus> iterable = distributionStatusHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} distribution statuses", counter.get());
-                distributionStatusRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<DistributionStatus> items = new ArrayList<>();
+                distributionStatusHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} distribution statuses", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(distributionStatusHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(distributionStatusHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                distributionStatusWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest distribution statuses", e);
         }
     }

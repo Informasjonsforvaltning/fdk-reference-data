@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectWriter;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -30,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
             "spring.main.allow-bean-definition-overriding=true",
             "scheduling.enabled=false",
             "application.apiKey=my-api-key",
-            "application.catalogAdminUri=http://localhost:8080",
         })
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
@@ -56,7 +56,8 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
                 rdfSourceRepository,
-                conceptSubjectRepository);
+                conceptSubjectRepository,
+                new ConceptSubjectWriter(conceptSubjectRepository, rdfSourceRepository));
 
         conceptSubjectService.harvestAndSave();
     }
@@ -97,7 +98,7 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
                 .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(0, conceptSubjectRepository.count());
+        assertEquals(4, conceptSubjectRepository.count());
     }
 
     @Test

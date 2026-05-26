@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import no.fdk.referencedata.eu.conceptstatus.ConceptStatusWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -65,7 +66,8 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
                 new LocalConceptStatusHarvester("1"),
                 conceptStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         conceptStatusService.harvestAndSave(true);
     }

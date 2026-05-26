@@ -1,5 +1,6 @@
 package no.fdk.referencedata.iana.mediatype;
 
+import no.fdk.referencedata.iana.mediatype.MediaTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
@@ -37,7 +38,8 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         mediaTypeService.harvestAndSave();
 
@@ -72,7 +74,8 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         assertEquals(count, mediaTypeRepositorySpy.count());
     }

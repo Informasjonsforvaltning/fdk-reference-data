@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.currency.CurrencyWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.currency.Currency;
 import no.fdk.referencedata.eu.currency.CurrencyRepository;
@@ -47,7 +48,8 @@ class CurrencyQueryIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester("20241211-0"),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         currencyService.harvestAndSave(false);
     }

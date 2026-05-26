@@ -19,21 +19,21 @@ import java.util.Optional;
 @Service
 public class PublisherTypeService {
     private final String rdfSourceID = "publisher-type-source";
-
-    public PublisherTypeImporter publisherTypeImporter;
-
     private final PublisherTypeRepository publisherTypeRepository;
-
     private final RDFSourceRepository rdfSourceRepository;
+    private final PublisherTypeWriter publisherTypeWriter;
+    public PublisherTypeImporter publisherTypeImporter;
 
     @Autowired
     public PublisherTypeService(
             PublisherTypeImporter publisherTypeImporter,
             PublisherTypeRepository publisherTypeRepository,
-            RDFSourceRepository rdfSourceRepository) {
+            RDFSourceRepository rdfSourceRepository,
+            PublisherTypeWriter publisherTypeWriter) {
         this.publisherTypeImporter = publisherTypeImporter;
         this.publisherTypeRepository = publisherTypeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
+        this.publisherTypeWriter = publisherTypeWriter;
     }
 
     public List<PublisherType> getAll() {
@@ -58,14 +58,13 @@ public class PublisherTypeService {
         log.debug("Importing adms publisher-types");
         try {
             final List<PublisherType> publisherTypes = publisherTypeImporter.importFromSource();
-            publisherTypeRepository.deleteAll();
-            publisherTypeRepository.saveAll(publisherTypes);
 
             RDFSource rdfSource = new RDFSource();
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(publisherTypeImporter.getModel(), RDFFormat.TURTLE));
-            rdfSourceRepository.save(rdfSource);
-        } catch(Exception e) {
+
+            publisherTypeWriter.replaceAll(publisherTypes, rdfSource);
+        } catch (Exception e) {
             log.error("Unable to harvest adms publisher-types", e);
         }
     }

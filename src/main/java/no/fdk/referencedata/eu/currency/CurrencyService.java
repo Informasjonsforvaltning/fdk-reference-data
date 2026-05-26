@@ -13,14 +13,13 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Slf4j
@@ -28,19 +27,24 @@ public class CurrencyService {
     private final String dbSourceID = "currency-source";
 
     private final CurrencyHarvester currencyHarvester;
+
+    private final CurrencyWriter currencyWriter;
     private final CurrencyRepository currencyRepository;
     private final RDFSourceRepository rdfSourceRepository;
     private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
-    public CurrencyService(CurrencyHarvester currencyHarvester,
-                           CurrencyRepository currencyRepository,
-                           RDFSourceRepository rdfSourceRepository,
-                           HarvestSettingsRepository harvestSettingsRepository) {
+    public CurrencyService(
+            CurrencyHarvester currencyHarvester,
+            CurrencyRepository currencyRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            CurrencyWriter currencyWriter) {
         this.currencyHarvester = currencyHarvester;
         this.currencyRepository = currencyRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.currencyWriter = currencyWriter;
     }
 
     public boolean firstTime() {
@@ -53,7 +57,7 @@ public class CurrencyService {
 
     public Currencies getCurrencies() {
         return Currencies.builder().currencies(
-                StreamSupport.stream(currencyRepository.findAll().spliterator(), false)
+                currencyRepository.findAll().stream()
                         .sorted(Comparator.comparing(Currency::getUri))
                         .collect(Collectors.toList())).build();
     }
@@ -67,7 +71,6 @@ public class CurrencyService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(currencyHarvester.getVersion().replace("-", ""));
@@ -80,26 +83,22 @@ public class CurrencyService {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                currencyRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<Currency> iterable = currencyHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} currencies", counter.get());
-                currencyRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<Currency> items = new ArrayList<>();
+                currencyHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} currencies", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(currencyHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(currencyHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                currencyWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest currencies", e);
         }
     }

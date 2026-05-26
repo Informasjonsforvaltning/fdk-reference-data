@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.eu.frequency.FrequencyWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.frequency.Frequency;
 import no.fdk.referencedata.eu.frequency.FrequencyRepository;
@@ -50,7 +51,8 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
                 new LocalFrequencyHarvester("1"),
                 frequencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository);
+                harvestSettingsRepository,
+                new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         frequencyService.harvestAndSave(false);
     }

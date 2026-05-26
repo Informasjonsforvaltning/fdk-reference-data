@@ -16,11 +16,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 @Service
@@ -30,20 +29,25 @@ public class CountryService implements SearchableReferenceData {
 
     private final CountryHarvester countryHarvester;
 
+    private final CountryWriter countryWriter;
+
     private final CountryRepository countryRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public CountryService(CountryHarvester countryHarvester,
-                          CountryRepository countryRepository,
-                          RDFSourceRepository rdfSourceRepository,
-                          HarvestSettingsRepository harvestSettingsRepository) {
+    public CountryService(
+            CountryHarvester countryHarvester,
+            CountryRepository countryRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            CountryWriter countryWriter) {
         this.countryHarvester = countryHarvester;
         this.countryRepository = countryRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.harvestSettingsRepository = harvestSettingsRepository;
+        this.countryWriter = countryWriter;
     }
 
     public boolean firstTime() {
@@ -75,7 +79,6 @@ public class CountryService implements SearchableReferenceData {
                 .map(Country::toSearchHit);
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(countryHarvester.getVersion().replace("-", ""));
@@ -88,26 +91,22 @@ public class CountryService implements SearchableReferenceData {
 
             final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                countryRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<Country> iterable = countryHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} countries", counter.get());
-                countryRepository.saveAll(iterable);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<Country> items = new ArrayList<>();
+                countryHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} countries", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(countryHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
 
                 settings.setLatestHarvestDate(LocalDateTime.now());
                 settings.setLatestVersion(countryHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+
+                countryWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest countries", e);
         }
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectHarvester;
+import no.fdk.referencedata.digdir.conceptsubjects.LocalConceptSubjectHarvester;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeHarvester;
 import no.fdk.referencedata.digdir.evidencetype.LocalEvidenceTypeHarvester;
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeHarvester;
@@ -113,6 +115,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public DatasetTypeHarvester datasetTypeHarvester() {
         return new LocalDatasetTypeHarvester("1");
+    }
+
+    @Bean
+    public ConceptSubjectHarvester conceptSubjectHarvester(ApplicationSettings applicationSettings) {
+        return new LocalConceptSubjectHarvester(applicationSettings);
     }
 
     @Bean

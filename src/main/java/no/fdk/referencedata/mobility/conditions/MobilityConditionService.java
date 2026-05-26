@@ -13,10 +13,10 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +25,8 @@ public class MobilityConditionService {
 
     private final MobilityConditionHarvester mobilityConditionHarvester;
 
+    private final MobilityConditionWriter mobilityConditionWriter;
+
     private final MobilityConditionRepository mobilityConditionRepository;
 
     private final HarvestSettingsRepository harvestSettingsRepository;
@@ -32,12 +34,15 @@ public class MobilityConditionService {
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
-    public MobilityConditionService(MobilityConditionHarvester mobilityConditionHarvester,
-                                    MobilityConditionRepository mobilityConditionRepository,
-                                    RDFSourceRepository rdfSourceRepository,
-                                    HarvestSettingsRepository harvestSettingsRepository) {
+    public MobilityConditionService(
+            MobilityConditionHarvester mobilityConditionHarvester,
+            MobilityConditionRepository mobilityConditionRepository,
+            RDFSourceRepository rdfSourceRepository,
+            HarvestSettingsRepository harvestSettingsRepository,
+            MobilityConditionWriter mobilityConditionWriter) {
         this.mobilityConditionHarvester = mobilityConditionHarvester;
         this.mobilityConditionRepository = mobilityConditionRepository;
+        this.mobilityConditionWriter = mobilityConditionWriter;
         this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
     }
@@ -55,7 +60,6 @@ public class MobilityConditionService {
         }
     }
 
-    @Transactional
     public void harvestAndSave(boolean force) {
         try {
             final Version latestVersion = new Version(mobilityConditionHarvester.getVersion());
@@ -68,26 +72,22 @@ public class MobilityConditionService {
 
             final Version currentVersion = new Version(settings.getLatestVersion());
 
-            if(force || latestVersion.compareTo(currentVersion) > 0) {
-                mobilityConditionRepository.deleteAll();
-
-                final AtomicInteger counter = new AtomicInteger(0);
-                final Iterable<MobilityCondition> iterable = mobilityConditionHarvester.harvest().toIterable();
-                iterable.forEach(item -> counter.getAndIncrement());
-                log.info("Harvest and saving {} mobility conditions", counter.get());
-                mobilityConditionRepository.saveAll(iterable);
-
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(mobilityConditionHarvester.getVersion());
-                harvestSettingsRepository.save(settings);
+            if (force || latestVersion.compareTo(currentVersion) > 0) {
+                final List<MobilityCondition> items = new ArrayList<>();
+                mobilityConditionHarvester.harvest().toIterable().forEach(items::add);
+                log.info("Harvest and saving {} mobility conditions", items.size());
 
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(dbSourceID);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityConditionHarvester.getModel(), RDFFormat.TURTLE));
-                rdfSourceRepository.save(rdfSource);
+
+                settings.setLatestHarvestDate(LocalDateTime.now());
+                settings.setLatestVersion(mobilityConditionHarvester.getVersion());
+
+                mobilityConditionWriter.replaceAll(items, rdfSource, settings);
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Unable to harvest mobility conditions", e);
         }
     }
