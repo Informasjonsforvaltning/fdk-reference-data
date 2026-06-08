@@ -58,6 +58,9 @@ type Query {
   legalResourceTypes: [LegalResourceType!]!
   legalResourceTypeByCode(code: String!): LegalResourceType
 
+  languages: [Language!]!
+  languageByCode(code: String!): Language
+
   linguisticSystems: [LinguisticSystem!]!
   linguisticSystemByCode(code: String!): LinguisticSystem
 
@@ -263,6 +266,12 @@ type HighValueCategory {
 }
 
 type LegalResourceType {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type Language {
   uri: ID!
   code: String
   label: LocalizedStrings

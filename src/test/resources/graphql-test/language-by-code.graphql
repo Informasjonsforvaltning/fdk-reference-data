@@ -1,0 +1,7 @@
+query GetLanguageByCode($code: String!) {
+    languageByCode(code: $code) {
+        uri
+        code
+        label { en nb nn no }
+    }
+}
