@@ -42,7 +42,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        audienceTypeService.harvestAndSave(false);
+        audienceTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         audienceTypeRepository.findAll().forEach(audienceType -> counter.incrementAndGet());
@@ -56,7 +56,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         AudienceTypeService audienceTypeService = new AudienceTypeService(
                 new LocalAudienceTypeHarvester("132-0"),
                 audienceTypeRepository,
@@ -65,7 +65,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        audienceTypeService.harvestAndSave(false);
+        audienceTypeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
@@ -83,7 +83,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        audienceTypeService.harvestAndSave(false);
+        audienceTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
@@ -92,23 +92,23 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester("132-1"),
+                new LocalAudienceTypeHarvester("132-2"),
                 audienceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        audienceTypeService.harvestAndSave(false);
+        audienceTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("132-2", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

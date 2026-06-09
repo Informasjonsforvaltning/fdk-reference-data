@@ -42,7 +42,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        fileTypeService.harvestAndSave(false);
+        fileTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         fileTypeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -55,7 +55,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester("20210512-6"),
                 fileTypeRepository,
@@ -64,7 +64,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave(false);
+        fileTypeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
@@ -82,7 +82,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave(false);
+        fileTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
@@ -91,23 +91,23 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester("20210512-6"),
+                new LocalFileTypeHarvester("20210513-0"),
                 fileTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave(false);
+        fileTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20210513-0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

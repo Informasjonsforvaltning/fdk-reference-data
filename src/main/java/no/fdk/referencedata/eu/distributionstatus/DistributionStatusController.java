@@ -35,7 +35,7 @@ public class DistributionStatusController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateDistributionStatuses() {
-        distributionStatusService.harvestAndSave(true);
+        distributionStatusService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

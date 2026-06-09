@@ -40,7 +40,7 @@ public class ServiceChannelTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateServiceChannelTypes() {
-        serviceChannelTypeService.harvestAndSave(true);
+        serviceChannelTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

@@ -30,7 +30,7 @@ public class ConceptStatusController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateConceptStatuses() {
-        conceptStatusService.harvestAndSave(true);
+        conceptStatusService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

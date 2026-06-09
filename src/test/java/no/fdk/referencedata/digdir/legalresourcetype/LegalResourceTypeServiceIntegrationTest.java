@@ -54,7 +54,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 harvestSettingsRepository,
                 new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        legalResourceTypeService.harvestAndSave(false);
+        legalResourceTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         legalResourceTypeRepository.findAll().forEach(legalResourceType -> counter.incrementAndGet());
@@ -67,7 +67,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
                 new LocalLegalResourceTypeHarvester("2023-08-17"),
                 legalResourceTypeRepository,
@@ -75,14 +75,15 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 harvestSettingsRepository,
                 new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        legalResourceTypeService.harvestAndSave(false);
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
+        legalResourceTypeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(LEGAL_RESOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("2023-08-17", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isBefore(firstHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         legalResourceTypeService = new LegalResourceTypeService(
@@ -92,32 +93,33 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 harvestSettingsRepository,
                 new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        legalResourceTypeService.harvestAndSave(false);
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
+        legalResourceTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(LEGAL_RESOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("2023-08-18", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(secondHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester("2023-08-16"),
+                new LocalLegalResourceTypeHarvester("2023-08-18"),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        legalResourceTypeService.harvestAndSave(false);
+        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
+        legalResourceTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(LEGAL_RESOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("2023-08-18", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(secondHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

@@ -43,7 +43,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         datasetTypeRepository.findAll().forEach(accessRight -> counter.incrementAndGet());
@@ -56,7 +56,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         DatasetTypeService accessRightService = new DatasetTypeService(
                 new LocalDatasetTypeHarvester("20200923-1"),
                 datasetTypeRepository,
@@ -65,7 +65,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
@@ -83,7 +83,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
@@ -92,7 +92,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         accessRightService = new DatasetTypeService(
                 new LocalDatasetTypeHarvester("20200924-0"),
                 datasetTypeRepository,
@@ -101,14 +101,14 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

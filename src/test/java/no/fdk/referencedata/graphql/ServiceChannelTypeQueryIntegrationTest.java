@@ -55,7 +55,7 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        serviceChannelTypeService.harvestAndSave(false);
+        serviceChannelTypeService.harvestAndSave();
     }
 
     @Test

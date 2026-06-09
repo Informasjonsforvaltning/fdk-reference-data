@@ -67,7 +67,7 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
                 harvestSettingsRepository,
                 new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        plannedAvailabilityService.harvestAndSave(true);
+        plannedAvailabilityService.harvestAndSave();
     }
 
     @Test
@@ -116,7 +116,7 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
     }
 
     @Test
-    public void test_if_post_planned_availabilities_executes_a_force_update() {
+    public void test_if_post_planned_availabilities_executes_a_harvest() {
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
@@ -132,7 +132,7 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertEquals("20220715-0", harvestSettingsAfter.getLatestVersion());
+        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

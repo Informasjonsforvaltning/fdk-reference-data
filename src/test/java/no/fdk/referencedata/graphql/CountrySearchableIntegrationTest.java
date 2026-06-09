@@ -68,7 +68,7 @@ class CountrySearchableIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        countryService.harvestAndSave(false);
+        countryService.harvestAndSave();
 
         ContinentService continentService = new ContinentService(
                 new LocalContinentHarvester("1"),
@@ -77,7 +77,7 @@ class CountrySearchableIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        continentService.harvestAndSave(false);
+        continentService.harvestAndSave();
     }
 
     @Test

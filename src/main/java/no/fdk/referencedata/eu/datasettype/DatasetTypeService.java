@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -59,33 +58,26 @@ public class DatasetTypeService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(datasetTypeHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATASET_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DATASET_TYPE.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<DatasetType> items = new ArrayList<>();
+            datasetTypeHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} dataset-types", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<DatasetType> items = new ArrayList<>();
-                datasetTypeHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} dataset-types", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(datasetTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(datasetTypeHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(datasetTypeHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(datasetTypeHarvester.getVersion());
-
-                datasetTypeWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            datasetTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest dataset-types", e);
         }

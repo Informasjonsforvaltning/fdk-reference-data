@@ -53,7 +53,7 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
     }
 
     @Test

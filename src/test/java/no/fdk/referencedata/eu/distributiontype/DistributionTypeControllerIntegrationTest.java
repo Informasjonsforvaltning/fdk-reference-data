@@ -67,7 +67,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
                 harvestSettingsRepository,
                 new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        distributionTypeService.harvestAndSave(true);
+        distributionTypeService.harvestAndSave();
     }
 
     @Test

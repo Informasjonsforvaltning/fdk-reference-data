@@ -56,7 +56,7 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        EuroVocService.harvestAndSave(false);
+        EuroVocService.harvestAndSave();
     }
 
     @Test

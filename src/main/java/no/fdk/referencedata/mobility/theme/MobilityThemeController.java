@@ -38,7 +38,7 @@ public class MobilityThemeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateMobilityThemes() {
-        mobilityThemeService.harvestAndSave(true);
+        mobilityThemeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

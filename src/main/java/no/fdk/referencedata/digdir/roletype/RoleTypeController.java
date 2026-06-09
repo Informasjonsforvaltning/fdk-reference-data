@@ -40,7 +40,7 @@ public class RoleTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateRoleTypes() {
-        roleTypeService.harvestAndSave(true);
+        roleTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

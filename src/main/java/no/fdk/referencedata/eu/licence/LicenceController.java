@@ -35,7 +35,7 @@ public class LicenceController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateLicences() {
-        licenceService.harvestAndSave(true);
+        licenceService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

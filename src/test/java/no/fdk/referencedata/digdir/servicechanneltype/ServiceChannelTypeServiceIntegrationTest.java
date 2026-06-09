@@ -46,7 +46,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 harvestSettingsRepository,
                 new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        serviceChannelTypeService.harvestAndSave(false);
+        serviceChannelTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         serviceChannelTypeRepository.findAll().forEach(serviceChannelType -> counter.incrementAndGet());
@@ -59,7 +59,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
                 new LocalServiceChannelTypeHarvester("132-0"),
                 serviceChannelTypeRepository,
@@ -68,7 +68,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        serviceChannelTypeService.harvestAndSave(false);
+        serviceChannelTypeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(SERVICE_CHANNEL_TYPE.name()).orElseThrow();
@@ -86,7 +86,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        serviceChannelTypeService.harvestAndSave(false);
+        serviceChannelTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(SERVICE_CHANNEL_TYPE.name()).orElseThrow();
@@ -95,23 +95,23 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester("132-1"),
+                new LocalServiceChannelTypeHarvester("132-2"),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        serviceChannelTypeService.harvestAndSave(false);
+        serviceChannelTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(SERVICE_CHANNEL_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("132-2", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

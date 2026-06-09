@@ -40,7 +40,7 @@ public class MainActivityController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateMainActivities() {
-        mainActivityService.harvestAndSave(true);
+        mainActivityService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -59,33 +58,26 @@ public class PlannedAvailabilityService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(plannedAvailabilityHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.PLANNED_AVAILABILITY.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<PlannedAvailability> items = new ArrayList<>();
+            plannedAvailabilityHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} planned availabilities", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<PlannedAvailability> items = new ArrayList<>();
-                plannedAvailabilityHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} planned availabilities", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(plannedAvailabilityHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(plannedAvailabilityHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(plannedAvailabilityHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(plannedAvailabilityHarvester.getVersion());
-
-                plannedAvailabilityWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            plannedAvailabilityWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest planned availabilities", e);
         }

@@ -66,7 +66,7 @@ public class CountryControllerIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        countryService.harvestAndSave(true);
+        countryService.harvestAndSave();
     }
 
     @Test

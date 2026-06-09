@@ -55,7 +55,7 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        roleTypeService.harvestAndSave(false);
+        roleTypeService.harvestAndSave();
     }
 
     @Test

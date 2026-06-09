@@ -38,7 +38,7 @@ public class MobilityConditionController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateMobilityConditions() {
-        mobilityConditionService.harvestAndSave(true);
+        mobilityConditionService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

@@ -54,7 +54,7 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        frequencyService.harvestAndSave(false);
+        frequencyService.harvestAndSave();
     }
 
     @Test

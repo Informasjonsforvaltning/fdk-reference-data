@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -60,33 +59,26 @@ public class ServiceChannelTypeService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(serviceChannelTypeHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.SERVICE_CHANNEL_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.SERVICE_CHANNEL_TYPE.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<ServiceChannelType> items = new ArrayList<>();
+            serviceChannelTypeHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} service-channel-types", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<ServiceChannelType> items = new ArrayList<>();
-                serviceChannelTypeHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} service-channel-types", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(serviceChannelTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(serviceChannelTypeHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(serviceChannelTypeHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(serviceChannelTypeHarvester.getVersion());
-
-                serviceChannelTypeWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            serviceChannelTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest service-channel-types", e);
         }

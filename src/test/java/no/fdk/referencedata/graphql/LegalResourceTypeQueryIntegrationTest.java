@@ -57,7 +57,7 @@ class LegalResourceTypeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        legalResourceTypeService.harvestAndSave(false);
+        legalResourceTypeService.harvestAndSave();
     }
 
     @Test

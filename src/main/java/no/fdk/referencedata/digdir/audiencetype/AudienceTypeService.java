@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -60,33 +59,26 @@ public class AudienceTypeService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(audienceTypeHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.AUDIENCE_TYPE.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<AudienceType> items = new ArrayList<>();
+            audienceTypeHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} audience-types", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<AudienceType> items = new ArrayList<>();
-                audienceTypeHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} audience-types", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(audienceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(audienceTypeHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(audienceTypeHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(audienceTypeHarvester.getVersion());
-
-                audienceTypeWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            audienceTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest audience-types", e);
         }

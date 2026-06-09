@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -59,33 +58,26 @@ public class DistributionTypeService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(distributionTypeHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DISTRIBUTION_TYPE.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<DistributionType> items = new ArrayList<>();
+            distributionTypeHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} distribution-types", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<DistributionType> items = new ArrayList<>();
-                distributionTypeHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} distribution-types", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(distributionTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(distributionTypeHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(distributionTypeHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(distributionTypeHarvester.getVersion());
-
-                distributionTypeWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            distributionTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest distribution-types", e);
         }

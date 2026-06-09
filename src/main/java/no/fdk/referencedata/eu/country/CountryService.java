@@ -10,7 +10,6 @@ import no.fdk.referencedata.search.SearchableReferenceData;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -79,33 +78,26 @@ public class CountryService implements SearchableReferenceData {
                 .map(Country::toSearchHit);
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(countryHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.COUNTRY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.COUNTRY.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<Country> items = new ArrayList<>();
+            countryHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} countries", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<Country> items = new ArrayList<>();
-                countryHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} countries", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(countryHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(countryHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(countryHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(countryHarvester.getVersion());
-
-                countryWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            countryWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest countries", e);
         }

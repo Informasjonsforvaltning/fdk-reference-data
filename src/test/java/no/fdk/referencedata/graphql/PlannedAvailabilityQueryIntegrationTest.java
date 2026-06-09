@@ -54,7 +54,7 @@ class PlannedAvailabilityQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        plannedAvailabilityService.harvestAndSave(false);
+        plannedAvailabilityService.harvestAndSave();
     }
 
     @Test

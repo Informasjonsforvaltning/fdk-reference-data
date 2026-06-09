@@ -66,7 +66,7 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
                 harvestSettingsRepository,
                 new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        relationshipWithSourceTypeService.harvestAndSave(true);
+        relationshipWithSourceTypeService.harvestAndSave();
     }
 
     @Test

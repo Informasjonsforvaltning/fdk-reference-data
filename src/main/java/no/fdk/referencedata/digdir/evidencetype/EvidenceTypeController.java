@@ -40,7 +40,7 @@ public class EvidenceTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateEvidenceTypes() {
-        evidenceTypeService.harvestAndSave(true);
+        evidenceTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

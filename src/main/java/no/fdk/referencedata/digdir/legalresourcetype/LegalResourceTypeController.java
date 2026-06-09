@@ -40,7 +40,7 @@ public class LegalResourceTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateLegalResourceTypes() {
-        legalResourceTypeService.harvestAndSave(true);
+        legalResourceTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

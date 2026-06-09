@@ -38,7 +38,7 @@ public class MobilityDataStandardController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateMobilityDataStandards() {
-        mobilityDataStandardService.harvestAndSave(true);
+        mobilityDataStandardService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

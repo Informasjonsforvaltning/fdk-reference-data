@@ -55,7 +55,7 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mainActivityService.harvestAndSave(false);
+        mainActivityService.harvestAndSave();
     }
 
     @Test

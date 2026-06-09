@@ -35,7 +35,7 @@ public class DatasetTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateDatasetTypes() {
-        datasetTypeService.harvestAndSave(true);
+        datasetTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

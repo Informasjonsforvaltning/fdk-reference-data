@@ -35,7 +35,7 @@ public class ContinentController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateContinents() {
-        continentService.harvestAndSave(true);
+        continentService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

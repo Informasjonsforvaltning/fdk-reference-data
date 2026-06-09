@@ -53,7 +53,7 @@ class ContinentQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        continentService.harvestAndSave(false);
+        continentService.harvestAndSave();
     }
 
     @Test

@@ -55,7 +55,7 @@ class MobilityConditionQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mobilityConditionService.harvestAndSave(false);
+        mobilityConditionService.harvestAndSave();
     }
 
     @Test

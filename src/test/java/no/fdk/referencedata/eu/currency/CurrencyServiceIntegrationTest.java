@@ -43,7 +43,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        currencyService.harvestAndSave(true);
+        currencyService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         currencyRepository.findAll().forEach(status -> counter.incrementAndGet());
@@ -56,7 +56,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         CurrencyService currencyService = new CurrencyService(
                 new LocalCurrencyHarvester("2"),
                 currencyRepository,
@@ -65,7 +65,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        currencyService.harvestAndSave(true);
+        currencyService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(CURRENCY.name()).orElseThrow();
@@ -83,7 +83,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
                 new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        currencyService.harvestAndSave(false);
+        currencyService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(CURRENCY.name()).orElseThrow();
@@ -92,23 +92,23 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         currencyService = new CurrencyService(
-                new LocalCurrencyHarvester("20210715-0"),
+                new LocalCurrencyHarvester("20220715-1"),
                 currencyRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        currencyService.harvestAndSave(false);
+        currencyService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(CURRENCY.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20220715-1", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

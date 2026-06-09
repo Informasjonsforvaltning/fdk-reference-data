@@ -55,7 +55,7 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mobilityThemeService.harvestAndSave(false);
+        mobilityThemeService.harvestAndSave();
     }
 
     @Test

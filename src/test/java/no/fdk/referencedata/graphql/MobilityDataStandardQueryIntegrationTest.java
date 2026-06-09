@@ -55,7 +55,7 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mobilityDataStandardService.harvestAndSave(false);
+        mobilityDataStandardService.harvestAndSave();
     }
 
     @Test

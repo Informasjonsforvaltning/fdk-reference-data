@@ -51,7 +51,7 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        highValueCategoryService.harvestAndSave(false);
+        highValueCategoryService.harvestAndSave();
     }
 
     @Test

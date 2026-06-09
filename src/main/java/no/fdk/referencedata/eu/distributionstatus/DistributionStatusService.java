@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -59,33 +58,26 @@ public class DistributionStatusService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(distributionStatusHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DISTRIBUTION_STATUS.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DISTRIBUTION_STATUS.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<DistributionStatus> items = new ArrayList<>();
+            distributionStatusHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} distribution statuses", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<DistributionStatus> items = new ArrayList<>();
-                distributionStatusHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} distribution statuses", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(distributionStatusHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(distributionStatusHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(distributionStatusHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(distributionStatusHarvester.getVersion());
-
-                distributionStatusWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            distributionStatusWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest distribution statuses", e);
         }

@@ -67,7 +67,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
                 harvestSettingsRepository,
                 new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        datasetTypeService.harvestAndSave(true);
+        datasetTypeService.harvestAndSave();
     }
 
     @Test

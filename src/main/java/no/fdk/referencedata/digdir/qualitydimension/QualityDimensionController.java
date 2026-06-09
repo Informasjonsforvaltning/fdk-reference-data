@@ -40,7 +40,7 @@ public class QualityDimensionController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateQualityDimensions() {
-        qualityDimensionService.harvestAndSave(true);
+        qualityDimensionService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

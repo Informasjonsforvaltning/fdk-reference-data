@@ -64,7 +64,7 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
                 harvestSettingsRepository,
                 new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        highValueCategoryService.harvestAndSave(true);
+        highValueCategoryService.harvestAndSave();
     }
 
     @Test

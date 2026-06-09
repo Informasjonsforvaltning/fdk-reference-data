@@ -35,7 +35,7 @@ public class DistributionTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateDistributionTypes() {
-        distributionTypeService.harvestAndSave(true);
+        distributionTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

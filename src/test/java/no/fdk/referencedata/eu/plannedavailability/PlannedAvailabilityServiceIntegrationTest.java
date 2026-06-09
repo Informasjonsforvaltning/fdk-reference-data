@@ -1,6 +1,5 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
-import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -43,7 +42,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 harvestSettingsRepository,
                 new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        plannedAvailabilityService.harvestAndSave(true);
+        plannedAvailabilityService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         plannedAvailabilityRepository.findAll().forEach(status -> counter.incrementAndGet());
@@ -56,7 +55,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
                 new LocalPlannedAvailabilityHarvester("2"),
                 plannedAvailabilityRepository,
@@ -65,7 +64,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        plannedAvailabilityService.harvestAndSave(true);
+        plannedAvailabilityService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(PLANNED_AVAILABILITY.name()).orElseThrow();
@@ -83,7 +82,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
                 new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        plannedAvailabilityService.harvestAndSave(false);
+        plannedAvailabilityService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(PLANNED_AVAILABILITY.name()).orElseThrow();
@@ -92,23 +91,23 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("20210715-0"),
+                new LocalPlannedAvailabilityHarvester("20220715-1"),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        plannedAvailabilityService.harvestAndSave(false);
+        plannedAvailabilityService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(PLANNED_AVAILABILITY.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20220715-1", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

@@ -66,7 +66,7 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        continentService.harvestAndSave(true);
+        continentService.harvestAndSave();
     }
 
     @Test
