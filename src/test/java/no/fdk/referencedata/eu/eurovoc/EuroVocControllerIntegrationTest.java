@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -30,7 +27,6 @@ import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZ
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -50,9 +46,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private RestClient restClient;
 
     @BeforeEach
@@ -65,8 +58,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository));
 
         EuroVocService.harvestAndSave();
     }
@@ -99,8 +91,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_post_eurovocs_fails_without_api_key() {
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -110,16 +100,12 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_data_themes_executes_a_force_update() {
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -129,8 +115,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

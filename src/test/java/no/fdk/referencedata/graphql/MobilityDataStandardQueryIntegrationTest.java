@@ -8,7 +8,6 @@ import no.fdk.referencedata.mobility.datastandard.MobilityDataStandard;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardRepository;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MobilityDataStandardRepository mobilityDataStandardRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -52,8 +48,7 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository));
 
         mobilityDataStandardService.harvestAndSave();
     }

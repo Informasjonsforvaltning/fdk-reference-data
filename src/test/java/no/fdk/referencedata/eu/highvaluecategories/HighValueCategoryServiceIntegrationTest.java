@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.highvaluecategories.LocalHighValueCategoryHarvester.HIGH_VALUE_CATEGORIES_SIZE;
-import static no.fdk.referencedata.settings.Settings.HIGH_VALUE_CATEGORY;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -31,9 +28,6 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
     @Autowired
     private HighValueCategoryRepository highValueCategoryRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -42,8 +36,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
                 new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository));
 
         highValueCategoryService.harvestAndSave();
 
@@ -55,59 +48,6 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         assertEquals("http://data.europa.eu/bna/c_164e0bf5", first.getUri());
         assertEquals("c_164e0bf5", first.getCode());
         assertEquals("Meteorological", first.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester(),
-                highValueCategoryRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        highValueCategoryService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester(),
-                highValueCategoryRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        highValueCategoryService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester(),
-                highValueCategoryRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        highValueCategoryService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test
@@ -130,8 +70,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
                 new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository));
 
         assertEquals(count, highValueCategoryRepositorySpy.count());
     }

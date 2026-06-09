@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -44,9 +41,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
     private HighValueCategoryRepository highValueCategoryRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -61,8 +55,7 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
                 new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository));
 
         highValueCategoryService.harvestAndSave();
     }
@@ -101,8 +94,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
     public void test_if_post_high_value_categories_fails_without_api_key() {
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -114,16 +105,12 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_high_value_categories_executes_a_force_update() {
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -135,8 +122,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

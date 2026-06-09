@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -29,7 +26,6 @@ import java.time.LocalDateTime;
 import static no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester.DISTRIBUTION_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -47,9 +43,6 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
     private DistributionTypeRepository distributionTypeRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -64,8 +57,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
                 new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository));
 
         distributionTypeService.harvestAndSave();
     }
@@ -98,8 +90,6 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
     public void test_if_post_distribution_types_fails_without_api_key() {
         assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -109,16 +99,12 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_distribution_types_executes_a_force_update() {
         assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -128,8 +114,6 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(DISTRIBUTION_TYPES_SIZE, distributionTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

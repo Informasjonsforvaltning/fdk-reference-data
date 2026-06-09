@@ -3,8 +3,6 @@ package no.fdk.referencedata.eu.filetype;
 import no.fdk.referencedata.eu.filetype.FileTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDateTime;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.FILE_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -28,9 +25,6 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private FileTypeRepository fileTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -39,8 +33,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester(),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
 
@@ -55,59 +48,6 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        FileTypeService fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester(),
-                fileTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester(),
-                fileTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester(),
-                fileTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        fileTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(FILE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         FileTypeRepository fileTypeRepositorySpy = spy(fileTypeRepository);
 
@@ -116,7 +56,6 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 .code("FIL")
                 .mediaType("text/fil")
                 .build());
-
 
         long count = fileTypeRepositorySpy.count();
         assertTrue(count > 0);
@@ -127,8 +66,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester(),
                 fileTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository));
 
         assertEquals(count, fileTypeRepositorySpy.count());
     }

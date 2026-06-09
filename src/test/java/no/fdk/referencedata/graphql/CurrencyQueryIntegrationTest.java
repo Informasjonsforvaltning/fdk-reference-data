@@ -7,7 +7,6 @@ import no.fdk.referencedata.eu.currency.CurrencyRepository;
 import no.fdk.referencedata.eu.currency.CurrencyService;
 import no.fdk.referencedata.eu.currency.LocalCurrencyHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +38,13 @@ class CurrencyQueryIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @BeforeEach
     public void setup() {
         CurrencyService currencyService = new CurrencyService(
                 new LocalCurrencyHarvester(),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
+                new CurrencyWriter(currencyRepository, rdfSourceRepository));
 
         currencyService.harvestAndSave();
     }

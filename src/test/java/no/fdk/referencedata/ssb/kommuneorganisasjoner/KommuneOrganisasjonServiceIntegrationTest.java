@@ -58,7 +58,6 @@ public class KommuneOrganisasjonServiceIntegrationTest extends AbstractContainer
                 .build();
         kommuneOrganisasjonRepositorySpy.save(kommuneOrganisasjon);
 
-
         long count = kommuneOrganisasjonRepositorySpy.count();
         assertTrue(count > 0);
 

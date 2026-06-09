@@ -4,8 +4,6 @@ import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester.QUALITY_DIMENSIONS_SIZE;
-import static no.fdk.referencedata.settings.Settings.QUALITY_DIMENSION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,15 +31,11 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
     @Autowired
     private QualityDimensionRepository qualityDimensionRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @BeforeEach
     public void setup() {
         qualityDimensionRepository.deleteAll();
-        harvestSettingsRepository.deleteAll();
     }
 
     @Test
@@ -51,8 +44,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository));
 
         qualityDimensionService.harvestAndSave();
 
@@ -67,59 +59,6 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        QualityDimensionService qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester(),
-                qualityDimensionRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        qualityDimensionService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(QUALITY_DIMENSION.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester(),
-                qualityDimensionRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        qualityDimensionService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(QUALITY_DIMENSION.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester(),
-                qualityDimensionRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        qualityDimensionService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(QUALITY_DIMENSION.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         QualityDimensionRepository qualityDimensionRepositorySpy = spy(this.qualityDimensionRepository);
 
@@ -130,7 +69,6 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 .build();
         qualityDimensionRepositorySpy.save(qualityDimension);
 
-
         long count = qualityDimensionRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -140,8 +78,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester(),
                 qualityDimensionRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository));
 
         assertEquals(count, qualityDimensionRepositorySpy.count());
     }

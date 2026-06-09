@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,19 +26,16 @@ public class EuroVocService {
 
     private final RDFSourceRepository rdfSourceRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     public EuroVocService(
             EuroVocHarvester euroVocHarvester,
             EuroVocRepository euroVocRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             EuroVocWriter euroVocWriter) {
         this.euroVocHarvester = euroVocHarvester;
         this.euroVocRepository = euroVocRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.euroVocWriter = euroVocWriter;
     }
 
@@ -61,10 +54,6 @@ public class EuroVocService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EURO_VOC.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.EURO_VOC.name())
-                            .build());
 
             final List<EuroVoc> items = new ArrayList<>();
             euroVocHarvester.harvest().toIterable().forEach(items::add);
@@ -74,9 +63,8 @@ public class EuroVocService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(euroVocHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            euroVocWriter.replaceAll(items, rdfSource, settings);
+            euroVocWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest eurovoc", e);
         }

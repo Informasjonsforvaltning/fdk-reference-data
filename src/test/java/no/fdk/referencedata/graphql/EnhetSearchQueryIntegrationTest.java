@@ -11,7 +11,6 @@ import no.fdk.referencedata.geonorge.administrativeenheter.LocalEnhetHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchRequest;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +46,6 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private GraphQlTester graphQlTester;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -61,8 +57,7 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
                 enhetRepository,
                 enhetVariantRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository));
 
         enhetService.harvestAndSave();
     }

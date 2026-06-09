@@ -4,9 +4,6 @@ import no.fdk.referencedata.iana.mediatype.MediaTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -28,7 +25,6 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -45,9 +41,6 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MediaTypeRepository mediaTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private RestClient restClient;
 
     @Autowired
@@ -63,8 +56,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository));
 
         mediaTypeService.harvestAndSave();
     }
@@ -113,8 +105,6 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_post_media_types_fails_without_api_key() {
         assertEquals(1441, mediaTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MEDIA_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -124,16 +114,12 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(1441, mediaTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MEDIA_TYPE.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_media_types_executes_a_force_update() {
         assertEquals(1441, mediaTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MEDIA_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -143,8 +129,6 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1441, mediaTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MEDIA_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

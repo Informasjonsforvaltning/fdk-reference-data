@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,6 @@ public class DatasetTypeService {
 
     private final DatasetTypeRepository datasetTypeRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -36,12 +31,10 @@ public class DatasetTypeService {
             DatasetTypeHarvester datasetTypeHarvester,
             DatasetTypeRepository datasetTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             DatasetTypeWriter datasetTypeWriter) {
         this.datasetTypeHarvester = datasetTypeHarvester;
         this.datasetTypeRepository = datasetTypeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.datasetTypeWriter = datasetTypeWriter;
     }
 
@@ -60,10 +53,6 @@ public class DatasetTypeService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATASET_TYPE.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.DATASET_TYPE.name())
-                            .build());
 
             final List<DatasetType> items = new ArrayList<>();
             datasetTypeHarvester.harvest().toIterable().forEach(items::add);
@@ -73,9 +62,8 @@ public class DatasetTypeService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(datasetTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            datasetTypeWriter.replaceAll(items, rdfSource, settings);
+            datasetTypeWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest dataset-types", e);
         }

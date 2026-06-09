@@ -4,7 +4,6 @@ import no.fdk.referencedata.geonorge.administrativeenheter.EnhetWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -20,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static no.fdk.referencedata.geonorge.administrativeenheter.LocalEnhetHarvester.ADMINISTRATIVE_ENHETER_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -42,9 +40,6 @@ public class EnhetControllerIntegrationTest extends AbstractContainerTest {
     private EnhetVariantRepository enhetVariantRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -60,8 +55,7 @@ public class EnhetControllerIntegrationTest extends AbstractContainerTest {
                 enhetRepository,
                 enhetVariantRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository));
 
         enhetService.harvestAndSave();
     }

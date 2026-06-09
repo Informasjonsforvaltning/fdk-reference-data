@@ -61,7 +61,6 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
                 .build();
         conceptSubjectRepositorySpy.save(conceptSubject);
 
-
         long count = conceptSubjectRepositorySpy.count();
         assertTrue(count > 0);
 

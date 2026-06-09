@@ -9,7 +9,6 @@ import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSo
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeRepository;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +38,6 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
     @Autowired
     private RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -53,8 +49,7 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
                 new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository));
 
         relationshipWithSourceTypeService.harvestAndSave();
     }

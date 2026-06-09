@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -27,7 +24,6 @@ import java.time.LocalDateTime;
 import static no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester.FREQUENCIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -45,9 +41,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
     private FrequencyRepository frequencyRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -62,8 +55,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
                 new LocalFrequencyHarvester(),
                 frequencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
+                new FrequencyWriter(frequencyRepository, rdfSourceRepository));
 
         frequencyService.harvestAndSave();
     }
@@ -102,8 +94,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_post_frequencies_fails_without_api_key() {
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -115,16 +105,12 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_frequencies_executes_a_force_update() {
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -136,8 +122,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

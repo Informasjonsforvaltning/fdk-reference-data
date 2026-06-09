@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.datatheme.DataThemeWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester.DATA_THEMES_SIZE;
-import static no.fdk.referencedata.settings.Settings.DATA_THEME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -33,17 +30,13 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @Test
     public void test_if_harvest_persists_datathemes() {
         DataThemeService fileTypeService = new DataThemeService(
                 new LocalDataThemeHarvester(),
                 dataThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
 
@@ -61,59 +54,6 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        DataThemeService dataThemeService = new DataThemeService(
-                new LocalDataThemeHarvester(),
-                dataThemeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        dataThemeService = new DataThemeService(
-                new LocalDataThemeHarvester(),
-                dataThemeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        dataThemeService = new DataThemeService(
-                new LocalDataThemeHarvester(),
-                dataThemeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         DataThemeRepository dataThemeRepositorySpy = spy(this.dataThemeRepository);
 
@@ -122,7 +62,6 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 .code("THEME")
                 .label(Map.of("en", "My theme"))
                 .build());
-
 
         long count = dataThemeRepositorySpy.count();
         assertTrue(count > 0);
@@ -133,8 +72,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester(),
                 dataThemeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository));
 
         assertEquals(count, dataThemeRepositorySpy.count());
     }

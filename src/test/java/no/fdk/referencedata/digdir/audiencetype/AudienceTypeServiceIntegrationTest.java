@@ -4,8 +4,6 @@ import no.fdk.referencedata.digdir.audiencetype.AudienceTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.AUDIENCE_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -28,9 +25,6 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private AudienceTypeRepository audienceTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -39,8 +33,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository));
 
         audienceTypeService.harvestAndSave();
 
@@ -56,59 +49,6 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        AudienceTypeService audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester(),
-                audienceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        audienceTypeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester(),
-                audienceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        audienceTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester(),
-                audienceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        audienceTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         AudienceTypeRepository audienceTypeRepositorySpy = spy(this.audienceTypeRepository);
 
@@ -119,7 +59,6 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         audienceTypeRepositorySpy.save(audienceType);
 
-
         long count = audienceTypeRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -129,8 +68,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester(),
                 audienceTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository));
 
         assertEquals(count, audienceTypeRepositorySpy.count());
     }

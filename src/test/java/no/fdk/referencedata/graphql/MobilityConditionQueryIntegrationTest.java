@@ -8,7 +8,6 @@ import no.fdk.referencedata.mobility.conditions.MobilityCondition;
 import no.fdk.referencedata.mobility.conditions.MobilityConditionRepository;
 import no.fdk.referencedata.mobility.conditions.MobilityConditionService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ class MobilityConditionQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MobilityConditionRepository mobilityConditionRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -52,8 +48,7 @@ class MobilityConditionQueryIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityConditionHarvester(),
                 mobilityConditionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository));
 
         mobilityConditionService.harvestAndSave();
     }

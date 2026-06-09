@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.eurovoc.EuroVocWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +15,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZE;
-import static no.fdk.referencedata.settings.Settings.EURO_VOC;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -34,17 +31,13 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @Test
     public void test_if_harvest_persists_eurovoc() {
         EuroVocService euroVocService = new EuroVocService(
                 new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository));
 
         euroVocService.harvestAndSave();
 
@@ -61,59 +54,6 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        EuroVocService euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester(),
-                euroVocRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        euroVocService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester(),
-                euroVocRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        euroVocService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester(),
-                euroVocRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        euroVocService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         EuroVocRepository EuroVocRepositorySpy = spy(this.euroVocRepository);
 
@@ -122,7 +62,6 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
                 .code("1111")
                 .label(Map.of("en", "My EuroVoc"))
                 .build());
-
 
         long count = EuroVocRepositorySpy.count();
         assertTrue(count > 0);
@@ -133,8 +72,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEuroVocHarvester(),
                 EuroVocRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository));
 
         assertEquals(count, EuroVocRepositorySpy.count());
     }

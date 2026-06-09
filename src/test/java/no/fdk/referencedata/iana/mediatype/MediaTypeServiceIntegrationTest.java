@@ -3,7 +3,6 @@ package no.fdk.referencedata.iana.mediatype;
 import no.fdk.referencedata.iana.mediatype.MediaTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = "scheduling.enabled=false")
 @ActiveProfiles("test")
@@ -26,9 +24,6 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
 
     @Autowired
     private MediaTypeRepository mediaTypeRepository;
-
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
@@ -38,8 +33,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository));
 
         mediaTypeService.harvestAndSave();
 
@@ -74,8 +68,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository));
 
         assertEquals(count, mediaTypeRepositorySpy.count());
     }

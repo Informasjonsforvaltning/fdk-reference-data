@@ -4,8 +4,6 @@ import no.fdk.referencedata.digdir.roletype.RoleTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.ROLE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,9 +29,6 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private RoleTypeRepository roleTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -43,8 +37,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester(),
                 roleTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository));
 
         roleTypeService.harvestAndSave();
 
@@ -59,59 +52,6 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        RoleTypeService roleTypeService = new RoleTypeService(
-                new LocalRoleTypeHarvester(),
-                roleTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        roleTypeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(ROLE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        roleTypeService = new RoleTypeService(
-                new LocalRoleTypeHarvester(),
-                roleTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        roleTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(ROLE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        roleTypeService = new RoleTypeService(
-                new LocalRoleTypeHarvester(),
-                roleTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        roleTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(ROLE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         RoleTypeRepository roleTypeRepositorySpy = spy(this.roleTypeRepository);
 
@@ -122,7 +62,6 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         roleTypeRepositorySpy.save(roleType);
 
-
         long count = roleTypeRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -132,8 +71,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester(),
                 roleTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository));
 
         assertEquals(count, roleTypeRepositorySpy.count());
     }

@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.datasettype.DatasetTypeRepository;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
 import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +38,6 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private DatasetTypeRepository datasetTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @BeforeEach
@@ -50,8 +46,7 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository));
 
         datasetTypeService.harvestAndSave();
     }

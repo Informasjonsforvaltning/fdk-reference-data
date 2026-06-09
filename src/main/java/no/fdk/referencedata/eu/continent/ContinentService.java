@@ -7,16 +7,12 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -32,7 +28,6 @@ public class ContinentService implements SearchableReferenceData {
 
     private final ContinentRepository continentRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -40,12 +35,10 @@ public class ContinentService implements SearchableReferenceData {
             ContinentHarvester continentHarvester,
             ContinentRepository continentRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             ContinentWriter continentWriter) {
         this.continentHarvester = continentHarvester;
         this.continentRepository = continentRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.continentWriter = continentWriter;
     }
 
@@ -80,10 +73,6 @@ public class ContinentService implements SearchableReferenceData {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.CONTINENT.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.CONTINENT.name())
-                            .build());
 
             final List<Continent> items = new ArrayList<>();
             continentHarvester.harvest().toIterable().forEach(items::add);
@@ -93,9 +82,8 @@ public class ContinentService implements SearchableReferenceData {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(continentHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            continentWriter.replaceAll(items, rdfSource, settings);
+            continentWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest continents", e);
         }

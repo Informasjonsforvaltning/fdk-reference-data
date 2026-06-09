@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -25,7 +22,6 @@ import org.springframework.web.client.RestClient;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -46,9 +42,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private RestClient restClient;
 
     @BeforeEach
@@ -61,8 +54,7 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
                 new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository));
 
         mobilityThemeService.harvestAndSave();
     }
@@ -101,8 +93,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
     public void test_if_post_mobility_themes_fails_without_api_key() {
         assertEquals(123, mobilityThemeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -114,16 +104,12 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(123, mobilityThemeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_mobility_themes_executes_a_force_update() {
         assertEquals(123, mobilityThemeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -135,8 +121,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(123, mobilityThemeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

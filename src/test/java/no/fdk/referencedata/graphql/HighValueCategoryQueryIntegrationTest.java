@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryService;
 import no.fdk.referencedata.eu.highvaluecategories.LocalHighValueCategoryHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +33,6 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private HighValueCategoryRepository highValueCategoryRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -48,8 +44,7 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
                 new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository, harvestSettingsRepository));
+                new HighValueCategoryWriter(highValueCategoryRepository, rdfSourceRepository));
 
         highValueCategoryService.harvestAndSave();
     }

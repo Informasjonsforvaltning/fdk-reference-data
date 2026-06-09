@@ -2,8 +2,6 @@ package no.fdk.referencedata.mobility.datastandard;
 
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,23 +13,19 @@ public class MobilityDataStandardWriter {
 
     private final MobilityDataStandardRepository mobilityDataStandardRepository;
     private final RDFSourceRepository rdfSourceRepository;
-    private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     public MobilityDataStandardWriter(
             MobilityDataStandardRepository mobilityDataStandardRepository,
-            RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository) {
+            RDFSourceRepository rdfSourceRepository) {
         this.mobilityDataStandardRepository = mobilityDataStandardRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
     @Transactional
-    public void replaceAll(List<MobilityDataStandard> items, RDFSource rdfSource, HarvestSettings settings) {
+    public void replaceAll(List<MobilityDataStandard> items, RDFSource rdfSource) {
         mobilityDataStandardRepository.deleteAll();
         mobilityDataStandardRepository.saveAll(items);
         rdfSourceRepository.save(rdfSource);
-        harvestSettingsRepository.save(settings);
     }
 }

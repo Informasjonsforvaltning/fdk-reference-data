@@ -8,7 +8,6 @@ import no.fdk.referencedata.digdir.qualitydimension.QualityDimension;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionRepository;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,6 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private QualityDimensionRepository qualityDimensionRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -54,8 +50,7 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
                 new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
+                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository));
 
         qualityDimensionService.harvestAndSave();
     }

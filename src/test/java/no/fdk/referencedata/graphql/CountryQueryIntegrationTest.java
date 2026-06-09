@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.country.CountryService;
 import no.fdk.referencedata.eu.country.LocalCountryHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,6 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private CountryRepository countryRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -50,8 +46,7 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
+                new CountryWriter(countryRepository, rdfSourceRepository));
 
         countryService.harvestAndSave();
     }

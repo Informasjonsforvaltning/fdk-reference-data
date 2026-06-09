@@ -7,16 +7,12 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -32,7 +28,6 @@ public class LicenceService implements SearchableReferenceData {
 
     private final LicenceRepository licenceRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -40,12 +35,10 @@ public class LicenceService implements SearchableReferenceData {
             LicenceHarvester licenceHarvester,
             LicenceRepository licenceRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             LicenceWriter licenceWriter) {
         this.licenceHarvester = licenceHarvester;
         this.licenceRepository = licenceRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.licenceWriter = licenceWriter;
     }
 
@@ -64,10 +57,6 @@ public class LicenceService implements SearchableReferenceData {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.LICENCE.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.LICENCE.name())
-                            .build());
 
             final List<Licence> items = new ArrayList<>();
             licenceHarvester.harvest().toIterable().forEach(items::add);
@@ -77,9 +66,8 @@ public class LicenceService implements SearchableReferenceData {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(licenceHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            licenceWriter.replaceAll(items, rdfSource, settings);
+            licenceWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest licences", e);
         }

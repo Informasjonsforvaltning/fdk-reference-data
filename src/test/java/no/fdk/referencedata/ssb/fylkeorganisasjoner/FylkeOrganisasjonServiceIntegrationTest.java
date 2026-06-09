@@ -58,7 +58,6 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
                 .build();
         fylkeOrganisasjonRepositorySpy.save(fylkeOrganisasjon);
 
-
         long count = fylkeOrganisasjonRepositorySpy.count();
         assertTrue(count > 0);
 
