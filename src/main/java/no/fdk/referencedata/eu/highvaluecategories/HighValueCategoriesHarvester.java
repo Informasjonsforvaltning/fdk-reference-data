@@ -3,7 +3,6 @@ package no.fdk.referencedata.eu.highvaluecategories;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
-import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.vocabulary.*;
@@ -26,16 +25,12 @@ public class HighValueCategoriesHarvester extends AbstractEuHarvester<HighValueC
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
     private static final String SCHEMA_URI = "http://data.europa.eu/bna/asd487ae75";
 
     public HighValueCategoriesHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<HighValueCategory> harvest() {
         log.info("Starting harvest of EU high-value categories");
@@ -45,18 +40,11 @@ public class HighValueCategoriesHarvester extends AbstractEuHarvester<HighValueC
         }
 
         return Mono.justOrEmpty(loadModel(categoriesRdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, ResourceFactory.createResource(SCHEMA_URI)).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapHighValueCategory);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(SCHEMA_URI),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private HighValueCategory mapHighValueCategory(Resource highValueCategory) {
         final Map<String, String> label = new HashMap<>();
@@ -81,12 +69,10 @@ public class HighValueCategoriesHarvester extends AbstractEuHarvester<HighValueC
             "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
             "PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#> " +
             "CONSTRUCT { " +
-                "<" + SCHEMA_URI  + "> owl:versionInfo ?version . " +
                 "?category skos:inScheme <" + SCHEMA_URI + "> . " +
                 "?category dc:identifier ?code . " +
                 "?category skos:prefLabel ?prefLabel . " +
             "} WHERE { " +
-                "<" + SCHEMA_URI + "> owl:versionInfo ?version . " +
                 "?category skos:inScheme <" + SCHEMA_URI + "> . " +
                 "?category a skos:Concept . " +
                 "?category dc:identifier ?code . " +

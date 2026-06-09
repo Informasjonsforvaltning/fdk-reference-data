@@ -20,7 +20,6 @@ import java.util.Optional;
 public abstract class AbstractMobilityHarvester<T> {
     private static final String BASE_URI = "https://mobilitydcat-ap.github.io/controlled-vocabularies/";
 
-    public abstract String getVersion();
 
     public Resource getSource(final String path) {
         try {

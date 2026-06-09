@@ -61,7 +61,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
                 .build();
 
         DatasetTypeService datasetTypeService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester("1"),
+                new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -146,7 +146,6 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DATASET_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -158,7 +157,6 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DATASET_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -167,7 +165,6 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DATASET_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -179,7 +176,6 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DATASET_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

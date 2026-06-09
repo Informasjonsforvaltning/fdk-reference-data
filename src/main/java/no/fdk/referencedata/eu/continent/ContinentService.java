@@ -83,7 +83,6 @@ public class ContinentService implements SearchableReferenceData {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.CONTINENT.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.CONTINENT.name())
-                            .latestVersion("0")
                             .build());
 
             final List<Continent> items = new ArrayList<>();
@@ -95,7 +94,6 @@ public class ContinentService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(continentHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(continentHarvester.getVersion());
 
             continentWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

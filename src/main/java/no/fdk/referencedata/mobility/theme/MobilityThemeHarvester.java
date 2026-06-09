@@ -27,15 +27,11 @@ public class MobilityThemeHarvester extends AbstractMobilityHarvester<MobilityTh
                     .map(Language::code)
                     .collect(Collectors.toList());
     private static final String PATH = "mobility-theme/latest/mobility-theme.ttl";
-    private static String VERSION = "0";
 
     public MobilityThemeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<MobilityTheme> harvest() {
         log.info("Starting harvest of mobility themes");
@@ -47,19 +43,12 @@ public class MobilityThemeHarvester extends AbstractMobilityHarvester<MobilityTh
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         MobilityThemeVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapMobilityTheme);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(MobilityThemeVocabulary.getURI()),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private MobilityTheme mapMobilityTheme(Resource theme) {
         final Map<String, String> label = new HashMap<>();

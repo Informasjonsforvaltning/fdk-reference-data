@@ -63,7 +63,6 @@ public class DatasetTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATASET_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DATASET_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<DatasetType> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class DatasetTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(datasetTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(datasetTypeHarvester.getVersion());
 
             datasetTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

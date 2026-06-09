@@ -27,15 +27,11 @@ public class ServiceChannelTypeHarvester extends AbstractDataNorgeHarvester<Serv
                     .map(Language::code)
                     .collect(Collectors.toList());
     private static final String PATH = "service-channel-type";
-    private static String VERSION = "0";
 
     public ServiceChannelTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<ServiceChannelType> harvest() {
         log.info("Starting harvest of data.norge service-channel-types");
@@ -47,19 +43,12 @@ public class ServiceChannelTypeHarvester extends AbstractDataNorgeHarvester<Serv
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         ServiceChannelTypeVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapServiceChannelType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(ServiceChannelTypeVocabulary.getURI()),
-                DCTerms.modified
-        ).getString();
-    }
 
     private ServiceChannelType mapServiceChannelType(Resource serviceChannelType) {
         final Map<String, String> label = new HashMap<>();

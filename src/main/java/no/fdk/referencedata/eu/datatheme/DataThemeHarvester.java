@@ -30,15 +30,11 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public DataThemeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<DataTheme> harvest() {
         log.info("Starting harvest of EU data themes");
@@ -48,18 +44,11 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
         }
 
         return Mono.justOrEmpty(loadModel(dataThemesRdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDataTheme.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapDataTheme);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/data-theme"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private DataTheme mapDataTheme(Resource dataTheme) {
         final ConceptSchema conceptSchema = Mono.justOrEmpty(dataTheme.getProperty(SKOS.inScheme).getResource())
@@ -95,14 +84,12 @@ public class DataThemeHarvester extends AbstractEuHarvester<DataTheme> {
             "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
             "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
             "CONSTRUCT { " +
-                "atres:data-theme owl:versionInfo ?version . " +
                 "atres:data-theme skos:prefLabel ?schemaLabel . " +
                 "?dataTheme skos:inScheme ?inScheme . " +
                 "?dataTheme dc:identifier ?code . " +
                 "?dataTheme at:start.use ?startUse . " +
                 "?dataTheme skos:prefLabel ?prefLabel . " +
             "} WHERE { " +
-                "atres:data-theme owl:versionInfo ?version . " +
                 "atres:data-theme skos:prefLabel ?schemaLabel . " +
                 "FILTER(" +
                     "LANG(?schemaLabel) = 'en' || " +

@@ -62,7 +62,7 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         RoleTypeService roleTypeService = new RoleTypeService(
-                new LocalRoleTypeHarvester("1"),
+                new LocalRoleTypeHarvester(),
                 roleTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -100,7 +100,6 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(5, roleTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ROLE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -112,7 +111,6 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(5, roleTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ROLE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -121,7 +119,6 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(5, roleTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ROLE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -133,7 +130,6 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(5, roleTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ROLE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

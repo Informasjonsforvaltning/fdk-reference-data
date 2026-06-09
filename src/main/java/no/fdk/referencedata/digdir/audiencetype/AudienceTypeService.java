@@ -64,7 +64,6 @@ public class AudienceTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.AUDIENCE_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<AudienceType> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class AudienceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(audienceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(audienceTypeHarvester.getVersion());
 
             audienceTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

@@ -64,7 +64,6 @@ public class MobilityDataStandardService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MOBILITY_DATA_STANDARD.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.MOBILITY_DATA_STANDARD.name())
-                            .latestVersion("0")
                             .build());
 
             final List<MobilityDataStandard> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class MobilityDataStandardService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityDataStandardHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(mobilityDataStandardHarvester.getVersion());
 
             mobilityDataStandardWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

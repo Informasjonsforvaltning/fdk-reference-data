@@ -60,7 +60,7 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
                 .build();
 
         AudienceTypeService audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester("1"),
+                new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -98,7 +98,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(2, audienceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -110,7 +109,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(2, audienceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -119,7 +117,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(2, audienceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -131,7 +128,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(2, audienceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertEquals("2023-03-16", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

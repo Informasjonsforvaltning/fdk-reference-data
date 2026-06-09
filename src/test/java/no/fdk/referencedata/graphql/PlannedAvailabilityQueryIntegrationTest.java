@@ -48,7 +48,7 @@ class PlannedAvailabilityQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("1"),
+                new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

@@ -49,7 +49,7 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester("1.1.0"),
+                new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

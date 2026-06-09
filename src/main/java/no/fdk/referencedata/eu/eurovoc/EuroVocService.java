@@ -64,7 +64,6 @@ public class EuroVocService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EURO_VOC.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.EURO_VOC.name())
-                            .latestVersion("0")
                             .build());
 
             final List<EuroVoc> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class EuroVocService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(euroVocHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(euroVocHarvester.getVersion());
 
             euroVocWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

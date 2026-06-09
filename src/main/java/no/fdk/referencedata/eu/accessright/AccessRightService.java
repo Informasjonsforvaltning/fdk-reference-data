@@ -63,7 +63,6 @@ public class AccessRightService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.ACCESS_RIGHT.name())
-                            .latestVersion("0")
                             .build());
 
             final List<AccessRight> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class AccessRightService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(accessRightHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(accessRightHarvester.getVersion());
 
             accessRightWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

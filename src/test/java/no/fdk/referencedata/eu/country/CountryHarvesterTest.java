@@ -16,11 +16,10 @@ public class CountryHarvesterTest {
 
     @Test
     public void test_fetch_countries() {
-        CountryHarvester harvester = new LocalCountryHarvester("1");
+        CountryHarvester harvester = new LocalCountryHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("country-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("1", harvester.getVersion());
 
         List<Country> countries = harvester.harvest().collectList().block();
         assertNotNull(countries);

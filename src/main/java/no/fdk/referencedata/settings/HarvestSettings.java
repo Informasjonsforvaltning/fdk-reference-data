@@ -26,8 +26,6 @@ public class HarvestSettings {
     @Column(name = "id")
     String id;
 
-    @Column(name = "latest_version")
-    String latestVersion;
 
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)

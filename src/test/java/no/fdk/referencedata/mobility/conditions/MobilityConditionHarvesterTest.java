@@ -14,11 +14,10 @@ public class MobilityConditionHarvesterTest {
 
     @Test
     public void test_fetch_mobility_conditions() {
-        MobilityConditionHarvester harvester = new LocalMobilityConditionHarvester("1.1.0");
+        MobilityConditionHarvester harvester = new LocalMobilityConditionHarvester();
 
         assertNotNull(harvester.getSource("mobility-conditions"));
         assertEquals("mobility-conditions.ttl", harvester.getSource("mobility-conditions").getFilename());
-        assertEquals("1.1.0", harvester.getVersion());
 
         List<MobilityCondition> themes = harvester.harvest().collectList().block();
         assertNotNull(themes);

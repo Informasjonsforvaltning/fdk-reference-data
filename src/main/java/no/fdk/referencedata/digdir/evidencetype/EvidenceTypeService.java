@@ -64,7 +64,6 @@ public class EvidenceTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EVIDENCE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.EVIDENCE_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<EvidenceType> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class EvidenceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(evidenceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(evidenceTypeHarvester.getVersion());
 
             evidenceTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

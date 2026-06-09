@@ -75,7 +75,6 @@ public class CurrencyService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.CURRENCY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.CURRENCY.name())
-                            .latestVersion("0")
                             .build());
 
             final List<Currency> items = new ArrayList<>();
@@ -87,7 +86,6 @@ public class CurrencyService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(currencyHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(currencyHarvester.getVersion());
 
             currencyWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

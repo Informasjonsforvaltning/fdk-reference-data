@@ -59,7 +59,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         FrequencyService frequencyService = new FrequencyService(
-                new LocalFrequencyHarvester("1"),
+                new LocalFrequencyHarvester(),
                 frequencyRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -103,7 +103,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -117,7 +116,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -126,7 +124,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -140,7 +137,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FREQUENCY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

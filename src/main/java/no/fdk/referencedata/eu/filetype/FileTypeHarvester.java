@@ -20,15 +20,11 @@ import java.nio.charset.StandardCharsets;
 @Component
 @Slf4j
 public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
-    private static String VERSION = "0";
 
     public FileTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<FileType> harvest() {
         log.info("Starting harvest of EU file types");
@@ -38,18 +34,11 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
         }
 
         return Mono.justOrEmpty(loadModel(fileTypesRdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, EUVOC.FileType).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapFileType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/file-type"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private FileType mapFileType(Resource fileType) {
         final StringBuilder ianaMediaType = new StringBuilder();
@@ -77,14 +66,12 @@ public class FileTypeHarvester extends AbstractEuHarvester<FileType> {
             "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
             "PREFIX euvoc: <http://publications.europa.eu/ontology/euvoc#> " +
             "CONSTRUCT { " +
-                "atres:file-type owl:versionInfo ?version . " +
                 "?fileType a euvoc:FileType . " +
                 "?fileType dc:identifier ?code . " +
                 "?fileType euvoc:xlNotation ?xlNotation . " +
                 "?xlNotation dct:type <http://publications.europa.eu/resource/authority/notation-type/IANA_MT> . " +
                 "?xlNotation euvoc:xlCodification ?xlCodification . " +
             "} WHERE { " +
-                "atres:file-type owl:versionInfo ?version . " +
                 "?fileType skos:inScheme atres:file-type . " +
                 "?fileType a euvoc:FileType . " +
                 "?fileType dc:identifier ?code . " +

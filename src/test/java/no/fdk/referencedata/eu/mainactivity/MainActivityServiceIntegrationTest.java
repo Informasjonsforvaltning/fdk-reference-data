@@ -41,7 +41,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_datathemes() {
         MainActivityService mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester("123"),
+                new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -62,7 +62,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         MainActivityService mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester("123-0"),
+                new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -74,13 +74,12 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(MAIN_ACTIVITY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("123-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester("123-2"),
+                new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -92,13 +91,12 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(MAIN_ACTIVITY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("123-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester("123-2"),
+                new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -110,7 +108,6 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(MAIN_ACTIVITY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("123-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -133,7 +130,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         when(mainActivityRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new MainActivityService(
-                new LocalMainActivityHarvester("123"),
+                new LocalMainActivityHarvester(),
                 mainActivityRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

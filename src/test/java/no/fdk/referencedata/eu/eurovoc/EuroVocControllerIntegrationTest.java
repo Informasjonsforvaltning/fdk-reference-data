@@ -62,7 +62,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         EuroVocService EuroVocService = new EuroVocService(
-                new LocalEuroVocHarvester("1"),
+                new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -100,7 +100,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -112,7 +111,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -121,7 +119,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -133,7 +130,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EURO_VOC.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

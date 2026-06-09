@@ -45,7 +45,7 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester("2.1"),
+                new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

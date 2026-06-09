@@ -64,7 +64,6 @@ public class MobilityThemeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.MOBILITY_THEME.name())
-                            .latestVersion("0")
                             .build());
 
             final List<MobilityTheme> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class MobilityThemeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityThemeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(mobilityThemeHarvester.getVersion());
 
             mobilityThemeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

@@ -47,7 +47,7 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         DatasetTypeService datasetTypeService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester("1"),
+                new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

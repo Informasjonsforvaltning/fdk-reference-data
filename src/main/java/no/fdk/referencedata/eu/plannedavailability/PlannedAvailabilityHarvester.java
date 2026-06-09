@@ -30,15 +30,11 @@ public class PlannedAvailabilityHarvester extends AbstractEuHarvester<PlannedAva
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public PlannedAvailabilityHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<PlannedAvailability> harvest() {
         log.info("Starting harvest of EU planned availability");
@@ -48,18 +44,11 @@ public class PlannedAvailabilityHarvester extends AbstractEuHarvester<PlannedAva
         }
 
         return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUPlannedAvailability.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapPlannedAvailability);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/planned-availability"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private PlannedAvailability mapPlannedAvailability(Resource plannedAvailability) {
         return PlannedAvailability.builder()

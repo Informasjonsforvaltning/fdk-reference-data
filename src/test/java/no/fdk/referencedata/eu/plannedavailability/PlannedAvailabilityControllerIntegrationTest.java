@@ -61,7 +61,7 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
                 .build();
 
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("1"),
+                new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -99,7 +99,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -111,7 +110,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -120,7 +118,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -132,7 +129,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

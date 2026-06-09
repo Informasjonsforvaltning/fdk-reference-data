@@ -51,7 +51,7 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester("2023-01-30"),
+                new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

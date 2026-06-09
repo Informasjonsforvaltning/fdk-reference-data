@@ -30,15 +30,11 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .toList();
-    private static final String VERSION = "0";
 
     public EuroVocHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<EuroVoc> harvest() {
         log.info("Starting harvest of EU eurovoc");

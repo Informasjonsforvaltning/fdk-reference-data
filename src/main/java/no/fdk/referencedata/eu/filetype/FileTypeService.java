@@ -83,7 +83,6 @@ public class FileTypeService implements SearchableReferenceData {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.FILE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.FILE_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<FileType> items = new ArrayList<>();
@@ -95,7 +94,6 @@ public class FileTypeService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(fileTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(fileTypeHarvester.getVersion());
 
             fileTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

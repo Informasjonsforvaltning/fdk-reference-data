@@ -60,7 +60,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         FileTypeService fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester("1"),
+                new LocalFileTypeHarvester(),
                 fileTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -98,7 +98,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -110,7 +109,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -119,7 +117,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -131,7 +128,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(198, fileTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

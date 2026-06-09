@@ -14,11 +14,10 @@ public class AudienceTypeHarvesterTest {
 
     @Test
     public void test_fetch_audience_types() {
-        AudienceTypeHarvester harvester = new LocalAudienceTypeHarvester("123-0");
+        AudienceTypeHarvester harvester = new LocalAudienceTypeHarvester();
 
         assertNotNull(harvester.getSource("audience-type"));
         assertEquals("audience-type.ttl", harvester.getSource("audience-type").getFilename());
-        assertEquals("123-0", harvester.getVersion());
 
         List<AudienceType> audienceTypes = harvester.harvest().collectList().block();
         assertNotNull(audienceTypes);

@@ -15,11 +15,10 @@ public class DistributionTypeHarvesterTest {
 
     @Test
     public void test_fetch_distribution_types() {
-        DistributionTypeHarvester harvester = new LocalDistributionTypeHarvester("20200923-0");
+        DistributionTypeHarvester harvester = new LocalDistributionTypeHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("distribution-types-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("20200923-0", harvester.getVersion());
 
         List<DistributionType> distributionTypes = harvester.harvest().collectList().block();
         assertNotNull(distributionTypes);

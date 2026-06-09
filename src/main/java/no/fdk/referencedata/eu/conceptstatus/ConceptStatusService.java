@@ -75,7 +75,6 @@ public class ConceptStatusService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.CONCEPT_STATUS.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.CONCEPT_STATUS.name())
-                            .latestVersion("0")
                             .build());
 
             final List<ConceptStatus> items = new ArrayList<>();
@@ -87,7 +86,6 @@ public class ConceptStatusService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(conceptStatusHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(conceptStatusHarvester.getVersion());
 
             conceptStatusWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

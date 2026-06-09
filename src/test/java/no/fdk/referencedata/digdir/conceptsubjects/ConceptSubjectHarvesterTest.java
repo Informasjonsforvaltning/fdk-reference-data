@@ -19,7 +19,6 @@ public class ConceptSubjectHarvesterTest {
 
         assertNotNull(harvester.getSource());
         assertEquals("concept-subjects.ttl", harvester.getSource().getFilename());
-        assertEquals("0", harvester.getVersion());
 
         List<ConceptSubject> subjects = harvester.harvest().collectList().block();
         assertNotNull(subjects);

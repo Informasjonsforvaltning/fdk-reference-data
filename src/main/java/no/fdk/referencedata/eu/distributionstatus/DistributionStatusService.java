@@ -63,7 +63,6 @@ public class DistributionStatusService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DISTRIBUTION_STATUS.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DISTRIBUTION_STATUS.name())
-                            .latestVersion("0")
                             .build());
 
             final List<DistributionStatus> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class DistributionStatusService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(distributionStatusHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(distributionStatusHarvester.getVersion());
 
             distributionStatusWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

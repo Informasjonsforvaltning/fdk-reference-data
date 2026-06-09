@@ -26,15 +26,11 @@ public class AudienceTypeHarvester extends AbstractDataNorgeHarvester<AudienceTy
                     .map(Language::code)
                     .toList();
     private static final String PATH = "audience-type";
-    private static String VERSION = "0";
 
     public AudienceTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<AudienceType> harvest() {
         log.info("Starting harvest of data.norge audience-types");
@@ -46,19 +42,12 @@ public class AudienceTypeHarvester extends AbstractDataNorgeHarvester<AudienceTy
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         AudienceTypeVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapAudienceType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(AudienceTypeVocabulary.getURI()),
-                DCTerms.modified
-        ).getString();
-    }
 
     private AudienceType mapAudienceType(Resource audienceType) {
         final Map<String, String> label = new HashMap<>();

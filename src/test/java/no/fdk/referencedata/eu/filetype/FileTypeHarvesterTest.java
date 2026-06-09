@@ -13,11 +13,10 @@ public class FileTypeHarvesterTest {
 
     @Test
     public void test_fetch_filetypes() throws Exception {
-        FileTypeHarvester fileTypeHarvester = new LocalFileTypeHarvester("20210512-0");
+        FileTypeHarvester fileTypeHarvester = new LocalFileTypeHarvester();
 
         assertNotNull(fileTypeHarvester.getSource());
         assertEquals("filetypes-sparql-result.ttl", fileTypeHarvester.getSource().getFilename());
-        assertEquals("20210512-0", fileTypeHarvester.getVersion());
 
         List<FileType> fileTypes = fileTypeHarvester.harvest().collectList().block();
         assertNotNull(fileTypes);

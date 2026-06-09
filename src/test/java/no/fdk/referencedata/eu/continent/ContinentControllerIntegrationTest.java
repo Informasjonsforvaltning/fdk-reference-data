@@ -60,7 +60,7 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         ContinentService continentService = new ContinentService(
-                new LocalContinentHarvester("1"),
+                new LocalContinentHarvester(),
                 continentRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -98,7 +98,6 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CONTINENTS_SIZE, continentRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CONTINENT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -110,7 +109,6 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CONTINENTS_SIZE, continentRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CONTINENT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -119,7 +117,6 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CONTINENTS_SIZE, continentRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CONTINENT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -131,7 +128,6 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CONTINENTS_SIZE, continentRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CONTINENT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

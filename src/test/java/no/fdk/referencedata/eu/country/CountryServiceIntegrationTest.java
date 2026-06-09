@@ -39,7 +39,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_countries() {
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester("1"),
+                new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -60,7 +60,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester("20200923-1"),
+                new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -71,12 +71,11 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
 
         HarvestSettings settings = harvestSettingsRepository.findById(COUNTRY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         countryService = new CountryService(
-                new LocalCountryHarvester("20200924-0"),
+                new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -87,12 +86,11 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
 
         settings = harvestSettingsRepository.findById(COUNTRY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         countryService = new CountryService(
-                new LocalCountryHarvester("20200924-0"),
+                new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -103,7 +101,6 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
 
         settings = harvestSettingsRepository.findById(COUNTRY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -125,7 +122,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
         when(countryRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new CountryService(
-                new LocalCountryHarvester("20200924-2"),
+                new LocalCountryHarvester(),
                 countryRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

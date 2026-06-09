@@ -15,11 +15,10 @@ public class QualityDimensionHarvesterTest {
 
     @Test
     public void test_fetch_quality_dimensions() {
-        QualityDimensionHarvester harvester = new LocalQualityDimensionHarvester("2023-01-30");
+        QualityDimensionHarvester harvester = new LocalQualityDimensionHarvester();
 
         assertNotNull(harvester.getSource("quality-dimension"));
         assertEquals("quality-dimension.ttl", harvester.getSource("quality-dimension").getFilename());
-        assertEquals("2023-01-30", harvester.getVersion());
 
         List<QualityDimension> qualityDimensions = harvester.harvest().collectList().block();
         assertNotNull(qualityDimensions);

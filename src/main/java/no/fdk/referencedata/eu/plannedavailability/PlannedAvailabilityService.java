@@ -63,7 +63,6 @@ public class PlannedAvailabilityService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.PLANNED_AVAILABILITY.name())
-                            .latestVersion("0")
                             .build());
 
             final List<PlannedAvailability> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class PlannedAvailabilityService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(plannedAvailabilityHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(plannedAvailabilityHarvester.getVersion());
 
             plannedAvailabilityWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

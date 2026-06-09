@@ -48,7 +48,7 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         DataThemeService dataThemeService = new DataThemeService(
-                new LocalDataThemeHarvester("1"),
+                new LocalDataThemeHarvester(),
                 dataThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

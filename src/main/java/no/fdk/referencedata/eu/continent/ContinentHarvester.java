@@ -22,7 +22,6 @@ import static no.fdk.referencedata.i18n.Language.*;
 @Component
 @Slf4j
 public class ContinentHarvester extends AbstractEuHarvester<Continent> {
-    private static String VERSION = "0";
     private static final List<String> SUPPORTED_LANGUAGES =
             Arrays.stream(Language.values())
                     .map(Language::code)
@@ -32,9 +31,6 @@ public class ContinentHarvester extends AbstractEuHarvester<Continent> {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<Continent> harvest() {
         log.info("Starting harvest of EU continents");

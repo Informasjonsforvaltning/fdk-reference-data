@@ -49,7 +49,7 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester("1"),
+                new LocalServiceChannelTypeHarvester(),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

@@ -16,11 +16,10 @@ public class ContinentHarvesterTest {
 
     @Test
     public void test_fetch_continents() {
-        ContinentHarvester harvester = new LocalContinentHarvester("1");
+        ContinentHarvester harvester = new LocalContinentHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("continent-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("1", harvester.getVersion());
 
         List<Continent> continents = harvester.harvest().collectList().block();
         assertNotNull(continents);

@@ -62,7 +62,7 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
                 .build();
 
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester("1"),
+                new LocalServiceChannelTypeHarvester(),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -100,7 +100,6 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
         assertEquals(11, serviceChannelTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.SERVICE_CHANNEL_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -112,7 +111,6 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
         assertEquals(11, serviceChannelTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.SERVICE_CHANNEL_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -121,7 +119,6 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
         assertEquals(11, serviceChannelTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.SERVICE_CHANNEL_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -133,7 +130,6 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
         assertEquals(11, serviceChannelTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.SERVICE_CHANNEL_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

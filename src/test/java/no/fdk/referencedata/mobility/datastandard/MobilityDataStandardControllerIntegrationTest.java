@@ -58,7 +58,7 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
                 .build();
 
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester("1.0.0"),
+                new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -102,7 +102,6 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
         assertEquals(15, mobilityDataStandardRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_DATA_STANDARD.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -116,7 +115,6 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
         assertEquals(15, mobilityDataStandardRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_DATA_STANDARD.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -125,7 +123,6 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
         assertEquals(15, mobilityDataStandardRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_DATA_STANDARD.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -139,7 +136,6 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
         assertEquals(15, mobilityDataStandardRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_DATA_STANDARD.name()).orElseThrow();
-        assertEquals("1.1.0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

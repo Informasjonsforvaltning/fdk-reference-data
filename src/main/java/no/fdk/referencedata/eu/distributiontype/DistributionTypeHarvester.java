@@ -30,15 +30,11 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public DistributionTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<DistributionType> harvest() {
         log.info("Starting harvest of EU distribution types");
@@ -48,18 +44,11 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
         }
 
         return Mono.justOrEmpty(loadModel(dataThemesRdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDistributionType.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapDistributionType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/distribution-type"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private DistributionType mapDistributionType(Resource distributionType) {
         return DistributionType.builder()

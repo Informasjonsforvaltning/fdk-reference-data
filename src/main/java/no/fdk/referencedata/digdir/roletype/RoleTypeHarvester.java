@@ -27,15 +27,11 @@ public class RoleTypeHarvester extends AbstractDataNorgeHarvester<RoleType> {
                     .map(Language::code)
                     .collect(Collectors.toList());
     private static final String PATH = "role-type";
-    private static String VERSION = "0";
 
     public RoleTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<RoleType> harvest() {
         log.info("Starting harvest of data.norge role-types");
@@ -47,19 +43,12 @@ public class RoleTypeHarvester extends AbstractDataNorgeHarvester<RoleType> {
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         RoleTypeVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapRoleType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(RoleTypeVocabulary.getURI()),
-                DCTerms.modified
-        ).getString();
-    }
 
     private RoleType mapRoleType(Resource roleType) {
         final Map<String, String> label = new HashMap<>();

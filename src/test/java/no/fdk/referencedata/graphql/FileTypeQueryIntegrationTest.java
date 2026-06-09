@@ -48,7 +48,7 @@ class FileTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         FileTypeService fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester("1"),
+                new LocalFileTypeHarvester(),
                 fileTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

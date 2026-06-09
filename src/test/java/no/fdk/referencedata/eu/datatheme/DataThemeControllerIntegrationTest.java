@@ -63,7 +63,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         DataThemeService dataThemeService = new DataThemeService(
-                new LocalDataThemeHarvester("1"),
+                new LocalDataThemeHarvester(),
                 dataThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -107,7 +107,6 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -119,7 +118,6 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -128,7 +126,6 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -140,7 +137,6 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DATA_THEME.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

@@ -61,7 +61,7 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
                 .build();
 
         DistributionStatusService distributionStatusService = new DistributionStatusService(
-                new LocalDistributionStatusHarvester("1"),
+                new LocalDistributionStatusHarvester(),
                 distributionStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -99,7 +99,6 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
         assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DISTRIBUTION_STATUS.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -111,7 +110,6 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
         assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_STATUS.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -120,7 +118,6 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
         assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.DISTRIBUTION_STATUS.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -132,7 +129,6 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
         assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.DISTRIBUTION_STATUS.name()).orElseThrow();
-        assertEquals("20220615-0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

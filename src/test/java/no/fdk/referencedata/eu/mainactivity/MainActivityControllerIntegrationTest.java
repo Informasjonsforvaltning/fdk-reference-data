@@ -63,7 +63,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
                 .build();
 
         MainActivityService mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester("1"),
+                new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -101,7 +101,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +112,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -122,7 +120,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -134,7 +131,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

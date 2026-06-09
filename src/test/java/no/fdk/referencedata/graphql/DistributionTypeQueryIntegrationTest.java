@@ -48,7 +48,7 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         DistributionTypeService distributionTypeService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester("1"),
+                new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

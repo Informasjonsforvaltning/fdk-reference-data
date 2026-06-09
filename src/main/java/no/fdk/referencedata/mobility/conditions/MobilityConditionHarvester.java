@@ -27,15 +27,11 @@ public class MobilityConditionHarvester extends AbstractMobilityHarvester<Mobili
                     .map(Language::code)
                     .collect(Collectors.toList());
     private static final String PATH = "conditions-for-access-and-usage/latest/conditions-for-access-and-usage.ttl";
-    private static String VERSION = "0";
 
     public MobilityConditionHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<MobilityCondition> harvest() {
         log.info("Starting harvest of conditions for access and usage");
@@ -47,19 +43,12 @@ public class MobilityConditionHarvester extends AbstractMobilityHarvester<Mobili
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         MobilityConditionsVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapMobilityCondition);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(MobilityConditionsVocabulary.getURI()),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private MobilityCondition mapMobilityCondition(Resource condition) {
         final Map<String, String> label = new HashMap<>();

@@ -39,7 +39,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
     @Test
     public void test_if_harvest_persists_high_value_categories() {
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester("20200923-0"),
+                new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -60,7 +60,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester("20200923-1"),
+                new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -72,13 +72,12 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         HarvestSettings settings =
                 harvestSettingsRepository.findById(HIGH_VALUE_CATEGORY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester("20200924-0"),
+                new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -90,13 +89,12 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         settings =
                 harvestSettingsRepository.findById(HIGH_VALUE_CATEGORY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester("20200924-0"),
+                new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -108,7 +106,6 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         settings =
                 harvestSettingsRepository.findById(HIGH_VALUE_CATEGORY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -130,7 +127,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         when(highValueCategoryRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester("20200924-2"),
+                new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

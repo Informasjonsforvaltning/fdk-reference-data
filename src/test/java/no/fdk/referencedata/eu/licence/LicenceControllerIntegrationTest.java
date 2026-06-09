@@ -58,7 +58,7 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         LicenceService licenceService = new LicenceService(
-                new LocalLicenceHarvester("1"),
+                new LocalLicenceHarvester(),
                 licenceRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -102,7 +102,6 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(LICENCES_SIZE, licenceRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.LICENCE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -116,7 +115,6 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(LICENCES_SIZE, licenceRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.LICENCE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -125,7 +123,6 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(LICENCES_SIZE, licenceRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.LICENCE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -139,7 +136,6 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(LICENCES_SIZE, licenceRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.LICENCE.name()).orElseThrow();
-        assertEquals("20241211-0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

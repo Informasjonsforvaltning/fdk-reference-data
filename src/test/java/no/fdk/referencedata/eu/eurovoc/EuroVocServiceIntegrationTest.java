@@ -40,7 +40,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_eurovoc() {
         EuroVocService euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester("20200923-0"),
+                new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -63,7 +63,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         EuroVocService euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester("20200923-1"),
+                new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -75,13 +75,12 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester("20200924-0"),
+                new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -93,13 +92,12 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester("20200924-0"),
+                new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -111,7 +109,6 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(EURO_VOC.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -133,7 +130,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         when(EuroVocRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new EuroVocService(
-                new LocalEuroVocHarvester("20200924-2"),
+                new LocalEuroVocHarvester(),
                 EuroVocRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

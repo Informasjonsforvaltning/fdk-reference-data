@@ -15,11 +15,10 @@ public class DistributionStatusHarvesterTest {
 
     @Test
     public void test_fetch_distribution_statuses() {
-        DistributionStatusHarvester harvester = new LocalDistributionStatusHarvester("20220615-0");
+        DistributionStatusHarvester harvester = new LocalDistributionStatusHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("distribution-status-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("20220615-0", harvester.getVersion());
 
         List<DistributionStatus> distributionStatuses = harvester.harvest().collectList().block();
         assertNotNull(distributionStatuses);
