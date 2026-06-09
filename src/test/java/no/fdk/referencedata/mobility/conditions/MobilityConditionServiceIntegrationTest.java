@@ -42,7 +42,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 harvestSettingsRepository,
                 new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mobilityConditionService.harvestAndSave(true);
+        mobilityConditionService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         mobilityConditionRepository.findAll().forEach(condition -> counter.incrementAndGet());
@@ -55,7 +55,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         MobilityConditionService mobilityConditionService = new MobilityConditionService(
                 new LocalMobilityConditionHarvester("1.1.1"),
                 mobilityConditionRepository,
@@ -64,7 +64,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        mobilityConditionService.harvestAndSave(false);
+        mobilityConditionService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(MOBILITY_CONDITION.name()).orElseThrow();
@@ -82,7 +82,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        mobilityConditionService.harvestAndSave(false);
+        mobilityConditionService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(MOBILITY_CONDITION.name()).orElseThrow();
@@ -91,23 +91,23 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         mobilityConditionService = new MobilityConditionService(
-                new LocalMobilityConditionHarvester("1.0.0"),
+                new LocalMobilityConditionHarvester("1.1.2"),
                 mobilityConditionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        mobilityConditionService.harvestAndSave(false);
+        mobilityConditionService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(MOBILITY_CONDITION.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("1.1.2", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

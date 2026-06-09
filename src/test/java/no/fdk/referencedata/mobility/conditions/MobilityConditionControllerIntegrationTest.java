@@ -64,7 +64,7 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
                 harvestSettingsRepository,
                 new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mobilityConditionService.harvestAndSave(true);
+        mobilityConditionService.harvestAndSave();
     }
 
     @Test

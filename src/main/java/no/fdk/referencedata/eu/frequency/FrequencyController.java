@@ -35,7 +35,7 @@ public class FrequencyController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateFrequencies() {
-        frequencyService.harvestAndSave(true);
+        frequencyService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

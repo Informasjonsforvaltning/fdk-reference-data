@@ -53,7 +53,7 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new CountryWriter(countryRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        countryService.harvestAndSave(false);
+        countryService.harvestAndSave();
     }
 
     @Test

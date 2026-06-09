@@ -42,7 +42,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mobilityThemeService.harvestAndSave(false);
+        mobilityThemeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         mobilityThemeRepository.findAll().forEach(theme -> counter.incrementAndGet());
@@ -55,7 +55,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
                 new LocalMobilityThemeHarvester("1.0.3"),
                 mobilityThemeRepository,
@@ -64,7 +64,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        mobilityThemeService.harvestAndSave(false);
+        mobilityThemeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
@@ -82,7 +82,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        mobilityThemeService.harvestAndSave(false);
+        mobilityThemeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
@@ -91,23 +91,23 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.0.0"),
+                new LocalMobilityThemeHarvester("1.1.0"),
                 mobilityThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        mobilityThemeService.harvestAndSave(false);
+        mobilityThemeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("1.1.0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

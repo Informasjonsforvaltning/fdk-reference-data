@@ -35,7 +35,7 @@ public class HighValueCategoryController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateHighValueCategories() {
-        highValueCategoryService.harvestAndSave(true);
+        highValueCategoryService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

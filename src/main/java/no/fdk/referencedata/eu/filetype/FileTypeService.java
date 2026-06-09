@@ -10,7 +10,6 @@ import no.fdk.referencedata.search.SearchableReferenceData;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -79,33 +78,26 @@ public class FileTypeService implements SearchableReferenceData {
                 .map(FileType::toSearchHit);
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(fileTypeHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.FILE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.FILE_TYPE.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<FileType> items = new ArrayList<>();
+            fileTypeHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} file-types", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<FileType> items = new ArrayList<>();
-                fileTypeHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} file-types", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(fileTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(fileTypeHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(fileTypeHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(fileTypeHarvester.getVersion());
-
-                fileTypeWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            fileTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest file-types", e);
         }

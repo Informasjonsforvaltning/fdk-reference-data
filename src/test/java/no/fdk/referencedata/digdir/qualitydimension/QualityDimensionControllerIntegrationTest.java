@@ -69,7 +69,7 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
                 harvestSettingsRepository,
                 new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        qualityDimensionService.harvestAndSave(true);
+        qualityDimensionService.harvestAndSave();
     }
 
     @Test

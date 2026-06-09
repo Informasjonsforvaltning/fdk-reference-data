@@ -69,7 +69,7 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
                 harvestSettingsRepository,
                 new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        legalResourceTypeService.harvestAndSave(true);
+        legalResourceTypeService.harvestAndSave();
     }
 
     @Test

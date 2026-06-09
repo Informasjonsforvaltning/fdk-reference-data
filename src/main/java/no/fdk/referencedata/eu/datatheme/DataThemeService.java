@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -60,33 +59,26 @@ public class DataThemeService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(dataThemeHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATA_THEME.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DATA_THEME.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<DataTheme> items = new ArrayList<>();
+            dataThemeHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} data-themes", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<DataTheme> items = new ArrayList<>();
-                dataThemeHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} data-themes", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(dataThemeHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(dataThemeHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(dataThemeHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(dataThemeHarvester.getVersion());
-
-                dataThemeWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            dataThemeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest data-themes", e);
         }

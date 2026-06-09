@@ -69,7 +69,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
                 harvestSettingsRepository,
                 new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mainActivityService.harvestAndSave(true);
+        mainActivityService.harvestAndSave();
     }
 
     @Test

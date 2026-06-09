@@ -45,7 +45,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         accessRightRepository.findAll().forEach(accessRight -> counter.incrementAndGet());
@@ -58,7 +58,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         AccessRightService accessRightService = new AccessRightService(
                 new LocalAccessRightHarvester("20200923-1"),
                 accessRightRepository,
@@ -67,7 +67,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
@@ -85,7 +85,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
@@ -94,7 +94,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         accessRightService = new AccessRightService(
                 new LocalAccessRightHarvester("20200924-0"),
                 accessRightRepository,
@@ -103,14 +103,14 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

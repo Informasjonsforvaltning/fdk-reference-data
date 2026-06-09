@@ -66,7 +66,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        fileTypeService.harvestAndSave(true);
+        fileTypeService.harvestAndSave();
     }
 
     @Test

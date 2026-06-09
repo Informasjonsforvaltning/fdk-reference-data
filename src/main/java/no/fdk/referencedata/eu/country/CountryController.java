@@ -35,7 +35,7 @@ public class CountryController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateCountries() {
-        countryService.harvestAndSave(true);
+        countryService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

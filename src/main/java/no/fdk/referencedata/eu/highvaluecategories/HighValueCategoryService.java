@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -59,33 +58,26 @@ public class HighValueCategoryService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(highValueCategoriesHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.HIGH_VALUE_CATEGORY.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<HighValueCategory> items = new ArrayList<>();
+            highValueCategoriesHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} high-value categories", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<HighValueCategory> items = new ArrayList<>();
-                highValueCategoriesHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} high-value categories", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(highValueCategoriesHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(highValueCategoriesHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(highValueCategoriesHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(highValueCategoriesHarvester.getVersion());
-
-                highValueCategoryWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            highValueCategoryWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest high-value categories", e);
         }

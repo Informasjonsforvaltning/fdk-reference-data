@@ -41,7 +41,7 @@ public class DataThemeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateDataThemes() {
-        dataThemeService.harvestAndSave(true);
+        dataThemeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

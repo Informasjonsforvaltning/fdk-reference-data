@@ -45,7 +45,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        continentService.harvestAndSave(true);
+        continentService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         continentRepository.findAll().forEach(continent -> counter.incrementAndGet());
@@ -58,7 +58,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         ContinentService continentService = new ContinentService(
                 new LocalContinentHarvester("20200923-1"),
                 continentRepository,
@@ -67,7 +67,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        continentService.harvestAndSave(false);
+        continentService.harvestAndSave();
 
         HarvestSettings settings = harvestSettingsRepository.findById(CONTINENT.name()).orElseThrow();
         assertNotNull(settings);
@@ -83,7 +83,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        continentService.harvestAndSave(false);
+        continentService.harvestAndSave();
 
         settings = harvestSettingsRepository.findById(CONTINENT.name()).orElseThrow();
         assertNotNull(settings);
@@ -99,13 +99,13 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
                 new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        continentService.harvestAndSave(false);
+        continentService.harvestAndSave();
 
         settings = harvestSettingsRepository.findById(CONTINENT.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

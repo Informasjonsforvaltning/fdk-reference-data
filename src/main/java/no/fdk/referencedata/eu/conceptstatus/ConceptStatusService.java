@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -71,33 +70,26 @@ public class ConceptStatusService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(conceptStatusHarvester.getVersion().replace("-", ""));
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.CONCEPT_STATUS.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.CONCEPT_STATUS.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion().replace("-", ""));
+            final List<ConceptStatus> items = new ArrayList<>();
+            conceptStatusHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} concept status", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<ConceptStatus> items = new ArrayList<>();
-                conceptStatusHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} concept status", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(conceptStatusHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(conceptStatusHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(conceptStatusHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(conceptStatusHarvester.getVersion());
-
-                conceptStatusWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            conceptStatusWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest concept statuses", e);
         }

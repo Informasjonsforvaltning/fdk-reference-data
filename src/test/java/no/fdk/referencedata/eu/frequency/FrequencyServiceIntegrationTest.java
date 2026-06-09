@@ -46,7 +46,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        frequencyService.harvestAndSave(true);
+        frequencyService.harvestAndSave();
     }
 
     @Test
@@ -58,7 +58,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        frequencyService.harvestAndSave(false);
+        frequencyService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         frequencyRepository.findAll().forEach(frequency -> counter.incrementAndGet());
@@ -71,7 +71,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         FrequencyService frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester("20200923-1"),
                 frequencyRepository,
@@ -80,7 +80,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
                 new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        frequencyService.harvestAndSave(false);
+        frequencyService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(FREQUENCY.name()).orElseThrow();
@@ -98,7 +98,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
                 new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        frequencyService.harvestAndSave(false);
+        frequencyService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(FREQUENCY.name()).orElseThrow();
@@ -107,23 +107,23 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         frequencyService = new FrequencyService(
-                new LocalFrequencyHarvester("20200923-0"),
+                new LocalFrequencyHarvester("20200924-0"),
                 frequencyRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        frequencyService.harvestAndSave(false);
+        frequencyService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(FREQUENCY.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

@@ -64,7 +64,7 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        licenceService.harvestAndSave(true);
+        licenceService.harvestAndSave();
     }
 
     @Test

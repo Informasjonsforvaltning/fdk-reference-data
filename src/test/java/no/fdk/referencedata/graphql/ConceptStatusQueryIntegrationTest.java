@@ -50,7 +50,7 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        conceptStatusService.harvestAndSave(false);
+        conceptStatusService.harvestAndSave();
     }
 
     @Test

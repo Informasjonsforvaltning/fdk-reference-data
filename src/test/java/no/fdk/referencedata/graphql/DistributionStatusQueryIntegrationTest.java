@@ -54,7 +54,7 @@ class DistributionStatusQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        distributionStatusService.harvestAndSave(false);
+        distributionStatusService.harvestAndSave();
     }
 
     @Test

@@ -41,7 +41,7 @@ public class EuroVocController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateEuroVocs() {
-        euroVocService.harvestAndSave(true);
+        euroVocService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

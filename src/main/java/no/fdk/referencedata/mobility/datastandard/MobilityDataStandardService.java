@@ -7,7 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.settings.HarvestSettings;
 import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import no.fdk.referencedata.settings.Settings;
-import no.fdk.referencedata.util.Version;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
@@ -60,33 +59,26 @@ public class MobilityDataStandardService {
         }
     }
 
-    public void harvestAndSave(boolean force) {
+    public void harvestAndSave() {
         try {
-            final Version latestVersion = new Version(mobilityDataStandardHarvester.getVersion());
-
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MOBILITY_DATA_STANDARD.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.MOBILITY_DATA_STANDARD.name())
                             .latestVersion("0")
                             .build());
 
-            final Version currentVersion = new Version(settings.getLatestVersion());
+            final List<MobilityDataStandard> items = new ArrayList<>();
+            mobilityDataStandardHarvester.harvest().toIterable().forEach(items::add);
+            log.info("Harvest and saving {} mobility data standards", items.size());
 
-            if (force || latestVersion.compareTo(currentVersion) > 0) {
-                final List<MobilityDataStandard> items = new ArrayList<>();
-                mobilityDataStandardHarvester.harvest().toIterable().forEach(items::add);
-                log.info("Harvest and saving {} mobility data standards", items.size());
+            RDFSource rdfSource = new RDFSource();
+            rdfSource.setId(dbSourceID);
+            rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityDataStandardHarvester.getModel(), RDFFormat.TURTLE));
 
-                RDFSource rdfSource = new RDFSource();
-                rdfSource.setId(dbSourceID);
-                rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityDataStandardHarvester.getModel(), RDFFormat.TURTLE));
+            settings.setLatestHarvestDate(LocalDateTime.now());
+            settings.setLatestVersion(mobilityDataStandardHarvester.getVersion());
 
-                settings.setLatestHarvestDate(LocalDateTime.now());
-                settings.setLatestVersion(mobilityDataStandardHarvester.getVersion());
-
-                mobilityDataStandardWriter.replaceAll(items, rdfSource, settings);
-            }
-
+            mobilityDataStandardWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {
             log.error("Unable to harvest mobility data standards", e);
         }

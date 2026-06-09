@@ -1,11 +1,12 @@
 package no.fdk.referencedata;
 
-import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
+import lombok.RequiredArgsConstructor;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeService;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionService;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
@@ -14,9 +15,9 @@ import no.fdk.referencedata.eu.continent.ContinentService;
 import no.fdk.referencedata.eu.country.CountryService;
 import no.fdk.referencedata.eu.currency.CurrencyService;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
+import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.distributionstatus.DistributionStatusService;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
-import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
@@ -33,7 +34,6 @@ import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardService;
 import no.fdk.referencedata.mobility.theme.MobilityThemeService;
 import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonService;
 import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
@@ -43,504 +43,342 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
 @EnableScheduling
-@ConditionalOnProperty(prefix = "scheduling", name="enabled", havingValue="true", matchIfMissing = true)
+@RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "scheduling", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class Scheduler {
 
-    @Autowired
-    private AccessRightService accessRightService;
+    private final AccessRightService accessRightService;
+    private final AudienceTypeService audienceTypeService;
+    private final ConceptStatusService conceptStatusService;
+    private final ConceptSubjectService conceptSubjectService;
+    private final ContinentService continentService;
+    private final CountryService countryService;
+    private final CurrencyService currencyService;
+    private final DataThemeService dataThemeService;
+    private final DatasetTypeService datasetTypeService;
+    private final DistributionStatusService distributionStatusService;
+    private final DistributionTypeService distributionTypeService;
+    private final EnhetService enhetService;
+    private final EuroVocService euroVocService;
+    private final EvidenceTypeService evidenceTypeService;
+    private final FileTypeService fileTypeService;
+    private final FrequencyService frequencyService;
+    private final FylkeOrganisasjonService fylkeOrganisasjonService;
+    private final GeonamesService geonamesService;
+    private final HighValueCategoryService highValueCategoryService;
+    private final KommuneOrganisasjonService kommuneOrganisasjonService;
+    private final LegalResourceTypeService legalResourceTypeService;
+    private final LicenceService licenceService;
+    private final LosService losService;
+    private final MainActivityService mainActivityService;
+    private final MediaTypeService mediaTypeService;
+    private final MobilityConditionService mobilityConditionService;
+    private final MobilityDataStandardService mobilityDataStandardService;
+    private final MobilityThemeService mobilityThemeService;
+    private final PlannedAvailabilityService plannedAvailabilityService;
+    private final QualityDimensionService qualityDimensionService;
+    private final RelationshipWithSourceTypeService relationshipWithSourceTypeService;
+    private final RoleTypeService roleTypeService;
+    private final ServiceChannelTypeService serviceChannelTypeService;
 
-    @Autowired
-    private AudienceTypeService audienceTypeService;
-
-    @Autowired
-    private RelationshipWithSourceTypeService relationshipWithSourceTypeService;
-
-    @Autowired
-    private MediaTypeService mediaTypeService;
-
-    @Autowired
-    private FileTypeService fileTypeService;
-
-    @Autowired
-    private DataThemeService dataThemeService;
-
-    @Autowired
-    private EuroVocService euroVocService;
-
-    @Autowired
-    private FrequencyService frequencyService;
-
-    @Autowired
-    private ConceptStatusService conceptStatusService;
-
-    @Autowired
-    private CurrencyService currencyService;
-
-    @Autowired
-    private DistributionStatusService distributionStatusService;
-
-    @Autowired
-    private DistributionTypeService distributionTypeService;
-
-    @Autowired
-    private DatasetTypeService datasetTypeService;
-
-    @Autowired
-    private EnhetService enhetService;
-
-    @Autowired
-    private MainActivityService mainActivityService;
-
-    @Autowired
-    private RoleTypeService roleTypeService;
-
-    @Autowired
-    private ServiceChannelTypeService serviceChannelTypeService;
-
-    @Autowired
-    private ConceptSubjectService conceptSubjectService;
-
-    @Autowired
-    private EvidenceTypeService evidenceTypeService;
-
-    @Autowired
-    private LosService losService;
-
-    @Autowired
-    private FylkeOrganisasjonService fylkeOrganisasjonService;
-
-    @Autowired
-    private KommuneOrganisasjonService kommuneOrganisasjonService;
-
-    @Autowired
-    private PlannedAvailabilityService plannedAvailabilityService;
-
-    @Autowired
-    private LicenceService licenceService;
-
-    @Autowired
-    private MobilityThemeService mobilityThemeService;
-
-    @Autowired
-    private MobilityDataStandardService mobilityDataStandardService;
-
-    @Autowired
-    private MobilityConditionService mobilityConditionService;
-
-    @Autowired
-    private HighValueCategoryService highValueCategoryService;
-
-    @Autowired
-    private QualityDimensionService qualityDimensionService;
-
-    @Autowired
-    private LegalResourceTypeService legalResourceTypeService;
-
-    @Autowired
-    private ContinentService continentService;
-
-    @Autowired
-    private CountryService countryService;
-
-    @Autowired
-    private GeonamesService geonamesService;
-
-    /**
-     * Run every hour
-     */
+    /** Run every hour at minute 45. */
     @Scheduled(cron = "0 45 * * * ?")
     public void updateConceptSubjects() {
         conceptSubjectService.harvestAndSave();
     }
 
-    /**
-     * Run every day 01:00 (at night)
-     */
-    @Scheduled(cron = "0 0 1 * * ?")
+    /** Run once a month at 01:00 on the 1st. */
+    @Scheduled(cron = "0 0 1 1 * ?")
     public void updateEvidenceTypes() {
-        evidenceTypeService.harvestAndSave(false);
+        evidenceTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 01:10 (at night)
-     */
-    @Scheduled(cron = "0 10 1 * * ?")
+    /** Run once a month at 01:10 on the 1st. */
+    @Scheduled(cron = "0 10 1 1 * ?")
     public void updateServiceChannelTypes() {
-        serviceChannelTypeService.harvestAndSave(false);
+        serviceChannelTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 01:20 (at night)
-     */
-    @Scheduled(cron = "0 20 1 * * ?")
+    /** Run once a month at 01:20 on the 1st. */
+    @Scheduled(cron = "0 20 1 1 * ?")
     public void updateRoleTypes() {
-        roleTypeService.harvestAndSave(false);
+        roleTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 01:30 (at night)
-     */
-    @Scheduled(cron = "0 30 1 * * ?")
+    /** Run once a month at 01:30 on the 1st. */
+    @Scheduled(cron = "0 30 1 1 * ?")
     public void updateAccessRights() {
-        accessRightService.harvestAndSave(false);
+        accessRightService.harvestAndSave();
     }
 
-    /**
-     * Run every day 01:40 (at night)
-     */
-    @Scheduled(cron = "0 40 1 * * ?")
+    /** Run once a month at 01:40 on the 1st. */
+    @Scheduled(cron = "0 40 1 1 * ?")
     public void updateMediaTypes() {
         mediaTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 01:50 (at night)
-     */
-    @Scheduled(cron = "0 50 1 * * ?")
+    /** Run once a month at 01:50 on the 1st. */
+    @Scheduled(cron = "0 50 1 1 * ?")
     public void updateFileTypes() {
-        fileTypeService.harvestAndSave(false);
+        fileTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:00 (at night)
-     */
-    @Scheduled(cron = "0 0 2 * * ?")
+    /** Run once a month at 02:00 on the 1st. */
+    @Scheduled(cron = "0 0 2 1 * ?")
     public void updateDataThemes() {
-        dataThemeService.harvestAndSave(false);
+        dataThemeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:10 (at night)
-     */
-    @Scheduled(cron = "0 10 2 * * ?")
+    /** Run once a month at 02:10 on the 1st. */
+    @Scheduled(cron = "0 10 2 1 * ?")
     public void updateEuroVoc() {
-        euroVocService.harvestAndSave(false);
+        euroVocService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:20 (at night)
-     */
-    @Scheduled(cron = "0 20 2 * * ?")
+    /** Run once a month at 02:20 on the 1st. */
+    @Scheduled(cron = "0 20 2 1 * ?")
     public void updateFrequencies() {
-        frequencyService.harvestAndSave(false);
+        frequencyService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:25 (at night)
-     */
-    @Scheduled(cron = "0 25 2 * * ?")
+    /** Run once a month at 02:25 on the 1st. */
+    @Scheduled(cron = "0 25 2 1 * ?")
     public void updateDistributionStatuses() {
-        distributionStatusService.harvestAndSave(false);
+        distributionStatusService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:30 (at night)
-     */
-    @Scheduled(cron = "0 30 2 * * ?")
+    /** Run once a month at 02:30 on the 1st. */
+    @Scheduled(cron = "0 30 2 1 * ?")
     public void updateDistributionTypes() {
-        distributionTypeService.harvestAndSave(false);
+        distributionTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:35 (at night)
-     */
-    @Scheduled(cron = "0 35 2 * * ?")
+    /** Run once a month at 02:35 on the 1st. */
+    @Scheduled(cron = "0 35 2 1 * ?")
     public void updateDatasetTypes() {
-        datasetTypeService.harvestAndSave(false);
+        datasetTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:40 (at night)
-     */
-    @Scheduled(cron = "0 40 2 * * ?")
+    /** Run once a month at 02:40 on the 1st. */
+    @Scheduled(cron = "0 40 2 1 * ?")
     public void updateMainActivities() {
-        mainActivityService.harvestAndSave(false);
+        mainActivityService.harvestAndSave();
     }
 
-    /**
-     * Run every day 02:50 (at night)
-     */
-    @Scheduled(cron = "0 50 2 * * ?")
+    /** Run once a month at 02:50 on the 1st. */
+    @Scheduled(cron = "0 50 2 1 * ?")
     public void updateLos() {
         losService.importLosNodes();
     }
 
-    /**
-     * Run every day 03:10 (at night)
-     */
-    @Scheduled(cron = "0 10 3 * * ?")
+    /** Run once a month at 03:10 on the 1st. */
+    @Scheduled(cron = "0 10 3 1 * ?")
     public void updateFylkeskommuner() {
         fylkeOrganisasjonService.harvestAndSave();
     }
 
-    /**
-     * Run every day 03:20 (at night)
-     */
-    @Scheduled(cron = "0 20 3 * * ?")
+    /** Run once a month at 03:20 on the 1st. */
+    @Scheduled(cron = "0 20 3 1 * ?")
     public void updateKommuneOrganisasjoner() {
         kommuneOrganisasjonService.harvestAndSave();
     }
 
-    /**
-     * Run every day 03:40 (at night)
-     */
-    @Scheduled(cron = "0 40 3 * * ?")
+    /** Run once a month at 03:40 on the 1st. */
+    @Scheduled(cron = "0 40 3 1 * ?")
     public void updateConceptStatuses() {
-        conceptStatusService.harvestAndSave(false);
+        conceptStatusService.harvestAndSave();
     }
 
-    /**
-     * Run every day 03:50 (at night)
-     */
-    @Scheduled(cron = "0 50 3 * * ?")
+    /** Run once a month at 03:50 on the 1st. */
+    @Scheduled(cron = "0 50 3 1 * ?")
     public void updateAudienceTypes() {
-        audienceTypeService.harvestAndSave(false);
+        audienceTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 04:00 (at night)
-     */
-    @Scheduled(cron = "0 0 4 * * ?")
+    /** Run once a month at 04:00 on the 1st. */
+    @Scheduled(cron = "0 0 4 1 * ?")
     public void updateAdministrativeEnheter() {
         enhetService.harvestAndSave();
     }
 
-    /**
-     * Run every day 04:10 (at night)
-     */
-    @Scheduled(cron = "0 10 4 * * ?")
+    /** Run once a month at 04:10 on the 1st. */
+    @Scheduled(cron = "0 10 4 1 * ?")
     public void updateRelationshipWithSourceTypes() {
-        relationshipWithSourceTypeService.harvestAndSave(false);
+        relationshipWithSourceTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 04:20 (at night)
-     */
-    @Scheduled(cron = "0 20 4 * * ?")
+    /** Run once a month at 04:20 on the 1st. */
+    @Scheduled(cron = "0 20 4 1 * ?")
     public void updatePlannedAvailability() {
-        plannedAvailabilityService.harvestAndSave(false);
+        plannedAvailabilityService.harvestAndSave();
     }
 
-    /**
-     * Run every day 04:30 (at night)
-     */
-    @Scheduled(cron = "0 30 4 * * ?")
+    /** Run once a month at 04:30 on the 1st. */
+    @Scheduled(cron = "0 30 4 1 * ?")
     public void updateCurrencies() {
-        currencyService.harvestAndSave(false);
+        currencyService.harvestAndSave();
     }
 
-    /**
-     * Run every day 04:40 (at night)
-     */
-    @Scheduled(cron = "0 40 4 * * ?")
+    /** Run once a month at 04:40 on the 1st. */
+    @Scheduled(cron = "0 40 4 1 * ?")
     public void updateLicences() {
-        licenceService.harvestAndSave(false);
+        licenceService.harvestAndSave();
     }
 
-    /**
-     * Run every day 04:50 (at night)
-     */
-    @Scheduled(cron = "0 50 4 * * ?")
+    /** Run once a month at 04:50 on the 1st. */
+    @Scheduled(cron = "0 50 4 1 * ?")
     public void updateMobilityThemes() {
-        mobilityThemeService.harvestAndSave(false);
+        mobilityThemeService.harvestAndSave();
     }
 
-    /**
-     * Run every day 04:55 (at night)
-     */
-    @Scheduled(cron = "0 55 4 * * ?")
+    /** Run once a month at 04:55 on the 1st. */
+    @Scheduled(cron = "0 55 4 1 * ?")
     public void updateMobilityCondition() {
-        mobilityConditionService.harvestAndSave(false);
+        mobilityConditionService.harvestAndSave();
     }
 
-    /**
-     * Run every day 05:00 (at night)
-     */
-    @Scheduled(cron = "0 0 5 * * ?")
+    /** Run once a month at 05:00 on the 1st. */
+    @Scheduled(cron = "0 0 5 1 * ?")
     public void updateMobilityDataStandards() {
-        mobilityDataStandardService.harvestAndSave(false);
+        mobilityDataStandardService.harvestAndSave();
     }
 
-    /**
-     * Run every day 05:05 (at night)
-     */
-    @Scheduled(cron = "0 5 5 * * ?")
+    /** Run once a month at 05:05 on the 1st. */
+    @Scheduled(cron = "0 5 5 1 * ?")
     public void updateHighValueCategories() {
-        highValueCategoryService.harvestAndSave(false);
+        highValueCategoryService.harvestAndSave();
     }
 
-    /**
-     * Run every day 05:10 (at night)
-     */
-    @Scheduled(cron = "0 10 5 * * ?")
+    /** Run once a month at 05:10 on the 1st. */
+    @Scheduled(cron = "0 10 5 1 * ?")
     public void updateQualityDimensions() {
-        qualityDimensionService.harvestAndSave(false);
+        qualityDimensionService.harvestAndSave();
     }
 
-    /**
-     * Run every day 05:15 (at night)
-     */
-    @Scheduled(cron = "0 15 5 * * ?")
+    /** Run once a month at 05:15 on the 1st. */
+    @Scheduled(cron = "0 15 5 1 * ?")
     public void updateLegalResourceTypes() {
-        legalResourceTypeService.harvestAndSave(false);
+        legalResourceTypeService.harvestAndSave();
     }
 
-    /**
-     * Run every month at 05:20 (at night) on the 5th
-     */
-    @Scheduled(cron = "0 20 5 5 * ?")
+    /** Run once a month at 05:20 on the 1st. */
+    @Scheduled(cron = "0 20 5 1 * ?")
     public void updateContinents() {
-        continentService.harvestAndSave(false);
+        continentService.harvestAndSave();
     }
 
-    /**
-     * Run every month at 05:25 (at night) on the 5th
-     */
-    @Scheduled(cron = "0 25 5 5 * ?")
+    /** Run once a month at 05:25 on the 1st. */
+    @Scheduled(cron = "0 25 5 1 * ?")
     public void updateCountries() {
-        countryService.harvestAndSave(false);
+        countryService.harvestAndSave();
     }
 
-    /**
-     * Run every month at 05:30 (at night) on the 10th
-     */
-    @Scheduled(cron = "0 30 5 10 * ?")
+    /** Run once a month at 05:30 on the 1st. */
+    @Scheduled(cron = "0 30 5 1 * ?")
     public void updateGeonames() {
         geonamesService.harvestAndSave();
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
-        if(accessRightService.firstTime()) {
-            accessRightService.harvestAndSave(true);
+        if (accessRightService.firstTime()) {
+            accessRightService.harvestAndSave();
         }
-
-        if(fileTypeService.firstTime()) {
-            fileTypeService.harvestAndSave(true);
+        if (audienceTypeService.firstTime()) {
+            audienceTypeService.harvestAndSave();
         }
-
-        if(mediaTypeService.firstTime()) {
-            mediaTypeService.harvestAndSave();
+        if (conceptStatusService.firstTime()) {
+            conceptStatusService.harvestAndSave();
         }
-
-        if(dataThemeService.firstTime()) {
-            dataThemeService.harvestAndSave(true);
-        }
-
-        if(euroVocService.firstTime()) {
-            euroVocService.harvestAndSave(true);
-        }
-
-        if(frequencyService.firstTime()) {
-            frequencyService.harvestAndSave(true);
-        }
-
-        if(distributionStatusService.firstTime()) {
-            distributionStatusService.harvestAndSave(true);
-        }
-
-        if(distributionTypeService.firstTime()) {
-            distributionTypeService.harvestAndSave(true);
-        }
-
-        if(datasetTypeService.firstTime()) {
-            datasetTypeService.harvestAndSave(true);
-        }
-
-        if(enhetService.firstTime()) {
-            enhetService.harvestAndSave();
-        }
-
-        if(mainActivityService.firstTime()) {
-            mainActivityService.harvestAndSave(true);
-        }
-
-        if(roleTypeService.firstTime()) {
-            roleTypeService.harvestAndSave(true);
-        }
-
-        if(serviceChannelTypeService.firstTime()) {
-            serviceChannelTypeService.harvestAndSave(true);
-        }
-
-        if(conceptSubjectService.firstTime()) {
+        if (conceptSubjectService.firstTime()) {
             conceptSubjectService.harvestAndSave();
         }
-
-        if(evidenceTypeService.firstTime()) {
-            evidenceTypeService.harvestAndSave(true);
+        if (continentService.firstTime()) {
+            continentService.harvestAndSave();
         }
-
-        if(losService.firstTime()) {
-            losService.importLosNodes();
+        if (countryService.firstTime()) {
+            countryService.harvestAndSave();
         }
-
-        if(fylkeOrganisasjonService.firstTime()) {
+        if (currencyService.firstTime()) {
+            currencyService.harvestAndSave();
+        }
+        if (dataThemeService.firstTime()) {
+            dataThemeService.harvestAndSave();
+        }
+        if (datasetTypeService.firstTime()) {
+            datasetTypeService.harvestAndSave();
+        }
+        if (distributionStatusService.firstTime()) {
+            distributionStatusService.harvestAndSave();
+        }
+        if (distributionTypeService.firstTime()) {
+            distributionTypeService.harvestAndSave();
+        }
+        if (enhetService.firstTime()) {
+            enhetService.harvestAndSave();
+        }
+        if (euroVocService.firstTime()) {
+            euroVocService.harvestAndSave();
+        }
+        if (evidenceTypeService.firstTime()) {
+            evidenceTypeService.harvestAndSave();
+        }
+        if (fileTypeService.firstTime()) {
+            fileTypeService.harvestAndSave();
+        }
+        if (frequencyService.firstTime()) {
+            frequencyService.harvestAndSave();
+        }
+        if (fylkeOrganisasjonService.firstTime()) {
             fylkeOrganisasjonService.harvestAndSave();
         }
-
-        if(kommuneOrganisasjonService.firstTime()) {
+        if (geonamesService.firstTime()) {
+            geonamesService.harvestAndSave();
+        }
+        if (highValueCategoryService.firstTime()) {
+            highValueCategoryService.harvestAndSave();
+        }
+        if (kommuneOrganisasjonService.firstTime()) {
             kommuneOrganisasjonService.harvestAndSave();
         }
-
-        if(conceptStatusService.firstTime()) {
-            conceptStatusService.harvestAndSave(true);
+        if (legalResourceTypeService.firstTime()) {
+            legalResourceTypeService.harvestAndSave();
         }
-
-        if(audienceTypeService.firstTime()) {
-            audienceTypeService.harvestAndSave(true);
+        if (licenceService.firstTime()) {
+            licenceService.harvestAndSave();
         }
-
-        if(relationshipWithSourceTypeService.firstTime()) {
-            relationshipWithSourceTypeService.harvestAndSave(true);
+        if (losService.firstTime()) {
+            losService.importLosNodes();
         }
-
-        if(plannedAvailabilityService.firstTime()) {
-            plannedAvailabilityService.harvestAndSave(true);
+        if (mainActivityService.firstTime()) {
+            mainActivityService.harvestAndSave();
         }
-
-        if(currencyService.firstTime()) {
-            currencyService.harvestAndSave(true);
+        if (mediaTypeService.firstTime()) {
+            mediaTypeService.harvestAndSave();
         }
-
-        if(licenceService.firstTime()) {
-            licenceService.harvestAndSave(true);
+        if (mobilityConditionService.firstTime()) {
+            mobilityConditionService.harvestAndSave();
         }
-
-        if(mobilityThemeService.firstTime()) {
-            mobilityThemeService.harvestAndSave(true);
+        if (mobilityDataStandardService.firstTime()) {
+            mobilityDataStandardService.harvestAndSave();
         }
-
-        if(mobilityConditionService.firstTime()) {
-            mobilityConditionService.harvestAndSave(true);
+        if (mobilityThemeService.firstTime()) {
+            mobilityThemeService.harvestAndSave();
         }
-
-        if(mobilityDataStandardService.firstTime()) {
-            mobilityDataStandardService.harvestAndSave(true);
+        if (plannedAvailabilityService.firstTime()) {
+            plannedAvailabilityService.harvestAndSave();
         }
-
-        if(highValueCategoryService.firstTime()) {
-            highValueCategoryService.harvestAndSave(true);
+        if (qualityDimensionService.firstTime()) {
+            qualityDimensionService.harvestAndSave();
         }
-
-        if(qualityDimensionService.firstTime()) {
-            qualityDimensionService.harvestAndSave(true);
+        if (relationshipWithSourceTypeService.firstTime()) {
+            relationshipWithSourceTypeService.harvestAndSave();
         }
-
-        if(legalResourceTypeService.firstTime()) {
-            legalResourceTypeService.harvestAndSave(true);
+        if (roleTypeService.firstTime()) {
+            roleTypeService.harvestAndSave();
         }
-
-        if(continentService.firstTime()) {
-            continentService.harvestAndSave(true);
-        }
-
-        if(countryService.firstTime()) {
-            countryService.harvestAndSave(true);
-        }
-
-        if(geonamesService.firstTime()) {
-            geonamesService.harvestAndSave();
+        if (serviceChannelTypeService.firstTime()) {
+            serviceChannelTypeService.harvestAndSave();
         }
     }
 }

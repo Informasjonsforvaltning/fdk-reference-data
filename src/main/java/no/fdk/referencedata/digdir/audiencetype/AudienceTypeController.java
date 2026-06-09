@@ -35,7 +35,7 @@ public class AudienceTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateAudienceTypes() {
-        audienceTypeService.harvestAndSave(true);
+        audienceTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

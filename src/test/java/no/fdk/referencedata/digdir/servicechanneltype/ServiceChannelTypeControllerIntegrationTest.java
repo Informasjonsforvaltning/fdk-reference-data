@@ -68,7 +68,7 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
                 harvestSettingsRepository,
                 new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        serviceChannelTypeService.harvestAndSave(true);
+        serviceChannelTypeService.harvestAndSave();
     }
 
     @Test

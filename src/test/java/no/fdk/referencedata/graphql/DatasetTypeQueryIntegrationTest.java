@@ -53,7 +53,7 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        datasetTypeService.harvestAndSave(false);
+        datasetTypeService.harvestAndSave();
     }
 
     @Test

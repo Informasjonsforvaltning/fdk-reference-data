@@ -46,7 +46,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        roleTypeService.harvestAndSave(false);
+        roleTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         roleTypeRepository.findAll().forEach(roleType -> counter.incrementAndGet());
@@ -59,7 +59,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         RoleTypeService roleTypeService = new RoleTypeService(
                 new LocalRoleTypeHarvester("132-0"),
                 roleTypeRepository,
@@ -68,7 +68,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        roleTypeService.harvestAndSave(false);
+        roleTypeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(ROLE_TYPE.name()).orElseThrow();
@@ -86,7 +86,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        roleTypeService.harvestAndSave(false);
+        roleTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(ROLE_TYPE.name()).orElseThrow();
@@ -95,23 +95,23 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         roleTypeService = new RoleTypeService(
-                new LocalRoleTypeHarvester("132-1"),
+                new LocalRoleTypeHarvester("132-2"),
                 roleTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        roleTypeService.harvestAndSave(false);
+        roleTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(ROLE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("132-2", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

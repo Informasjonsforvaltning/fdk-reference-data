@@ -68,7 +68,7 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
                 harvestSettingsRepository,
                 new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        evidenceTypeService.harvestAndSave(true);
+        evidenceTypeService.harvestAndSave();
     }
 
     @Test

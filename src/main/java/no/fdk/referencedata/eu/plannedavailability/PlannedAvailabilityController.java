@@ -35,7 +35,7 @@ public class PlannedAvailabilityController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updatePlannedAvailabilities() {
-        plannedAvailabilityService.harvestAndSave(true);
+        plannedAvailabilityService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

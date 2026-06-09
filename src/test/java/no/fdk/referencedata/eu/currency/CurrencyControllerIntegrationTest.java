@@ -67,7 +67,7 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        currencyService.harvestAndSave(true);
+        currencyService.harvestAndSave();
     }
 
     @Test

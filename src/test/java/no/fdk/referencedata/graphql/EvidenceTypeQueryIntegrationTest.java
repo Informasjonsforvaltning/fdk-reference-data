@@ -57,7 +57,7 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        evidenceTypeService.harvestAndSave(false);
+        evidenceTypeService.harvestAndSave();
     }
 
     @Test

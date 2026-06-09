@@ -35,7 +35,7 @@ public class CurrencyController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateCurrencies() {
-        currencyService.harvestAndSave(true);
+        currencyService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

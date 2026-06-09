@@ -35,7 +35,7 @@ public class AccessRightController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateAccessRights() {
-        accessRightService.harvestAndSave(true);
+        accessRightService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

@@ -61,7 +61,7 @@ class FileTypeSearchableIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        fileTypeService.harvestAndSave(false);
+        fileTypeService.harvestAndSave();
     }
 
     @Test

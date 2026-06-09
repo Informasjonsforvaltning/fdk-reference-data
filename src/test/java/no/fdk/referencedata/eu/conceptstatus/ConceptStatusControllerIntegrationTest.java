@@ -69,7 +69,7 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
                 harvestSettingsRepository,
                 new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        conceptStatusService.harvestAndSave(true);
+        conceptStatusService.harvestAndSave();
     }
 
     @Test

@@ -35,7 +35,7 @@ public class FileTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateFileTypes() {
-        fileTypeService.harvestAndSave(true);
+        fileTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

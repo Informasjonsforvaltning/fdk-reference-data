@@ -67,7 +67,7 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
                 harvestSettingsRepository,
                 new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        distributionStatusService.harvestAndSave(true);
+        distributionStatusService.harvestAndSave();
     }
 
     @Test

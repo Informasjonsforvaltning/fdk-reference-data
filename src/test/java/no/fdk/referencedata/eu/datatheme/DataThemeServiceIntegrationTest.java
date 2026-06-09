@@ -45,7 +45,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        fileTypeService.harvestAndSave(false);
+        fileTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         dataThemeRepository.findAll().forEach(fileType -> counter.incrementAndGet());
@@ -61,7 +61,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200923-1"),
                 dataThemeRepository,
@@ -70,7 +70,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave(false);
+        dataThemeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
@@ -88,7 +88,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave(false);
+        dataThemeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
@@ -97,7 +97,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester("20200924-0"),
                 dataThemeRepository,
@@ -106,14 +106,14 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
                 new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        dataThemeService.harvestAndSave(false);
+        dataThemeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DATA_THEME.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20200924-0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

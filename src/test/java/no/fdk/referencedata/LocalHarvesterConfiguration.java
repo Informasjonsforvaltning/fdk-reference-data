@@ -44,6 +44,8 @@ import no.fdk.referencedata.eu.licence.LicenceHarvester;
 import no.fdk.referencedata.eu.licence.LocalLicenceHarvester;
 import no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester;
 import no.fdk.referencedata.eu.mainactivity.MainActivityHarvester;
+import no.fdk.referencedata.eu.plannedavailability.LocalPlannedAvailabilityHarvester;
+import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityHarvester;
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaTypeHarvester;
 import no.fdk.referencedata.los.LocalLosImporter;
@@ -130,6 +132,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public MainActivityHarvester mainActivityHarvester() {
         return new LocalMainActivityHarvester("1");
+    }
+
+    @Bean
+    public PlannedAvailabilityHarvester plannedAvailabilityHarvester() {
+        return new LocalPlannedAvailabilityHarvester("1");
     }
 
     @Bean

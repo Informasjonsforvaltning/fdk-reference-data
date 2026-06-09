@@ -46,7 +46,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        evidenceTypeService.harvestAndSave(false);
+        evidenceTypeService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         evidenceTypeRepository.findAll().forEach(evidenceType -> counter.incrementAndGet());
@@ -59,7 +59,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester("132-0"),
                 evidenceTypeRepository,
@@ -68,7 +68,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        evidenceTypeService.harvestAndSave(false);
+        evidenceTypeService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
@@ -86,7 +86,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        evidenceTypeService.harvestAndSave(false);
+        evidenceTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
@@ -95,23 +95,23 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("132-1"),
+                new LocalEvidenceTypeHarvester("132-2"),
                 evidenceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        evidenceTypeService.harvestAndSave(false);
+        evidenceTypeService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("132-2", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

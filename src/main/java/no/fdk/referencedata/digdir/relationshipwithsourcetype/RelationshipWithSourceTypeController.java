@@ -36,7 +36,7 @@ public class RelationshipWithSourceTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateRelationshipWithSourceTypes() {
-        relationshipWithSourceTypeService.harvestAndSave(true);
+        relationshipWithSourceTypeService.harvestAndSave();
         return ResponseEntity.ok().build();
     }
 

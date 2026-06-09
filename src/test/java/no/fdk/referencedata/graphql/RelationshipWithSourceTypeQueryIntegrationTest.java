@@ -56,7 +56,7 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
                 harvestSettingsRepository,
                 new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        relationshipWithSourceTypeService.harvestAndSave(false);
+        relationshipWithSourceTypeService.harvestAndSave();
     }
 
     @Test

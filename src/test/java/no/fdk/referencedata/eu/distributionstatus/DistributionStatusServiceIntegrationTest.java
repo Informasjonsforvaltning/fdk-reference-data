@@ -43,7 +43,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 harvestSettingsRepository,
                 new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        distributionStatusService.harvestAndSave(false);
+        distributionStatusService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         distributionStatusRepository.findAll().forEach(status -> counter.incrementAndGet());
@@ -56,7 +56,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         DistributionStatusService distributionStatusService = new DistributionStatusService(
                 new LocalDistributionStatusHarvester("20220615-0"),
                 distributionStatusRepository,
@@ -65,7 +65,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        distributionStatusService.harvestAndSave(false);
+        distributionStatusService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(DISTRIBUTION_STATUS.name()).orElseThrow();
@@ -83,7 +83,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        distributionStatusService.harvestAndSave(false);
+        distributionStatusService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DISTRIBUTION_STATUS.name()).orElseThrow();
@@ -92,23 +92,23 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         distributionStatusService = new DistributionStatusService(
-                new LocalDistributionStatusHarvester("20210615-0"),
+                new LocalDistributionStatusHarvester("20220615-1"),
                 distributionStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
                 new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        distributionStatusService.harvestAndSave(false);
+        distributionStatusService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(DISTRIBUTION_STATUS.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20220615-1", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

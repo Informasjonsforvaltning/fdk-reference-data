@@ -54,7 +54,7 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        distributionTypeService.harvestAndSave(false);
+        distributionTypeService.harvestAndSave();
     }
 
     @Test

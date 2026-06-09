@@ -45,7 +45,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        licenceService.harvestAndSave(false);
+        licenceService.harvestAndSave();
 
         final AtomicInteger counter = new AtomicInteger();
         licenceRepository.findAll().forEach(licence -> counter.incrementAndGet());
@@ -60,7 +60,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_only_persists_if_newer_version() {
+    public void test_if_harvest_always_persists_and_updates_version() {
         LicenceService licenceService = new LicenceService(
                 new LocalLicenceHarvester("20240610-1"),
                 licenceRepository,
@@ -69,7 +69,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        licenceService.harvestAndSave(false);
+        licenceService.harvestAndSave();
 
         HarvestSettings settings =
                 harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
@@ -87,7 +87,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        licenceService.harvestAndSave(false);
+        licenceService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
@@ -96,7 +96,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
-        // Older version
+        // Same version
         licenceService = new LicenceService(
                 new LocalLicenceHarvester("20240611-0"),
                 licenceRepository,
@@ -105,14 +105,14 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
 
         LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        licenceService.harvestAndSave(false);
+        licenceService.harvestAndSave();
 
         settings =
                 harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
         assertNotNull(settings);
         assertEquals("20240611-0", settings.getLatestVersion());
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
+        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test

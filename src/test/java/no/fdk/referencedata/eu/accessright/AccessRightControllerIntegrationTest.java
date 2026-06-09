@@ -67,7 +67,7 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
                 harvestSettingsRepository,
                 new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        accessRightService.harvestAndSave(true);
+        accessRightService.harvestAndSave();
     }
 
     @Test

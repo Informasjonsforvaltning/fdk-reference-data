@@ -64,7 +64,7 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
                 harvestSettingsRepository,
                 new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        mobilityDataStandardService.harvestAndSave(true);
+        mobilityDataStandardService.harvestAndSave();
     }
 
     @Test

@@ -55,7 +55,7 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        audienceTypeService.harvestAndSave(false);
+        audienceTypeService.harvestAndSave();
     }
 
     @Test

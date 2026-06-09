@@ -54,7 +54,7 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
                 harvestSettingsRepository,
                 new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
 
-        dataThemeService.harvestAndSave(false);
+        dataThemeService.harvestAndSave();
     }
 
     @Test
