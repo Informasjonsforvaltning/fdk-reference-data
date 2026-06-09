@@ -58,7 +58,7 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
                 .build();
 
         MobilityConditionService mobilityConditionService = new MobilityConditionService(
-                new LocalMobilityConditionHarvester("1.0.0"),
+                new LocalMobilityConditionHarvester(),
                 mobilityConditionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -102,7 +102,6 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
         assertEquals(10, mobilityConditionRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_CONDITION.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -116,7 +115,6 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
         assertEquals(10, mobilityConditionRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_CONDITION.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -125,7 +123,6 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
         assertEquals(10, mobilityConditionRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_CONDITION.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -139,7 +136,6 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
         assertEquals(10, mobilityConditionRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_CONDITION.name()).orElseThrow();
-        assertEquals("1.1.0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

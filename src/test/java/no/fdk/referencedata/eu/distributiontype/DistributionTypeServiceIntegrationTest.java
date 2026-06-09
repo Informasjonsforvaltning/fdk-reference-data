@@ -39,7 +39,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_harvest_persists_distribution_types() {
         DistributionTypeService accessRightService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester("20200923-0"),
+                new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -60,7 +60,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         DistributionTypeService accessRightService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester("20200923-1"),
+                new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -72,13 +72,12 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
         HarvestSettings settings =
                 harvestSettingsRepository.findById(DISTRIBUTION_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         accessRightService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester("20200924-0"),
+                new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -90,13 +89,12 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
         settings =
                 harvestSettingsRepository.findById(DISTRIBUTION_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         accessRightService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester("20200924-0"),
+                new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -108,7 +106,6 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
         settings =
                 harvestSettingsRepository.findById(DISTRIBUTION_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -131,7 +128,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
         when(distrubutionTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new DistributionTypeService(
-                new LocalDistributionTypeHarvester("20200924-2"),
+                new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

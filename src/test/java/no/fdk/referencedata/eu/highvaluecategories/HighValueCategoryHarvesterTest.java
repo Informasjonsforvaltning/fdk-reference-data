@@ -10,7 +10,7 @@ public class HighValueCategoryHarvesterTest {
 
     @Test
     public void test_fetch_high_value_categories() {
-        HighValueCategoriesHarvester harvester = new LocalHighValueCategoryHarvester("1");
+        HighValueCategoriesHarvester harvester = new LocalHighValueCategoryHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, harvester.harvest().collectList().block().size());

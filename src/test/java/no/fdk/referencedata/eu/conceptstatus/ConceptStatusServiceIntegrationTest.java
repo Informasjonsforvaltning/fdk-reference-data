@@ -42,7 +42,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester("1"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -54,7 +54,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_concept_statuses() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester("20200923-0"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -75,7 +75,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester("20200923-1"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -87,13 +87,12 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(CONCEPT_STATUS.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester("20200924-0"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -105,13 +104,12 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(CONCEPT_STATUS.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester("20200924-0"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -123,7 +121,6 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(CONCEPT_STATUS.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -146,7 +143,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         when(conceptStatusRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new ConceptStatusService(
-                new LocalConceptStatusHarvester("20200924-2"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

@@ -61,7 +61,7 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         CurrencyService currencyService = new CurrencyService(
-                new LocalCurrencyHarvester("1"),
+                new LocalCurrencyHarvester(),
                 currencyRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -101,7 +101,6 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +112,6 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -122,7 +120,6 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -134,7 +131,6 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertEquals("20241211-0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

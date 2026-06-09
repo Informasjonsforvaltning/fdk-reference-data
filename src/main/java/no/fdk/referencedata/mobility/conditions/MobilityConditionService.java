@@ -64,7 +64,6 @@ public class MobilityConditionService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MOBILITY_CONDITION.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.MOBILITY_CONDITION.name())
-                            .latestVersion("0")
                             .build());
 
             final List<MobilityCondition> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class MobilityConditionService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityConditionHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(mobilityConditionHarvester.getVersion());
 
             mobilityConditionWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

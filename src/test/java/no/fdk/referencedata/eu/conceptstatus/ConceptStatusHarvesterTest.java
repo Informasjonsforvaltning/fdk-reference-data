@@ -16,11 +16,10 @@ public class ConceptStatusHarvesterTest {
 
     @Test
     public void test_fetch_concept_statuses() {
-        ConceptStatusHarvester harvester = new LocalConceptStatusHarvester("20200923-0");
+        ConceptStatusHarvester harvester = new LocalConceptStatusHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("concept-status.ttl", harvester.getSource().getFilename());
-        assertEquals("20200923-0", harvester.getVersion());
 
         List<ConceptStatus> statuses = harvester.harvest().collectList().block();
         assertNotNull(statuses);

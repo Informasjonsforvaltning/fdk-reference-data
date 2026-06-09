@@ -51,7 +51,7 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("1"),
+                new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

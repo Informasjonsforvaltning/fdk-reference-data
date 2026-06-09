@@ -63,7 +63,6 @@ public class MainActivityService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.MAIN_ACTIVITY.name())
-                            .latestVersion("0")
                             .build());
 
             final List<MainActivity> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class MainActivityService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mainActivityHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(mainActivityHarvester.getVersion());
 
             mainActivityWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

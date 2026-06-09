@@ -64,7 +64,6 @@ public class QualityDimensionService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.QUALITY_DIMENSION.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.QUALITY_DIMENSION.name())
-                            .latestVersion("0")
                             .build());
 
             final List<QualityDimension> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class QualityDimensionService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(qualityDimensionHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(qualityDimensionHarvester.getVersion());
 
             qualityDimensionWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

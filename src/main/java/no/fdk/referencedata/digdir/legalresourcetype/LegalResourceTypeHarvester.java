@@ -26,15 +26,11 @@ public class LegalResourceTypeHarvester extends AbstractDataNorgeHarvester<Legal
                     .map(Language::code)
                     .toList();
     private static final String PATH = "legal-resource-type";
-    private static String VERSION = "0";
 
     public LegalResourceTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<LegalResourceType> harvest() {
         log.info("Starting harvest of data.norge legal resource types");
@@ -46,19 +42,12 @@ public class LegalResourceTypeHarvester extends AbstractDataNorgeHarvester<Legal
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         LegalResourceTypeVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapLegalResourceType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(LegalResourceTypeVocabulary.getURI()),
-                DCTerms.modified
-        ).getString();
-    }
 
     private LegalResourceType mapLegalResourceType(Resource legalResourceType) {
         final Map<String, String> label = new HashMap<>();

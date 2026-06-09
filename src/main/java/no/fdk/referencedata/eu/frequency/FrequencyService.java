@@ -63,7 +63,6 @@ public class FrequencyService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.FREQUENCY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.FREQUENCY.name())
-                            .latestVersion("0")
                             .build());
 
             final List<Frequency> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class FrequencyService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(frequencyHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(frequencyHarvester.getVersion());
 
             frequencyWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

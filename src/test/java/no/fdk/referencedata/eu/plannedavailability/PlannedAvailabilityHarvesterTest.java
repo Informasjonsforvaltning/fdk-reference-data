@@ -15,11 +15,10 @@ public class PlannedAvailabilityHarvesterTest {
 
     @Test
     public void test_fetch_planned_availabilities() {
-        PlannedAvailabilityHarvester harvester = new LocalPlannedAvailabilityHarvester("20220715-0");
+        PlannedAvailabilityHarvester harvester = new LocalPlannedAvailabilityHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("planned-availability-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("20220715-0", harvester.getVersion());
 
         List<PlannedAvailability> availabilities = harvester.harvest().collectList().block();
         assertNotNull(availabilities);

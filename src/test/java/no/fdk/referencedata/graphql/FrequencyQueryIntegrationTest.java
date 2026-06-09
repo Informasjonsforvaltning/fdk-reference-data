@@ -48,7 +48,7 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         FrequencyService frequencyService = new FrequencyService(
-                new LocalFrequencyHarvester("1"),
+                new LocalFrequencyHarvester(),
                 frequencyRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

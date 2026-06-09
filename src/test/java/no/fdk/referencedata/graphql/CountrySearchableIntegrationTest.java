@@ -62,7 +62,7 @@ class CountrySearchableIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester("1"),
+                new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -71,7 +71,7 @@ class CountrySearchableIntegrationTest extends AbstractContainerTest {
         countryService.harvestAndSave();
 
         ContinentService continentService = new ContinentService(
-                new LocalContinentHarvester("1"),
+                new LocalContinentHarvester(),
                 continentRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

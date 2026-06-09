@@ -27,15 +27,11 @@ public class QualityDimensionHarvester extends AbstractDataNorgeHarvester<Qualit
                     .map(Language::code)
                     .collect(Collectors.toList());
     private static final String PATH = "quality-dimension";
-    private static String VERSION = "0";
 
     public QualityDimensionHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<QualityDimension> harvest() {
         log.info("Starting harvest of data.norge quality-dimensions");
@@ -47,19 +43,12 @@ public class QualityDimensionHarvester extends AbstractDataNorgeHarvester<Qualit
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         QualityDimensionVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapQualityDimension);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(QualityDimensionVocabulary.getURI()),
-                DCTerms.modified
-        ).getString();
-    }
 
     private QualityDimension mapQualityDimension(Resource qualityDimension) {
         final Map<String, String> label = new HashMap<>();

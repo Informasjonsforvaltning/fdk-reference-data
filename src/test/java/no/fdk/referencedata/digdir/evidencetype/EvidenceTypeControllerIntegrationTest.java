@@ -62,7 +62,7 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
                 .build();
 
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("1"),
+                new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -100,7 +100,6 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(4, evidenceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EVIDENCE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -112,7 +111,6 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(4, evidenceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EVIDENCE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -121,7 +119,6 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(4, evidenceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.EVIDENCE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -133,7 +130,6 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(4, evidenceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.EVIDENCE_TYPE.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

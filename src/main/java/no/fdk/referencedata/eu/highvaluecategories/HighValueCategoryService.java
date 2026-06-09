@@ -63,7 +63,6 @@ public class HighValueCategoryService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.HIGH_VALUE_CATEGORY.name())
-                            .latestVersion("0")
                             .build());
 
             final List<HighValueCategory> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class HighValueCategoryService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(highValueCategoriesHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(highValueCategoriesHarvester.getVersion());
 
             highValueCategoryWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

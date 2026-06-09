@@ -30,15 +30,11 @@ public class DistributionStatusHarvester extends AbstractEuHarvester<Distributio
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public DistributionStatusHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<DistributionStatus> harvest() {
         log.info("Starting harvest of EU distribution statuses");
@@ -48,18 +44,11 @@ public class DistributionStatusHarvester extends AbstractEuHarvester<Distributio
         }
 
         return Mono.justOrEmpty(loadModel(dataThemesRdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDistributionStatus.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapDistributionStatus);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/distribution-status"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private DistributionStatus mapDistributionStatus(Resource distributionStatus) {
         return DistributionStatus.builder()

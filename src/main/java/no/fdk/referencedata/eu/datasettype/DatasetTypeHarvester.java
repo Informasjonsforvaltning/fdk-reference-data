@@ -33,15 +33,11 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public DatasetTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     private final Map<String, Map<String, String>> overrideTranslations = Map.ofEntries(
             Map.entry(EUDatasetType.getURI() + "/HVD", Map.ofEntries(
@@ -130,18 +126,11 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
         }
 
         return Mono.justOrEmpty(loadAndTranslateModel(datasetTypeRdfSource))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDatasetType.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapDatasetType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/dataset-type"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private DatasetType mapDatasetType(Resource datasetType) {
         return DatasetType.builder()

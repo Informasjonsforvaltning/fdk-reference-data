@@ -15,11 +15,10 @@ public class MainActivityHarvesterTest {
 
     @Test
     public void test_fetch_access_rights() {
-        MainActivityHarvester harvester = new LocalMainActivityHarvester("123");
+        MainActivityHarvester harvester = new LocalMainActivityHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("main-activity-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("123", harvester.getVersion());
 
         List<MainActivity> mainActivities = harvester.harvest().collectList().block();
         assertNotNull(mainActivities);

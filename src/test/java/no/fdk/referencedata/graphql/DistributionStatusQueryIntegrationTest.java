@@ -48,7 +48,7 @@ class DistributionStatusQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         DistributionStatusService distributionStatusService = new DistributionStatusService(
-                new LocalDistributionStatusHarvester("1"),
+                new LocalDistributionStatusHarvester(),
                 distributionStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

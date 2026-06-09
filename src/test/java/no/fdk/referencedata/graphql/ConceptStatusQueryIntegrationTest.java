@@ -44,7 +44,7 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester("1"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

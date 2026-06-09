@@ -29,15 +29,11 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public MainActivityHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<MainActivity> harvest() {
         log.info("Starting harvest of EU main-activity");
@@ -47,19 +43,12 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
         }
 
         return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EUMainActivity.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapMainActivity);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/main-activity"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private MainActivity mapMainActivity(Resource mainActivity) {
         final Map<String, String> label = new HashMap<>();

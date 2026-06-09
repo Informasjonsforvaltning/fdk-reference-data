@@ -67,7 +67,6 @@ public class LicenceService implements SearchableReferenceData {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.LICENCE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.LICENCE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<Licence> items = new ArrayList<>();
@@ -79,7 +78,6 @@ public class LicenceService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(licenceHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(licenceHarvester.getVersion());
 
             licenceWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

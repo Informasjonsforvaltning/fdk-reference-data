@@ -63,7 +63,7 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
                 .build();
 
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester("1"),
+                new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -101,7 +101,6 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
         assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CONCEPT_STATUS.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +112,6 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
         assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CONCEPT_STATUS.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -122,7 +120,6 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
         assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CONCEPT_STATUS.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -134,7 +131,6 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
         assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CONCEPT_STATUS.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

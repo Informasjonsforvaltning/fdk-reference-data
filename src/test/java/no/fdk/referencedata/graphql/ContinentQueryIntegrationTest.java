@@ -47,7 +47,7 @@ class ContinentQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ContinentService continentService = new ContinentService(
-                new LocalContinentHarvester("1"),
+                new LocalContinentHarvester(),
                 continentRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

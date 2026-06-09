@@ -63,7 +63,6 @@ public class DistributionTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DISTRIBUTION_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DISTRIBUTION_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<DistributionType> items = new ArrayList<>();
@@ -75,7 +74,6 @@ public class DistributionTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(distributionTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(distributionTypeHarvester.getVersion());
 
             distributionTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

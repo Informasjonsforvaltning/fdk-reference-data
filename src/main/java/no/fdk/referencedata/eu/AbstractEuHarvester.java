@@ -25,7 +25,6 @@ import static no.fdk.referencedata.rdf.RDFUtils.generateThemePaths;
 public abstract class AbstractEuHarvester<T> {
     private static final String SPARQL_API = "http://publications.europa.eu/webapi/rdf/sparql";
 
-    public abstract String getVersion();
 
     private Model model = ModelFactory.createDefaultModel();
 
@@ -73,13 +72,11 @@ public abstract class AbstractEuHarvester<T> {
                 "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
                 "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
                 "CONSTRUCT { " +
-                    "atres:" + schemaName + " owl:versionInfo ?version . " +
                     "?item skos:inScheme atres:" + schemaName + " . " +
                     "?item dc:identifier ?code . " +
                     "?item at:start.use ?startUse . " +
                     "?item skos:prefLabel ?prefLabel . " +
                 "} WHERE { " +
-                    "atres:" + schemaName + " owl:versionInfo ?version . " +
                     "?item skos:inScheme atres:" + schemaName + " . " +
                     "?item a skos:Concept . " +
                     "?item dc:identifier ?code . " +

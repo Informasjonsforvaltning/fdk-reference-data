@@ -34,15 +34,11 @@ public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public CurrencyHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<Currency> harvest() {
         log.info("Starting harvest of EU currencies");
@@ -52,18 +48,11 @@ public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
         }
 
         return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUCurrency.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapCurrency);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/currency"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private Currency mapCurrency(Resource currency) {
         String code = currency.getProperty(DC.identifier).getObject().toString();

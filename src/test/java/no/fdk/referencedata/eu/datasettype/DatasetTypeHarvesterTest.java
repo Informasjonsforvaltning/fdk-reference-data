@@ -15,11 +15,10 @@ public class DatasetTypeHarvesterTest {
 
     @Test
     public void test_fetch_dataset_types() {
-        DatasetTypeHarvester harvester = new LocalDatasetTypeHarvester("20200923-0");
+        DatasetTypeHarvester harvester = new LocalDatasetTypeHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("dataset-types-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("20200923-0", harvester.getVersion());
 
         List<DatasetType> datasetTypes = harvester.harvest().collectList().block();
         assertNotNull(datasetTypes);

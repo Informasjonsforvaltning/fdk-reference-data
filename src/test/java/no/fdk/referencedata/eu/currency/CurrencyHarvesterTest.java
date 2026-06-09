@@ -14,11 +14,10 @@ public class CurrencyHarvesterTest {
 
     @Test
     public void test_fetch_currencies() {
-        CurrencyHarvester harvester = new LocalCurrencyHarvester("20241211-0");
+        CurrencyHarvester harvester = new LocalCurrencyHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("currency-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("20241211-0", harvester.getVersion());
 
         List<Currency> currencies = harvester.harvest().collectList().block();
         assertNotNull(currencies);

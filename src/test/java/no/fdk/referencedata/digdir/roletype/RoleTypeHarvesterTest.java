@@ -14,11 +14,10 @@ public class RoleTypeHarvesterTest {
 
     @Test
     public void test_fetch_role_types() {
-        RoleTypeHarvester harvester = new LocalRoleTypeHarvester("123-0");
+        RoleTypeHarvester harvester = new LocalRoleTypeHarvester();
 
         assertNotNull(harvester.getSource("role-type"));
         assertEquals("role-type.ttl", harvester.getSource("role-type").getFilename());
-        assertEquals("123-0", harvester.getVersion());
 
         List<RoleType> roleTypes = harvester.harvest().collectList().block();
         assertNotNull(roleTypes);

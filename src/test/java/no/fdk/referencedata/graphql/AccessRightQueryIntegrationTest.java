@@ -47,7 +47,7 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         AccessRightService accessRightService = new AccessRightService(
-                new LocalAccessRightHarvester("1"),
+                new LocalAccessRightHarvester(),
                 accessRightRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

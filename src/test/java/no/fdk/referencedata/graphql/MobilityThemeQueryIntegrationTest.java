@@ -49,7 +49,7 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.0.0"),
+                new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

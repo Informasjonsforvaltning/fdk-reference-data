@@ -27,15 +27,11 @@ public class LicenceHarvester extends AbstractEuHarvester<Licence> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .toList();
-    private static String VERSION = "0";
 
     public LicenceHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<Licence> harvest() {
         log.info("Starting harvest of EU licences");
@@ -45,19 +41,12 @@ public class LicenceHarvester extends AbstractEuHarvester<Licence> {
         }
 
         return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                     EULicence.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapLicence);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/licence"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private Licence mapLicence(Resource licence) {
         final Map<String, String> label = new HashMap<>();
@@ -98,8 +87,7 @@ public class LicenceHarvester extends AbstractEuHarvester<Licence> {
             "PREFIX atres: <http://publications.europa.eu/resource/authority/> " +
             "PREFIX at: <http://publications.europa.eu/ontology/authority/> " +
             "CONSTRUCT { " +
-            "atres:licence owl:versionInfo ?version . " +
-            "atres:licence skos:prefLabel ?schemaLabel . " +
+                "atres:licence skos:prefLabel ?schemaLabel . " +
             "?licence skos:inScheme ?inScheme . " +
             "?licence dc:identifier ?code . " +
             "?licence skos:definition ?definition . " +
@@ -107,8 +95,7 @@ public class LicenceHarvester extends AbstractEuHarvester<Licence> {
             "?licence at:deprecated ?deprecated . " +
             "?licence skos:prefLabel ?prefLabel . " +
             "} WHERE { " +
-            "atres:licence owl:versionInfo ?version . " +
-            "atres:licence skos:prefLabel ?schemaLabel . " +
+                "atres:licence skos:prefLabel ?schemaLabel . " +
             "FILTER(" +
             "LANG(?schemaLabel) = 'en' || " +
             "LANG(?schemaLabel) = 'no' || " +

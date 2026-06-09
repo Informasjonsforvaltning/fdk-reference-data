@@ -37,7 +37,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_dataset_types() {
         DatasetTypeService accessRightService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester("20200923-0"),
+                new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -58,7 +58,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         DatasetTypeService accessRightService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester("20200923-1"),
+                new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -70,13 +70,12 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200923-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         accessRightService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester("20200924-0"),
+                new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -88,13 +87,12 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         accessRightService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester("20200924-0"),
+                new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -106,7 +104,6 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20200924-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -129,7 +126,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
         when(datasetTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new DatasetTypeService(
-                new LocalDatasetTypeHarvester("20200924-2"),
+                new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

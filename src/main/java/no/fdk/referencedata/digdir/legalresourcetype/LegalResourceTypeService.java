@@ -64,7 +64,6 @@ public class LegalResourceTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.LEGAL_RESOURCE_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<LegalResourceType> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class LegalResourceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(legalResourceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(legalResourceTypeHarvester.getVersion());
 
             legalResourceTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

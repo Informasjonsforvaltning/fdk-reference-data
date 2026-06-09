@@ -16,11 +16,10 @@ public class LicenceHarvesterTest {
 
     @Test
     public void test_fetch_licences() {
-        LicenceHarvester harvester = new LocalLicenceHarvester("20240610-0");
+        LicenceHarvester harvester = new LocalLicenceHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("licences-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("20240610-0", harvester.getVersion());
 
         List<Licence> licences = harvester.harvest().collectList().block();
         assertNotNull(licences);

@@ -15,11 +15,10 @@ public class FrequencyHarvesterTest {
 
     @Test
     public void test_fetch_frequencies() {
-        FrequencyHarvester harvester = new LocalFrequencyHarvester("20200923-0");
+        FrequencyHarvester harvester = new LocalFrequencyHarvester();
 
         assertNotNull(harvester.getSource());
         assertEquals("frequencies-sparql-result.ttl", harvester.getSource().getFilename());
-        assertEquals("20200923-0", harvester.getVersion());
 
         List<Frequency> frequencies = harvester.harvest().collectList().block();
         assertNotNull(frequencies);

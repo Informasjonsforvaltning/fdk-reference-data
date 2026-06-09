@@ -39,7 +39,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_licences() {
         LicenceService licenceService = new LicenceService(
-                new LocalLicenceHarvester("20240610-0"),
+                new LocalLicenceHarvester(),
                 licenceRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -62,7 +62,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         LicenceService licenceService = new LicenceService(
-                new LocalLicenceHarvester("20240610-1"),
+                new LocalLicenceHarvester(),
                 licenceRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -74,13 +74,12 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20240610-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         licenceService = new LicenceService(
-                new LocalLicenceHarvester("20240611-0"),
+                new LocalLicenceHarvester(),
                 licenceRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -92,13 +91,12 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20240611-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         licenceService = new LicenceService(
-                new LocalLicenceHarvester("20240611-0"),
+                new LocalLicenceHarvester(),
                 licenceRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -110,7 +108,6 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20240611-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -132,7 +129,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         when(licenceRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new LicenceService(
-                new LocalLicenceHarvester("20240611-2"),
+                new LocalLicenceHarvester(),
                 licenceRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

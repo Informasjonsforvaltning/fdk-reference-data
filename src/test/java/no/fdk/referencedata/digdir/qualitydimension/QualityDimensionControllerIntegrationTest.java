@@ -63,7 +63,7 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
                 .build();
 
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester("2023-01-30"),
+                new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -101,7 +101,6 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.QUALITY_DIMENSION.name()).orElseThrow();
-        assertEquals("2023-01-30", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +112,6 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.QUALITY_DIMENSION.name()).orElseThrow();
-        assertEquals("2023-01-30", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -122,7 +120,6 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.QUALITY_DIMENSION.name()).orElseThrow();
-        assertEquals("2023-01-30", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -134,7 +131,6 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.QUALITY_DIMENSION.name()).orElseThrow();
-        assertEquals("2023-01-30", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

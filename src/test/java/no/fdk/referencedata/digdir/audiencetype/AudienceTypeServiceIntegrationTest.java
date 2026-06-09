@@ -36,7 +36,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_audience_types() {
         AudienceTypeService audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester("123-0"),
+                new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -58,7 +58,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         AudienceTypeService audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester("132-0"),
+                new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -70,13 +70,12 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester("132-2"),
+                new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -88,13 +87,12 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester("132-2"),
+                new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -106,7 +104,6 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(AUDIENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -129,7 +126,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
         when(audienceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new AudienceTypeService(
-                new LocalAudienceTypeHarvester("123-2"),
+                new LocalAudienceTypeHarvester(),
                 audienceTypeRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

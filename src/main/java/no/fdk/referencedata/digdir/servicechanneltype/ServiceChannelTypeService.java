@@ -64,7 +64,6 @@ public class ServiceChannelTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.SERVICE_CHANNEL_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.SERVICE_CHANNEL_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<ServiceChannelType> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class ServiceChannelTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(serviceChannelTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(serviceChannelTypeHarvester.getVersion());
 
             serviceChannelTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

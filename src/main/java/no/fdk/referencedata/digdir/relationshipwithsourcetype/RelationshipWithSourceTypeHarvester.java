@@ -26,15 +26,11 @@ public class RelationshipWithSourceTypeHarvester extends AbstractDataNorgeHarves
                     .map(Language::code)
                     .toList();
     private static final String PATH = "relationship-with-source-type";
-    private static String VERSION = "0";
 
     public RelationshipWithSourceTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<RelationshipWithSourceType> harvest() {
         log.info("Starting harvest of data.norge relationship-with-source-type");
@@ -46,19 +42,12 @@ public class RelationshipWithSourceTypeHarvester extends AbstractDataNorgeHarves
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         RelationshipWithSourceTypeVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapRelationshipWithSourceType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(RelationshipWithSourceTypeVocabulary.getURI()),
-                DCTerms.modified
-        ).getString();
-    }
 
     private RelationshipWithSourceType mapRelationshipWithSourceType(Resource relationshipWithSourceType) {
         final Map<String, String> label = new HashMap<>();

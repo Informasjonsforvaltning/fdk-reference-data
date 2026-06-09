@@ -42,9 +42,6 @@ public class ConceptSubjectHarvester {
         this.applicationSettings = applicationSettings;
     }
 
-    public String getVersion() {
-        return "0";
-    }
 
     public org.springframework.core.io.Resource getSource() {
         try {

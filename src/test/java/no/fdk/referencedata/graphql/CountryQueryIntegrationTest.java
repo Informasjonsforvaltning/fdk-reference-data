@@ -47,7 +47,7 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester("1"),
+                new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

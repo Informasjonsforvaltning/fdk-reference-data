@@ -14,11 +14,10 @@ public class EvidenceTypeHarvesterTest {
 
     @Test
     public void test_fetch_evidence_types() {
-        EvidenceTypeHarvester harvester = new LocalEvidenceTypeHarvester("123-0");
+        EvidenceTypeHarvester harvester = new LocalEvidenceTypeHarvester();
 
         assertNotNull(harvester.getSource("evidence-type"));
         assertEquals("evidence-type.ttl", harvester.getSource("evidence-type").getFilename());
-        assertEquals("123-0", harvester.getVersion());
 
         List<EvidenceType> evidenceTypes = harvester.harvest().collectList().block();
         assertNotNull(evidenceTypes);

@@ -145,7 +145,6 @@ public class EnhetService implements SearchableReferenceData {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.ADMINISTRATIVE_ENHETER.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.ADMINISTRATIVE_ENHETER.name())
-                            .latestVersion("0")
                             .build());
 
             final List<Enhet> enheter = new ArrayList<>();

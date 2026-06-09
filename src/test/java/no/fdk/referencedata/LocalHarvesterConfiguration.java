@@ -76,47 +76,47 @@ public class LocalHarvesterConfiguration {
 
     @Bean
     public FileTypeHarvester fileTypeHarvester() {
-        return new LocalFileTypeHarvester("1");
+        return new LocalFileTypeHarvester();
     }
 
     @Bean
     public DataThemeHarvester dataThemeHarvester() {
-        return new LocalDataThemeHarvester("1");
+        return new LocalDataThemeHarvester();
     }
 
     @Bean
     public EuroVocHarvester euroVocHarvester() {
-        return new LocalEuroVocHarvester("1");
+        return new LocalEuroVocHarvester();
     }
 
     @Bean
     public AccessRightHarvester accessRightHarvester() {
-        return new LocalAccessRightHarvester("1");
+        return new LocalAccessRightHarvester();
     }
 
     @Bean
     public FrequencyHarvester frequencyHarvester() {
-        return new LocalFrequencyHarvester("1");
+        return new LocalFrequencyHarvester();
     }
 
     @Bean
     public ConceptStatusHarvester conceptStatusHarvester() {
-        return new LocalConceptStatusHarvester("1");
+        return new LocalConceptStatusHarvester();
     }
 
     @Bean
     public DistributionStatusHarvester distributionStatusHarvester() {
-        return new LocalDistributionStatusHarvester("20220615-0");
+        return new LocalDistributionStatusHarvester();
     }
 
     @Bean
     public DistributionTypeHarvester distributionTypeHarvester() {
-        return new LocalDistributionTypeHarvester("1");
+        return new LocalDistributionTypeHarvester();
     }
 
     @Bean
     public DatasetTypeHarvester datasetTypeHarvester() {
-        return new LocalDatasetTypeHarvester("1");
+        return new LocalDatasetTypeHarvester();
     }
 
     @Bean
@@ -126,47 +126,47 @@ public class LocalHarvesterConfiguration {
 
     @Bean
     public EvidenceTypeHarvester evidenceTypeHarvester() {
-        return new LocalEvidenceTypeHarvester("1");
+        return new LocalEvidenceTypeHarvester();
     }
 
     @Bean
     public MainActivityHarvester mainActivityHarvester() {
-        return new LocalMainActivityHarvester("1");
+        return new LocalMainActivityHarvester();
     }
 
     @Bean
     public PlannedAvailabilityHarvester plannedAvailabilityHarvester() {
-        return new LocalPlannedAvailabilityHarvester("1");
+        return new LocalPlannedAvailabilityHarvester();
     }
 
     @Bean
     public RoleTypeHarvester roleTypeHarvester() {
-        return new LocalRoleTypeHarvester("1");
+        return new LocalRoleTypeHarvester();
     }
 
     @Bean
     public CurrencyHarvester currencyHarvester() {
-        return new LocalCurrencyHarvester("20241211-0");
+        return new LocalCurrencyHarvester();
     }
 
     @Bean
     public LicenceHarvester licenceHarvester() {
-        return new LocalLicenceHarvester("20241211-0");
+        return new LocalLicenceHarvester();
     }
 
     @Bean
     public MobilityThemeHarvester mobilityThemeHarvester() {
-        return new LocalMobilityThemeHarvester("0.1.0");
+        return new LocalMobilityThemeHarvester();
     }
 
     @Bean
     public MobilityDataStandardHarvester mobilityDataStandardHarvester() {
-        return new LocalMobilityDataStandardHarvester("1.1.0");
+        return new LocalMobilityDataStandardHarvester();
     }
 
     @Bean
     public MobilityConditionHarvester mobilityConditionHarvester() {
-        return new LocalMobilityConditionHarvester("1.1.0");
+        return new LocalMobilityConditionHarvester();
     }
 
     @Bean
@@ -176,32 +176,32 @@ public class LocalHarvesterConfiguration {
 
     @Bean
     public ServiceChannelTypeHarvester serviceChannelTypeHarvester() {
-        return new LocalServiceChannelTypeHarvester("1");
+        return new LocalServiceChannelTypeHarvester();
     }
 
     @Bean
     public HighValueCategoriesHarvester highValueCategoriesHarvester() {
-        return new LocalHighValueCategoryHarvester("2.1");
+        return new LocalHighValueCategoryHarvester();
     }
 
     @Bean
     public QualityDimensionHarvester qualityDimensionHarvester() {
-        return new LocalQualityDimensionHarvester("2023-01-30");
+        return new LocalQualityDimensionHarvester();
     }
 
     @Bean
     public LegalResourceTypeHarvester legalResourceTypeHarvester() {
-        return new LocalLegalResourceTypeHarvester("2023-08-17");
+        return new LocalLegalResourceTypeHarvester();
     }
 
     @Bean
     public CountryHarvester countryHarvester() {
-        return new LocalCountryHarvester("1");
+        return new LocalCountryHarvester();
     }
 
     @Bean
     public ContinentHarvester continentHarvester() {
-        return new LocalContinentHarvester("1");
+        return new LocalContinentHarvester();
     }
 
     @Bean

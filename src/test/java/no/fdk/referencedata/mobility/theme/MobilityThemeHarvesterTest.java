@@ -14,11 +14,10 @@ public class MobilityThemeHarvesterTest {
 
     @Test
     public void test_fetch_mobility_themes() {
-        MobilityThemeHarvester harvester = new LocalMobilityThemeHarvester("1.0.0");
+        MobilityThemeHarvester harvester = new LocalMobilityThemeHarvester();
 
         assertNotNull(harvester.getSource("mobility-themes"));
         assertEquals("mobility-themes.ttl", harvester.getSource("mobility-themes").getFilename());
-        assertEquals("1.0.0", harvester.getVersion());
 
         List<MobilityTheme> themes = harvester.harvest().collectList().block();
         assertNotNull(themes);

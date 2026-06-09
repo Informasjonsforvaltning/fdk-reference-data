@@ -50,7 +50,7 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         EuroVocService EuroVocService = new EuroVocService(
-                new LocalEuroVocHarvester("1"),
+                new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

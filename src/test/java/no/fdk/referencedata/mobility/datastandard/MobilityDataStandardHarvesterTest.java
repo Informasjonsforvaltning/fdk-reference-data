@@ -14,11 +14,10 @@ public class MobilityDataStandardHarvesterTest {
 
     @Test
     public void test_fetch_mobility_data_standards() {
-        MobilityDataStandardHarvester harvester = new LocalMobilityDataStandardHarvester("1.1.0");
+        MobilityDataStandardHarvester harvester = new LocalMobilityDataStandardHarvester();
 
         assertNotNull(harvester.getSource("mobility-data-standards"));
         assertEquals("mobility-data-standards.ttl", harvester.getSource("mobility-data-standards").getFilename());
-        assertEquals("1.1.0", harvester.getVersion());
 
         List<MobilityDataStandard> standards = harvester.harvest().collectList().block();
         assertNotNull(standards);

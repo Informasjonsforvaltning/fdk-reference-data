@@ -27,15 +27,11 @@ public class MobilityDataStandardHarvester extends AbstractMobilityHarvester<Mob
                     .map(Language::code)
                     .collect(Collectors.toList());
     private static final String PATH = "mobility-data-standard/latest/mobility-data-standard.ttl";
-    private static String VERSION = "0";
 
     public MobilityDataStandardHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<MobilityDataStandard> harvest() {
         log.info("Starting harvest of mobility data standards");
@@ -47,19 +43,12 @@ public class MobilityDataStandardHarvester extends AbstractMobilityHarvester<Mob
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         MobilityDataStandardVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapMobilityDataStandard);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(MobilityDataStandardVocabulary.getURI()),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private MobilityDataStandard mapMobilityDataStandard(Resource standard) {
         final Map<String, String> label = new HashMap<>();

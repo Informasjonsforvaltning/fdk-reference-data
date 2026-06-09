@@ -36,7 +36,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
     @Test
     public void test_if_harvest_persists_relationshipWithSource_types() {
         RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester("123-0"),
+                new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -58,7 +58,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester("132-0"),
+                new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -70,13 +70,12 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
         HarvestSettings settings =
                 harvestSettingsRepository.findById(RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester("132-2"),
+                new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -88,13 +87,12 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
         settings =
                 harvestSettingsRepository.findById(RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester("132-2"),
+                new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -106,7 +104,6 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
         settings =
                 harvestSettingsRepository.findById(RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -129,7 +126,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
         when(relationshipWithSourceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester("123-2"),
+                new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

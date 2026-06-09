@@ -49,7 +49,7 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         AudienceTypeService audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester("1"),
+                new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

@@ -48,7 +48,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
     @Test
     public void test_if_harvest_persists_legal_resource_types() {
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester("2023-08-17"),
+                new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -69,7 +69,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester("2023-08-17"),
+                new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -81,13 +81,12 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
         HarvestSettings settings =
                 harvestSettingsRepository.findById(LEGAL_RESOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("2023-08-17", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester("2023-08-18"),
+                new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -99,13 +98,12 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
         settings =
                 harvestSettingsRepository.findById(LEGAL_RESOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("2023-08-18", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester("2023-08-18"),
+                new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -117,7 +115,6 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
         settings =
                 harvestSettingsRepository.findById(LEGAL_RESOURCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("2023-08-18", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -140,7 +137,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
         when(legalResourceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester("2023-08-17"),
+                new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

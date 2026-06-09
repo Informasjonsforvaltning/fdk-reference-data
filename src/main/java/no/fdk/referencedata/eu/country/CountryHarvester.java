@@ -21,7 +21,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class CountryHarvester extends AbstractEuHarvester<Country> {
-    private static String VERSION = "0";
     private static final List<String> SUPPORTED_LANGUAGES =
             Arrays.stream(Language.values())
                     .map(Language::code)
@@ -31,9 +30,6 @@ public class CountryHarvester extends AbstractEuHarvester<Country> {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<Country> harvest() {
         log.info("Starting harvest of EU countries");

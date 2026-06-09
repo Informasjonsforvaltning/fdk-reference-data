@@ -64,7 +64,6 @@ public class RoleTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.ROLE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.ROLE_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<RoleType> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class RoleTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(roleTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(roleTypeHarvester.getVersion());
 
             roleTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

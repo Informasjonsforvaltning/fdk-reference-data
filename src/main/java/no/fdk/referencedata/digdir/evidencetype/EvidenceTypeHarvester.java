@@ -27,15 +27,11 @@ public class EvidenceTypeHarvester extends AbstractDataNorgeHarvester<EvidenceTy
                     .map(Language::code)
                     .collect(Collectors.toList());
     private static final String PATH = "evidence-type";
-    private static String VERSION = "0";
 
     public EvidenceTypeHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<EvidenceType> harvest() {
         log.info("Starting harvest of data.norge evidence-types");
@@ -47,19 +43,12 @@ public class EvidenceTypeHarvester extends AbstractDataNorgeHarvester<EvidenceTy
         loadModel(rdfSource);
 
         return Mono.justOrEmpty(getModel())
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EvidenceTypeVocabulary.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapEvidenceType);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(EvidenceTypeVocabulary.getURI()),
-                DCTerms.modified
-        ).getString();
-    }
 
     private EvidenceType mapEvidenceType(Resource evidenceType) {
         final Map<String, String> label = new HashMap<>();

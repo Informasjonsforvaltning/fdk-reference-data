@@ -45,7 +45,7 @@ class CurrencyQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         CurrencyService currencyService = new CurrencyService(
-                new LocalCurrencyHarvester("20241211-0"),
+                new LocalCurrencyHarvester(),
                 currencyRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

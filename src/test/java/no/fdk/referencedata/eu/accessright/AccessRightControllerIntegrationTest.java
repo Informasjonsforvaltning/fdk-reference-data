@@ -61,7 +61,7 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
                 .build();
 
         AccessRightService accessRightService = new AccessRightService(
-                new LocalAccessRightHarvester("1"),
+                new LocalAccessRightHarvester(),
                 accessRightRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -99,7 +99,6 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -111,7 +110,6 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -120,7 +118,6 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -132,7 +129,6 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
         assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.ACCESS_RIGHT.name()).orElseThrow();
-        assertEquals("1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

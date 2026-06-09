@@ -14,11 +14,10 @@ public class ServiceChannelTypeHarvesterTest {
 
     @Test
     public void test_fetch_service_channel_types() {
-        ServiceChannelTypeHarvester harvester = new LocalServiceChannelTypeHarvester("123-0");
+        ServiceChannelTypeHarvester harvester = new LocalServiceChannelTypeHarvester();
 
         assertNotNull(harvester.getSource("service-channel-type"));
         assertEquals("service-channel-type.ttl", harvester.getSource("service-channel-type").getFilename());
-        assertEquals("123-0", harvester.getVersion());
 
         List<ServiceChannelType> serviceChannelTypes = harvester.harvest().collectList().block();
         assertNotNull(serviceChannelTypes);

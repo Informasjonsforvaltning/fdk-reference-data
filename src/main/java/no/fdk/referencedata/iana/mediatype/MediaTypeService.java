@@ -101,7 +101,6 @@ public class MediaTypeService implements SearchableReferenceData {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MEDIA_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.MEDIA_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<MediaType> items = new ArrayList<>();

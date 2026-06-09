@@ -50,7 +50,7 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
     @BeforeEach
     public void setup() {
         RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester("1"),
+                new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

@@ -64,7 +64,6 @@ public class RelationshipWithSourceTypeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.RELATIONSHIP_WITH_SOURCE_TYPE.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.RELATIONSHIP_WITH_SOURCE_TYPE.name())
-                            .latestVersion("0")
                             .build());
 
             final List<RelationshipWithSourceType> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class RelationshipWithSourceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(relationshipWithSourceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(relationshipWithSourceTypeHarvester.getVersion());
 
             relationshipWithSourceTypeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

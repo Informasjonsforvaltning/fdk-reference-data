@@ -64,7 +64,6 @@ public class DataThemeService {
             final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATA_THEME.name())
                     .orElse(HarvestSettings.builder()
                             .id(Settings.DATA_THEME.name())
-                            .latestVersion("0")
                             .build());
 
             final List<DataTheme> items = new ArrayList<>();
@@ -76,7 +75,6 @@ public class DataThemeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(dataThemeHarvester.getModel(), RDFFormat.TURTLE));
 
             settings.setLatestHarvestDate(LocalDateTime.now());
-            settings.setLatestVersion(dataThemeHarvester.getVersion());
 
             dataThemeWriter.replaceAll(items, rdfSource, settings);
         } catch (Exception e) {

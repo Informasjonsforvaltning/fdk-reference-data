@@ -48,7 +48,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_harvest_persists_quality_dimensions() {
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester("2023-01-30"),
+                new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -69,7 +69,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester("2023-01-31"),
+                new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -81,13 +81,12 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         HarvestSettings settings =
                 harvestSettingsRepository.findById(QUALITY_DIMENSION.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("2023-01-31", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester("2023-02-01"),
+                new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -99,13 +98,12 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         settings =
                 harvestSettingsRepository.findById(QUALITY_DIMENSION.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("2023-02-01", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester("2023-02-01"),
+                new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -117,7 +115,6 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         settings =
                 harvestSettingsRepository.findById(QUALITY_DIMENSION.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("2023-02-01", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -140,7 +137,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         when(qualityDimensionRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new QualityDimensionService(
-                new LocalQualityDimensionHarvester("2023-01-30"),
+                new LocalQualityDimensionHarvester(),
                 qualityDimensionRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

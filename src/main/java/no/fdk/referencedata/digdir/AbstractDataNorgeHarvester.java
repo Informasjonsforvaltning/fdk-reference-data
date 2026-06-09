@@ -20,7 +20,6 @@ import java.util.Optional;
 public abstract class AbstractDataNorgeHarvester<T> {
     private static final String BASE_URI = "https://data.norge.no/vocabulary/";
 
-    public abstract String getVersion();
 
     public Resource getSource(final String path) {
         try {

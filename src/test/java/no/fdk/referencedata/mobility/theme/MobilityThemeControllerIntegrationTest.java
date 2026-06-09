@@ -58,7 +58,7 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
                 .build();
 
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.0.0"),
+                new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -102,7 +102,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
         assertEquals(123, mobilityThemeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -116,7 +115,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
         assertEquals(123, mobilityThemeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -125,7 +123,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
         assertEquals(123, mobilityThemeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertEquals("1.0.0", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -139,7 +136,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
         assertEquals(123, mobilityThemeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MOBILITY_THEME.name()).orElseThrow();
-        assertEquals("0.1.0", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

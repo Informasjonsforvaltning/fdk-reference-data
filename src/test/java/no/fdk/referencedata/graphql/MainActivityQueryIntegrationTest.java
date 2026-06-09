@@ -49,7 +49,7 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         MainActivityService mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester("1"),
+                new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

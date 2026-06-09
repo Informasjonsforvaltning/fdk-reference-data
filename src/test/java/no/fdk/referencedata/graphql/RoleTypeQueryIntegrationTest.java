@@ -49,7 +49,7 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         RoleTypeService roleTypeService = new RoleTypeService(
-                new LocalRoleTypeHarvester("1"),
+                new LocalRoleTypeHarvester(),
                 roleTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

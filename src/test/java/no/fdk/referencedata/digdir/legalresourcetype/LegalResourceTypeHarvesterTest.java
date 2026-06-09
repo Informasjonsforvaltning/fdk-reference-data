@@ -15,11 +15,10 @@ public class LegalResourceTypeHarvesterTest {
 
     @Test
     public void test_fetch_legal_resource_types() {
-        LegalResourceTypeHarvester harvester = new LocalLegalResourceTypeHarvester("2023-08-17");
+        LegalResourceTypeHarvester harvester = new LocalLegalResourceTypeHarvester();
 
         assertNotNull(harvester.getSource("legal-resource-type"));
         assertEquals("legal-resource-type.ttl", harvester.getSource("legal-resource-type").getFilename());
-        assertEquals("2023-08-17", harvester.getVersion());
 
         List<LegalResourceType> legalResourceTypes = harvester.harvest().collectList().block();
         assertNotNull(legalResourceTypes);

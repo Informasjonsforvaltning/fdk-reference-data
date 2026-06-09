@@ -29,15 +29,11 @@ public class ConceptStatusHarvester extends AbstractEuHarvester<ConceptStatus> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public ConceptStatusHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<ConceptStatus> harvest() {
         log.info("Starting harvest of EU concept status");
@@ -47,19 +43,12 @@ public class ConceptStatusHarvester extends AbstractEuHarvester<ConceptStatus> {
         }
 
         return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EUConceptStatus.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapConceptStatus);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource(EUConceptStatus.getURI()),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private ConceptStatus mapConceptStatus(Resource status) {
         final Map<String, String> label = new HashMap<>();

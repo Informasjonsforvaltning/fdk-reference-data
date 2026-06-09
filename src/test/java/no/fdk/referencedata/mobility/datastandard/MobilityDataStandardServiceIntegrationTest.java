@@ -36,7 +36,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
     @Test
     public void test_if_harvest_persists_data_standards() {
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester("1.0.1"),
+                new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -57,7 +57,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester("1.1.1"),
+                new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -69,13 +69,12 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
         HarvestSettings settings =
                 harvestSettingsRepository.findById(MOBILITY_DATA_STANDARD.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("1.1.1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester("1.1.2"),
+                new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -87,13 +86,12 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
         settings =
                 harvestSettingsRepository.findById(MOBILITY_DATA_STANDARD.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("1.1.2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester("1.1.2"),
+                new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -105,7 +103,6 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
         settings =
                 harvestSettingsRepository.findById(MOBILITY_DATA_STANDARD.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("1.1.2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -128,7 +125,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
         when(mobilityDataStandardRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester("1.2.0"),
+                new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

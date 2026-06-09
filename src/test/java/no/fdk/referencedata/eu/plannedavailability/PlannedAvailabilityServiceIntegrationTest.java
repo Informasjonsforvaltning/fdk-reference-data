@@ -36,7 +36,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
     @Test
     public void test_if_harvest_persists_planned_availabilities() {
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("20220715-0"),
+                new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -57,7 +57,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("2"),
+                new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -69,13 +69,12 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         HarvestSettings settings =
                 harvestSettingsRepository.findById(PLANNED_AVAILABILITY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("20220715-1"),
+                new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -87,13 +86,12 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         settings =
                 harvestSettingsRepository.findById(PLANNED_AVAILABILITY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20220715-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("20220715-1"),
+                new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -105,7 +103,6 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         settings =
                 harvestSettingsRepository.findById(PLANNED_AVAILABILITY.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("20220715-1", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -128,7 +125,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         when(plannedAvailabilityRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester("20200924-2"),
+                new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,

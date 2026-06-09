@@ -40,7 +40,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_evidence_types() {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("123-0"),
+                new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -61,7 +61,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("132-0"),
+                new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -73,13 +73,12 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("132-2"),
+                new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -91,13 +90,12 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("132-2"),
+                new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -109,7 +107,6 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("132-2", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -132,7 +129,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         when(evidenceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester("123-2"),
+                new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

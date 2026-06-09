@@ -36,7 +36,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_themes() {
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.0.1"),
+                new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -57,7 +57,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_always_persists_and_updates_version() {
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.0.3"),
+                new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -69,13 +69,12 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
         HarvestSettings settings =
                 harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("1.0.3", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Newer version
         mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.1.0"),
+                new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -87,13 +86,12 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("1.1.0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         // Same version
         mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.1.0"),
+                new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -105,7 +103,6 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
         settings =
                 harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
         assertNotNull(settings);
-        assertEquals("1.1.0", settings.getLatestVersion());
         assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
         assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
@@ -128,7 +125,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
         when(mobilityThemeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new MobilityThemeService(
-                new LocalMobilityThemeHarvester("1.2.0"),
+                new LocalMobilityThemeHarvester(),
                 mobilityThemeRepositorySpy,
                 rdfSourceRepository,
                 harvestSettingsRepository,

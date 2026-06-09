@@ -63,7 +63,7 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
                 .build();
 
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester("2023-08-17"),
+                new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -101,7 +101,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertEquals("2023-08-17", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +112,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertEquals("2023-08-17", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -122,7 +120,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertEquals("2023-08-17", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -134,7 +131,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertEquals("2023-08-17", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

@@ -58,7 +58,7 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
                 .build();
 
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester("2.1"),
+                new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
                 rdfSourceRepository,
                 harvestSettingsRepository,
@@ -102,7 +102,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertEquals("2.1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -116,7 +115,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertEquals("2.1", harvestSettingsAfter.getLatestVersion());
         assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
@@ -125,7 +123,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
         HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertEquals("2.1", harvestSettingsBefore.getLatestVersion());
         assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
@@ -139,7 +136,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
         assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
 
         HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.HIGH_VALUE_CATEGORY.name()).orElseThrow();
-        assertEquals("2.1", harvestSettingsAfter.getLatestVersion());
         assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 

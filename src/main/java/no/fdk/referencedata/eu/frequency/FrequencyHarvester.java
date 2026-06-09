@@ -29,15 +29,11 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
-    private static String VERSION = "0";
 
     public FrequencyHarvester() {
         super();
     }
 
-    public String getVersion() {
-        return VERSION;
-    }
 
     public Flux<Frequency> harvest() {
         log.info("Starting harvest of EU frequencies");
@@ -47,19 +43,12 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
         }
 
         return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .doOnSuccess(this::updateVersion)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EUFrequency.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapFrequency);
     }
 
-    private void updateVersion(Model m) {
-        VERSION = m.getProperty(
-                m.getResource("http://publications.europa.eu/resource/authority/frequency"),
-                OWL.versionInfo
-        ).getString();
-    }
 
     private Frequency mapFrequency(Resource frequency) {
         String code = frequency.getProperty(DC.identifier).getObject().toString();
