@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,17 +43,13 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @BeforeEach
     public void setup() {
         EuroVocService EuroVocService = new EuroVocService(
                 new LocalEuroVocHarvester(),
                 euroVocRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EuroVocWriter(euroVocRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EuroVocWriter(euroVocRepository, rdfSourceRepository));
 
         EuroVocService.harvestAndSave();
     }

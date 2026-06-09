@@ -8,7 +8,6 @@ import no.fdk.referencedata.mobility.theme.MobilityTheme;
 import no.fdk.referencedata.mobility.theme.MobilityThemeRepository;
 import no.fdk.referencedata.mobility.theme.MobilityThemeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MobilityThemeRepository mobilityThemeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -52,8 +48,7 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository));
 
         mobilityThemeService.harvestAndSave();
     }

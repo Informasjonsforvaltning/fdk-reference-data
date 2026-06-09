@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.conceptstatus.ConceptStatusWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester.CONCEPT_STATUSES_SIZE;
-import static no.fdk.referencedata.settings.Settings.CONCEPT_STATUS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,17 +33,13 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @BeforeEach
     public void setup() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository));
 
         conceptStatusService.harvestAndSave();
     }
@@ -57,8 +50,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository));
 
         conceptStatusService.harvestAndSave();
 
@@ -73,59 +65,6 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
-                conceptStatusRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        conceptStatusService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(CONCEPT_STATUS.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
-                conceptStatusRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        conceptStatusService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(CONCEPT_STATUS.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
-                conceptStatusRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        conceptStatusService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(CONCEPT_STATUS.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         ConceptStatusRepository conceptStatusRepositorySpy = spy(this.conceptStatusRepository);
 
@@ -136,7 +75,6 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         conceptStatusRepositorySpy.save(conceptStatus);
 
-
         long count = conceptStatusRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -146,8 +84,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository));
 
         assertEquals(count, conceptStatusRepositorySpy.count());
     }

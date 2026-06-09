@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,19 +26,16 @@ public class DataThemeService {
 
     private final RDFSourceRepository rdfSourceRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
 
     @Autowired
     public DataThemeService(
             DataThemeHarvester dataThemeHarvester,
             DataThemeRepository dataThemeRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             DataThemeWriter dataThemeWriter) {
         this.dataThemeHarvester = dataThemeHarvester;
         this.dataThemeRepository = dataThemeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.dataThemeWriter = dataThemeWriter;
     }
 
@@ -61,10 +54,6 @@ public class DataThemeService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DATA_THEME.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.DATA_THEME.name())
-                            .build());
 
             final List<DataTheme> items = new ArrayList<>();
             dataThemeHarvester.harvest().toIterable().forEach(items::add);
@@ -74,9 +63,8 @@ public class DataThemeService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(dataThemeHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            dataThemeWriter.replaceAll(items, rdfSource, settings);
+            dataThemeWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest data-themes", e);
         }

@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.datatheme.DataThemeService;
 import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,17 +41,13 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @BeforeEach
     public void setup() {
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester(),
                 dataThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DataThemeWriter(dataThemeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DataThemeWriter(dataThemeRepository, rdfSourceRepository));
 
         dataThemeService.harvestAndSave();
     }

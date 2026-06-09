@@ -4,8 +4,6 @@ import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.SERVICE_CHANNEL_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,9 +29,6 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
     @Autowired
     private ServiceChannelTypeRepository serviceChannelTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -43,8 +37,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new LocalServiceChannelTypeHarvester(),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository));
 
         serviceChannelTypeService.harvestAndSave();
 
@@ -59,59 +52,6 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester(),
-                serviceChannelTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        serviceChannelTypeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(SERVICE_CHANNEL_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester(),
-                serviceChannelTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        serviceChannelTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(SERVICE_CHANNEL_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester(),
-                serviceChannelTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        serviceChannelTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(SERVICE_CHANNEL_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         ServiceChannelTypeRepository serviceChannelTypeRepositorySpy = spy(this.serviceChannelTypeRepository);
 
@@ -122,7 +62,6 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 .build();
         serviceChannelTypeRepositorySpy.save(serviceChannelType);
 
-
         long count = serviceChannelTypeRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -132,8 +71,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
                 new LocalServiceChannelTypeHarvester(),
                 serviceChannelTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository));
 
         assertEquals(count, serviceChannelTypeRepositorySpy.count());
     }

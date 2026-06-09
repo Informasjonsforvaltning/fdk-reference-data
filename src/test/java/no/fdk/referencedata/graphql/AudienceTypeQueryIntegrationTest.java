@@ -8,7 +8,6 @@ import no.fdk.referencedata.digdir.audiencetype.AudienceTypeRepository;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
 import no.fdk.referencedata.digdir.audiencetype.LocalAudienceTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private AudienceTypeRepository audienceTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -52,8 +48,7 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository));
 
         audienceTypeService.harvestAndSave();
     }

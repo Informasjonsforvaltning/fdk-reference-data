@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -31,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -51,9 +47,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private RestClient restClient;
 
     @BeforeEach
@@ -66,8 +59,7 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
                 new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository));
 
         legalResourceTypeService.harvestAndSave();
     }
@@ -100,8 +92,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
     public void test_if_post_legal_resource_types_fails_without_api_key() {
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -111,16 +101,12 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_legal_resource_types_executes_a_force_update() {
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -130,8 +116,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.LEGAL_RESOURCE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

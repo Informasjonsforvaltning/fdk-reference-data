@@ -8,7 +8,6 @@ import no.fdk.referencedata.digdir.roletype.RoleType;
 import no.fdk.referencedata.digdir.roletype.RoleTypeRepository;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private RoleTypeRepository roleTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -52,8 +48,7 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester(),
                 roleTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository));
 
         roleTypeService.harvestAndSave();
     }

@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,6 @@ public class MobilityConditionService {
 
     private final MobilityConditionRepository mobilityConditionRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
 
     private final RDFSourceRepository rdfSourceRepository;
 
@@ -37,12 +32,10 @@ public class MobilityConditionService {
             MobilityConditionHarvester mobilityConditionHarvester,
             MobilityConditionRepository mobilityConditionRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             MobilityConditionWriter mobilityConditionWriter) {
         this.mobilityConditionHarvester = mobilityConditionHarvester;
         this.mobilityConditionRepository = mobilityConditionRepository;
         this.mobilityConditionWriter = mobilityConditionWriter;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -61,10 +54,6 @@ public class MobilityConditionService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.MOBILITY_CONDITION.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.MOBILITY_CONDITION.name())
-                            .build());
 
             final List<MobilityCondition> items = new ArrayList<>();
             mobilityConditionHarvester.harvest().toIterable().forEach(items::add);
@@ -74,9 +63,8 @@ public class MobilityConditionService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityConditionHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            mobilityConditionWriter.replaceAll(items, rdfSource, settings);
+            mobilityConditionWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest mobility conditions", e);
         }

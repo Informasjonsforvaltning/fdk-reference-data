@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -31,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -49,9 +45,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
     private MainActivityRepository mainActivityRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -66,8 +59,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
                 new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository));
 
         mainActivityService.harvestAndSave();
     }
@@ -100,8 +92,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
     public void test_if_post_access_rights_fails_without_api_key() {
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -111,16 +101,12 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_access_rights_executes_a_force_update() {
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -130,8 +116,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.MAIN_ACTIVITY.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

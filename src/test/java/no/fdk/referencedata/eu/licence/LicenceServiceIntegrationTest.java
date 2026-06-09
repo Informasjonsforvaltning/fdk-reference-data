@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.licence.LicenceWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.licence.LocalLicenceHarvester.LICENCES_SIZE;
-import static no.fdk.referencedata.settings.Settings.LICENCE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -31,9 +28,6 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private LicenceRepository licenceRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -42,8 +36,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester(),
                 licenceRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
+                new LicenceWriter(licenceRepository, rdfSourceRepository));
 
         licenceService.harvestAndSave();
 
@@ -57,59 +50,6 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         assertEquals("Creative Commons CC0 1.0 Universal", first.getLabel().get(Language.ENGLISH.code()));
         assertEquals(false, first.deprecated);
         assertEquals("The person who associated a work with CC0 1.0 has dedicated the work to the public domain by waiving all of his or her rights to the work worldwide under copyright law, including all related and neighboring rights, to the extent allowed by law. One can copy, modify, distribute and perform the work, even for commercial purposes, all without asking permission.", first.definition.get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        LicenceService licenceService = new LicenceService(
-                new LocalLicenceHarvester(),
-                licenceRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        licenceService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        licenceService = new LicenceService(
-                new LocalLicenceHarvester(),
-                licenceRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        licenceService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        licenceService = new LicenceService(
-                new LocalLicenceHarvester(),
-                licenceRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        licenceService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(LICENCE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
     }
 
     @Test
@@ -132,8 +72,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLicenceHarvester(),
                 licenceRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new LicenceWriter(licenceRepository, rdfSourceRepository, harvestSettingsRepository));
+                new LicenceWriter(licenceRepository, rdfSourceRepository));
 
         assertEquals(count, licenceRepositorySpy.count());
     }

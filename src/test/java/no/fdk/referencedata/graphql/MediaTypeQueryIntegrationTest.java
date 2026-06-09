@@ -8,7 +8,6 @@ import no.fdk.referencedata.iana.mediatype.MediaTypeRepository;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,17 +41,13 @@ class MediaTypeQueryIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @BeforeEach
     public void setup() {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository));
 
         mediaTypeService.harvestAndSave();
     }

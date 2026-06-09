@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.accessright.AccessRightWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester.ACCESS_RIGHTS_SIZE;
-import static no.fdk.referencedata.settings.Settings.ACCESS_RIGHT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -31,9 +28,6 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private AccessRightRepository accessRightRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -42,8 +36,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester(),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository));
 
         accessRightService.harvestAndSave();
 
@@ -58,59 +51,6 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        AccessRightService accessRightService = new AccessRightService(
-                new LocalAccessRightHarvester(),
-                accessRightRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        accessRightService = new AccessRightService(
-                new LocalAccessRightHarvester(),
-                accessRightRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        accessRightService = new AccessRightService(
-                new LocalAccessRightHarvester(),
-                accessRightRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(ACCESS_RIGHT.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         AccessRightRepository accessRightRepositorySpy = spy(this.accessRightRepository);
 
@@ -121,7 +61,6 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         accessRightRepositorySpy.save(accessRight);
 
-
         long count = accessRightRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -131,8 +70,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester(),
                 accessRightRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository));
 
         assertEquals(count, accessRightRepositorySpy.count());
     }

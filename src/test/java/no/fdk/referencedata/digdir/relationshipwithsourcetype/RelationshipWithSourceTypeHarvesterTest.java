@@ -1,6 +1,5 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
-
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;

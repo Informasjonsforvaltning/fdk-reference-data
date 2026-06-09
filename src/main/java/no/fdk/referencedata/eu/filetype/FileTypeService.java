@@ -7,16 +7,12 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -32,7 +28,6 @@ public class FileTypeService implements SearchableReferenceData {
 
     private final FileTypeRepository fileTypeRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -40,12 +35,10 @@ public class FileTypeService implements SearchableReferenceData {
             FileTypeHarvester fileTypeHarvester,
             FileTypeRepository fileTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             FileTypeWriter fileTypeWriter) {
         this.fileTypeHarvester = fileTypeHarvester;
         this.fileTypeRepository = fileTypeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.fileTypeWriter = fileTypeWriter;
     }
 
@@ -80,10 +73,6 @@ public class FileTypeService implements SearchableReferenceData {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.FILE_TYPE.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.FILE_TYPE.name())
-                            .build());
 
             final List<FileType> items = new ArrayList<>();
             fileTypeHarvester.harvest().toIterable().forEach(items::add);
@@ -93,9 +82,8 @@ public class FileTypeService implements SearchableReferenceData {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(fileTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            fileTypeWriter.replaceAll(items, rdfSource, settings);
+            fileTypeWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest file-types", e);
         }

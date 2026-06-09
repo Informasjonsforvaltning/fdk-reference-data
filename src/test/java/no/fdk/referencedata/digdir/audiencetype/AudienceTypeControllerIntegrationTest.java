@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -28,7 +25,6 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -48,9 +44,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
     @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private RestClient restClient;
 
     @BeforeEach
@@ -63,8 +56,7 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
                 new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository));
 
         audienceTypeService.harvestAndSave();
     }
@@ -97,8 +89,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
     public void test_if_post_audience_types_fails_without_api_key() {
         assertEquals(2, audienceTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -108,16 +98,12 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(2, audienceTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_audience_types_executes_a_force_update() {
         assertEquals(2, audienceTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -127,8 +113,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(2, audienceTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.AUDIENCE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

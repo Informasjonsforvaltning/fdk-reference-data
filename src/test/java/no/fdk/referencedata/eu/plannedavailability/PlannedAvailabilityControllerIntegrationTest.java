@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -29,7 +26,6 @@ import java.time.LocalDateTime;
 import static no.fdk.referencedata.eu.plannedavailability.LocalPlannedAvailabilityHarvester.PLANNED_AVAILABILITY_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -47,9 +43,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
     private PlannedAvailabilityRepository plannedAvailabilityRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -64,8 +57,7 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
                 new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository, harvestSettingsRepository));
+                new PlannedAvailabilityWriter(plannedAvailabilityRepository, rdfSourceRepository));
 
         plannedAvailabilityService.harvestAndSave();
     }
@@ -98,8 +90,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
     public void test_if_post_planned_availabilities_fails_without_api_key() {
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -109,16 +99,12 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_planned_availabilities_executes_a_harvest() {
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -128,8 +114,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

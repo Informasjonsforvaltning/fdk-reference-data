@@ -10,7 +10,6 @@ public class LocalConceptSubjectHarvester extends ConceptSubjectHarvester {
         super(appSettings);
     }
 
-
     @Override
     public Resource getSource() {
         return new ClassPathResource("concept-subjects.ttl");

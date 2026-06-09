@@ -4,8 +4,6 @@ import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSo
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.RELATIONSHIP_WITH_SOURCE_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -28,9 +25,6 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
     @Autowired
     private RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -39,8 +33,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository));
 
         relationshipWithSourceTypeService.harvestAndSave();
 
@@ -56,59 +49,6 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester(),
-                relationshipWithSourceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        relationshipWithSourceTypeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester(),
-                relationshipWithSourceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        relationshipWithSourceTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester(),
-                relationshipWithSourceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        relationshipWithSourceTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(RELATIONSHIP_WITH_SOURCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepositorySpy = spy(this.relationshipWithSourceTypeRepository);
 
@@ -119,7 +59,6 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 .build();
         relationshipWithSourceTypeRepositorySpy.save(relationshipWithSourceType);
 
-
         long count = relationshipWithSourceTypeRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -129,8 +68,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository));
 
         assertEquals(count, relationshipWithSourceTypeRepositorySpy.count());
     }

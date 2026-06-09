@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,6 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private AccessRightRepository accessRightRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -50,8 +46,7 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
                 new LocalAccessRightHarvester(),
                 accessRightRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new AccessRightWriter(accessRightRepository, rdfSourceRepository, harvestSettingsRepository));
+                new AccessRightWriter(accessRightRepository, rdfSourceRepository));
 
         accessRightService.harvestAndSave();
     }

@@ -4,8 +4,6 @@ import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.MOBILITY_DATA_STANDARD;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -28,9 +25,6 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
     @Autowired
     private MobilityDataStandardRepository mobilityDataStandardRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -39,8 +33,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository));
 
         mobilityDataStandardService.harvestAndSave();
 
@@ -55,59 +48,6 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester(),
-                mobilityDataStandardRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        mobilityDataStandardService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(MOBILITY_DATA_STANDARD.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester(),
-                mobilityDataStandardRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        mobilityDataStandardService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MOBILITY_DATA_STANDARD.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester(),
-                mobilityDataStandardRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        mobilityDataStandardService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MOBILITY_DATA_STANDARD.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         MobilityDataStandardRepository mobilityDataStandardRepositorySpy = spy(this.mobilityDataStandardRepository);
 
@@ -118,7 +58,6 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 .build();
         mobilityDataStandardRepositorySpy.save(standard);
 
-
         long count = mobilityDataStandardRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -128,8 +67,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository));
 
         assertEquals(count, mobilityDataStandardRepositorySpy.count());
     }

@@ -4,8 +4,6 @@ import no.fdk.referencedata.mobility.conditions.MobilityConditionWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.MOBILITY_CONDITION;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -28,9 +25,6 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
     @Autowired
     private MobilityConditionRepository mobilityConditionRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -39,8 +33,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester(),
                 mobilityConditionRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository));
 
         mobilityConditionService.harvestAndSave();
 
@@ -55,59 +48,6 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        MobilityConditionService mobilityConditionService = new MobilityConditionService(
-                new LocalMobilityConditionHarvester(),
-                mobilityConditionRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        mobilityConditionService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(MOBILITY_CONDITION.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        mobilityConditionService = new MobilityConditionService(
-                new LocalMobilityConditionHarvester(),
-                mobilityConditionRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        mobilityConditionService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MOBILITY_CONDITION.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        mobilityConditionService = new MobilityConditionService(
-                new LocalMobilityConditionHarvester(),
-                mobilityConditionRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        mobilityConditionService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MOBILITY_CONDITION.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         MobilityConditionRepository mobilityConditionRepositorySpy = spy(this.mobilityConditionRepository);
 
@@ -118,7 +58,6 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 .build();
         mobilityConditionRepositorySpy.save(condition);
 
-
         long count = mobilityConditionRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -128,8 +67,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester(),
                 mobilityConditionRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository));
 
         assertEquals(count, mobilityConditionRepositorySpy.count());
     }

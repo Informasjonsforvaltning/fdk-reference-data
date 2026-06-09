@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.distributionstatus.DistributionStatusWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.distributionstatus.LocalDistributionStatusHarvester.DISTRIBUTION_STATUS_SIZE;
-import static no.fdk.referencedata.settings.Settings.DISTRIBUTION_STATUS;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -29,9 +26,6 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
     @Autowired
     private DistributionStatusRepository distributionStatusRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -40,8 +34,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester(),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository));
 
         distributionStatusService.harvestAndSave();
 
@@ -56,59 +49,6 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        DistributionStatusService distributionStatusService = new DistributionStatusService(
-                new LocalDistributionStatusHarvester(),
-                distributionStatusRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        distributionStatusService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(DISTRIBUTION_STATUS.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        distributionStatusService = new DistributionStatusService(
-                new LocalDistributionStatusHarvester(),
-                distributionStatusRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        distributionStatusService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(DISTRIBUTION_STATUS.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        distributionStatusService = new DistributionStatusService(
-                new LocalDistributionStatusHarvester(),
-                distributionStatusRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        distributionStatusService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(DISTRIBUTION_STATUS.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rolls_back_transaction_when_save_fails() {
         DistributionStatusRepository distributionStatusRepositorySpy = spy(this.distributionStatusRepository);
 
@@ -119,7 +59,6 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 .build();
         distributionStatusRepositorySpy.save(distributionStatus);
 
-
         long count = distributionStatusRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -129,8 +68,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester(),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository));
 
         assertEquals(count, distributionStatusRepositorySpy.count());
     }

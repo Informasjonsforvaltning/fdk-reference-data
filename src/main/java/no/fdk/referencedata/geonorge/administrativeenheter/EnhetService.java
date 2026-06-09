@@ -7,9 +7,6 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -20,7 +17,6 @@ import org.apache.jena.vocabulary.RDF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,7 +34,6 @@ public class EnhetService implements SearchableReferenceData {
 
     private final EnhetVariantRepository enhetVariantRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
 
     private final RDFSourceRepository rdfSourceRepository;
 
@@ -48,12 +43,10 @@ public class EnhetService implements SearchableReferenceData {
             EnhetRepository enhetRepository,
             EnhetVariantRepository enhetVariantRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             EnhetWriter enhetWriter) {
         this.enhetHarvester = enhetHarvester;
         this.enhetRepository = enhetRepository;
         this.enhetVariantRepository = enhetVariantRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.rdfSourceRepository = rdfSourceRepository;
         this.enhetWriter = enhetWriter;
     }
@@ -142,10 +135,6 @@ public class EnhetService implements SearchableReferenceData {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.ADMINISTRATIVE_ENHETER.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.ADMINISTRATIVE_ENHETER.name())
-                            .build());
 
             final List<Enhet> enheter = new ArrayList<>();
             enhetHarvester.harvest().toIterable().forEach(enheter::add);
@@ -173,9 +162,8 @@ public class EnhetService implements SearchableReferenceData {
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            enhetWriter.replaceAll(enheter, docVariants, idVariants, rdfSource, settings);
+            enhetWriter.replaceAll(enheter, docVariants, idVariants, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest administrative enheter", e);
         }

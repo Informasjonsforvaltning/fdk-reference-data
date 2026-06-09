@@ -9,7 +9,6 @@ import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
 import no.fdk.referencedata.digdir.evidencetype.LocalEvidenceTypeHarvester;
 import no.fdk.referencedata.eu.eurovoc.EuroVoc;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,6 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private EvidenceTypeRepository evidenceTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -54,8 +50,7 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository));
 
         evidenceTypeService.harvestAndSave();
     }

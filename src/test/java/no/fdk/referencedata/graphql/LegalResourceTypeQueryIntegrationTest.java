@@ -8,7 +8,6 @@ import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeRepository
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeService;
 import no.fdk.referencedata.digdir.legalresourcetype.LocalLegalResourceTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,6 @@ class LegalResourceTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private LegalResourceTypeRepository legalResourceTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -54,8 +50,7 @@ class LegalResourceTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository));
 
         legalResourceTypeService.harvestAndSave();
     }

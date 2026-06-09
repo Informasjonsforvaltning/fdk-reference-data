@@ -4,8 +4,6 @@ import no.fdk.referencedata.mobility.theme.MobilityThemeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.MOBILITY_THEME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -28,9 +25,6 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MobilityThemeRepository mobilityThemeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -39,8 +33,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository));
 
         mobilityThemeService.harvestAndSave();
 
@@ -55,59 +48,6 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        MobilityThemeService mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester(),
-                mobilityThemeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        mobilityThemeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester(),
-                mobilityThemeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        mobilityThemeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester(),
-                mobilityThemeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        mobilityThemeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MOBILITY_THEME.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         MobilityThemeRepository mobilityThemeRepositorySpy = spy(this.mobilityThemeRepository);
 
@@ -118,7 +58,6 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         mobilityThemeRepositorySpy.save(theme);
 
-
         long count = mobilityThemeRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -128,8 +67,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester(),
                 mobilityThemeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository));
 
         assertEquals(count, mobilityThemeRepositorySpy.count());
     }

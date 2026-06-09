@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,9 +36,6 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private FrequencyRepository frequencyRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -51,8 +47,7 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
                 new LocalFrequencyHarvester(),
                 frequencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new FrequencyWriter(frequencyRepository, rdfSourceRepository, harvestSettingsRepository));
+                new FrequencyWriter(frequencyRepository, rdfSourceRepository));
 
         frequencyService.harvestAndSave();
     }

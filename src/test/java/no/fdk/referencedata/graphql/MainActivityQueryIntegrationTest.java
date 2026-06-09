@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.mainactivity.MainActivity;
 import no.fdk.referencedata.eu.mainactivity.MainActivityRepository;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MainActivityRepository mainActivityRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -52,8 +48,7 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository));
 
         mainActivityService.harvestAndSave();
     }

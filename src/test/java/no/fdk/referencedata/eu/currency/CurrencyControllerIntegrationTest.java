@@ -5,9 +5,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -29,7 +26,6 @@ import java.time.LocalDateTime;
 import static no.fdk.referencedata.eu.currency.LocalCurrencyHarvester.CURRENCY_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -47,9 +43,6 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
     private CurrencyRepository currencyRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -64,8 +57,7 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
                 new LocalCurrencyHarvester(),
                 currencyRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new CurrencyWriter(currencyRepository, rdfSourceRepository, harvestSettingsRepository));
+                new CurrencyWriter(currencyRepository, rdfSourceRepository));
 
         currencyService.harvestAndSave();
     }
@@ -100,8 +92,6 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_post_currencies_fails_without_api_key() {
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -111,16 +101,12 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_currencies_executes_a_force_update() {
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -130,8 +116,6 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(CURRENCY_SIZE, currencyRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.CURRENCY.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

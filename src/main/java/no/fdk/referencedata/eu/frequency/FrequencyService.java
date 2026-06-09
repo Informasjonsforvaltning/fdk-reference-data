@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,6 @@ public class FrequencyService {
 
     private final FrequencyRepository frequencyRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -36,12 +31,10 @@ public class FrequencyService {
             FrequencyHarvester frequencyHarvester,
             FrequencyRepository frequencyRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             FrequencyWriter frequencyWriter) {
         this.frequencyHarvester = frequencyHarvester;
         this.frequencyRepository = frequencyRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.frequencyWriter = frequencyWriter;
     }
 
@@ -60,10 +53,6 @@ public class FrequencyService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.FREQUENCY.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.FREQUENCY.name())
-                            .build());
 
             final List<Frequency> items = new ArrayList<>();
             frequencyHarvester.harvest().toIterable().forEach(items::add);
@@ -73,9 +62,8 @@ public class FrequencyService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(frequencyHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            frequencyWriter.replaceAll(items, rdfSource, settings);
+            frequencyWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest frequencies", e);
         }

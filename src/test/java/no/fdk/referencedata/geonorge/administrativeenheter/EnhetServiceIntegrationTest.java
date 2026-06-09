@@ -3,7 +3,6 @@ package no.fdk.referencedata.geonorge.administrativeenheter;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,9 +25,6 @@ public class EnhetServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private EnhetVariantRepository enhetVariantRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -38,8 +34,7 @@ public class EnhetServiceIntegrationTest extends AbstractContainerTest {
                 enhetRepository,
                 enhetVariantRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository));
 
         enhetService.harvestAndSave();
 

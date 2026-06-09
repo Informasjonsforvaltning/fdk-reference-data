@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,6 @@ public class PlannedAvailabilityService {
 
     private final PlannedAvailabilityRepository plannedAvailabilityRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -36,13 +31,11 @@ public class PlannedAvailabilityService {
             PlannedAvailabilityHarvester plannedAvailabilityHarvester,
             PlannedAvailabilityRepository plannedAvailabilityRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             PlannedAvailabilityWriter plannedAvailabilityWriter) {
         this.plannedAvailabilityHarvester = plannedAvailabilityHarvester;
         this.plannedAvailabilityRepository = plannedAvailabilityRepository;
         this.plannedAvailabilityWriter = plannedAvailabilityWriter;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
     public boolean firstTime() {
@@ -60,10 +53,6 @@ public class PlannedAvailabilityService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.PLANNED_AVAILABILITY.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.PLANNED_AVAILABILITY.name())
-                            .build());
 
             final List<PlannedAvailability> items = new ArrayList<>();
             plannedAvailabilityHarvester.harvest().toIterable().forEach(items::add);
@@ -73,9 +62,8 @@ public class PlannedAvailabilityService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(plannedAvailabilityHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            plannedAvailabilityWriter.replaceAll(items, rdfSource, settings);
+            plannedAvailabilityWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest planned availabilities", e);
         }

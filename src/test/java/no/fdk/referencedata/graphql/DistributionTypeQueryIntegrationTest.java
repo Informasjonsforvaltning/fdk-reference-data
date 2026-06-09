@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.distributiontype.DistributionTypeRepository;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
 import no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,6 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private DistributionTypeRepository distributionTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @BeforeEach
@@ -51,8 +47,7 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository));
 
         distributionTypeService.harvestAndSave();
     }

@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.datasettype.DatasetTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester.DATASET_TYPES_SIZE;
-import static no.fdk.referencedata.settings.Settings.DATASET_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -29,9 +26,6 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private DatasetTypeRepository datasetTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -40,8 +34,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository));
 
         accessRightService.harvestAndSave();
 
@@ -56,59 +49,6 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        DatasetTypeService accessRightService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester(),
-                datasetTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        accessRightService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester(),
-                datasetTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        accessRightService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester(),
-                datasetTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        accessRightService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(DATASET_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         DatasetTypeRepository datasetTypeRepositorySpy = spy(this.datasetTypeRepository);
 
@@ -119,7 +59,6 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         datasetTypeRepositorySpy.save(datasetType);
 
-
         long count = datasetTypeRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -129,8 +68,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository));
 
         assertEquals(count, datasetTypeRepositorySpy.count());
     }

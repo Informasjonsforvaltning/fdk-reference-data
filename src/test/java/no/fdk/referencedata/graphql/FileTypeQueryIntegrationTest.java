@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +39,6 @@ class FileTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private FileTypeRepository fileTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @BeforeEach
@@ -51,8 +47,7 @@ class FileTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester(),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
     }

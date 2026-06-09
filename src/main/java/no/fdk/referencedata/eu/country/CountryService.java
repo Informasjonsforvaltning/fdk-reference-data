@@ -7,16 +7,12 @@ import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -32,7 +28,6 @@ public class CountryService implements SearchableReferenceData {
 
     private final CountryRepository countryRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -40,12 +35,10 @@ public class CountryService implements SearchableReferenceData {
             CountryHarvester countryHarvester,
             CountryRepository countryRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             CountryWriter countryWriter) {
         this.countryHarvester = countryHarvester;
         this.countryRepository = countryRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.countryWriter = countryWriter;
     }
 
@@ -80,10 +73,6 @@ public class CountryService implements SearchableReferenceData {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.COUNTRY.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.COUNTRY.name())
-                            .build());
 
             final List<Country> items = new ArrayList<>();
             countryHarvester.harvest().toIterable().forEach(items::add);
@@ -93,9 +82,8 @@ public class CountryService implements SearchableReferenceData {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(countryHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            countryWriter.replaceAll(items, rdfSource, settings);
+            countryWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest countries", e);
         }

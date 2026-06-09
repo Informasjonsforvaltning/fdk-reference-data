@@ -4,8 +4,6 @@ import no.fdk.referencedata.eu.mainactivity.MainActivityWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,7 +14,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester.MAIN_ACTIVITIES_SIZE;
-import static no.fdk.referencedata.settings.Settings.MAIN_ACTIVITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,9 +30,6 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private MainActivityRepository mainActivityRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -44,8 +38,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository));
 
         mainActivityService.harvestAndSave();
 
@@ -60,59 +53,6 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        MainActivityService mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester(),
-                mainActivityRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        mainActivityService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(MAIN_ACTIVITY.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester(),
-                mainActivityRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        mainActivityService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MAIN_ACTIVITY.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester(),
-                mainActivityRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        mainActivityService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(MAIN_ACTIVITY.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         MainActivityRepository mainActivityRepositorySpy = spy(this.mainActivityRepository);
 
@@ -123,7 +63,6 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         mainActivityRepositorySpy.save(mainActivity);
 
-
         long count = mainActivityRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -133,8 +72,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester(),
                 mainActivityRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository, harvestSettingsRepository));
+                new MainActivityWriter(mainActivityRepository, rdfSourceRepository));
 
         assertEquals(count, mainActivityRepositorySpy.count());
     }

@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,6 @@ public class DistributionStatusService {
 
     private final DistributionStatusRepository distributionStatusRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
     @Autowired
@@ -36,13 +31,11 @@ public class DistributionStatusService {
             DistributionStatusHarvester distributionStatusHarvester,
             DistributionStatusRepository distributionStatusRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             DistributionStatusWriter distributionStatusWriter) {
         this.distributionStatusHarvester = distributionStatusHarvester;
         this.distributionStatusRepository = distributionStatusRepository;
         this.distributionStatusWriter = distributionStatusWriter;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
     }
 
     public boolean firstTime() {
@@ -60,10 +53,6 @@ public class DistributionStatusService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.DISTRIBUTION_STATUS.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.DISTRIBUTION_STATUS.name())
-                            .build());
 
             final List<DistributionStatus> items = new ArrayList<>();
             distributionStatusHarvester.harvest().toIterable().forEach(items::add);
@@ -73,9 +62,8 @@ public class DistributionStatusService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(distributionStatusHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            distributionStatusWriter.replaceAll(items, rdfSource, settings);
+            distributionStatusWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest distribution statuses", e);
         }

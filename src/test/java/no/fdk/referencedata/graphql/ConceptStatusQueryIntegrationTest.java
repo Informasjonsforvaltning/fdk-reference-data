@@ -7,7 +7,6 @@ import no.fdk.referencedata.eu.conceptstatus.ConceptStatusRepository;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
 import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,17 +37,13 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
 
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     @BeforeEach
     public void setup() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ConceptStatusWriter(conceptStatusRepository, rdfSourceRepository));
 
         conceptStatusService.harvestAndSave();
     }

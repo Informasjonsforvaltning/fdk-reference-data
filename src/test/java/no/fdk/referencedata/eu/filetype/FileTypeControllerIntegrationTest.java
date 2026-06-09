@@ -4,9 +4,6 @@ import no.fdk.referencedata.eu.filetype.FileTypeWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -28,7 +25,6 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
             "spring.main.allow-bean-definition-overriding=true",
@@ -46,9 +42,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
     private FileTypeRepository fileTypeRepository;
 
     @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
-    @Autowired
     private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
@@ -63,8 +56,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester(),
                 fileTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new FileTypeWriter(fileTypeRepository, rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
     }
@@ -97,8 +89,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_post_file_types_fails_without_api_key() {
         assertEquals(198, fileTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "");
@@ -108,16 +98,12 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
         assertEquals(198, fileTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertEquals(harvestSettingsAfter.getLatestHarvestDate(), harvestSettingsBefore.getLatestHarvestDate());
     }
 
     @Test
     public void test_if_post_file_types_executes_a_force_update() {
         assertEquals(198, fileTypeRepository.count());
 
-        HarvestSettings harvestSettingsBefore = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsBefore.getLatestHarvestDate().isBefore(LocalDateTime.now()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-API-KEY", "my-api-key");
@@ -127,8 +113,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(198, fileTypeRepository.count());
 
-        HarvestSettings harvestSettingsAfter = harvestSettingsRepository.findById(Settings.FILE_TYPE.name()).orElseThrow();
-        assertTrue(harvestSettingsAfter.getLatestHarvestDate().isAfter(harvestSettingsBefore.getLatestHarvestDate()));
     }
 
     @Test

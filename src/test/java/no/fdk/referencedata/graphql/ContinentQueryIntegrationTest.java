@@ -8,7 +8,6 @@ import no.fdk.referencedata.eu.continent.ContinentService;
 import no.fdk.referencedata.eu.continent.LocalContinentHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,6 @@ class ContinentQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private ContinentRepository continentRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -50,8 +46,7 @@ class ContinentQueryIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester(),
                 continentRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ContinentWriter(continentRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ContinentWriter(continentRepository, rdfSourceRepository));
 
         continentService.harvestAndSave();
     }

@@ -8,7 +8,6 @@ import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelType;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeRepository;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
     @Autowired
     private ServiceChannelTypeRepository serviceChannelTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Autowired
@@ -52,8 +48,7 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalServiceChannelTypeHarvester(),
                 serviceChannelTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new ServiceChannelTypeWriter(serviceChannelTypeRepository, rdfSourceRepository));
 
         serviceChannelTypeService.harvestAndSave();
     }

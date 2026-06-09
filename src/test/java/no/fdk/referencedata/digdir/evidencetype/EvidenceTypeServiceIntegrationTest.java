@@ -4,8 +4,6 @@ import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.settings.Settings.EVIDENCE_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,9 +29,6 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Autowired
     private EvidenceTypeRepository evidenceTypeRepository;
 
-    @Autowired
-    private HarvestSettingsRepository harvestSettingsRepository;
-
     private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
 
     @Test
@@ -43,8 +37,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository));
 
         evidenceTypeService.harvestAndSave();
 
@@ -59,59 +52,6 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
     }
 
     @Test
-    public void test_if_harvest_always_persists_and_updates_version() {
-        EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester(),
-                evidenceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime firstHarvestDateTime = LocalDateTime.now();
-        evidenceTypeService.harvestAndSave();
-
-        HarvestSettings settings =
-                harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(firstHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Newer version
-        evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester(),
-                evidenceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime secondHarvestDateTime = LocalDateTime.now();
-        evidenceTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(secondHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-
-        // Same version
-        evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester(),
-                evidenceTypeRepository,
-                rdfSourceRepository,
-                harvestSettingsRepository,
-                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
-
-        LocalDateTime thirdHarvestDateTime = LocalDateTime.now();
-        evidenceTypeService.harvestAndSave();
-
-        settings =
-                harvestSettingsRepository.findById(EVIDENCE_TYPE.name()).orElseThrow();
-        assertNotNull(settings);
-        assertTrue(settings.getLatestHarvestDate().isAfter(thirdHarvestDateTime));
-        assertTrue(settings.getLatestHarvestDate().isBefore(LocalDateTime.now()));
-    }
-
-    @Test
     public void test_if_harvest_rollsback_transaction_when_save_fails() {
         EvidenceTypeRepository evidenceTypeRepositorySpy = spy(this.evidenceTypeRepository);
 
@@ -122,7 +62,6 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 .build();
         evidenceTypeRepositorySpy.save(evidenceType);
 
-
         long count = evidenceTypeRepositorySpy.count();
         assertTrue(count > 0);
 
@@ -132,8 +71,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepositorySpy,
                 rdfSourceRepository,
-                harvestSettingsRepository,
-                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository, harvestSettingsRepository));
+                new EvidenceTypeWriter(evidenceTypeRepository, rdfSourceRepository));
 
         assertEquals(count, evidenceTypeRepositorySpy.count());
     }

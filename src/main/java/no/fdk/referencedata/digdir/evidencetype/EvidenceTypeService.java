@@ -4,16 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
-import no.fdk.referencedata.settings.HarvestSettings;
-import no.fdk.referencedata.settings.HarvestSettingsRepository;
-import no.fdk.referencedata.settings.Settings;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +24,6 @@ public class EvidenceTypeService {
 
     private final EvidenceTypeRepository evidenceTypeRepository;
 
-    private final HarvestSettingsRepository harvestSettingsRepository;
 
     private final RDFSourceRepository rdfSourceRepository;
 
@@ -37,11 +32,9 @@ public class EvidenceTypeService {
             EvidenceTypeHarvester evidenceTypeHarvester,
             EvidenceTypeRepository evidenceTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            HarvestSettingsRepository harvestSettingsRepository,
             EvidenceTypeWriter evidenceTypeWriter) {
         this.evidenceTypeHarvester = evidenceTypeHarvester;
         this.evidenceTypeRepository = evidenceTypeRepository;
-        this.harvestSettingsRepository = harvestSettingsRepository;
         this.evidenceTypeWriter = evidenceTypeWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
@@ -61,10 +54,6 @@ public class EvidenceTypeService {
 
     public void harvestAndSave() {
         try {
-            final HarvestSettings settings = harvestSettingsRepository.findById(Settings.EVIDENCE_TYPE.name())
-                    .orElse(HarvestSettings.builder()
-                            .id(Settings.EVIDENCE_TYPE.name())
-                            .build());
 
             final List<EvidenceType> items = new ArrayList<>();
             evidenceTypeHarvester.harvest().toIterable().forEach(items::add);
@@ -74,9 +63,8 @@ public class EvidenceTypeService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(evidenceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
-            settings.setLatestHarvestDate(LocalDateTime.now());
 
-            evidenceTypeWriter.replaceAll(items, rdfSource, settings);
+            evidenceTypeWriter.replaceAll(items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest evidence-types", e);
         }
