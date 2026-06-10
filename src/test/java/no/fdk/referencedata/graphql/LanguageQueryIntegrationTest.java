@@ -77,9 +77,7 @@ class LanguageQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/language/NOB", result.getUri());
         assertEquals("NOB", result.getCode());
         assertEquals("Norwegian Bokmål", result.getLabel().get("en"));
-        assertEquals("Norsk Bokmål", result.getLabel().get("nb"));
-        assertEquals("Norsk Bokmål", result.getLabel().get("nn"));
-        assertEquals("Norsk Bokmål", result.getLabel().get("no"));
+        assertEquals("norsk (bokmål)", result.getLabel().get("no"));
     }
 
     @Test

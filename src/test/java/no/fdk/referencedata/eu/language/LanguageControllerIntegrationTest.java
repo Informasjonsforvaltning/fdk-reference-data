@@ -71,6 +71,7 @@ public class LanguageControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/language/ENG", first.getUri());
         assertEquals("ENG", first.getCode());
         assertEquals("English", first.getLabel().get(no.fdk.referencedata.i18n.Language.ENGLISH.code()));
+        assertEquals("engelsk", first.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN.code()));
     }
 
     @Test
@@ -82,8 +83,7 @@ public class LanguageControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/language/NOB", language.getUri());
         assertEquals("NOB", language.getCode());
         assertEquals("Norwegian Bokmål", language.getLabel().get(no.fdk.referencedata.i18n.Language.ENGLISH.code()));
-        assertEquals("Norsk Bokmål", language.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN_BOKMAAL.code()));
-        assertEquals("Norsk Bokmål", language.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN_NYNORSK.code()));
+        assertEquals("norsk (bokmål)", language.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN.code()));
     }
 
     @Test

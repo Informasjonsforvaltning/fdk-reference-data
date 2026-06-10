@@ -17,6 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static no.fdk.referencedata.i18n.Language.ENGLISH;
+import static no.fdk.referencedata.i18n.Language.NORWEGIAN;
+
 @Component
 @Slf4j
 public class LanguageHarvester extends AbstractEuHarvester<Language> {
@@ -53,9 +56,34 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
                 .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
                 .subscribe();
 
+        String code = language.getProperty(DC.identifier).getObject().toString();
+
+        switch (code) {
+            case "NOB":
+                label.put(NORWEGIAN.code(), "norsk (bokmål)");
+                break;
+            case "NNO":
+                label.put(NORWEGIAN.code(), "norsk (nynorsk)");
+                break;
+            case "SMI":
+                label.put(NORWEGIAN.code(), "samisk");
+                break;
+            case "SMJ":
+                label.put(NORWEGIAN.code(), "lulesamisk");
+                label.put(ENGLISH.code(), "Lule Sami");
+                break;
+            case "SMA":
+                label.put(NORWEGIAN.code(), "sørsamisk");
+                label.put(ENGLISH.code(), "Southern Sami");
+                break;
+            case "SOM":
+                label.put(NORWEGIAN.code(), "somali");
+                break;
+        }
+
         return Language.builder()
                 .uri(language.getURI())
-                .code(language.getProperty(DC.identifier).getObject().toString())
+                .code(code)
                 .label(label)
                 .build();
     }

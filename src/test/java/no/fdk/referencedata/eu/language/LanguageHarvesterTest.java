@@ -29,7 +29,7 @@ public class LanguageHarvesterTest {
         assertEquals("http://publications.europa.eu/resource/authority/language/ENG", first.getUri());
         assertEquals("ENG", first.getCode());
         assertEquals("English", first.getLabel().get(no.fdk.referencedata.i18n.Language.ENGLISH.code()));
-        assertEquals("Engelsk", first.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN_BOKMAAL.code()));
+        assertEquals("engelsk", first.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN.code()));
 
         Language nob = languages.stream()
                 .filter(language -> language.getCode().equals("NOB"))
@@ -38,7 +38,6 @@ public class LanguageHarvesterTest {
         assertEquals("http://publications.europa.eu/resource/authority/language/NOB", nob.getUri());
         assertEquals("NOB", nob.getCode());
         assertEquals("Norwegian Bokmål", nob.getLabel().get(no.fdk.referencedata.i18n.Language.ENGLISH.code()));
-        assertEquals("Norsk Bokmål", nob.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN_BOKMAAL.code()));
-        assertEquals("Norsk Bokmål", nob.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN_NYNORSK.code()));
+        assertEquals("norsk (bokmål)", nob.getLabel().get(no.fdk.referencedata.i18n.Language.NORWEGIAN.code()));
     }
 }
