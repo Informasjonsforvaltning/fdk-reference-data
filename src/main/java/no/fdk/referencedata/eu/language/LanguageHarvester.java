@@ -78,7 +78,9 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
                         LANG(?prefLabel) = 'en' ||
                         LANG(?prefLabel) = 'no' ||
                         LANG(?prefLabel) = 'nb' ||
-                        LANG(?prefLabel) = 'nn'
+                        LANG(?prefLabel) = 'nn' ||
+                        LANG(?prefLabel) = 'sma' ||
+                        LANG(?prefLabel) = 'smj'
                     ) .
                 }""";
         return URLEncoder.encode(query, StandardCharsets.UTF_8);
