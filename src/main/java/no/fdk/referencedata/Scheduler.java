@@ -281,10 +281,8 @@ public class Scheduler {
         geonamesService.harvestAndSave();
     }
 
-    /**
-     * Run every day 05:35 (at night)
-     */
-    @Scheduled(cron = "0 35 5 * * ?")
+    /** Run once a month at 05:35 on the 1st. */
+    @Scheduled(cron = "0 35 5 1 * ?")
     public void updateLanguages() {
         languageService.harvestAndSave();
     }
