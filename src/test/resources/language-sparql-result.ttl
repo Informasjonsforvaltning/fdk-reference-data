@@ -1,0 +1,22 @@
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/language/> .
+@prefix ns2:	<http://publications.europa.eu/resource/authority/> .
+@prefix dc:	    <http://purl.org/dc/elements/1.1/> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+
+ns2:language	owl:versionInfo	"20160921-0" .
+
+ns1:ENG	skos:inScheme	ns2:language ;
+	skos:prefLabel	"engelsk"@no, "English"@en ;
+	dc:identifier	"ENG" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1950-05-09" .
+
+ns1:NOR	skos:inScheme	ns2:language ;
+	skos:prefLabel	"norsk"@no, "Norwegian"@en ;
+	dc:identifier	"NOR" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1950-05-09" .
+
+ns1:NOB	skos:inScheme	ns2:language ;
+	skos:prefLabel	"Norwegian Bokmål"@en ;
+	dc:identifier	"NOB" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"1950-05-09" .

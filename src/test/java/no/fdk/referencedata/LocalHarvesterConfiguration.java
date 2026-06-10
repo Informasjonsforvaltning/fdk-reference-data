@@ -40,6 +40,8 @@ import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
 import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoriesHarvester;
 import no.fdk.referencedata.eu.highvaluecategories.LocalHighValueCategoryHarvester;
+import no.fdk.referencedata.eu.language.LanguageHarvester;
+import no.fdk.referencedata.eu.language.LocalLanguageHarvester;
 import no.fdk.referencedata.eu.licence.LicenceHarvester;
 import no.fdk.referencedata.eu.licence.LocalLicenceHarvester;
 import no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester;
@@ -147,6 +149,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public CurrencyHarvester currencyHarvester() {
         return new LocalCurrencyHarvester();
+    }
+
+    @Bean
+    public LanguageHarvester languageHarvester() {
+        return new LocalLanguageHarvester();
     }
 
     @Bean

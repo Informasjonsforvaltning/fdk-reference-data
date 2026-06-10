@@ -22,6 +22,7 @@ import no.fdk.referencedata.eu.eurovoc.EuroVocService;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.eu.frequency.FrequencyService;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryService;
+import no.fdk.referencedata.eu.language.LanguageService;
 import no.fdk.referencedata.eu.licence.LicenceService;
 import no.fdk.referencedata.eu.mainactivity.MainActivityService;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
@@ -67,6 +68,7 @@ public class Scheduler {
     private final GeonamesService geonamesService;
     private final HighValueCategoryService highValueCategoryService;
     private final KommuneOrganisasjonService kommuneOrganisasjonService;
+    private final LanguageService languageService;
     private final LegalResourceTypeService legalResourceTypeService;
     private final LicenceService licenceService;
     private final LosService losService;
@@ -279,6 +281,12 @@ public class Scheduler {
         geonamesService.harvestAndSave();
     }
 
+    /** Run once a month at 05:35 on the 1st. */
+    @Scheduled(cron = "0 35 5 1 * ?")
+    public void updateLanguages() {
+        languageService.harvestAndSave();
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
         if (accessRightService.firstTime()) {
@@ -379,6 +387,10 @@ public class Scheduler {
         }
         if (serviceChannelTypeService.firstTime()) {
             serviceChannelTypeService.harvestAndSave();
+        }
+
+        if(languageService.firstTime()) {
+            languageService.harvestAndSave();
         }
     }
 }

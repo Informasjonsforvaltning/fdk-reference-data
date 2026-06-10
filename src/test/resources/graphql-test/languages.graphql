@@ -1,0 +1,7 @@
+query {
+    languages {
+        uri
+        code
+        label { en }
+    }
+}
