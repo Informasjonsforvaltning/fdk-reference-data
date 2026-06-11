@@ -115,7 +115,7 @@ public class LanguageControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_languages_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/languages", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(LanguageControllerIntegrationTest.class.getClassLoader().getResource("language-sparql-result.ttl")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(LanguageControllerIntegrationTest.class.getClassLoader().getResource("languages-translated.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }

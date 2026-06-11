@@ -4,8 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.*;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDF;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,22 +18,57 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static no.fdk.referencedata.i18n.Language.*;
 
 @Component
 @Slf4j
 public class ContinentHarvester extends AbstractEuHarvester<Continent> {
+    private static final String CONTINENT_URI = "http://publications.europa.eu/resource/authority/continent/";
+
     private static final List<String> SUPPORTED_LANGUAGES =
             Arrays.stream(Language.values())
                     .map(Language::code)
                     .collect(Collectors.toList());
 
+    private final Map<String, Map<String, String>> missingTranslations = Map.ofEntries(
+            Map.entry(CONTINENT_URI + "AFRICA", Map.of("no", "Afrika")),
+            Map.entry(CONTINENT_URI + "AMERICA", Map.of("no", "Amerika")),
+            Map.entry(CONTINENT_URI + "ASIA", Map.of("no", "Asia")),
+            Map.entry(CONTINENT_URI + "EUROPE", Map.of("no", "Europa")),
+            Map.entry(CONTINENT_URI + "OCEANIA", Map.of("no", "Oseania")),
+            Map.entry(CONTINENT_URI + "ANTARCTICA", Map.of("no", "Antarktika"))
+    );
+
     public ContinentHarvester() {
         super();
     }
 
+    public Model translateContinents(Model model) {
+        Model translated = ModelFactory.createDefaultModel();
+        model.listStatements().forEach(translated::add);
+
+        for (String subject : missingTranslations.keySet()) {
+            Resource subjectResource = model.getResource(subject);
+            Map<String, String> subjectTranslations = missingTranslations.get(subject);
+            for (Map.Entry<String, String> entry : subjectTranslations.entrySet()) {
+                translated.add(
+                        subjectResource,
+                        DCTerms.title,
+                        entry.getValue(),
+                        entry.getKey()
+                );
+            }
+        }
+
+        updateModel(translated);
+        return translated;
+    }
+
+    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource continentsRdfSource) {
+        return loadModel(continentsRdfSource, false)
+                .map(this::translateContinents);
+    }
 
     public Flux<Continent> harvest() {
         log.info("Starting harvest of EU continents");
@@ -39,45 +77,20 @@ public class ContinentHarvester extends AbstractEuHarvester<Continent> {
             return Flux.error(new Exception("Unable to fetch continents distribution"));
         }
 
-        return Mono.justOrEmpty(loadModel(continentsRdfSource, false))
+        return Mono.justOrEmpty(loadAndTranslateModel(continentsRdfSource))
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, DCTerms.Location).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapContinent);
     }
 
     private Continent mapContinent(Resource continent) {
-        Map<String, String> label = continent.listProperties(DCTerms.title).toList().stream()
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .collect(Collectors.toMap(Literal::getLanguage, Literal::getString));
-
-        String code = continent.getProperty(DCTerms.identifier).getObject().toString();
-
-        switch (code) {
-            case "AFRICA":
-                label.put(NORWEGIAN.code(), "Afrika");
-                break;
-            case "AMERICA":
-                label.put(NORWEGIAN.code(), "Amerika");
-                break;
-            case "ASIA":
-                label.put(NORWEGIAN.code(), "Asia");
-                break;
-            case "EUROPE":
-                label.put(NORWEGIAN.code(), "Europa");
-                break;
-            case "OCEANIA":
-                label.put(NORWEGIAN.code(), "Oseania");
-                break;
-            case "ANTARCTICA":
-                label.put(NORWEGIAN.code(), "Antarktika");
-                break;
-        }
-
         return Continent.builder()
                 .uri(continent.getURI())
-                .code(code)
-                .label(label)
+                .code(continent.getProperty(DCTerms.identifier).getObject().toString())
+                .label(continent.listProperties(DCTerms.title).toList().stream()
+                        .map(stmt -> stmt.getObject().asLiteral())
+                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
+                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
                 .build();
     }
 

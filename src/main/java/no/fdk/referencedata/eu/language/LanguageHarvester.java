@@ -3,6 +3,9 @@ package no.fdk.referencedata.eu.language;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EULanguage;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.SKOS;
@@ -13,12 +16,10 @@ import reactor.core.publisher.Mono;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static no.fdk.referencedata.i18n.Language.ENGLISH;
-import static no.fdk.referencedata.i18n.Language.NORWEGIAN;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -29,10 +30,50 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
                     .map(no.fdk.referencedata.i18n.Language::code)
                     .toList();
 
+    private final Map<String, Map<String, String>> missingTranslations = Map.ofEntries(
+            Map.entry(EULanguage.getURI() + "/NOB", Map.of("no", "norsk (bokmål)")),
+            Map.entry(EULanguage.getURI() + "/NNO", Map.of("no", "norsk (nynorsk)")),
+            Map.entry(EULanguage.getURI() + "/SMI", Map.of("no", "samisk")),
+            Map.entry(EULanguage.getURI() + "/SMJ", Map.of(
+                    "no", "lulesamisk",
+                    "en", "Lule Sami"
+            )),
+            Map.entry(EULanguage.getURI() + "/SMA", Map.of(
+                    "no", "sørsamisk",
+                    "en", "Southern Sami"
+            )),
+            Map.entry(EULanguage.getURI() + "/SOM", Map.of("no", "somali"))
+    );
+
     public LanguageHarvester() {
         super();
     }
 
+    public Model translateLanguages(Model model) {
+        Model translated = ModelFactory.createDefaultModel();
+        model.listStatements().forEach(translated::add);
+
+        for (String subject : missingTranslations.keySet()) {
+            Resource subjectResource = model.getResource(subject);
+            Map<String, String> subjectTranslations = missingTranslations.get(subject);
+            for (Map.Entry<String, String> entry : subjectTranslations.entrySet()) {
+                translated.add(
+                        subjectResource,
+                        SKOS.prefLabel,
+                        entry.getValue(),
+                        entry.getKey()
+                );
+            }
+        }
+
+        updateModel(translated);
+        return translated;
+    }
+
+    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource rdfSource) {
+        return loadModel(rdfSource, false)
+                .map(this::translateLanguages);
+    }
 
     public Flux<Language> harvest() {
         log.info("Starting harvest of EU languages");
@@ -41,7 +82,7 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
             return Flux.error(new Exception("Unable to fetch language distribution"));
         }
 
-        return Mono.justOrEmpty(loadModel(rdfSource, false))
+        return Mono.justOrEmpty(loadAndTranslateModel(rdfSource))
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EULanguage.SCHEME).toList())
                 .filter(Resource::isURIResource)
@@ -49,42 +90,13 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
     }
 
     private Language mapLanguage(Resource language) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(language.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
-
-        String code = language.getProperty(DC.identifier).getObject().toString();
-
-        switch (code) {
-            case "NOB":
-                label.put(NORWEGIAN.code(), "norsk (bokmål)");
-                break;
-            case "NNO":
-                label.put(NORWEGIAN.code(), "norsk (nynorsk)");
-                break;
-            case "SMI":
-                label.put(NORWEGIAN.code(), "samisk");
-                break;
-            case "SMJ":
-                label.put(NORWEGIAN.code(), "lulesamisk");
-                label.put(ENGLISH.code(), "Lule Sami");
-                break;
-            case "SMA":
-                label.put(NORWEGIAN.code(), "sørsamisk");
-                label.put(ENGLISH.code(), "Southern Sami");
-                break;
-            case "SOM":
-                label.put(NORWEGIAN.code(), "somali");
-                break;
-        }
-
         return Language.builder()
                 .uri(language.getURI())
-                .code(code)
-                .label(label)
+                .code(language.getProperty(DC.identifier).getObject().toString())
+                .label(language.listProperties(SKOS.prefLabel).toList().stream()
+                        .map(stmt -> stmt.getObject().asLiteral())
+                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
+                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
                 .build();
     }
 
