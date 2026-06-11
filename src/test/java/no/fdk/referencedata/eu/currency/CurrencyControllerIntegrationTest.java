@@ -121,7 +121,7 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_currencies_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/currencies", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(CurrencyControllerIntegrationTest.class.getClassLoader().getResource("currency-sparql-result.ttl")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(CurrencyControllerIntegrationTest.class.getClassLoader().getResource("currencies-translated.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }

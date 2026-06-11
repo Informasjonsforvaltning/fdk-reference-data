@@ -119,7 +119,7 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_continents_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/continents", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ContinentControllerIntegrationTest.class.getClassLoader().getResource("continent-sparql-result.ttl")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ContinentControllerIntegrationTest.class.getClassLoader().getResource("continents-translated.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }

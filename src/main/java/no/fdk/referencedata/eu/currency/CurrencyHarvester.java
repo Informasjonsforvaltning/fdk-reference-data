@@ -7,6 +7,7 @@ import no.fdk.referencedata.eu.vocabulary.EUCurrency;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.OWL;
@@ -21,10 +22,8 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static no.fdk.referencedata.i18n.Language.NORWEGIAN_BOKMAAL;
-import static no.fdk.referencedata.i18n.Language.NORWEGIAN_NYNORSK;
 
 @Component
 @Slf4j
@@ -35,10 +34,70 @@ public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
                     .map(Language::code)
                     .collect(Collectors.toList());
 
+    private final Map<String, Map<String, String>> missingTranslations = Map.ofEntries(
+            Map.entry(EUCurrency.getURI() + "/NOK", Map.of(
+                    "nb", "Norsk krone",
+                    "nn", "Norsk krone"
+            )),
+            Map.entry(EUCurrency.getURI() + "/EUR", Map.of(
+                    "nb", "Euro",
+                    "nn", "Euro"
+            )),
+            Map.entry(EUCurrency.getURI() + "/GBP", Map.of(
+                    "nb", "Britisk pund",
+                    "nn", "Britisk pund"
+            )),
+            Map.entry(EUCurrency.getURI() + "/USD", Map.of(
+                    "nb", "Amerikansk dollar",
+                    "nn", "Amerikansk dollar"
+            )),
+            Map.entry(EUCurrency.getURI() + "/DKK", Map.of(
+                    "nb", "Dansk krone",
+                    "nn", "Dansk krone"
+            )),
+            Map.entry(EUCurrency.getURI() + "/SEK", Map.of(
+                    "nb", "Svensk krone",
+                    "nn", "Svensk krone"
+            )),
+            Map.entry(EUCurrency.getURI() + "/ISK", Map.of(
+                    "nb", "Islandsk krone",
+                    "nn", "Islandsk krone"
+            )),
+            Map.entry(EUCurrency.getURI() + "/JPY", Map.of(
+                    "nb", "Japansk yen",
+                    "nn", "Japansk yen"
+            ))
+    );
+
     public CurrencyHarvester() {
         super();
     }
 
+    public Model translateCurrencies(Model model) {
+        Model translated = ModelFactory.createDefaultModel();
+        model.listStatements().forEach(translated::add);
+
+        for (String subject : missingTranslations.keySet()) {
+            Resource subjectResource = model.getResource(subject);
+            Map<String, String> subjectTranslations = missingTranslations.get(subject);
+            for (Map.Entry<String, String> entry : subjectTranslations.entrySet()) {
+                translated.add(
+                        subjectResource,
+                        SKOS.prefLabel,
+                        entry.getValue(),
+                        entry.getKey()
+                );
+            }
+        }
+
+        updateModel(translated);
+        return translated;
+    }
+
+    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource rdfSource) {
+        return loadModel(rdfSource, false)
+                .map(this::translateCurrencies);
+    }
 
     public Flux<Currency> harvest() {
         log.info("Starting harvest of EU currencies");
@@ -47,58 +106,20 @@ public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
             return Flux.error(new Exception("Unable to fetch EU currencies"));
         }
 
-        return Mono.justOrEmpty(loadModel(rdfSource, false))
+        return Mono.justOrEmpty(loadAndTranslateModel(rdfSource))
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUCurrency.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapCurrency);
     }
 
-
     private Currency mapCurrency(Resource currency) {
-        String code = currency.getProperty(DC.identifier).getObject().toString();
-        Map<String, String> label = currency.listProperties(SKOS.prefLabel).toList().stream()
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .collect(Collectors.toMap(Literal::getLanguage, Literal::getString));
-
-        switch (code) {
-            case "NOK":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Norsk krone");
-                label.put(NORWEGIAN_NYNORSK.code(), "Norsk krone");
-                break;
-            case "EUR":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Euro");
-                label.put(NORWEGIAN_NYNORSK.code(), "Euro");
-                break;
-            case "GBP":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Britisk pund");
-                label.put(NORWEGIAN_NYNORSK.code(), "Britisk pund");
-                break;
-            case "USD":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Amerikansk dollar");
-                label.put(NORWEGIAN_NYNORSK.code(), "Amerikansk dollar");
-                break;
-            case "DKK":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Dansk krone");
-                label.put(NORWEGIAN_NYNORSK.code(), "Dansk krone");
-                break;
-            case "SEK":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Svensk krone");
-                label.put(NORWEGIAN_NYNORSK.code(), "Svensk krone");
-                break;
-            case "ISK":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Islandsk krone");
-                label.put(NORWEGIAN_NYNORSK.code(), "Islandsk krone");
-                break;
-            case "JPY":
-                label.put(NORWEGIAN_BOKMAAL.code(), "Japansk yen");
-                label.put(NORWEGIAN_NYNORSK.code(), "Japansk yen");
-        }
-
         return Currency.builder()
                 .uri(currency.getURI())
-                .code(code)
-                .label(label)
+                .code(currency.getProperty(DC.identifier).getObject().toString())
+                .label(currency.listProperties(SKOS.prefLabel).toList().stream()
+                        .map(stmt -> stmt.getObject().asLiteral())
+                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
+                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
                 .startUse(currency.hasProperty(EUAuthorityOntology.startUse) ?
                         LocalDate.parse(currency.getProperty(EUAuthorityOntology.startUse).getString()) : null)
                 .build();

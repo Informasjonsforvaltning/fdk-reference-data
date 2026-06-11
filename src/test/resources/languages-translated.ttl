@@ -1,0 +1,35 @@
+PREFIX dc:   <http://purl.org/dc/elements/1.1/>
+PREFIX ns1:  <http://publications.europa.eu/resource/authority/language/>
+PREFIX ns2:  <http://publications.europa.eu/resource/authority/>
+PREFIX owl:  <http://www.w3.org/2002/07/owl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+ns1:NNO  skos:prefLabel  "norsk (nynorsk)"@no .
+
+ns1:SMI  skos:prefLabel  "samisk"@no .
+
+ns1:NOB  <http://publications.europa.eu/ontology/authority/start.use>
+                "1950-05-09";
+        dc:identifier   "NOB";
+        skos:inScheme   ns2:language;
+        skos:prefLabel  "Norwegian Bokmål"@en , "norsk (bokmål)"@no .
+
+ns1:NOR  <http://publications.europa.eu/ontology/authority/start.use>
+                "1950-05-09";
+        dc:identifier   "NOR";
+        skos:inScheme   ns2:language;
+        skos:prefLabel  "norsk"@no , "Norwegian"@en .
+
+ns2:language  owl:versionInfo  "20160921-0" .
+
+ns1:ENG  <http://publications.europa.eu/ontology/authority/start.use>
+                "1950-05-09";
+        dc:identifier   "ENG";
+        skos:inScheme   ns2:language;
+        skos:prefLabel  "engelsk"@no , "English"@en .
+
+ns1:SMA  skos:prefLabel  "sørsamisk"@no , "Southern Sami"@en .
+
+ns1:SOM  skos:prefLabel  "somali"@no .
+
+ns1:SMJ  skos:prefLabel  "lulesamisk"@no , "Lule Sami"@en .
