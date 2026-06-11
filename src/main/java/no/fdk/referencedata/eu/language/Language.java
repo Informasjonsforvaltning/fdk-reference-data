@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import no.fdk.referencedata.search.SearchAlternative;
+import no.fdk.referencedata.search.SearchHit;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -30,4 +32,13 @@ public class Language {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "label", columnDefinition = "jsonb")
     Map<String, String> label;
+
+    public SearchHit toSearchHit() {
+        return SearchHit.builder()
+                .uri(this.uri)
+                .code(this.code)
+                .label(this.label)
+                .type(SearchAlternative.EU_LANGUAGES)
+                .build();
+    }
 }
