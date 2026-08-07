@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class ConceptSubjectService {
 
     private final ConceptSubjectHarvester conceptSubjectHarvester;
 
-    private final ConceptSubjectWriter conceptSubjectWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final ConceptSubjectRepository conceptSubjectRepository;
 
@@ -31,11 +33,11 @@ public class ConceptSubjectService {
             ConceptSubjectHarvester conceptSubjectHarvester,
             RDFSourceRepository rdfSourceRepository,
             ConceptSubjectRepository conceptSubjectRepository,
-            ConceptSubjectWriter conceptSubjectWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.conceptSubjectHarvester = conceptSubjectHarvester;
         this.rdfSourceRepository = rdfSourceRepository;
         this.conceptSubjectRepository = conceptSubjectRepository;
-        this.conceptSubjectWriter = conceptSubjectWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -61,7 +63,7 @@ public class ConceptSubjectService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(conceptSubjectHarvester.getModel(), RDFFormat.TURTLE));
 
-            conceptSubjectWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(conceptSubjectRepository, items, rdfSource);
 
         } catch (Exception e) {
             log.error("Unable to harvest concept subjects", e);

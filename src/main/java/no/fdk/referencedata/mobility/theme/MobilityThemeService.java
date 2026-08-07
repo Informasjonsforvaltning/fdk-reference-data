@@ -1,5 +1,7 @@
 package no.fdk.referencedata.mobility.theme;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class MobilityThemeService {
 
     private final MobilityThemeHarvester mobilityThemeHarvester;
 
-    private final MobilityThemeWriter mobilityThemeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final MobilityThemeRepository mobilityThemeRepository;
 
@@ -32,10 +34,10 @@ public class MobilityThemeService {
             MobilityThemeHarvester mobilityThemeHarvester,
             MobilityThemeRepository mobilityThemeRepository,
             RDFSourceRepository rdfSourceRepository,
-            MobilityThemeWriter mobilityThemeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.mobilityThemeHarvester = mobilityThemeHarvester;
         this.mobilityThemeRepository = mobilityThemeRepository;
-        this.mobilityThemeWriter = mobilityThemeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class MobilityThemeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityThemeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            mobilityThemeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(mobilityThemeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest mobility themes", e);
         }

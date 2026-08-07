@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
-import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -44,7 +45,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         qualityDimensionService.harvestAndSave();
 
@@ -78,7 +79,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
                 new LocalQualityDimensionHarvester(),
                 qualityDimensionRepositorySpy,
                 rdfSourceRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, qualityDimensionRepositorySpy.count());
     }

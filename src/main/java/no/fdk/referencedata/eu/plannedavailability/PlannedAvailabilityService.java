@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class PlannedAvailabilityService {
 
     private final PlannedAvailabilityHarvester plannedAvailabilityHarvester;
 
-    private final PlannedAvailabilityWriter plannedAvailabilityWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final PlannedAvailabilityRepository plannedAvailabilityRepository;
 
@@ -31,10 +33,10 @@ public class PlannedAvailabilityService {
             PlannedAvailabilityHarvester plannedAvailabilityHarvester,
             PlannedAvailabilityRepository plannedAvailabilityRepository,
             RDFSourceRepository rdfSourceRepository,
-            PlannedAvailabilityWriter plannedAvailabilityWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.plannedAvailabilityHarvester = plannedAvailabilityHarvester;
         this.plannedAvailabilityRepository = plannedAvailabilityRepository;
-        this.plannedAvailabilityWriter = plannedAvailabilityWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -63,7 +65,7 @@ public class PlannedAvailabilityService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(plannedAvailabilityHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            plannedAvailabilityWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(plannedAvailabilityRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest planned availabilities", e);
         }

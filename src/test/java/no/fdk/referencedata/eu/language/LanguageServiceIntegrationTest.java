@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLanguageHarvester(),
                 languageRepository,
                 rdfSourceRepository,
-                new LanguageWriter(languageRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         languageService.harvestAndSave();
 
@@ -70,7 +72,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
                 new LocalLanguageHarvester(),
                 languageRepository,
                 rdfSourceRepository,
-                new LanguageWriter(languageRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, languageRepositorySpy.count());
     }

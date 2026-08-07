@@ -1,6 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceType;
@@ -50,7 +51,7 @@ class LegalResourceTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         legalResourceTypeService.harvestAndSave();
     }

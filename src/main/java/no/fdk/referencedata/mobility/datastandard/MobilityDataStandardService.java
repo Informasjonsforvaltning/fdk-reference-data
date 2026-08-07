@@ -1,5 +1,7 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class MobilityDataStandardService {
 
     private final MobilityDataStandardHarvester mobilityDataStandardHarvester;
 
-    private final MobilityDataStandardWriter mobilityDataStandardWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final MobilityDataStandardRepository mobilityDataStandardRepository;
 
@@ -32,10 +34,10 @@ public class MobilityDataStandardService {
             MobilityDataStandardHarvester mobilityDataStandardHarvester,
             MobilityDataStandardRepository mobilityDataStandardRepository,
             RDFSourceRepository rdfSourceRepository,
-            MobilityDataStandardWriter mobilityDataStandardWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.mobilityDataStandardHarvester = mobilityDataStandardHarvester;
         this.mobilityDataStandardRepository = mobilityDataStandardRepository;
-        this.mobilityDataStandardWriter = mobilityDataStandardWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class MobilityDataStandardService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityDataStandardHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            mobilityDataStandardWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(mobilityDataStandardRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest mobility data standards", e);
         }

@@ -1,7 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.eu.country.CountryWriter;
-import no.fdk.referencedata.eu.continent.ContinentWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -61,7 +61,7 @@ class ContinentSearchableIntegrationTest extends AbstractContainerTest {
                 new LocalContinentHarvester(),
                 continentRepository,
                 rdfSourceRepository,
-                new ContinentWriter(continentRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         continentService.harvestAndSave();
 
@@ -69,7 +69,7 @@ class ContinentSearchableIntegrationTest extends AbstractContainerTest {
                 new LocalCountryHarvester(),
                 countryRepository,
                 rdfSourceRepository,
-                new CountryWriter(countryRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         countryService.harvestAndSave();
     }

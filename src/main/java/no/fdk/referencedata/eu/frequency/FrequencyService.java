@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.frequency;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.ReferenceDataWriter;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
@@ -20,7 +21,7 @@ public class FrequencyService {
 
     private final FrequencyHarvester frequencyHarvester;
 
-    private final FrequencyWriter frequencyWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final FrequencyRepository frequencyRepository;
 
@@ -31,11 +32,11 @@ public class FrequencyService {
             FrequencyHarvester frequencyHarvester,
             FrequencyRepository frequencyRepository,
             RDFSourceRepository rdfSourceRepository,
-            FrequencyWriter frequencyWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.frequencyHarvester = frequencyHarvester;
         this.frequencyRepository = frequencyRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.frequencyWriter = frequencyWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -62,8 +63,7 @@ public class FrequencyService {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(frequencyHarvester.getModel(), RDFFormat.TURTLE));
 
-
-            frequencyWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(frequencyRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest frequencies", e);
         }

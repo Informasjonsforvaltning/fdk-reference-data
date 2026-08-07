@@ -1,6 +1,11 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
-import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonWriter;
+import static org.mockito.Mockito.mock;
+
+import no.fdk.referencedata.rdf.RDFSourceRepository;
+
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +54,7 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository,
-                new FylkeOrganisasjonWriter(fylkeOrganisasjonRepository));
+                new ReferenceDataWriter(mock(RDFSourceRepository.class)));
 
         fylkeOrganisasjonService.harvestAndSave();
     }

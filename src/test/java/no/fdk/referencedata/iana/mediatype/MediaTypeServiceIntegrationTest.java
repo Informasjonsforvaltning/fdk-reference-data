@@ -1,6 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
-import no.fdk.referencedata.iana.mediatype.MediaTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
                 rdfSourceRepository,
-                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mediaTypeService.harvestAndSave();
 
@@ -68,7 +69,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepositorySpy,
                 rdfSourceRepository,
-                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, mediaTypeRepositorySpy.count());
     }

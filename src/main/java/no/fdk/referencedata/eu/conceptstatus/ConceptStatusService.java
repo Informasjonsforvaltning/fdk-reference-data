@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -23,7 +25,7 @@ public class ConceptStatusService {
 
     private final ConceptStatusHarvester conceptStatusHarvester;
 
-    private final ConceptStatusWriter conceptStatusWriter;
+    private final ReferenceDataWriter referenceDataWriter;
     private final ConceptStatusRepository conceptStatusRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
@@ -32,11 +34,11 @@ public class ConceptStatusService {
             ConceptStatusHarvester conceptStatusHarvester,
             ConceptStatusRepository conceptStatusRepository,
             RDFSourceRepository rdfSourceRepository,
-            ConceptStatusWriter conceptStatusWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.conceptStatusHarvester = conceptStatusHarvester;
         this.conceptStatusRepository = conceptStatusRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.conceptStatusWriter = conceptStatusWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -75,7 +77,7 @@ public class ConceptStatusService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(conceptStatusHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            conceptStatusWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(conceptStatusRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest concept statuses", e);
         }

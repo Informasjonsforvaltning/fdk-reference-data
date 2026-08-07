@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class EuroVocService {
 
     private final EuroVocHarvester euroVocHarvester;
 
-    private final EuroVocWriter euroVocWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final EuroVocRepository euroVocRepository;
 
@@ -32,11 +34,11 @@ public class EuroVocService {
             EuroVocHarvester euroVocHarvester,
             EuroVocRepository euroVocRepository,
             RDFSourceRepository rdfSourceRepository,
-            EuroVocWriter euroVocWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.euroVocHarvester = euroVocHarvester;
         this.euroVocRepository = euroVocRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.euroVocWriter = euroVocWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -64,7 +66,7 @@ public class EuroVocService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(euroVocHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            euroVocWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(euroVocRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest eurovoc", e);
         }

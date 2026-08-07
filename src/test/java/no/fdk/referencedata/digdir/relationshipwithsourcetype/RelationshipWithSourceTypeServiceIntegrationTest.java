@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
-import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -33,7 +34,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         relationshipWithSourceTypeService.harvestAndSave();
 
@@ -68,7 +69,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
                 new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepositorySpy,
                 rdfSourceRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, relationshipWithSourceTypeRepositorySpy.count());
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class DataThemeService {
 
     private final DataThemeHarvester dataThemeHarvester;
 
-    private final DataThemeWriter dataThemeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final DataThemeRepository dataThemeRepository;
 
@@ -32,11 +34,11 @@ public class DataThemeService {
             DataThemeHarvester dataThemeHarvester,
             DataThemeRepository dataThemeRepository,
             RDFSourceRepository rdfSourceRepository,
-            DataThemeWriter dataThemeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.dataThemeHarvester = dataThemeHarvester;
         this.dataThemeRepository = dataThemeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.dataThemeWriter = dataThemeWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -64,7 +66,7 @@ public class DataThemeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(dataThemeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            dataThemeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(dataThemeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest data-themes", e);
         }

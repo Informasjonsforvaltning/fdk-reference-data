@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.mainactivity;
 
-import no.fdk.referencedata.eu.mainactivity.MainActivityWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -38,7 +39,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mainActivityService.harvestAndSave();
 
@@ -72,7 +73,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMainActivityHarvester(),
                 mainActivityRepositorySpy,
                 rdfSourceRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, mainActivityRepositorySpy.count());
     }

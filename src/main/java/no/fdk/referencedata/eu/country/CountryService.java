@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -24,7 +26,7 @@ public class CountryService implements SearchableReferenceData {
 
     private final CountryHarvester countryHarvester;
 
-    private final CountryWriter countryWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final CountryRepository countryRepository;
 
@@ -35,11 +37,11 @@ public class CountryService implements SearchableReferenceData {
             CountryHarvester countryHarvester,
             CountryRepository countryRepository,
             RDFSourceRepository rdfSourceRepository,
-            CountryWriter countryWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.countryHarvester = countryHarvester;
         this.countryRepository = countryRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.countryWriter = countryWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -83,7 +85,7 @@ public class CountryService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(countryHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            countryWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(countryRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest countries", e);
         }

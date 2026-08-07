@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -24,7 +26,7 @@ public class FileTypeService implements SearchableReferenceData {
 
     private final FileTypeHarvester fileTypeHarvester;
 
-    private final FileTypeWriter fileTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final FileTypeRepository fileTypeRepository;
 
@@ -35,11 +37,11 @@ public class FileTypeService implements SearchableReferenceData {
             FileTypeHarvester fileTypeHarvester,
             FileTypeRepository fileTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            FileTypeWriter fileTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.fileTypeHarvester = fileTypeHarvester;
         this.fileTypeRepository = fileTypeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.fileTypeWriter = fileTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -83,7 +85,7 @@ public class FileTypeService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(fileTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            fileTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(fileTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest file-types", e);
         }

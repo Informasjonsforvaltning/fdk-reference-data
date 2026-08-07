@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
-import no.fdk.referencedata.eu.filetype.FileTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -56,7 +57,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester(),
                 fileTypeRepository,
                 rdfSourceRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
     }

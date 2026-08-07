@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class HighValueCategoryService {
 
     private final HighValueCategoriesHarvester highValueCategoriesHarvester;
 
-    private final HighValueCategoryWriter highValueCategoryWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final HighValueCategoryRepository highValueCategoryRepository;
 
@@ -31,11 +33,11 @@ public class HighValueCategoryService {
             HighValueCategoriesHarvester highValueCategoriesHarvester,
             HighValueCategoryRepository highValueCategoryRepository,
             RDFSourceRepository rdfSourceRepository,
-            HighValueCategoryWriter highValueCategoryWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.highValueCategoriesHarvester = highValueCategoriesHarvester;
         this.highValueCategoryRepository = highValueCategoryRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.highValueCategoryWriter = highValueCategoryWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -63,7 +65,7 @@ public class HighValueCategoryService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(highValueCategoriesHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            highValueCategoryWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(highValueCategoryRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest high-value categories", e);
         }

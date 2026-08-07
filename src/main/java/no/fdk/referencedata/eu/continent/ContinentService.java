@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.continent;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -24,7 +26,7 @@ public class ContinentService implements SearchableReferenceData {
 
     private final ContinentHarvester continentHarvester;
 
-    private final ContinentWriter continentWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final ContinentRepository continentRepository;
 
@@ -35,11 +37,11 @@ public class ContinentService implements SearchableReferenceData {
             ContinentHarvester continentHarvester,
             ContinentRepository continentRepository,
             RDFSourceRepository rdfSourceRepository,
-            ContinentWriter continentWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.continentHarvester = continentHarvester;
         this.continentRepository = continentRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.continentWriter = continentWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -83,7 +85,7 @@ public class ContinentService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(continentHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            continentWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(continentRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest continents", e);
         }

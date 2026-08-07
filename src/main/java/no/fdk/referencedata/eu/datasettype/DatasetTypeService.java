@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.datasettype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class DatasetTypeService {
 
     private final DatasetTypeHarvester datasetTypeHarvester;
 
-    private final DatasetTypeWriter datasetTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final DatasetTypeRepository datasetTypeRepository;
 
@@ -31,11 +33,11 @@ public class DatasetTypeService {
             DatasetTypeHarvester datasetTypeHarvester,
             DatasetTypeRepository datasetTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            DatasetTypeWriter datasetTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.datasetTypeHarvester = datasetTypeHarvester;
         this.datasetTypeRepository = datasetTypeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.datasetTypeWriter = datasetTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -63,7 +65,7 @@ public class DatasetTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(datasetTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            datasetTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(datasetTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest dataset-types", e);
         }

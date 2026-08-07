@@ -1,6 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.eu.datatheme.DataThemeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
@@ -47,7 +48,7 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalDataThemeHarvester(),
                 dataThemeRepository,
                 rdfSourceRepository,
-                new DataThemeWriter(dataThemeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         dataThemeService.harvestAndSave();
     }
