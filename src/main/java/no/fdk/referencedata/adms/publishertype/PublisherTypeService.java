@@ -1,13 +1,7 @@
 package no.fdk.referencedata.adms.publishertype;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -22,20 +16,17 @@ import java.util.Optional;
 public class PublisherTypeService {
     private final String rdfSourceID = "publisher-type-source";
     private final PublisherTypeRepository publisherTypeRepository;
-    private final RDFSourceRepository rdfSourceRepository;
-    private final ReferenceDataWriter referenceDataWriter;
+    private final ReferenceDataServiceSupport support;
     public PublisherTypeImporter publisherTypeImporter;
 
     @Autowired
     public PublisherTypeService(
             PublisherTypeImporter publisherTypeImporter,
             PublisherTypeRepository publisherTypeRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.publisherTypeImporter = publisherTypeImporter;
         this.publisherTypeRepository = publisherTypeRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
     public List<PublisherType> getAll() {
@@ -47,12 +38,7 @@ public class PublisherTypeService {
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(rdfSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(rdfSourceID, rdfFormat);
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -60,15 +46,9 @@ public class PublisherTypeService {
         log.debug("Importing adms publisher-types");
         try {
             final List<PublisherType> publisherTypes = publisherTypeImporter.importFromSource();
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(rdfSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(publisherTypeImporter.getModel(), RDFFormat.TURTLE));
-
-            referenceDataWriter.replaceAll(publisherTypeRepository, publisherTypes, rdfSource);
+            support.saveAll(publisherTypes, publisherTypeImporter.getModel(), publisherTypeRepository, rdfSourceID);
         } catch (Exception e) {
             log.error("Unable to harvest adms publisher-types", e);
         }
     }
-
 }

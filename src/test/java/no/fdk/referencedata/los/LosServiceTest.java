@@ -1,5 +1,7 @@
 package no.fdk.referencedata.los;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -29,8 +31,8 @@ public class LosServiceTest extends AbstractContainerTest {
 
     @Test
     public void test_if_get_all_returns_all_los_nodes() {
-        LosService losService = new LosService(new LocalLosImporter(), losRepository, rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+        LosService losService = new LosService(new LocalLosImporter(), losRepository,
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
         losService.importLosNodes();
 
         List<LosNode> losNodeList = losService.getAll();
@@ -47,8 +49,8 @@ public class LosServiceTest extends AbstractContainerTest {
 
     @Test
     public void test_if_get_los_nodes_by_uris_returns_correct_los_nodes() {
-        LosService losService = new LosService(new LocalLosImporter(), losRepository, rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+        LosService losService = new LosService(new LocalLosImporter(), losRepository,
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
         losService.importLosNodes();
 
         List<LosNode> losNodeList = losService.getByURIs(List.of(

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import static org.mockito.Mockito.mock;
 
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -54,7 +56,7 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository,
-                new ReferenceDataWriter(mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
 
         fylkeOrganisasjonService.harvestAndSave();
     }

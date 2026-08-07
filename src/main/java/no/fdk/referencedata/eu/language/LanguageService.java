@@ -1,60 +1,45 @@
 package no.fdk.referencedata.eu.language;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Service
-@Slf4j
-public class LanguageService implements SearchableReferenceData {
+public class LanguageService implements SearchableReferenceData, HarvestableReferenceData {
     private final String dbSourceID = "language-source";
 
     private final LanguageHarvester languageHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final LanguageRepository languageRepository;
 
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public LanguageService(
             LanguageHarvester languageHarvester,
             LanguageRepository languageRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.languageHarvester = languageHarvester;
         this.languageRepository = languageRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return languageRepository.count() == 0;
+        return support.firstTime(languageRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
     public SearchAlternative getSearchType() {
@@ -73,20 +58,8 @@ public class LanguageService implements SearchableReferenceData {
                 .map(Language::toSearchHit);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-            final List<Language> items = new ArrayList<>();
-            languageHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} languages", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(languageHarvester.getModel(), RDFFormat.TURTLE));
-
-            referenceDataWriter.replaceAll(languageRepository, items, rdfSource);
-
-        } catch (Exception e) {
-            log.error("Unable to harvest languages", e);
-        }
+        support.harvestAndSave(languageHarvester, languageRepository, dbSourceID, "languages");
     }
 }

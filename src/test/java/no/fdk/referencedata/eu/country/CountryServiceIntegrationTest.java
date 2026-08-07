@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.i18n.Language;
@@ -36,8 +38,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
         CountryService countryService = new CountryService(
                 new LocalCountryHarvester(),
                 countryRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         countryService.harvestAndSave();
 
@@ -70,8 +71,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
         new CountryService(
                 new LocalCountryHarvester(),
                 countryRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, countryRepositorySpy.count());
     }

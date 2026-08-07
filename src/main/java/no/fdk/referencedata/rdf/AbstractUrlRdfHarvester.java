@@ -2,6 +2,7 @@ package no.fdk.referencedata.rdf;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.ModelHarvester;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -15,7 +16,7 @@ import java.net.MalformedURLException;
 import java.util.Optional;
 
 @Slf4j
-public abstract class AbstractUrlRdfHarvester<T> {
+public abstract class AbstractUrlRdfHarvester<T> implements ModelHarvester<T> {
 
     @Getter
     private final Model model = ModelFactory.createDefaultModel();

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -43,8 +45,7 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         conceptStatusService.harvestAndSave();
     }

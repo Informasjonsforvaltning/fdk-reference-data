@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.continent;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -57,8 +59,7 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
         ContinentService continentService = new ContinentService(
                 new LocalContinentHarvester(),
                 continentRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         continentService.harvestAndSave();
     }

@@ -1,9 +1,10 @@
 package no.fdk.referencedata.geonames;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
@@ -11,7 +12,6 @@ import no.fdk.referencedata.search.SearchableReferenceData;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
@@ -24,40 +24,36 @@ import java.util.stream.Stream;
 
 @Service
 @Slf4j
-public class GeonamesService implements SearchableReferenceData {
+public class GeonamesService implements SearchableReferenceData, HarvestableReferenceData {
     private final String rdfSourceID = "geonames-source";
 
     private final GeonamesHarvester geonamesHarvester;
     private final GeonamesFylkeRepository geonamesFylkeRepository;
     private final GeonamesKommuneRepository geonamesKommuneRepository;
-    private final RDFSourceRepository rdfSourceRepository;
     private final GeonamesWriter geonamesWriter;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public GeonamesService(
             GeonamesHarvester geonamesHarvester,
             GeonamesFylkeRepository geonamesFylkeRepository,
             GeonamesKommuneRepository geonamesKommuneRepository,
-            RDFSourceRepository rdfSourceRepository,
-            GeonamesWriter geonamesWriter) {
+            GeonamesWriter geonamesWriter,
+            ReferenceDataServiceSupport support) {
         this.geonamesHarvester = geonamesHarvester;
         this.geonamesFylkeRepository = geonamesFylkeRepository;
         this.geonamesKommuneRepository = geonamesKommuneRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
         this.geonamesWriter = geonamesWriter;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return geonamesFylkeRepository.count() == 0;
+        return support.firstTime(geonamesFylkeRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(rdfSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(rdfSourceID, rdfFormat);
     }
 
     public SearchAlternative getSearchType() {
@@ -100,6 +96,7 @@ public class GeonamesService implements SearchableReferenceData {
         }
     }
 
+    @Override
     public void harvestAndSave() {
         try {
             List<GeonamesFylke> fylker = geonamesHarvester.harvestFylker().collectList().block();

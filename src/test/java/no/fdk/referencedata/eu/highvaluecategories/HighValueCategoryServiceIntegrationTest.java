@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.i18n.Language;
@@ -36,8 +38,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
                 new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         highValueCategoryService.harvestAndSave();
 
@@ -70,8 +71,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         new HighValueCategoryService(
                 new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, highValueCategoryRepositorySpy.count());
     }

@@ -1,74 +1,45 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
-public class LegalResourceTypeService {
+public class LegalResourceTypeService implements HarvestableReferenceData {
     private final String dbSourceID = "legal-resource-types-source";
 
     private final LegalResourceTypeHarvester legalResourceTypeHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final LegalResourceTypeRepository legalResourceTypeRepository;
 
-
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public LegalResourceTypeService(
             LegalResourceTypeHarvester legalResourceTypeHarvester,
             LegalResourceTypeRepository legalResourceTypeRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.legalResourceTypeHarvester = legalResourceTypeHarvester;
         this.legalResourceTypeRepository = legalResourceTypeRepository;
-        this.referenceDataWriter = referenceDataWriter;
-        this.rdfSourceRepository = rdfSourceRepository;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return legalResourceTypeRepository.count() == 0;
+        return support.firstTime(legalResourceTypeRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-
-            final List<LegalResourceType> items = new ArrayList<>();
-            legalResourceTypeHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} legal-resource-types", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(legalResourceTypeHarvester.getModel(), RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(legalResourceTypeRepository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest legal-resource-types", e);
-        }
+        support.harvestAndSave(legalResourceTypeHarvester, legalResourceTypeRepository, dbSourceID, "legal-resource-types");
     }
 }

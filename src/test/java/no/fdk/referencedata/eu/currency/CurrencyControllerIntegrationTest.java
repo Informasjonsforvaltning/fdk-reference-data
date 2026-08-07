@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -57,8 +59,7 @@ public class CurrencyControllerIntegrationTest extends AbstractContainerTest {
         CurrencyService currencyService = new CurrencyService(
                 new LocalCurrencyHarvester(),
                 currencyRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         currencyService.harvestAndSave();
     }

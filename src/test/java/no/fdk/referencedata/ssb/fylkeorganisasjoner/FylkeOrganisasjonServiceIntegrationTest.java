@@ -1,5 +1,7 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -37,7 +39,7 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository,
-                new ReferenceDataWriter(mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
 
         fylkeOrganisasjonService.harvestAndSave();
 
@@ -70,7 +72,7 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
         new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepositorySpy,
-                new ReferenceDataWriter(mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
 
         assertEquals(count, fylkeOrganisasjonRepositorySpy.count());
     }

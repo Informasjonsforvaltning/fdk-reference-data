@@ -1,5 +1,9 @@
 package no.fdk.referencedata.geonames;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.geonames.GeonamesWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -59,8 +63,8 @@ public class GeonamesControllerIntegrationTest extends AbstractContainerTest {
                 new LocalGeonamesHarvester(wiremockHost, wiremockPort),
                 geonamesFylkeRepository,
                 geonamesKommuneRepository,
-                rdfSourceRepository,
-                new GeonamesWriter(geonamesFylkeRepository, geonamesKommuneRepository, rdfSourceRepository));
+                new GeonamesWriter(geonamesFylkeRepository, geonamesKommuneRepository, rdfSourceRepository),
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         geonamesService.harvestAndSave();
     }

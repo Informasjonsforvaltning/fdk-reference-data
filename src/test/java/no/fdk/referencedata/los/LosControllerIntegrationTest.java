@@ -1,5 +1,7 @@
 package no.fdk.referencedata.los;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -54,8 +56,7 @@ public class LosControllerIntegrationTest extends AbstractContainerTest {
         LosService losService = new LosService(
                 new LocalLosImporter(),
                 losRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         losService.importLosNodes();
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.distributionstatus;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -57,8 +59,7 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
         DistributionStatusService distributionStatusService = new DistributionStatusService(
                 new LocalDistributionStatusHarvester(),
                 distributionStatusRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         distributionStatusService.harvestAndSave();
     }

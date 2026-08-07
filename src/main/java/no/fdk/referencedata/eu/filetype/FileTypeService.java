@@ -1,60 +1,45 @@
 package no.fdk.referencedata.eu.filetype;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Service
-@Slf4j
-public class FileTypeService implements SearchableReferenceData {
+public class FileTypeService implements SearchableReferenceData, HarvestableReferenceData {
     private final String dbSourceID = "file-types-source";
 
     private final FileTypeHarvester fileTypeHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final FileTypeRepository fileTypeRepository;
 
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public FileTypeService(
             FileTypeHarvester fileTypeHarvester,
             FileTypeRepository fileTypeRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.fileTypeHarvester = fileTypeHarvester;
         this.fileTypeRepository = fileTypeRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return fileTypeRepository.count() == 0;
+        return support.firstTime(fileTypeRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
     public SearchAlternative getSearchType() {
@@ -73,21 +58,8 @@ public class FileTypeService implements SearchableReferenceData {
                 .map(FileType::toSearchHit);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-
-            final List<FileType> items = new ArrayList<>();
-            fileTypeHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} file-types", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(fileTypeHarvester.getModel(), RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(fileTypeRepository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest file-types", e);
-        }
+        support.harvestAndSave(fileTypeHarvester, fileTypeRepository, dbSourceID, "file-types");
     }
 }

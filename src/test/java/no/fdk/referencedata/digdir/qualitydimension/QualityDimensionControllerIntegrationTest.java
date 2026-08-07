@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -59,8 +61,7 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
                 new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         qualityDimensionService.harvestAndSave();
     }

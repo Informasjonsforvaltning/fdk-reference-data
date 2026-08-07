@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -35,8 +37,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
         LanguageService languageService = new LanguageService(
                 new LocalLanguageHarvester(),
                 languageRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         languageService.harvestAndSave();
 
@@ -71,8 +72,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
         new LanguageService(
                 new LocalLanguageHarvester(),
                 languageRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, languageRepositorySpy.count());
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -34,8 +36,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
         CurrencyService currencyService = new CurrencyService(
                 new LocalCurrencyHarvester(),
                 currencyRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         currencyService.harvestAndSave();
 
@@ -68,8 +69,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
         new CurrencyService(
                 new LocalCurrencyHarvester(),
                 currencyRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, currencyRepositorySpy.count());
     }

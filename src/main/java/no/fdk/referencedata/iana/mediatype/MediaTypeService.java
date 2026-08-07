@@ -1,18 +1,14 @@
 package no.fdk.referencedata.iana.mediatype;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
@@ -25,41 +21,30 @@ import java.util.stream.Stream;
 
 @Service
 @Slf4j
-public class MediaTypeService implements SearchableReferenceData {
+public class MediaTypeService implements SearchableReferenceData, HarvestableReferenceData {
     private final String rdfSourceID = "media-types-source";
 
     private final MediaTypeHarvester mediaTypeHarvester;
-
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final MediaTypeRepository mediaTypeRepository;
-
-
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public MediaTypeService(
             MediaTypeHarvester mediaTypeHarvester,
             MediaTypeRepository mediaTypeRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.mediaTypeHarvester = mediaTypeHarvester;
         this.mediaTypeRepository = mediaTypeRepository;
-        this.referenceDataWriter = referenceDataWriter;
-        this.rdfSourceRepository = rdfSourceRepository;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return mediaTypeRepository.count() == 0;
+        return support.firstTime(mediaTypeRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(rdfSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(rdfSourceID, rdfFormat);
     }
 
     private void addMediaTypeToModel(MediaType mediaType, Model model) {
@@ -91,9 +76,9 @@ public class MediaTypeService implements SearchableReferenceData {
                 .map(MediaType::toSearchHit);
     }
 
+    @Override
     public void harvestAndSave() {
         try {
-
             final List<MediaType> items = new ArrayList<>();
             mediaTypeHarvester.harvest().toIterable().forEach(items::add);
             log.info("Harvest and saving {} media-types", items.size());
@@ -102,12 +87,7 @@ public class MediaTypeService implements SearchableReferenceData {
             model.setNsPrefix("dct", DCTerms.NS);
             items.forEach(item -> addMediaTypeToModel(item, model));
 
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(rdfSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(mediaTypeRepository, items, rdfSource);
+            support.saveAll(items, model, mediaTypeRepository, rdfSourceID);
         } catch (Exception e) {
             log.error("Unable to harvest media-types", e);
         }

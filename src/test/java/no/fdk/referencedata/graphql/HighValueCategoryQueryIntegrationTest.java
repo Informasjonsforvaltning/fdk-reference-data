@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -44,8 +46,7 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
                 new LocalHighValueCategoryHarvester(),
                 highValueCategoryRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         highValueCategoryService.harvestAndSave();
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -59,8 +61,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         DataThemeService dataThemeService = new DataThemeService(
                 new LocalDataThemeHarvester(),
                 dataThemeRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         dataThemeService.harvestAndSave();
     }

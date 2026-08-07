@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.accessright;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.i18n.Language;
@@ -36,8 +38,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
         AccessRightService accessRightService = new AccessRightService(
                 new LocalAccessRightHarvester(),
                 accessRightRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         accessRightService.harvestAndSave();
 
@@ -70,8 +71,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
         new AccessRightService(
                 new LocalAccessRightHarvester(),
                 accessRightRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, accessRightRepositorySpy.count());
     }

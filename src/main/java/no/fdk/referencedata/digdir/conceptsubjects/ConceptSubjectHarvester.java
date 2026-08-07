@@ -5,7 +5,7 @@ import no.fdk.referencedata.rdf.SkosMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.ApplicationSettings;
-import no.fdk.referencedata.i18n.Language;
+import no.fdk.referencedata.core.ModelHarvester;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -22,15 +22,12 @@ import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Component
 @Slf4j
-public class ConceptSubjectHarvester {
+public class ConceptSubjectHarvester implements ModelHarvester<ConceptSubject> {
 
     private final ApplicationSettings applicationSettings;
 

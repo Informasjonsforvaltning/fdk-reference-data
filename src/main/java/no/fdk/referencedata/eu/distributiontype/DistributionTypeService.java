@@ -1,73 +1,45 @@
 package no.fdk.referencedata.eu.distributiontype;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
-public class DistributionTypeService {
+public class DistributionTypeService implements HarvestableReferenceData {
     private final String dbSourceID = "distribution-types-source";
 
     private final DistributionTypeHarvester distributionTypeHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final DistributionTypeRepository distributionTypeRepository;
 
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public DistributionTypeService(
             DistributionTypeHarvester distributionTypeHarvester,
             DistributionTypeRepository distributionTypeRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.distributionTypeHarvester = distributionTypeHarvester;
         this.distributionTypeRepository = distributionTypeRepository;
-        this.referenceDataWriter = referenceDataWriter;
-        this.rdfSourceRepository = rdfSourceRepository;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return distributionTypeRepository.count() == 0;
+        return support.firstTime(distributionTypeRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-
-            final List<DistributionType> items = new ArrayList<>();
-            distributionTypeHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} distribution-types", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(distributionTypeHarvester.getModel(), RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(distributionTypeRepository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest distribution-types", e);
-        }
+        support.harvestAndSave(distributionTypeHarvester, distributionTypeRepository, dbSourceID, "distribution-types");
     }
 }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -49,8 +51,7 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
         EuroVocService EuroVocService = new EuroVocService(
                 new LocalEuroVocHarvester(),
                 euroVocRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         EuroVocService.harvestAndSave();
     }
