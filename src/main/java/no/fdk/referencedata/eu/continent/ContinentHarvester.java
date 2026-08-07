@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.continent;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
@@ -26,10 +28,6 @@ import java.util.stream.Collectors;
 public class ContinentHarvester extends AbstractEuHarvester<Continent> {
     private static final String CONTINENT_URI = "http://publications.europa.eu/resource/authority/continent/";
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     private final Map<String, Map<String, String>> missingTranslations = Map.ofEntries(
             Map.entry(CONTINENT_URI + "AFRICA", Map.of("no", "Afrika")),
@@ -87,10 +85,7 @@ public class ContinentHarvester extends AbstractEuHarvester<Continent> {
         return Continent.builder()
                 .uri(continent.getURI())
                 .code(continent.getProperty(DCTerms.identifier).getObject().toString())
-                .label(continent.listProperties(DCTerms.title).toList().stream()
-                        .map(stmt -> stmt.getObject().asLiteral())
-                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                .label(SkosMapper.extractLiteralProperty(continent, DCTerms.title))
                 .build();
     }
 

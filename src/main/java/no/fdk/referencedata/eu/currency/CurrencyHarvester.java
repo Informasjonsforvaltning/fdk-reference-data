@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
@@ -29,10 +31,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     private final Map<String, Map<String, String>> missingTranslations = Map.ofEntries(
             Map.entry(EUCurrency.getURI() + "/NOK", Map.of(
@@ -116,10 +114,7 @@ public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
         return Currency.builder()
                 .uri(currency.getURI())
                 .code(currency.getProperty(DC.identifier).getObject().toString())
-                .label(currency.listProperties(SKOS.prefLabel).toList().stream()
-                        .map(stmt -> stmt.getObject().asLiteral())
-                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                .label(SkosMapper.extractLabels(currency))
                 .startUse(currency.hasProperty(EUAuthorityOntology.startUse) ?
                         LocalDate.parse(currency.getProperty(EUAuthorityOntology.startUse).getString()) : null)
                 .build();

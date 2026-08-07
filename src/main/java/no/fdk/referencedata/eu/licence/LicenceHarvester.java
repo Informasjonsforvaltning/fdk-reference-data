@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EULicence;
@@ -23,10 +25,6 @@ import java.util.*;
 @Slf4j
 public class LicenceHarvester extends AbstractEuHarvester<Licence> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .toList();
 
     public LicenceHarvester() {
         super();
@@ -49,19 +47,9 @@ public class LicenceHarvester extends AbstractEuHarvester<Licence> {
 
 
     private Licence mapLicence(Resource licence) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(licence.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(licence);
 
-        final Map<String, String> definition = new HashMap<>();
-        Flux.fromIterable(licence.listProperties(SKOS.definition).toList())
-            .map(stmt -> stmt.getObject().asLiteral())
-            .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-            .doOnNext(literal -> definition.put(literal.getLanguage(), literal.getString()))
-            .subscribe();
+        Map<String, String> definition = SkosMapper.extractDefinitions(licence);
 
         final List<String> context = new ArrayList<>();
         Flux.fromIterable(licence.listProperties(EUVOC.context).toList())

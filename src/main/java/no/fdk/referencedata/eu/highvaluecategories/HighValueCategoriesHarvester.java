@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
@@ -21,10 +23,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class HighValueCategoriesHarvester extends AbstractEuHarvester<HighValueCategory> {
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
     private static final String SCHEMA_URI = "http://data.europa.eu/bna/asd487ae75";
 
     public HighValueCategoriesHarvester() {
@@ -47,12 +45,7 @@ public class HighValueCategoriesHarvester extends AbstractEuHarvester<HighValueC
 
 
     private HighValueCategory mapHighValueCategory(Resource highValueCategory) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(highValueCategory.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(highValueCategory);
 
         return HighValueCategory.builder()
                 .uri(highValueCategory.getURI())

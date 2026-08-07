@@ -1,5 +1,7 @@
 package no.fdk.referencedata.mobility.theme;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mobility.AbstractMobilityHarvester;
@@ -22,10 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MobilityThemeHarvester extends AbstractMobilityHarvester<MobilityTheme> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
     private static final String PATH = "mobility-theme/latest/mobility-theme.ttl";
 
     public MobilityThemeHarvester() {
@@ -51,12 +49,7 @@ public class MobilityThemeHarvester extends AbstractMobilityHarvester<MobilityTh
 
 
     private MobilityTheme mapMobilityTheme(Resource theme) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(theme.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(theme);
 
         String[] uriParts = theme.getURI().split("/");
 

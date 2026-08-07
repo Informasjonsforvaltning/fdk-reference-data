@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.roletype;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;
 import no.fdk.referencedata.digdir.vocabulary.RoleTypeVocabulary;
@@ -22,10 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RoleTypeHarvester extends AbstractDataNorgeHarvester<RoleType> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
     private static final String PATH = "role-type";
 
     public RoleTypeHarvester() {
@@ -51,12 +49,7 @@ public class RoleTypeHarvester extends AbstractDataNorgeHarvester<RoleType> {
 
 
     private RoleType mapRoleType(Resource roleType) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(roleType.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(roleType);
 
         return RoleType.builder()
                 .uri(roleType.getURI())

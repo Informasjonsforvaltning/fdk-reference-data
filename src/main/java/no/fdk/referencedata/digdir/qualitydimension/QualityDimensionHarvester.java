@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;
 import no.fdk.referencedata.digdir.vocabulary.QualityDimensionVocabulary;
@@ -22,10 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class QualityDimensionHarvester extends AbstractDataNorgeHarvester<QualityDimension> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
     private static final String PATH = "quality-dimension";
 
     public QualityDimensionHarvester() {
@@ -51,12 +49,7 @@ public class QualityDimensionHarvester extends AbstractDataNorgeHarvester<Qualit
 
 
     private QualityDimension mapQualityDimension(Resource qualityDimension) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(qualityDimension.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(qualityDimension);
 
         return QualityDimension.builder()
                 .uri(qualityDimension.getURI())

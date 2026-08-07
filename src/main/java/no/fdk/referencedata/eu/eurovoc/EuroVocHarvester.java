@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
@@ -26,10 +28,6 @@ import java.util.Objects;
 @Slf4j
 public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .toList();
 
     public EuroVocHarvester() {
         super();
@@ -63,12 +61,7 @@ public class EuroVocHarvester extends AbstractEuHarvester<EuroVoc> {
     }
 
     private EuroVoc mapEuroVoc(Resource euroVoc) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(euroVoc.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(euroVoc);
 
         return EuroVoc.builder()
                 .uri(euroVoc.getURI())

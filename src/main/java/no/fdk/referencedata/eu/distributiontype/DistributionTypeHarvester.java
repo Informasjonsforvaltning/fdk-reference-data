@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
@@ -26,10 +28,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionType> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     public DistributionTypeHarvester() {
         super();
@@ -54,10 +52,7 @@ public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionT
         return DistributionType.builder()
                 .uri(distributionType.getURI())
                 .code(distributionType.getProperty(DC.identifier).getObject().toString())
-                .label(distributionType.listProperties(SKOS.prefLabel).toList().stream()
-                        .map(stmt -> stmt.getObject().asLiteral())
-                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                .label(SkosMapper.extractLabels(distributionType))
                 .startUse(distributionType.hasProperty(EUAuthorityOntology.startUse) ?
                         LocalDate.parse(distributionType.getProperty(EUAuthorityOntology.startUse).getString()) : null)
                 .build();

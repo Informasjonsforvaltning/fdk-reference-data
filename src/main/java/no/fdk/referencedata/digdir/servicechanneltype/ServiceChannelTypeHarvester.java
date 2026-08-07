@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;
 import no.fdk.referencedata.digdir.vocabulary.ServiceChannelTypeVocabulary;
@@ -22,10 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ServiceChannelTypeHarvester extends AbstractDataNorgeHarvester<ServiceChannelType> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
     private static final String PATH = "service-channel-type";
 
     public ServiceChannelTypeHarvester() {
@@ -51,12 +49,7 @@ public class ServiceChannelTypeHarvester extends AbstractDataNorgeHarvester<Serv
 
 
     private ServiceChannelType mapServiceChannelType(Resource serviceChannelType) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(serviceChannelType.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(serviceChannelType);
 
         return ServiceChannelType.builder()
                 .uri(serviceChannelType.getURI())

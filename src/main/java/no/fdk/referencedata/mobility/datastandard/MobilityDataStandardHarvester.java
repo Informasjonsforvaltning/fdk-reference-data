@@ -1,5 +1,7 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mobility.AbstractMobilityHarvester;
@@ -22,10 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MobilityDataStandardHarvester extends AbstractMobilityHarvester<MobilityDataStandard> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
     private static final String PATH = "mobility-data-standard/latest/mobility-data-standard.ttl";
 
     public MobilityDataStandardHarvester() {
@@ -51,12 +49,7 @@ public class MobilityDataStandardHarvester extends AbstractMobilityHarvester<Mob
 
 
     private MobilityDataStandard mapMobilityDataStandard(Resource standard) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(standard.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(standard);
 
         String[] uriParts = standard.getURI().split("/");
 

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.mobility.conditions;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.mobility.AbstractMobilityHarvester;
@@ -22,10 +24,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MobilityConditionHarvester extends AbstractMobilityHarvester<MobilityCondition> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
     private static final String PATH = "conditions-for-access-and-usage/latest/conditions-for-access-and-usage.ttl";
 
     public MobilityConditionHarvester() {
@@ -51,12 +49,7 @@ public class MobilityConditionHarvester extends AbstractMobilityHarvester<Mobili
 
 
     private MobilityCondition mapMobilityCondition(Resource condition) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(condition.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(condition);
 
         String[] uriParts = condition.getURI().split("/");
 

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;
 import no.fdk.referencedata.digdir.vocabulary.AudienceTypeVocabulary;
@@ -21,10 +23,6 @@ import java.util.Map;
 @Slf4j
 public class AudienceTypeHarvester extends AbstractDataNorgeHarvester<AudienceType> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .toList();
     private static final String PATH = "audience-type";
 
     public AudienceTypeHarvester() {
@@ -50,12 +48,7 @@ public class AudienceTypeHarvester extends AbstractDataNorgeHarvester<AudienceTy
 
 
     private AudienceType mapAudienceType(Resource audienceType) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(audienceType.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(audienceType);
 
         return AudienceType.builder()
                 .uri(audienceType.getURI())
