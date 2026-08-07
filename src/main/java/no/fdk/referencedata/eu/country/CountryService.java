@@ -1,60 +1,45 @@
 package no.fdk.referencedata.eu.country;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Service
-@Slf4j
-public class CountryService implements SearchableReferenceData {
+public class CountryService implements SearchableReferenceData, HarvestableReferenceData {
     private final String dbSourceID = "country-source";
 
     private final CountryHarvester countryHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final CountryRepository countryRepository;
 
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public CountryService(
             CountryHarvester countryHarvester,
             CountryRepository countryRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.countryHarvester = countryHarvester;
         this.countryRepository = countryRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return countryRepository.count() == 0;
+        return support.firstTime(countryRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
     public SearchAlternative getSearchType() {
@@ -73,21 +58,8 @@ public class CountryService implements SearchableReferenceData {
                 .map(Country::toSearchHit);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-
-            final List<Country> items = new ArrayList<>();
-            countryHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} countries", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(countryHarvester.getModel(), RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(countryRepository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest countries", e);
-        }
+        support.harvestAndSave(countryHarvester, countryRepository, dbSourceID, "countries");
     }
 }

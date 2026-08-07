@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -59,8 +61,7 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
                 new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         legalResourceTypeService.harvestAndSave();
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -48,8 +50,7 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
                 new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         mobilityDataStandardService.harvestAndSave();
     }

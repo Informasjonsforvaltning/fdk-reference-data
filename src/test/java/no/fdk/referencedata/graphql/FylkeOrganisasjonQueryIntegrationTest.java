@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import static org.mockito.Mockito.mock;
 
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -55,7 +57,7 @@ class FylkeOrganisasjonQueryIntegrationTest extends AbstractContainerTest {
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository,
-                new ReferenceDataWriter(mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
 
         fylkeOrganisasjonService.harvestAndSave();
     }

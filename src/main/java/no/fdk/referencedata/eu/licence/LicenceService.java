@@ -1,78 +1,50 @@
 package no.fdk.referencedata.eu.licence;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchableReferenceData;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 @Service
-@Slf4j
-public class LicenceService implements SearchableReferenceData {
+public class LicenceService implements SearchableReferenceData, HarvestableReferenceData {
     private final String dbSourceID = "licences-source";
 
     private final LicenceHarvester licenceHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final LicenceRepository licenceRepository;
 
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public LicenceService(
             LicenceHarvester licenceHarvester,
             LicenceRepository licenceRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.licenceHarvester = licenceHarvester;
         this.licenceRepository = licenceRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return licenceRepository.count() == 0;
+        return support.firstTime(licenceRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-
-            final List<Licence> items = new ArrayList<>();
-            licenceHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} licences", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(licenceHarvester.getModel(), RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(licenceRepository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest licences", e);
-        }
+        support.harvestAndSave(licenceHarvester, licenceRepository, dbSourceID, "licences");
     }
 
     @Override

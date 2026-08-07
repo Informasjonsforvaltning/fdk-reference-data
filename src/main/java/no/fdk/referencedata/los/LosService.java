@@ -1,13 +1,8 @@
 package no.fdk.referencedata.los;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,20 +12,20 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class LosService {
+public class LosService implements HarvestableReferenceData {
     private final String rdfSourceID = "los-source";
     private final LosRepository losRepository;
-    private final RDFSourceRepository rdfSourceRepository;
-    private final ReferenceDataWriter referenceDataWriter;
+    private final ReferenceDataServiceSupport support;
     public LosImporter losImporter;
 
     @Autowired
-    public LosService(LosImporter losImporter, LosRepository losRepository, RDFSourceRepository rdfSourceRepository,
-                      ReferenceDataWriter referenceDataWriter) {
+    public LosService(
+            LosImporter losImporter,
+            LosRepository losRepository,
+            ReferenceDataServiceSupport support) {
         this.losImporter = losImporter;
         this.losRepository = losRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
     public List<LosNode> getByURIs(List<String> uris) {
@@ -40,12 +35,7 @@ public class LosService {
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(rdfSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(rdfSourceID, rdfFormat);
     }
 
     public List<LosNode> getAll() {
@@ -54,21 +44,22 @@ public class LosService {
                 .toList();
     }
 
+    @Override
     public boolean firstTime() {
-        return losRepository.count() == 0;
+        return support.firstTime(losRepository);
     }
 
     public void importLosNodes() {
         try {
             final List<LosNode> losList = losImporter.importFromLosSource();
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(rdfSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(losImporter.getModel(), RDFFormat.TURTLE));
-
-            referenceDataWriter.replaceAll(losRepository, losList, rdfSource);
+            support.saveAll(losList, losImporter.getModel(), losRepository, rdfSourceID);
         } catch (Exception e) {
             log.error("Unable to harvest LOS", e);
         }
+    }
+
+    @Override
+    public void harvestAndSave() {
+        importLosNodes();
     }
 }

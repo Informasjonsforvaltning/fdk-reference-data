@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -58,8 +60,7 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 new LocalEvidenceTypeHarvester(),
                 evidenceTypeRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         evidenceTypeService.harvestAndSave();
     }

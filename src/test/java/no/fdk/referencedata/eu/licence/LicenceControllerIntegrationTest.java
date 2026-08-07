@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -55,8 +57,7 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
         LicenceService licenceService = new LicenceService(
                 new LocalLicenceHarvester(),
                 licenceRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         licenceService.harvestAndSave();
     }

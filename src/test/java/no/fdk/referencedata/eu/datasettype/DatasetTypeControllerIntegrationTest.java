@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.datasettype;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -57,8 +59,7 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         DatasetTypeService datasetTypeService = new DatasetTypeService(
                 new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         datasetTypeService.harvestAndSave();
     }

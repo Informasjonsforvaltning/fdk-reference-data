@@ -1,74 +1,45 @@
 package no.fdk.referencedata.mobility.conditions;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
-public class MobilityConditionService {
+public class MobilityConditionService implements HarvestableReferenceData {
     private final String dbSourceID = "mobility-condition-source";
 
     private final MobilityConditionHarvester mobilityConditionHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final MobilityConditionRepository mobilityConditionRepository;
 
-
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public MobilityConditionService(
             MobilityConditionHarvester mobilityConditionHarvester,
             MobilityConditionRepository mobilityConditionRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.mobilityConditionHarvester = mobilityConditionHarvester;
         this.mobilityConditionRepository = mobilityConditionRepository;
-        this.referenceDataWriter = referenceDataWriter;
-        this.rdfSourceRepository = rdfSourceRepository;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return mobilityConditionRepository.count() == 0;
+        return support.firstTime(mobilityConditionRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-
-            final List<MobilityCondition> items = new ArrayList<>();
-            mobilityConditionHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} mobility conditions", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityConditionHarvester.getModel(), RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(mobilityConditionRepository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest mobility conditions", e);
-        }
+        support.harvestAndSave(mobilityConditionHarvester, mobilityConditionRepository, dbSourceID, "mobility conditions");
     }
 }

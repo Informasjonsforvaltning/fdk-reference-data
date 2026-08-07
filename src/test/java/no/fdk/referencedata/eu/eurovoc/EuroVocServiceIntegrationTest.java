@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.i18n.Language;
@@ -37,8 +39,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         EuroVocService euroVocService = new EuroVocService(
                 new LocalEuroVocHarvester(),
                 euroVocRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         euroVocService.harvestAndSave();
 
@@ -72,8 +73,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         new EuroVocService(
                 new LocalEuroVocHarvester(),
                 EuroVocRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, EuroVocRepositorySpy.count());
     }

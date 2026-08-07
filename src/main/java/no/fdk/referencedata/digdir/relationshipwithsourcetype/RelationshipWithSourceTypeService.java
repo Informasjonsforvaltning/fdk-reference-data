@@ -1,74 +1,45 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Slf4j
-public class RelationshipWithSourceTypeService {
+public class RelationshipWithSourceTypeService implements HarvestableReferenceData {
     private final String dbSourceID = "relationship-with-source-types-source";
 
     private final RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester;
 
-    private final ReferenceDataWriter referenceDataWriter;
-
     private final RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
 
-
-    private final RDFSourceRepository rdfSourceRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public RelationshipWithSourceTypeService(
             RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester,
             RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.relationshipWithSourceTypeHarvester = relationshipWithSourceTypeHarvester;
         this.relationshipWithSourceTypeRepository = relationshipWithSourceTypeRepository;
-        this.referenceDataWriter = referenceDataWriter;
-        this.rdfSourceRepository = rdfSourceRepository;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return relationshipWithSourceTypeRepository.count() == 0;
+        return support.firstTime(relationshipWithSourceTypeRepository);
     }
 
     public String getRdf(RDFFormat rdfFormat) {
-        String source = rdfSourceRepository.findById(dbSourceID).orElse(new RDFSource()).getTurtle();
-        if (rdfFormat == RDFFormat.TURTLE) {
-            return source;
-        } else {
-            return RDFUtils.modelToResponse(ModelFactory.createDefaultModel().read(source, Lang.TURTLE.getName()), rdfFormat);
-        }
+        return support.getRdf(dbSourceID, rdfFormat);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-
-            final List<RelationshipWithSourceType> items = new ArrayList<>();
-            relationshipWithSourceTypeHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} relationship-with-source-types", items.size());
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(dbSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(relationshipWithSourceTypeHarvester.getModel(), RDFFormat.TURTLE));
-
-
-            referenceDataWriter.replaceAll(relationshipWithSourceTypeRepository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest relationship-with-source-types", e);
-        }
+        support.harvestAndSave(relationshipWithSourceTypeHarvester, relationshipWithSourceTypeRepository, dbSourceID, "relationship-with-source-types");
     }
 }

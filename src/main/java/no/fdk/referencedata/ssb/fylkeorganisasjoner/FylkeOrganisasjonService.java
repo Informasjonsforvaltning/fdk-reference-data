@@ -1,47 +1,37 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
-import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
-@Slf4j
-public class FylkeOrganisasjonService {
+public class FylkeOrganisasjonService implements HarvestableReferenceData {
 
     private final FylkeOrganisasjonHarvester fylkeOrganisasjonHarvester;
-
-    private final ReferenceDataWriter referenceDataWriter;
     private final FylkeOrganisasjonRepository fylkeOrganisasjonRepository;
+    private final ReferenceDataServiceSupport support;
 
     @Autowired
     public FylkeOrganisasjonService(
             FylkeOrganisasjonHarvester fylkeOrganisasjonHarvester,
             FylkeOrganisasjonRepository fylkeOrganisasjonRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.fylkeOrganisasjonHarvester = fylkeOrganisasjonHarvester;
         this.fylkeOrganisasjonRepository = fylkeOrganisasjonRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
+    @Override
     public boolean firstTime() {
-        return fylkeOrganisasjonRepository.count() == 0;
+        return support.firstTime(fylkeOrganisasjonRepository);
     }
 
+    @Override
     public void harvestAndSave() {
-        try {
-            final List<FylkeOrganisasjon> items = new ArrayList<>();
-            fylkeOrganisasjonHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} fylkeskommunale organisasjoner", items.size());
-
-            referenceDataWriter.replaceAll(fylkeOrganisasjonRepository, items);
-
-        } catch (Exception e) {
-            log.error("Unable to harvest fylkeskommunale organisasjoner", e);
-        }
+        support.harvestAndSaveWithoutRdf(
+                fylkeOrganisasjonHarvester::harvest,
+                fylkeOrganisasjonRepository,
+                "fylkeskommunale organisasjoner");
     }
 }

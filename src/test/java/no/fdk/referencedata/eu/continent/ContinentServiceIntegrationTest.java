@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.continent;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.i18n.Language;
@@ -36,8 +38,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
         ContinentService continentService = new ContinentService(
                 new LocalContinentHarvester(),
                 continentRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         continentService.harvestAndSave();
 
@@ -70,8 +71,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
         new ContinentService(
                 new LocalContinentHarvester(),
                 continentRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, continentRepositorySpy.count());
     }

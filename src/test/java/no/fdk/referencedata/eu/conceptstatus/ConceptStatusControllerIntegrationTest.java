@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -59,8 +61,7 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         conceptStatusService.harvestAndSave();
     }

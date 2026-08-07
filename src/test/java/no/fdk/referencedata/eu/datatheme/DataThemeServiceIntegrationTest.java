@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.i18n.Language;
@@ -36,8 +38,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         DataThemeService fileTypeService = new DataThemeService(
                 new LocalDataThemeHarvester(),
                 dataThemeRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
 
@@ -72,8 +73,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         new DataThemeService(
                 new LocalDataThemeHarvester(),
                 dataThemeRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, dataThemeRepositorySpy.count());
     }

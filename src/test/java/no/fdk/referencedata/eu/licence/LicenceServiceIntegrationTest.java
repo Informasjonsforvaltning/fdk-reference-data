@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.i18n.Language;
@@ -36,8 +38,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         LicenceService licenceService = new LicenceService(
                 new LocalLicenceHarvester(),
                 licenceRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         licenceService.harvestAndSave();
 
@@ -72,8 +73,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         new LicenceService(
                 new LocalLicenceHarvester(),
                 licenceRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, licenceRepositorySpy.count());
     }

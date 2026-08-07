@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,8 +56,7 @@ class FileTypeSearchableIntegrationTest extends AbstractContainerTest {
         FileTypeService fileTypeService = new FileTypeService(
                 new LocalFileTypeHarvester(),
                 fileTypeRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
     }

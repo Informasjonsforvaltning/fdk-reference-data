@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -39,8 +41,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         conceptStatusService.harvestAndSave();
     }
@@ -50,8 +51,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         conceptStatusService.harvestAndSave();
 
@@ -84,8 +84,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         new ConceptStatusService(
                 new LocalConceptStatusHarvester(),
                 conceptStatusRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, conceptStatusRepositorySpy.count());
     }

@@ -1,11 +1,7 @@
 package no.fdk.referencedata.adms.status;
 
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
 import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.rdf.RDFSource;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
-import no.fdk.referencedata.rdf.RDFUtils;
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +19,17 @@ public class ADMSStatusService {
     private final String rdfSourceID = "adms-status-source";
 
     private final ADMSStatusRepository admsStatusRepository;
-
-    private final RDFSourceRepository rdfSourceRepository;
-
-    private final ReferenceDataWriter referenceDataWriter;
-
+    private final ReferenceDataServiceSupport support;
     public ADMSStatusImporter admsStatusImporter;
 
     @Autowired
     public ADMSStatusService(
             ADMSStatusImporter admsStatusImporter,
             ADMSStatusRepository admsStatusRepository,
-            RDFSourceRepository rdfSourceRepository,
-            ReferenceDataWriter referenceDataWriter) {
+            ReferenceDataServiceSupport support) {
         this.admsStatusImporter = admsStatusImporter;
         this.admsStatusRepository = admsStatusRepository;
-        this.rdfSourceRepository = rdfSourceRepository;
-        this.referenceDataWriter = referenceDataWriter;
+        this.support = support;
     }
 
     public List<ADMSStatus> getAll() {
@@ -61,15 +51,9 @@ public class ADMSStatusService {
         log.debug("Importing adms statuses");
         try {
             final List<ADMSStatus> admsStatuses = admsStatusImporter.importFromSource();
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(rdfSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(admsStatusImporter.getModel(), RDFFormat.TURTLE));
-
-            referenceDataWriter.replaceAll(admsStatusRepository, admsStatuses, rdfSource);
+            support.saveAll(admsStatuses, admsStatusImporter.getModel(), admsStatusRepository, rdfSourceID);
         } catch (Exception e) {
             log.error("Unable to harvest adms statuses", e);
         }
     }
-
 }

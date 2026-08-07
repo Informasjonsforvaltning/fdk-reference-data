@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.frequency;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -36,8 +38,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         FrequencyService frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester(),
                 frequencyRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         frequencyService.harvestAndSave();
     }
@@ -47,8 +48,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         FrequencyService frequencyService = new FrequencyService(
                 new LocalFrequencyHarvester(),
                 frequencyRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         frequencyService.harvestAndSave();
 
@@ -81,8 +81,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         new FrequencyService(
                 new LocalFrequencyHarvester(),
                 frequencyRepositorySpy,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, frequencyRepositorySpy.count());
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -46,8 +48,7 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
         AccessRightService accessRightService = new AccessRightService(
                 new LocalAccessRightHarvester(),
                 accessRightRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         accessRightService.harvestAndSave();
     }

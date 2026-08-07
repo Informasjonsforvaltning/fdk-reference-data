@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.ModelHarvester;
 import no.fdk.referencedata.vocabulary.FDK;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -22,7 +23,7 @@ import static no.fdk.referencedata.rdf.RDFUtils.generateThemePaths;
 
 @Component
 @Slf4j
-public abstract class AbstractEuHarvester<T> {
+public abstract class AbstractEuHarvester<T> implements ModelHarvester<T> {
     private static final String SPARQL_API = "http://publications.europa.eu/webapi/rdf/sparql";
 
 

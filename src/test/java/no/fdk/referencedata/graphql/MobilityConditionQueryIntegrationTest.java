@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -48,8 +50,7 @@ class MobilityConditionQueryIntegrationTest extends AbstractContainerTest {
         MobilityConditionService mobilityConditionService = new MobilityConditionService(
                 new LocalMobilityConditionHarvester(),
                 mobilityConditionRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         mobilityConditionService.harvestAndSave();
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import no.fdk.referencedata.core.ReferenceDataServiceSupport;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -34,8 +36,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
                 new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         plannedAvailabilityService.harvestAndSave();
 
@@ -68,8 +69,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         new PlannedAvailabilityService(
                 new LocalPlannedAvailabilityHarvester(),
                 plannedAvailabilityRepository,
-                rdfSourceRepository,
-                new ReferenceDataWriter(rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         assertEquals(count, plannedAvailabilityRepositorySpy.count());
     }
