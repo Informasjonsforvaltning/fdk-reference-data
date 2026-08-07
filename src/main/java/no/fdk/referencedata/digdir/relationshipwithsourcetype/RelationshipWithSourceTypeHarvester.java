@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;
 import no.fdk.referencedata.digdir.vocabulary.RelationshipWithSourceTypeVocabulary;
@@ -21,10 +23,6 @@ import java.util.Map;
 @Slf4j
 public class RelationshipWithSourceTypeHarvester extends AbstractDataNorgeHarvester<RelationshipWithSourceType> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .toList();
     private static final String PATH = "relationship-with-source-type";
 
     public RelationshipWithSourceTypeHarvester() {
@@ -50,12 +48,7 @@ public class RelationshipWithSourceTypeHarvester extends AbstractDataNorgeHarves
 
 
     private RelationshipWithSourceType mapRelationshipWithSourceType(Resource relationshipWithSourceType) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(relationshipWithSourceType.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(relationshipWithSourceType);
 
         return RelationshipWithSourceType.builder()
                 .uri(relationshipWithSourceType.getURI())

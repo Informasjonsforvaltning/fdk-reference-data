@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.mainactivity;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUMainActivity;
@@ -25,10 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     public MainActivityHarvester() {
         super();
@@ -51,12 +49,7 @@ public class MainActivityHarvester extends AbstractEuHarvester<MainActivity> {
 
 
     private MainActivity mapMainActivity(Resource mainActivity) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(mainActivity.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(mainActivity);
 
         return MainActivity.builder()
                 .uri(mainActivity.getURI())

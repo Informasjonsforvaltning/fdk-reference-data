@@ -3,11 +3,9 @@ package no.fdk.referencedata.eu.frequency;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUFrequency;
-import no.fdk.referencedata.i18n.Language;
-import org.apache.jena.rdf.model.Model;
+import no.fdk.referencedata.rdf.SkosMapper;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
-import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -15,20 +13,11 @@ import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
-
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     public FrequencyHarvester() {
         super();
@@ -52,12 +41,7 @@ public class FrequencyHarvester extends AbstractEuHarvester<Frequency> {
 
     private Frequency mapFrequency(Resource frequency) {
         String code = frequency.getProperty(DC.identifier).getObject().toString();
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(frequency.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(frequency);
 
         int sortIndex = switch (code) {
             case "CONT" -> 0;

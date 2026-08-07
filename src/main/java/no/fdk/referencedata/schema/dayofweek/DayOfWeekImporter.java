@@ -1,5 +1,7 @@
 package no.fdk.referencedata.schema.dayofweek;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Model;
@@ -25,10 +27,6 @@ import static java.util.Objects.requireNonNull;
 @Service
 public class DayOfWeekImporter {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     private Model model;
 
@@ -50,12 +48,7 @@ public class DayOfWeekImporter {
     }
 
     private static DayOfWeek extractDayOfWeekFromModel(Resource specResource) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(specResource.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(specResource);
 
         return DayOfWeek.builder()
                 .uri(specResource.getURI())

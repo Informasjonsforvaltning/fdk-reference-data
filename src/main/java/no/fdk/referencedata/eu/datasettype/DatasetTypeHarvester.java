@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.datasettype;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
@@ -29,10 +31,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     public DatasetTypeHarvester() {
         super();
@@ -136,10 +134,7 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
         return DatasetType.builder()
                 .uri(datasetType.getURI())
                 .code(datasetType.getProperty(DC.identifier).getObject().toString())
-                .label(datasetType.listProperties(SKOS.prefLabel).toList().stream()
-                        .map(stmt -> stmt.getObject().asLiteral())
-                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                .label(SkosMapper.extractLabels(datasetType))
                 .startUse(datasetType.hasProperty(EUAuthorityOntology.startUse) ?
                         LocalDate.parse(datasetType.getProperty(EUAuthorityOntology.startUse).getString()) : null)
                 .build();

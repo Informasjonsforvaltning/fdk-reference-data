@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
@@ -26,10 +28,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PlannedAvailabilityHarvester extends AbstractEuHarvester<PlannedAvailability> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     public PlannedAvailabilityHarvester() {
         super();
@@ -54,10 +52,7 @@ public class PlannedAvailabilityHarvester extends AbstractEuHarvester<PlannedAva
         return PlannedAvailability.builder()
                 .uri(plannedAvailability.getURI())
                 .code(plannedAvailability.getProperty(DC.identifier).getObject().toString())
-                .label(plannedAvailability.listProperties(SKOS.prefLabel).toList().stream()
-                        .map(stmt -> stmt.getObject().asLiteral())
-                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                .label(SkosMapper.extractLabels(plannedAvailability))
                 .startUse(plannedAvailability.hasProperty(EUAuthorityOntology.startUse) ?
                         LocalDate.parse(plannedAvailability.getProperty(EUAuthorityOntology.startUse).getString()) : null)
                 .build();

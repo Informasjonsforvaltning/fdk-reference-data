@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.ApplicationSettings;
@@ -32,10 +34,6 @@ public class ConceptSubjectHarvester {
 
     private final ApplicationSettings applicationSettings;
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .toList();
 
     @Autowired
     public ConceptSubjectHarvester(ApplicationSettings applicationSettings) {
@@ -88,12 +86,7 @@ public class ConceptSubjectHarvester {
     }
 
     private ConceptSubject mapConceptSubject(Resource conceptSubject) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(conceptSubject.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(conceptSubject);
 
         return ConceptSubject.builder()
                 .uri(conceptSubject.getURI())

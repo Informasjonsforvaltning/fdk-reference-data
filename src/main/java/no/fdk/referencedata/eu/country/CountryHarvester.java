@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
@@ -21,10 +23,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class CountryHarvester extends AbstractEuHarvester<Country> {
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     public CountryHarvester() {
         super();
@@ -45,10 +43,7 @@ public class CountryHarvester extends AbstractEuHarvester<Country> {
     }
 
     private Country mapCountry(Resource country) {
-        Map<String, String> label = country.listProperties(DCTerms.title).toList().stream()
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .collect(Collectors.toMap(Literal::getLanguage, Literal::getString));
+        Map<String, String> label = SkosMapper.extractLiteralProperty(country, DCTerms.title);
 
         return Country.builder()
                 .uri(country.getURI())

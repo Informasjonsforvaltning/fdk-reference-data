@@ -1,5 +1,7 @@
 package no.fdk.referencedata.linguisticsystem;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.vocabulary.AT;
@@ -24,10 +26,6 @@ import static java.util.Objects.requireNonNull;
 @Service
 public class LinguisticSystemImporter {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .collect(Collectors.toList());
 
     private Model model;
 
@@ -49,12 +47,7 @@ public class LinguisticSystemImporter {
     }
 
     private static LinguisticSystem extractLinguisticSystemFromModel(Resource specResource) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(specResource.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(specResource);
 
         return LinguisticSystem.builder()
                 .uri(specResource.getURI())

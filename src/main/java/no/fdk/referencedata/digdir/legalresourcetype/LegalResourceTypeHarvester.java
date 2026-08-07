@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;
 import no.fdk.referencedata.digdir.vocabulary.LegalResourceTypeVocabulary;
@@ -21,10 +23,6 @@ import java.util.Map;
 @Slf4j
 public class LegalResourceTypeHarvester extends AbstractDataNorgeHarvester<LegalResourceType> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(Language.values())
-                    .map(Language::code)
-                    .toList();
     private static final String PATH = "legal-resource-type";
 
     public LegalResourceTypeHarvester() {
@@ -50,12 +48,7 @@ public class LegalResourceTypeHarvester extends AbstractDataNorgeHarvester<Legal
 
 
     private LegalResourceType mapLegalResourceType(Resource legalResourceType) {
-        final Map<String, String> label = new HashMap<>();
-        Flux.fromIterable(legalResourceType.listProperties(SKOS.prefLabel).toList())
-                .map(stmt -> stmt.getObject().asLiteral())
-                .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                .doOnNext(literal -> label.put(literal.getLanguage(), literal.getString()))
-                .subscribe();
+        Map<String, String> label = SkosMapper.extractLabels(legalResourceType);
 
         return LegalResourceType.builder()
                 .uri(legalResourceType.getURI())

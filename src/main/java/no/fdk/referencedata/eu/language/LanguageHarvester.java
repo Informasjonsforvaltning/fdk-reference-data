@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.rdf.SkosMapper;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EULanguage;
@@ -25,10 +27,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LanguageHarvester extends AbstractEuHarvester<Language> {
 
-    private static final List<String> SUPPORTED_LANGUAGES =
-            Arrays.stream(no.fdk.referencedata.i18n.Language.values())
-                    .map(no.fdk.referencedata.i18n.Language::code)
-                    .toList();
 
     private final Map<String, Map<String, String>> missingTranslations = Map.ofEntries(
             Map.entry(EULanguage.getURI() + "/NOB", Map.of("no", "norsk (bokmål)")),
@@ -93,10 +91,7 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
         return Language.builder()
                 .uri(language.getURI())
                 .code(language.getProperty(DC.identifier).getObject().toString())
-                .label(language.listProperties(SKOS.prefLabel).toList().stream()
-                        .map(stmt -> stmt.getObject().asLiteral())
-                        .filter(literal -> SUPPORTED_LANGUAGES.contains(literal.getLanguage()))
-                        .collect(Collectors.toMap(Literal::getLanguage, Literal::getString)))
+                .label(SkosMapper.extractLabels(language))
                 .build();
     }
 
