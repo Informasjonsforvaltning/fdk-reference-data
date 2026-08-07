@@ -11,19 +11,19 @@ import java.util.Optional;
 @Service
 public class ReferenceTypeService {
 
-    public ReferenceTypeImporter referenceTypeImporter;
+    private final List<ReferenceType> types;
 
     @Autowired
     public ReferenceTypeService(ReferenceTypeImporter referenceTypeImporter) {
-        this.referenceTypeImporter = referenceTypeImporter;
+        this.types = List.copyOf(referenceTypeImporter.importFromSource());
     }
 
     public List<ReferenceType> getAll() {
-        return referenceTypeImporter.importFromSource();
+        return types;
     }
 
     public Optional<ReferenceType> getByCode(final String code) {
-        return referenceTypeImporter.importFromSource().stream()
+        return types.stream()
                 .filter(s -> s.code.equals(code))
                 .findFirst();
     }
