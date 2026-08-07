@@ -1,67 +1,35 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
-import no.fdk.referencedata.rdf.SkosMapper;
-
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.AbstractEuHarvester;
+import no.fdk.referencedata.eu.GenericEuSkosHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUConceptStatus;
-import no.fdk.referencedata.i18n.Language;
-import org.apache.jena.rdf.model.Model;
+import no.fdk.referencedata.rdf.SkosMapper;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.DC;
-import org.apache.jena.vocabulary.OWL;
-import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
-@Slf4j
-public class ConceptStatusHarvester extends AbstractEuHarvester<ConceptStatus> {
+public class ConceptStatusHarvester extends GenericEuSkosHarvester<ConceptStatus> {
 
-
-    public ConceptStatusHarvester() {
-        super();
+    @Override
+    protected String schemaName() {
+        return "concept-status";
     }
 
-
-    public Flux<ConceptStatus> harvest() {
-        log.info("Starting harvest of EU concept status");
-        final org.springframework.core.io.Resource rdfSource = getSource();
-        if(rdfSource == null) {
-            return Flux.error(new Exception("Unable to fetch concept status distribution"));
-        }
-
-        return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
-                        EUConceptStatus.SCHEME).toList())
-                .filter(Resource::isURIResource)
-                .map(this::mapConceptStatus);
+    @Override
+    protected Resource scheme() {
+        return EUConceptStatus.SCHEME;
     }
 
+    @Override
+    protected String logName() {
+        return "concept status";
+    }
 
-    private ConceptStatus mapConceptStatus(Resource status) {
-        Map<String, String> label = SkosMapper.extractLabels(status);
-
+    @Override
+    protected ConceptStatus mapConcept(Resource status) {
         return ConceptStatus.builder()
                 .uri(status.getURI())
-                .code(status.getProperty(DC.identifier).getObject().toString())
-                .label(label)
+                .code(extractCode(status))
+                .label(SkosMapper.extractLabels(status))
                 .build();
-    }
-
-    public String sparqlQuery() {
-        return URLEncoder.encode(
-                genericSPARQLQuery("concept-status"),
-                StandardCharsets.UTF_8
-        );
     }
 }

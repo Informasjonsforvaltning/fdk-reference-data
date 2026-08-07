@@ -1,67 +1,36 @@
 package no.fdk.referencedata.eu.distributiontype;
 
-import no.fdk.referencedata.rdf.SkosMapper;
-
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.AbstractEuHarvester;
-import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
+import no.fdk.referencedata.eu.GenericEuSkosHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUDistributionType;
-import no.fdk.referencedata.i18n.Language;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Model;
+import no.fdk.referencedata.rdf.SkosMapper;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.DC;
-import org.apache.jena.vocabulary.OWL;
-import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-@Slf4j
-public class DistributionTypeHarvester extends AbstractEuHarvester<DistributionType> {
+public class DistributionTypeHarvester extends GenericEuSkosHarvester<DistributionType> {
 
-
-    public DistributionTypeHarvester() {
-        super();
+    @Override
+    protected String schemaName() {
+        return "distribution-type";
     }
 
-
-    public Flux<DistributionType> harvest() {
-        log.info("Starting harvest of EU distribution types");
-        final org.springframework.core.io.Resource dataThemesRdfSource = getSource();
-        if(dataThemesRdfSource == null) {
-            return Flux.error(new Exception("Unable to fetch distribution-types distribution"));
-        }
-
-        return Mono.justOrEmpty(loadModel(dataThemesRdfSource, false))
-                .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDistributionType.SCHEME).toList())
-                .filter(Resource::isURIResource)
-                .map(this::mapDistributionType);
+    @Override
+    protected Resource scheme() {
+        return EUDistributionType.SCHEME;
     }
 
+    @Override
+    protected String logName() {
+        return "distribution types";
+    }
 
-    private DistributionType mapDistributionType(Resource distributionType) {
+    @Override
+    protected DistributionType mapConcept(Resource distributionType) {
         return DistributionType.builder()
                 .uri(distributionType.getURI())
-                .code(distributionType.getProperty(DC.identifier).getObject().toString())
+                .code(extractCode(distributionType))
                 .label(SkosMapper.extractLabels(distributionType))
-                .startUse(distributionType.hasProperty(EUAuthorityOntology.startUse) ?
-                        LocalDate.parse(distributionType.getProperty(EUAuthorityOntology.startUse).getString()) : null)
+                .startUse(extractStartUse(distributionType))
                 .build();
-    }
-
-    public String sparqlQuery() {
-        return URLEncoder.encode(
-                genericSPARQLQuery("distribution-type"),
-                StandardCharsets.UTF_8
-        );
     }
 }
