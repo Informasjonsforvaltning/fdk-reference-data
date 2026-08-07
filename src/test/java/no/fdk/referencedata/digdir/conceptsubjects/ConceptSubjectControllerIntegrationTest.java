@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
-import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
@@ -56,7 +57,7 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
                 new LocalConceptSubjectHarvester(new ApplicationSettings()),
                 rdfSourceRepository,
                 conceptSubjectRepository,
-                new ConceptSubjectWriter(conceptSubjectRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         conceptSubjectService.harvestAndSave();
     }

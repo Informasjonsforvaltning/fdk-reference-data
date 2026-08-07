@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -24,7 +26,7 @@ public class LanguageService implements SearchableReferenceData {
 
     private final LanguageHarvester languageHarvester;
 
-    private final LanguageWriter languageWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final LanguageRepository languageRepository;
 
@@ -35,11 +37,11 @@ public class LanguageService implements SearchableReferenceData {
             LanguageHarvester languageHarvester,
             LanguageRepository languageRepository,
             RDFSourceRepository rdfSourceRepository,
-            LanguageWriter languageWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.languageHarvester = languageHarvester;
         this.languageRepository = languageRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.languageWriter = languageWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -81,7 +83,7 @@ public class LanguageService implements SearchableReferenceData {
             rdfSource.setId(dbSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(languageHarvester.getModel(), RDFFormat.TURTLE));
 
-            languageWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(languageRepository, items, rdfSource);
 
         } catch (Exception e) {
             log.error("Unable to harvest languages", e);

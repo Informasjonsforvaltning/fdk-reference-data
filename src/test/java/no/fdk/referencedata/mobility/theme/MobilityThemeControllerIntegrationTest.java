@@ -1,6 +1,7 @@
 package no.fdk.referencedata.mobility.theme;
 
-import no.fdk.referencedata.mobility.theme.MobilityThemeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -54,7 +55,7 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
                 new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mobilityThemeService.harvestAndSave();
     }

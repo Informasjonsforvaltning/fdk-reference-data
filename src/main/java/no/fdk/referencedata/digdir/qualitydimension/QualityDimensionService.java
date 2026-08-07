@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class QualityDimensionService {
 
     private final QualityDimensionHarvester qualityDimensionHarvester;
 
-    private final QualityDimensionWriter qualityDimensionWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final QualityDimensionRepository qualityDimensionRepository;
 
@@ -32,10 +34,10 @@ public class QualityDimensionService {
             QualityDimensionHarvester qualityDimensionHarvester,
             QualityDimensionRepository qualityDimensionRepository,
             RDFSourceRepository rdfSourceRepository,
-            QualityDimensionWriter qualityDimensionWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.qualityDimensionHarvester = qualityDimensionHarvester;
         this.qualityDimensionRepository = qualityDimensionRepository;
-        this.qualityDimensionWriter = qualityDimensionWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class QualityDimensionService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(qualityDimensionHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            qualityDimensionWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(qualityDimensionRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest quality-dimensions", e);
         }

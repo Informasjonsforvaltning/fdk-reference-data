@@ -1,5 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -28,7 +30,7 @@ public class MediaTypeService implements SearchableReferenceData {
 
     private final MediaTypeHarvester mediaTypeHarvester;
 
-    private final MediaTypeWriter mediaTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final MediaTypeRepository mediaTypeRepository;
 
@@ -40,10 +42,10 @@ public class MediaTypeService implements SearchableReferenceData {
             MediaTypeHarvester mediaTypeHarvester,
             MediaTypeRepository mediaTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            MediaTypeWriter mediaTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.mediaTypeHarvester = mediaTypeHarvester;
         this.mediaTypeRepository = mediaTypeRepository;
-        this.mediaTypeWriter = mediaTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -105,7 +107,7 @@ public class MediaTypeService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
 
 
-            mediaTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(mediaTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest media-types", e);
         }

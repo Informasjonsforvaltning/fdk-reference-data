@@ -1,6 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester;
@@ -50,7 +51,7 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
                 new LocalQualityDimensionHarvester(),
                 qualityDimensionRepository,
                 rdfSourceRepository,
-                new QualityDimensionWriter(qualityDimensionRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         qualityDimensionService.harvestAndSave();
     }

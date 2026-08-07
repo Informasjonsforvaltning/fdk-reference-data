@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.distributiontype;
 
-import no.fdk.referencedata.eu.distributiontype.DistributionTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -36,7 +37,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
                 new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         accessRightService.harvestAndSave();
 
@@ -70,7 +71,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
                 new LocalDistributionTypeHarvester(),
                 distributionTypeRepository,
                 rdfSourceRepository,
-                new DistributionTypeWriter(distributionTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, distrubutionTypeRepositorySpy.count());
     }

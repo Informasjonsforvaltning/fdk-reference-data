@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.mainactivity;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class MainActivityService {
 
     private final MainActivityHarvester mainActivityHarvester;
 
-    private final MainActivityWriter mainActivityWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final MainActivityRepository mainActivityRepository;
 
@@ -31,11 +33,11 @@ public class MainActivityService {
             MainActivityHarvester mainActivityHarvester,
             MainActivityRepository mainActivityRepository,
             RDFSourceRepository rdfSourceRepository,
-            MainActivityWriter mainActivityWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.mainActivityHarvester = mainActivityHarvester;
         this.mainActivityRepository = mainActivityRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.mainActivityWriter = mainActivityWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -63,7 +65,7 @@ public class MainActivityService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mainActivityHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            mainActivityWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(mainActivityRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest main-activities", e);
         }

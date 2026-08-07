@@ -1,5 +1,7 @@
 package no.fdk.referencedata.adms.publishertype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -21,7 +23,7 @@ public class PublisherTypeService {
     private final String rdfSourceID = "publisher-type-source";
     private final PublisherTypeRepository publisherTypeRepository;
     private final RDFSourceRepository rdfSourceRepository;
-    private final PublisherTypeWriter publisherTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
     public PublisherTypeImporter publisherTypeImporter;
 
     @Autowired
@@ -29,11 +31,11 @@ public class PublisherTypeService {
             PublisherTypeImporter publisherTypeImporter,
             PublisherTypeRepository publisherTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            PublisherTypeWriter publisherTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.publisherTypeImporter = publisherTypeImporter;
         this.publisherTypeRepository = publisherTypeRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.publisherTypeWriter = publisherTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public List<PublisherType> getAll() {
@@ -63,7 +65,7 @@ public class PublisherTypeService {
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(publisherTypeImporter.getModel(), RDFFormat.TURTLE));
 
-            publisherTypeWriter.replaceAll(publisherTypes, rdfSource);
+            referenceDataWriter.replaceAll(publisherTypeRepository, publisherTypes, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest adms publisher-types", e);
         }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -55,7 +57,7 @@ public class LanguageControllerIntegrationTest extends AbstractContainerTest {
                 new LocalLanguageHarvester(),
                 languageRepository,
                 rdfSourceRepository,
-                new LanguageWriter(languageRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         languageService.harvestAndSave();
     }

@@ -1,6 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.digdir.roletype.RoleTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
@@ -48,7 +49,7 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester(),
                 roleTypeRepository,
                 rdfSourceRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         roleTypeService.harvestAndSave();
     }

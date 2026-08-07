@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
-import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -56,7 +57,7 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
                 new LocalRelationshipWithSourceTypeHarvester(),
                 relationshipWithSourceTypeRepository,
                 rdfSourceRepository,
-                new RelationshipWithSourceTypeWriter(relationshipWithSourceTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         relationshipWithSourceTypeService.harvestAndSave();
     }

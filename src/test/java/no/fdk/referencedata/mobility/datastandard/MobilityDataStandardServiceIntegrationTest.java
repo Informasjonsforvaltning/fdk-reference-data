@@ -1,6 +1,7 @@
 package no.fdk.referencedata.mobility.datastandard;
 
-import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -33,7 +34,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepository,
                 rdfSourceRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mobilityDataStandardService.harvestAndSave();
 
@@ -67,7 +68,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
                 new LocalMobilityDataStandardHarvester(),
                 mobilityDataStandardRepositorySpy,
                 rdfSourceRepository,
-                new MobilityDataStandardWriter(mobilityDataStandardRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, mobilityDataStandardRepositorySpy.count());
     }

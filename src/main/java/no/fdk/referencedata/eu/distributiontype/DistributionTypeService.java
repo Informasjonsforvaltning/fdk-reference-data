@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class DistributionTypeService {
 
     private final DistributionTypeHarvester distributionTypeHarvester;
 
-    private final DistributionTypeWriter distributionTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final DistributionTypeRepository distributionTypeRepository;
 
@@ -31,10 +33,10 @@ public class DistributionTypeService {
             DistributionTypeHarvester distributionTypeHarvester,
             DistributionTypeRepository distributionTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            DistributionTypeWriter distributionTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.distributionTypeHarvester = distributionTypeHarvester;
         this.distributionTypeRepository = distributionTypeRepository;
-        this.distributionTypeWriter = distributionTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -63,7 +65,7 @@ public class DistributionTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(distributionTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            distributionTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(distributionTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest distribution-types", e);
         }

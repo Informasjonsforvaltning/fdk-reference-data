@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.roletype;
 
-import no.fdk.referencedata.digdir.roletype.RoleTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -37,7 +38,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester(),
                 roleTypeRepository,
                 rdfSourceRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         roleTypeService.harvestAndSave();
 
@@ -71,7 +72,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalRoleTypeHarvester(),
                 roleTypeRepositorySpy,
                 rdfSourceRepository,
-                new RoleTypeWriter(roleTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, roleTypeRepositorySpy.count());
     }

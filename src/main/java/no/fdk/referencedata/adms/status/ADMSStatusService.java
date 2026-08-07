@@ -1,5 +1,7 @@
 package no.fdk.referencedata.adms.status;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -24,7 +26,7 @@ public class ADMSStatusService {
 
     private final RDFSourceRepository rdfSourceRepository;
 
-    private final ADMSStatusWriter admsStatusWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     public ADMSStatusImporter admsStatusImporter;
 
@@ -33,11 +35,11 @@ public class ADMSStatusService {
             ADMSStatusImporter admsStatusImporter,
             ADMSStatusRepository admsStatusRepository,
             RDFSourceRepository rdfSourceRepository,
-            ADMSStatusWriter admsStatusWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.admsStatusImporter = admsStatusImporter;
         this.admsStatusRepository = admsStatusRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.admsStatusWriter = admsStatusWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public List<ADMSStatus> getAll() {
@@ -64,7 +66,7 @@ public class ADMSStatusService {
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(admsStatusImporter.getModel(), RDFFormat.TURTLE));
 
-            admsStatusWriter.replaceAll(admsStatuses, rdfSource);
+            referenceDataWriter.replaceAll(admsStatusRepository, admsStatuses, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest adms statuses", e);
         }

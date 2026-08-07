@@ -1,7 +1,7 @@
 package no.fdk.referencedata.eu.frequency;
 
-import no.fdk.referencedata.eu.frequency.FrequencyWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
+import no.fdk.referencedata.core.ReferenceDataWriter;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -55,7 +55,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
                 new LocalFrequencyHarvester(),
                 frequencyRepository,
                 rdfSourceRepository,
-                new FrequencyWriter(frequencyRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         frequencyService.harvestAndSave();
     }

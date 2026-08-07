@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.distributionstatus;
 
-import no.fdk.referencedata.eu.distributionstatus.DistributionStatusWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -34,7 +35,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester(),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         distributionStatusService.harvestAndSave();
 
@@ -68,7 +69,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
                 new LocalDistributionStatusHarvester(),
                 distributionStatusRepository,
                 rdfSourceRepository,
-                new DistributionStatusWriter(distributionStatusRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, distributionStatusRepositorySpy.count());
     }

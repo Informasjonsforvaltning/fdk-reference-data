@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class EvidenceTypeService {
 
     private final EvidenceTypeHarvester evidenceTypeHarvester;
 
-    private final EvidenceTypeWriter evidenceTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final EvidenceTypeRepository evidenceTypeRepository;
 
@@ -32,10 +34,10 @@ public class EvidenceTypeService {
             EvidenceTypeHarvester evidenceTypeHarvester,
             EvidenceTypeRepository evidenceTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            EvidenceTypeWriter evidenceTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.evidenceTypeHarvester = evidenceTypeHarvester;
         this.evidenceTypeRepository = evidenceTypeRepository;
-        this.evidenceTypeWriter = evidenceTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class EvidenceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(evidenceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            evidenceTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(evidenceTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest evidence-types", e);
         }

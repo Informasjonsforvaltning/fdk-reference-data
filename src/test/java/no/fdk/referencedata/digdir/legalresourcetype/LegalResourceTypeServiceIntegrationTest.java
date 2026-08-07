@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
-import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -44,7 +45,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepository,
                 rdfSourceRepository,
-                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         legalResourceTypeService.harvestAndSave();
 
@@ -78,7 +79,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
                 new LocalLegalResourceTypeHarvester(),
                 legalResourceTypeRepositorySpy,
                 rdfSourceRepository,
-                new LegalResourceTypeWriter(legalResourceTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, legalResourceTypeRepositorySpy.count());
     }

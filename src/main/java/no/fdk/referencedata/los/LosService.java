@@ -1,5 +1,7 @@
 package no.fdk.referencedata.los;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -19,16 +21,16 @@ public class LosService {
     private final String rdfSourceID = "los-source";
     private final LosRepository losRepository;
     private final RDFSourceRepository rdfSourceRepository;
-    private final LosWriter losWriter;
+    private final ReferenceDataWriter referenceDataWriter;
     public LosImporter losImporter;
 
     @Autowired
     public LosService(LosImporter losImporter, LosRepository losRepository, RDFSourceRepository rdfSourceRepository,
-                      LosWriter losWriter) {
+                      ReferenceDataWriter referenceDataWriter) {
         this.losImporter = losImporter;
         this.losRepository = losRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.losWriter = losWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public List<LosNode> getByURIs(List<String> uris) {
@@ -64,7 +66,7 @@ public class LosService {
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(losImporter.getModel(), RDFFormat.TURTLE));
 
-            losWriter.replaceAll(losList, rdfSource);
+            referenceDataWriter.replaceAll(losRepository, losList, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest LOS", e);
         }

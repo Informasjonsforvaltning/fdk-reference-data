@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.accessright;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class AccessRightService {
 
     private final AccessRightHarvester accessRightHarvester;
 
-    private final AccessRightWriter accessRightWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final AccessRightRepository accessRightRepository;
 
@@ -31,11 +33,11 @@ public class AccessRightService {
             AccessRightHarvester accessRightHarvester,
             AccessRightRepository accessRightRepository,
             RDFSourceRepository rdfSourceRepository,
-            AccessRightWriter accessRightWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.accessRightHarvester = accessRightHarvester;
         this.accessRightRepository = accessRightRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.accessRightWriter = accessRightWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -63,7 +65,7 @@ public class AccessRightService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(accessRightHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            accessRightWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(accessRightRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest access-rights", e);
         }

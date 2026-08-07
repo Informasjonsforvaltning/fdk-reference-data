@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class LegalResourceTypeService {
 
     private final LegalResourceTypeHarvester legalResourceTypeHarvester;
 
-    private final LegalResourceTypeWriter legalResourceTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final LegalResourceTypeRepository legalResourceTypeRepository;
 
@@ -32,10 +34,10 @@ public class LegalResourceTypeService {
             LegalResourceTypeHarvester legalResourceTypeHarvester,
             LegalResourceTypeRepository legalResourceTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            LegalResourceTypeWriter legalResourceTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.legalResourceTypeHarvester = legalResourceTypeHarvester;
         this.legalResourceTypeRepository = legalResourceTypeRepository;
-        this.legalResourceTypeWriter = legalResourceTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class LegalResourceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(legalResourceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            legalResourceTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(legalResourceTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest legal-resource-types", e);
         }

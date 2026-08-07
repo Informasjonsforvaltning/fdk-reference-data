@@ -1,10 +1,11 @@
 package no.fdk.referencedata.adms;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.adms.status.ADMSStatus;
 import no.fdk.referencedata.adms.status.ADMSStatusImporter;
 import no.fdk.referencedata.adms.status.ADMSStatusRepository;
 import no.fdk.referencedata.adms.status.ADMSStatusService;
-import no.fdk.referencedata.adms.status.ADMSStatusWriter;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -33,7 +34,7 @@ public class StatusServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_returns_all_statuses() {
         ADMSStatusService service = new ADMSStatusService(new ADMSStatusImporter(), admsStatusRepository, rdfSourceRepository,
-                new ADMSStatusWriter(admsStatusRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
         service.importADMSStatuses();
 
         List<ADMSStatus> statuses = service.getAll();
@@ -48,7 +49,7 @@ public class StatusServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_status_by_code_returns_correct_status() {
         ADMSStatusService service = new ADMSStatusService(new ADMSStatusImporter(), admsStatusRepository, rdfSourceRepository,
-                new ADMSStatusWriter(admsStatusRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
         service.importADMSStatuses();
 
         Optional<ADMSStatus> statusOptional = service.getByCode("Deprecated");

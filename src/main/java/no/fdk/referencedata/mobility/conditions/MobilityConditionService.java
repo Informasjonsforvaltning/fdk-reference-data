@@ -1,5 +1,7 @@
 package no.fdk.referencedata.mobility.conditions;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class MobilityConditionService {
 
     private final MobilityConditionHarvester mobilityConditionHarvester;
 
-    private final MobilityConditionWriter mobilityConditionWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final MobilityConditionRepository mobilityConditionRepository;
 
@@ -32,10 +34,10 @@ public class MobilityConditionService {
             MobilityConditionHarvester mobilityConditionHarvester,
             MobilityConditionRepository mobilityConditionRepository,
             RDFSourceRepository rdfSourceRepository,
-            MobilityConditionWriter mobilityConditionWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.mobilityConditionHarvester = mobilityConditionHarvester;
         this.mobilityConditionRepository = mobilityConditionRepository;
-        this.mobilityConditionWriter = mobilityConditionWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class MobilityConditionService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(mobilityConditionHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            mobilityConditionWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(mobilityConditionRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest mobility conditions", e);
         }

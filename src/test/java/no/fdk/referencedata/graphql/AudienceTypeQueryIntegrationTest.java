@@ -1,6 +1,7 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.digdir.audiencetype.AudienceTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.audiencetype.AudienceType;
@@ -48,7 +49,7 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
                 new LocalAudienceTypeHarvester(),
                 audienceTypeRepository,
                 rdfSourceRepository,
-                new AudienceTypeWriter(audienceTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         audienceTypeService.harvestAndSave();
     }

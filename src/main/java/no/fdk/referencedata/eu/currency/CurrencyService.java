@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -23,7 +25,7 @@ public class CurrencyService {
 
     private final CurrencyHarvester currencyHarvester;
 
-    private final CurrencyWriter currencyWriter;
+    private final ReferenceDataWriter referenceDataWriter;
     private final CurrencyRepository currencyRepository;
     private final RDFSourceRepository rdfSourceRepository;
 
@@ -32,11 +34,11 @@ public class CurrencyService {
             CurrencyHarvester currencyHarvester,
             CurrencyRepository currencyRepository,
             RDFSourceRepository rdfSourceRepository,
-            CurrencyWriter currencyWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.currencyHarvester = currencyHarvester;
         this.currencyRepository = currencyRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.currencyWriter = currencyWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -75,7 +77,7 @@ public class CurrencyService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(currencyHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            currencyWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(currencyRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest currencies", e);
         }

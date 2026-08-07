@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
-import no.fdk.referencedata.eu.filetype.FileTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester(),
                 fileTypeRepository,
                 rdfSourceRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         fileTypeService.harvestAndSave();
 
@@ -66,7 +67,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalFileTypeHarvester(),
                 fileTypeRepositorySpy,
                 rdfSourceRepository,
-                new FileTypeWriter(fileTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, fileTypeRepositorySpy.count());
     }

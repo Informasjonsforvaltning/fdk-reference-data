@@ -1,6 +1,7 @@
 package no.fdk.referencedata.mobility.theme;
 
-import no.fdk.referencedata.mobility.theme.MobilityThemeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -33,7 +34,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester(),
                 mobilityThemeRepository,
                 rdfSourceRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mobilityThemeService.harvestAndSave();
 
@@ -67,7 +68,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalMobilityThemeHarvester(),
                 mobilityThemeRepositorySpy,
                 rdfSourceRepository,
-                new MobilityThemeWriter(mobilityThemeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, mobilityThemeRepositorySpy.count());
     }

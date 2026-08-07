@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.mainactivity;
 
-import no.fdk.referencedata.eu.mainactivity.MainActivityWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
@@ -59,7 +60,7 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
                 new LocalMainActivityHarvester(),
                 mainActivityRepository,
                 rdfSourceRepository,
-                new MainActivityWriter(mainActivityRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mainActivityService.harvestAndSave();
     }

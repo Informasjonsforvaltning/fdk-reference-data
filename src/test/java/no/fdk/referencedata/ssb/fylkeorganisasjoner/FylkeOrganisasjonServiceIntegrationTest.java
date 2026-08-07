@@ -1,6 +1,9 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
-import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonWriter;
+import no.fdk.referencedata.rdf.RDFSourceRepository;
+
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -33,7 +37,7 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository,
-                new FylkeOrganisasjonWriter(fylkeOrganisasjonRepository));
+                new ReferenceDataWriter(mock(RDFSourceRepository.class)));
 
         fylkeOrganisasjonService.harvestAndSave();
 
@@ -66,7 +70,7 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
         new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepositorySpy,
-                new FylkeOrganisasjonWriter(fylkeOrganisasjonRepositorySpy));
+                new ReferenceDataWriter(mock(RDFSourceRepository.class)));
 
         assertEquals(count, fylkeOrganisasjonRepositorySpy.count());
     }

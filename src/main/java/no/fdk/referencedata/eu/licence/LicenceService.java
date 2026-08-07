@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -24,7 +26,7 @@ public class LicenceService implements SearchableReferenceData {
 
     private final LicenceHarvester licenceHarvester;
 
-    private final LicenceWriter licenceWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final LicenceRepository licenceRepository;
 
@@ -35,11 +37,11 @@ public class LicenceService implements SearchableReferenceData {
             LicenceHarvester licenceHarvester,
             LicenceRepository licenceRepository,
             RDFSourceRepository rdfSourceRepository,
-            LicenceWriter licenceWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.licenceHarvester = licenceHarvester;
         this.licenceRepository = licenceRepository;
         this.rdfSourceRepository = rdfSourceRepository;
-        this.licenceWriter = licenceWriter;
+        this.referenceDataWriter = referenceDataWriter;
     }
 
     public boolean firstTime() {
@@ -67,7 +69,7 @@ public class LicenceService implements SearchableReferenceData {
             rdfSource.setTurtle(RDFUtils.modelToResponse(licenceHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            licenceWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(licenceRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest licences", e);
         }

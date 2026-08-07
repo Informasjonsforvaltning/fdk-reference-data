@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.roletype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class RoleTypeService {
 
     private final RoleTypeHarvester roleTypeHarvester;
 
-    private final RoleTypeWriter roleTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final RoleTypeRepository roleTypeRepository;
 
@@ -32,10 +34,10 @@ public class RoleTypeService {
             RoleTypeHarvester roleTypeHarvester,
             RoleTypeRepository roleTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            RoleTypeWriter roleTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.roleTypeHarvester = roleTypeHarvester;
         this.roleTypeRepository = roleTypeRepository;
-        this.roleTypeWriter = roleTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class RoleTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(roleTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            roleTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(roleTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest role-types", e);
         }

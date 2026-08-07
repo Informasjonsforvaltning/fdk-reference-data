@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class RelationshipWithSourceTypeService {
 
     private final RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester;
 
-    private final RelationshipWithSourceTypeWriter relationshipWithSourceTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
 
@@ -32,10 +34,10 @@ public class RelationshipWithSourceTypeService {
             RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester,
             RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            RelationshipWithSourceTypeWriter relationshipWithSourceTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.relationshipWithSourceTypeHarvester = relationshipWithSourceTypeHarvester;
         this.relationshipWithSourceTypeRepository = relationshipWithSourceTypeRepository;
-        this.relationshipWithSourceTypeWriter = relationshipWithSourceTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class RelationshipWithSourceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(relationshipWithSourceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            relationshipWithSourceTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(relationshipWithSourceTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest relationship-with-source-types", e);
         }

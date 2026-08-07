@@ -1,5 +1,7 @@
 package no.fdk.referencedata.eu.distributionstatus;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class DistributionStatusService {
 
     private final DistributionStatusHarvester distributionStatusHarvester;
 
-    private final DistributionStatusWriter distributionStatusWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final DistributionStatusRepository distributionStatusRepository;
 
@@ -31,10 +33,10 @@ public class DistributionStatusService {
             DistributionStatusHarvester distributionStatusHarvester,
             DistributionStatusRepository distributionStatusRepository,
             RDFSourceRepository rdfSourceRepository,
-            DistributionStatusWriter distributionStatusWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.distributionStatusHarvester = distributionStatusHarvester;
         this.distributionStatusRepository = distributionStatusRepository;
-        this.distributionStatusWriter = distributionStatusWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -63,7 +65,7 @@ public class DistributionStatusService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(distributionStatusHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            distributionStatusWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(distributionStatusRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest distribution statuses", e);
         }

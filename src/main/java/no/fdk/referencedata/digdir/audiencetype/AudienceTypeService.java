@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class AudienceTypeService {
 
     private final AudienceTypeHarvester audienceTypeHarvester;
 
-    private final AudienceTypeWriter audienceTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final AudienceTypeRepository audienceTypeRepository;
 
@@ -32,10 +34,10 @@ public class AudienceTypeService {
             AudienceTypeHarvester audienceTypeHarvester,
             AudienceTypeRepository audienceTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            AudienceTypeWriter audienceTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.audienceTypeHarvester = audienceTypeHarvester;
         this.audienceTypeRepository = audienceTypeRepository;
-        this.audienceTypeWriter = audienceTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class AudienceTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(audienceTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            audienceTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(audienceTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest audience-types", e);
         }

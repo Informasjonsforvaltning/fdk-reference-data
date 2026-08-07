@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.datasettype;
 
-import no.fdk.referencedata.eu.datasettype.DatasetTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -34,7 +35,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         accessRightService.harvestAndSave();
 
@@ -68,7 +69,7 @@ public class DatasetTypeServiceIntegrationTest extends AbstractContainerTest {
                 new LocalDatasetTypeHarvester(),
                 datasetTypeRepository,
                 rdfSourceRepository,
-                new DatasetTypeWriter(datasetTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, datasetTypeRepositorySpy.count());
     }

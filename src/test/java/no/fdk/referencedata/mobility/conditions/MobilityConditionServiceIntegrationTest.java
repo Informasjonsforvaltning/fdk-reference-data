@@ -1,6 +1,7 @@
 package no.fdk.referencedata.mobility.conditions;
 
-import no.fdk.referencedata.mobility.conditions.MobilityConditionWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -33,7 +34,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester(),
                 mobilityConditionRepository,
                 rdfSourceRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mobilityConditionService.harvestAndSave();
 
@@ -67,7 +68,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
                 new LocalMobilityConditionHarvester(),
                 mobilityConditionRepositorySpy,
                 rdfSourceRepository,
-                new MobilityConditionWriter(mobilityConditionRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         assertEquals(count, mobilityConditionRepositorySpy.count());
     }

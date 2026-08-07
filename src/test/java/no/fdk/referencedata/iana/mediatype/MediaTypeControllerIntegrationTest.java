@@ -1,6 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
-import no.fdk.referencedata.iana.mediatype.MediaTypeWriter;
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -56,7 +57,7 @@ public class MediaTypeControllerIntegrationTest extends AbstractContainerTest {
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
                 rdfSourceRepository,
-                new MediaTypeWriter(mediaTypeRepository, rdfSourceRepository));
+                new ReferenceDataWriter(rdfSourceRepository));
 
         mediaTypeService.harvestAndSave();
     }

@@ -1,5 +1,7 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
+import no.fdk.referencedata.core.ReferenceDataWriter;
+
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -20,7 +22,7 @@ public class ServiceChannelTypeService {
 
     private final ServiceChannelTypeHarvester serviceChannelTypeHarvester;
 
-    private final ServiceChannelTypeWriter serviceChannelTypeWriter;
+    private final ReferenceDataWriter referenceDataWriter;
 
     private final ServiceChannelTypeRepository serviceChannelTypeRepository;
 
@@ -32,10 +34,10 @@ public class ServiceChannelTypeService {
             ServiceChannelTypeHarvester serviceChannelTypeHarvester,
             ServiceChannelTypeRepository serviceChannelTypeRepository,
             RDFSourceRepository rdfSourceRepository,
-            ServiceChannelTypeWriter serviceChannelTypeWriter) {
+            ReferenceDataWriter referenceDataWriter) {
         this.serviceChannelTypeHarvester = serviceChannelTypeHarvester;
         this.serviceChannelTypeRepository = serviceChannelTypeRepository;
-        this.serviceChannelTypeWriter = serviceChannelTypeWriter;
+        this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
     }
 
@@ -64,7 +66,7 @@ public class ServiceChannelTypeService {
             rdfSource.setTurtle(RDFUtils.modelToResponse(serviceChannelTypeHarvester.getModel(), RDFFormat.TURTLE));
 
 
-            serviceChannelTypeWriter.replaceAll(items, rdfSource);
+            referenceDataWriter.replaceAll(serviceChannelTypeRepository, items, rdfSource);
         } catch (Exception e) {
             log.error("Unable to harvest service-channel-types", e);
         }
