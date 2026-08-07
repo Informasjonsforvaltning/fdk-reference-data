@@ -1,59 +1,44 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import no.fdk.referencedata.eu.GenericEuSkosHarvester;
 import no.fdk.referencedata.rdf.SkosMapper;
-
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.AbstractEuHarvester;
-import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.vocabulary.*;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
-@Slf4j
-public class HighValueCategoriesHarvester extends AbstractEuHarvester<HighValueCategory> {
+public class HighValueCategoriesHarvester extends GenericEuSkosHarvester<HighValueCategory> {
+
     private static final String SCHEMA_URI = "http://data.europa.eu/bna/asd487ae75";
 
-    public HighValueCategoriesHarvester() {
-        super();
+    @Override
+    protected String schemaName() {
+        return "high-value-categories";
     }
 
-
-    public Flux<HighValueCategory> harvest() {
-        log.info("Starting harvest of EU high-value categories");
-        final org.springframework.core.io.Resource categoriesRdfSource = getSource();
-        if(categoriesRdfSource == null) {
-            return Flux.error(new Exception("Unable to fetch high-value categories distribution"));
-        }
-
-        return Mono.justOrEmpty(loadModel(categoriesRdfSource, false))
-                .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, ResourceFactory.createResource(SCHEMA_URI)).toList())
-                .filter(Resource::isURIResource)
-                .map(this::mapHighValueCategory);
+    @Override
+    protected Resource scheme() {
+        return ResourceFactory.createResource(SCHEMA_URI);
     }
 
+    @Override
+    protected String logName() {
+        return "high-value categories";
+    }
 
-    private HighValueCategory mapHighValueCategory(Resource highValueCategory) {
-        Map<String, String> label = SkosMapper.extractLabels(highValueCategory);
-
+    @Override
+    protected HighValueCategory mapConcept(Resource highValueCategory) {
         return HighValueCategory.builder()
                 .uri(highValueCategory.getURI())
-                .code(highValueCategory.getProperty(DC.identifier).getObject().toString())
-                .label(label)
+                .code(extractCode(highValueCategory))
+                .label(SkosMapper.extractLabels(highValueCategory))
                 .build();
     }
 
+    @Override
     public String sparqlQuery() {
         String query = "PREFIX owl: <http://www.w3.org/2002/07/owl#> " +
             "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> " +

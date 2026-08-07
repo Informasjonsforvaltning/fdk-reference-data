@@ -1,58 +1,35 @@
 package no.fdk.referencedata.eu.accessright;
 
-import lombok.extern.slf4j.Slf4j;
-import no.fdk.referencedata.eu.AbstractEuHarvester;
+import no.fdk.referencedata.eu.GenericEuSkosHarvester;
 import no.fdk.referencedata.eu.vocabulary.EUAccessRight;
 import no.fdk.referencedata.rdf.SkosMapper;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.vocabulary.DC;
-import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 @Component
-@Slf4j
-public class AccessRightHarvester extends AbstractEuHarvester<AccessRight> {
+public class AccessRightHarvester extends GenericEuSkosHarvester<AccessRight> {
 
-    public AccessRightHarvester() {
-        super();
+    @Override
+    protected String schemaName() {
+        return "access-right";
     }
 
-
-    public Flux<AccessRight> harvest() {
-        log.info("Starting harvest of EU access-rights");
-        final org.springframework.core.io.Resource rdfSource = getSource();
-        if(rdfSource == null) {
-            return Flux.error(new Exception("Unable to fetch access-right distribution"));
-        }
-
-        return Mono.justOrEmpty(loadModel(rdfSource, false))
-                .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
-                        EUAccessRight.SCHEME).toList())
-                .filter(Resource::isURIResource)
-                .map(this::mapAccessRight);
+    @Override
+    protected Resource scheme() {
+        return EUAccessRight.SCHEME;
     }
 
+    @Override
+    protected String logName() {
+        return "access-rights";
+    }
 
-    private AccessRight mapAccessRight(Resource accessRight) {
-        Map<String, String> label = SkosMapper.extractLabels(accessRight);
-
+    @Override
+    protected AccessRight mapConcept(Resource accessRight) {
         return AccessRight.builder()
                 .uri(accessRight.getURI())
-                .code(accessRight.getProperty(DC.identifier).getObject().toString())
-                .label(label)
+                .code(extractCode(accessRight))
+                .label(SkosMapper.extractLabels(accessRight))
                 .build();
-    }
-
-    public String sparqlQuery() {
-        return URLEncoder.encode(
-                genericSPARQLQuery("access-right"),
-                StandardCharsets.UTF_8
-        );
     }
 }
