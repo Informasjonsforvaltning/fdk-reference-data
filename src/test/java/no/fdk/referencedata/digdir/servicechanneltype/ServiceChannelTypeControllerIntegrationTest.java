@@ -1,14 +1,10 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -36,14 +32,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 public class ServiceChannelTypeControllerIntegrationTest extends AbstractContainerTest {
 
+    @Autowired
+    private ReferenceDataRegistry registry;
+
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private ServiceChannelTypeRepository serviceChannelTypeRepository;
-
-    @Autowired
-    private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
 
@@ -53,12 +46,7 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
                 .baseUrl("http://localhost:" + port)
                 .build();
 
-        ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
-                LocalHarvesters.serviceChannelType(),
-                serviceChannelTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        serviceChannelTypeService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "service-channel-type");
     }
 
     @Test

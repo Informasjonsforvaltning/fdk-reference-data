@@ -1,13 +1,9 @@
 package no.fdk.referencedata.eu.filetype;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -34,14 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
 
+    @Autowired
+    private ReferenceDataRegistry registry;
+
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private FileTypeRepository fileTypeRepository;
-
-    @Autowired
-    private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
 
@@ -51,12 +44,7 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
                 .baseUrl("http://localhost:" + port)
                 .build();
 
-        FileTypeService fileTypeService = new FileTypeService(
-                LocalHarvesters.fileType(),
-                fileTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        fileTypeService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "file-type");
     }
 
     @Test

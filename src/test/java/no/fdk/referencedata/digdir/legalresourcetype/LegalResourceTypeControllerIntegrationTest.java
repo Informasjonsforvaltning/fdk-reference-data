@@ -1,14 +1,10 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.i18n.Language;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -36,14 +32,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 public class LegalResourceTypeControllerIntegrationTest extends AbstractContainerTest {
 
+    @Autowired
+    private ReferenceDataRegistry registry;
+
     @LocalServerPort
     private int port;
-
-    @Autowired
-    private LegalResourceTypeRepository legalResourceTypeRepository;
-
-    @Autowired
-    private RDFSourceRepository rdfSourceRepository;
 
     private RestClient restClient;
 
@@ -53,12 +46,7 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
                 .baseUrl("http://localhost:" + port)
                 .build();
 
-        LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
-                LocalHarvesters.legalResourceType(),
-                legalResourceTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        legalResourceTypeService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "legal-resource-type");
     }
 
     @Test

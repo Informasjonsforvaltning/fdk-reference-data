@@ -1,16 +1,10 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.filetype.FileType;
-import no.fdk.referencedata.eu.filetype.FileTypeRepository;
-import no.fdk.referencedata.eu.filetype.FileTypeService;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -37,21 +30,14 @@ import static org.mockito.Mockito.mock;
 class FileTypeQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
-    private GraphQlTester graphQlTester;
+    private ReferenceDataRegistry registry;
 
     @Autowired
-    private FileTypeRepository fileTypeRepository;
-
-    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+    private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
-        FileTypeService fileTypeService = new FileTypeService(
-                LocalHarvesters.fileType(),
-                fileTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        fileTypeService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "file-type");
     }
 
     @Test

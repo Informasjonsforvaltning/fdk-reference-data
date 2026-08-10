@@ -1,16 +1,10 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.country.Country;
-import no.fdk.referencedata.eu.country.CountryRepository;
-import no.fdk.referencedata.eu.country.CountryService;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +15,6 @@ import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -36,21 +29,14 @@ import static org.mockito.Mockito.mock;
 class CountryQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
-    private CountryRepository countryRepository;
-
-    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+    private ReferenceDataRegistry registry;
 
     @Autowired
     private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
-        CountryService countryService = new CountryService(
-                LocalHarvesters.country(),
-                countryRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        countryService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "country");
     }
 
     @Test
