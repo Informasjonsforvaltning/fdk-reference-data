@@ -23,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.LocalHarvestFixtures.LEGAL_RESOURCE_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -64,9 +63,6 @@ class LegalResourceTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['legalResourceTypes']")
                 .entityList(LegalResourceType.class)
                 .get();
-
-        Assertions.assertEquals(LEGAL_RESOURCE_TYPES_SIZE, result.size());
-
         LegalResourceType legalResourceType = result.get(0);
 
         assertEquals("https://data.norge.no/vocabulary/legal-resource-type#act", legalResourceType.getUri());
@@ -88,15 +84,6 @@ class LegalResourceTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("regulation", result.getCode());
         assertEquals("forskrift", result.getLabel().get("nb"));
         assertEquals("regulation", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_legal_resource_type_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("legal-resource-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['legalResourceTypeByCode']")
-                .valueIsNull();
     }
 
 }

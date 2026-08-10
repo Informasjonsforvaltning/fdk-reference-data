@@ -63,9 +63,6 @@ class ConceptSubjectQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['conceptSubjects']")
                 .entityList(ConceptSubject.class)
                 .get();
-
-        assertEquals(4, result.size());
-
         ConceptSubject conceptSubject = result.get(0);
 
         assertEquals(

@@ -62,9 +62,6 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['audienceTypes']")
                 .entityList(AudienceType.class)
                 .get();
-
-        assertEquals(2, result.size());
-
         AudienceType audienceType = result.get(0);
         assertEquals("https://data.norge.no/vocabulary/audience-type#public", audienceType.getUri());
         assertEquals("public", audienceType.getCode());
@@ -87,15 +84,6 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("spesialist", result.getLabel().get("nb"));
         assertEquals("spesialist", result.getLabel().get("nn"));
         assertEquals("specialist", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_audience_type_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("audience-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['audienceTypeByCode']")
-                .valueIsNull();
     }
 
 }

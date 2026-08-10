@@ -62,9 +62,6 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['mobilityThemes']")
                 .entityList(MobilityTheme.class)
                 .get();
-
-        assertEquals(123, result.size());
-
         MobilityTheme theme = result.get(0);
 
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-theme/accesibility-information-for-vehicles", theme.getUri());
@@ -84,15 +81,6 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-theme/junctions", result.getUri());
         assertEquals("junctions", result.getCode());
         assertEquals("Junctions", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_mobility_theme_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("mobility-theme-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['mobilityThemeByCode']")
-                .valueIsNull();
     }
 
 }

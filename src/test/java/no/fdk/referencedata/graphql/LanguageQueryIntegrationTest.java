@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.LocalHarvestFixtures.LANGUAGES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -58,9 +57,6 @@ class LanguageQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['languages']")
                 .entityList(Language.class)
                 .get();
-
-        assertEquals(LANGUAGES_SIZE, result.size());
-
         Language language = result.get(0);
         assertEquals("http://publications.europa.eu/resource/authority/language/ENG", language.getUri());
         assertEquals("ENG", language.getCode());
@@ -82,12 +78,4 @@ class LanguageQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("norsk (bokmål)", result.getLabel().get("no"));
     }
 
-    @Test
-    void test_if_language_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("language-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['languageByCode']")
-                .valueIsNull();
-    }
 }

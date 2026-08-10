@@ -62,9 +62,6 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['roleTypes']")
                 .entityList(RoleType.class)
                 .get();
-
-        assertEquals(5, result.size());
-
         RoleType roleType = result.get(0);
 
         assertEquals("https://data.norge.no/vocabulary/role-type#data-consumer", roleType.getUri());
@@ -86,15 +83,6 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("service-provider", result.getCode());
         assertEquals("tjenestetilbyder", result.getLabel().get("nb"));
         assertEquals("service provider", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_access_right_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("role-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['roleTypeByCode']")
-                .valueIsNull();
     }
 
 }

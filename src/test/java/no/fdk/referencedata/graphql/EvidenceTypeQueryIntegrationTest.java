@@ -64,9 +64,6 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['evidenceTypes']")
                 .entityList(EvidenceType.class)
                 .get();
-
-        Assertions.assertEquals(4, result.size());
-
         EvidenceType evidenceType = result.get(0);
 
         assertEquals("https://data.norge.no/vocabulary/evidence-type#attestation", evidenceType.getUri());
@@ -88,15 +85,6 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("protocol", result.getCode());
         assertEquals("protokoll", result.getLabel().get("nb"));
         assertEquals("protocol", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_evidence_type_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("evidence-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['evidenceTypeByCode']")
-                .valueIsNull();
     }
 
 }

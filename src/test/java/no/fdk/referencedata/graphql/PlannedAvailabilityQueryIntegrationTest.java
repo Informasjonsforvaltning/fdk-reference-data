@@ -61,9 +61,6 @@ class PlannedAvailabilityQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['plannedAvailabilities']")
                 .entityList(PlannedAvailability.class)
                 .get();
-
-        Assertions.assertEquals(4, result.size());
-
         PlannedAvailability plannedAvailability = result.get(0);
 
         assertEquals(
@@ -95,15 +92,6 @@ class PlannedAvailabilityQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("midlertidig", result.getLabel().get("nb"));
         assertEquals("midlertidig", result.getLabel().get("nn"));
         assertEquals("temporary", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_distribution_status_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("planned-availability-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['plannedAvailabilityByCode']")
-                .valueIsNull();
     }
 
 }

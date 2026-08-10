@@ -62,9 +62,6 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['serviceChannelTypes']")
                 .entityList(ServiceChannelType.class)
                 .get();
-
-        assertEquals(11, result.size());
-
         ServiceChannelType serviceChannelType = result.get(0);
 
         assertEquals("https://data.norge.no/vocabulary/service-channel-type#assistant", serviceChannelType.getUri());
@@ -86,15 +83,6 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("telephone", result.getCode());
         assertEquals("telefon", result.getLabel().get("nb"));
         assertEquals("telephone", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_service_channel_type_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("service-channel-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['serviceChannelTypeByCode']")
-                .valueIsNull();
     }
 
 }

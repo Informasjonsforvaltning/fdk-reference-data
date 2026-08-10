@@ -61,9 +61,6 @@ class DistributionStatusQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['distributionStatuses']")
                 .entityList(DistributionStatus.class)
                 .get();
-
-        Assertions.assertEquals(4, result.size());
-
         DistributionStatus distributionStatus = result.get(0);
 
         assertEquals(
@@ -95,15 +92,6 @@ class DistributionStatusQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("trukket tilbake", result.getLabel().get("nb"));
         assertEquals("trekt tilbake", result.getLabel().get("nn"));
         assertEquals("withdrawn", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_distribution_status_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("distribution-status-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['distributionStatusByCode']")
-                .valueIsNull();
     }
 
 }

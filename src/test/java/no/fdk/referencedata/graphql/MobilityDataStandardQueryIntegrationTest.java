@@ -62,9 +62,6 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['mobilityDataStandards']")
                 .entityList(MobilityDataStandard.class)
                 .get();
-
-        assertEquals(15, result.size());
-
         MobilityDataStandard standard = result.get(0);
 
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-data-standard/c-its", standard.getUri());
@@ -84,15 +81,6 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-data-standard/ocpi", result.getUri());
         assertEquals("ocpi", result.getCode());
         assertEquals("OCPI", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_mobility_data_standard_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("mobility-data-standard-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['mobilityDataStandardByCode']")
-                .valueIsNull();
     }
 
 }

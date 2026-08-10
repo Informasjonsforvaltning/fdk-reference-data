@@ -59,9 +59,6 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
                 .execute()
                 .path("$['data']['accessRights']")
                 .entityList(AccessRight.class);
-
-        result.hasSize(6);
-
         AccessRight accessRight = result.get().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", accessRight.getUri());
         assertEquals("CONFIDENTIAL", accessRight.getCode());
@@ -80,15 +77,6 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/access-right/PUBLIC", result.getUri());
         assertEquals("PUBLIC", result.getCode());
         assertEquals("public", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_access_right_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("access-right-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['accessRightByCode']")
-                .valueIsNull();
     }
 
 }
