@@ -2,7 +2,6 @@ package no.fdk.referencedata.mobility;
 
 import lombok.RequiredArgsConstructor;
 import no.fdk.referencedata.core.ReferenceDataModule;
-import no.fdk.referencedata.core.ScheduleSpec;
 import no.fdk.referencedata.mobility.conditions.MobilityConditionService;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardService;
 import no.fdk.referencedata.mobility.theme.MobilityThemeService;
@@ -24,7 +23,7 @@ public class MobilityReferenceDataModules {
 
     @Bean
     public ReferenceDataModule mobilityThemeModule() {
-        return new ReferenceDataModule("mobility-theme", ScheduleSpec.of(CRON_MOBILITY_THEME), mobilityThemeService);
+        return new ReferenceDataModule("mobility-theme", mobilityThemeService);
     }
 
     @Scheduled(cron = CRON_MOBILITY_THEME)
@@ -34,7 +33,7 @@ public class MobilityReferenceDataModules {
 
     @Bean
     public ReferenceDataModule mobilityConditionModule() {
-        return new ReferenceDataModule("mobility-condition", ScheduleSpec.of(CRON_MOBILITY_CONDITION), mobilityConditionService);
+        return new ReferenceDataModule("mobility-condition", mobilityConditionService);
     }
 
     @Scheduled(cron = CRON_MOBILITY_CONDITION)
@@ -44,7 +43,7 @@ public class MobilityReferenceDataModules {
 
     @Bean
     public ReferenceDataModule mobilityDataStandardModule() {
-        return new ReferenceDataModule("mobility-data-standard", ScheduleSpec.of(CRON_MOBILITY_DATA_STANDARD), mobilityDataStandardService);
+        return new ReferenceDataModule("mobility-data-standard", mobilityDataStandardService);
     }
 
     @Scheduled(cron = CRON_MOBILITY_DATA_STANDARD)

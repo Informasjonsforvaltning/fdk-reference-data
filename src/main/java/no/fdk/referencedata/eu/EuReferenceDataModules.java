@@ -2,7 +2,6 @@ package no.fdk.referencedata.eu;
 
 import lombok.RequiredArgsConstructor;
 import no.fdk.referencedata.core.ReferenceDataModule;
-import no.fdk.referencedata.core.ScheduleSpec;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
 import no.fdk.referencedata.eu.continent.ContinentService;
@@ -66,7 +65,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule accessRightModule() {
-        return new ReferenceDataModule("access-right", ScheduleSpec.of(CRON_ACCESS_RIGHT), accessRightService);
+        return new ReferenceDataModule("access-right", accessRightService);
     }
 
     @Scheduled(cron = CRON_ACCESS_RIGHT)
@@ -76,7 +75,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule fileTypeModule() {
-        return new ReferenceDataModule("file-type", ScheduleSpec.of(CRON_FILE_TYPE), fileTypeService);
+        return new ReferenceDataModule("file-type", fileTypeService);
     }
 
     @Scheduled(cron = CRON_FILE_TYPE)
@@ -86,7 +85,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule dataThemeModule() {
-        return new ReferenceDataModule("data-theme", ScheduleSpec.of(CRON_DATA_THEME), dataThemeService);
+        return new ReferenceDataModule("data-theme", dataThemeService);
     }
 
     @Scheduled(cron = CRON_DATA_THEME)
@@ -96,7 +95,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule euroVocModule() {
-        return new ReferenceDataModule("eurovoc", ScheduleSpec.of(CRON_EUROVOC), euroVocService);
+        return new ReferenceDataModule("eurovoc", euroVocService);
     }
 
     @Scheduled(cron = CRON_EUROVOC)
@@ -106,7 +105,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule frequencyModule() {
-        return new ReferenceDataModule("frequency", ScheduleSpec.of(CRON_FREQUENCY), frequencyService);
+        return new ReferenceDataModule("frequency", frequencyService);
     }
 
     @Scheduled(cron = CRON_FREQUENCY)
@@ -116,7 +115,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule distributionStatusModule() {
-        return new ReferenceDataModule("distribution-status", ScheduleSpec.of(CRON_DISTRIBUTION_STATUS), distributionStatusService);
+        return new ReferenceDataModule("distribution-status", distributionStatusService);
     }
 
     @Scheduled(cron = CRON_DISTRIBUTION_STATUS)
@@ -126,7 +125,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule distributionTypeModule() {
-        return new ReferenceDataModule("distribution-type", ScheduleSpec.of(CRON_DISTRIBUTION_TYPE), distributionTypeService);
+        return new ReferenceDataModule("distribution-type", distributionTypeService);
     }
 
     @Scheduled(cron = CRON_DISTRIBUTION_TYPE)
@@ -136,7 +135,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule datasetTypeModule() {
-        return new ReferenceDataModule("dataset-type", ScheduleSpec.of(CRON_DATASET_TYPE), datasetTypeService);
+        return new ReferenceDataModule("dataset-type", datasetTypeService);
     }
 
     @Scheduled(cron = CRON_DATASET_TYPE)
@@ -146,7 +145,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule mainActivityModule() {
-        return new ReferenceDataModule("main-activity", ScheduleSpec.of(CRON_MAIN_ACTIVITY), mainActivityService);
+        return new ReferenceDataModule("main-activity", mainActivityService);
     }
 
     @Scheduled(cron = CRON_MAIN_ACTIVITY)
@@ -156,7 +155,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule conceptStatusModule() {
-        return new ReferenceDataModule("concept-status", ScheduleSpec.of(CRON_CONCEPT_STATUS), conceptStatusService);
+        return new ReferenceDataModule("concept-status", conceptStatusService);
     }
 
     @Scheduled(cron = CRON_CONCEPT_STATUS)
@@ -166,7 +165,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule plannedAvailabilityModule() {
-        return new ReferenceDataModule("planned-availability", ScheduleSpec.of(CRON_PLANNED_AVAILABILITY), plannedAvailabilityService);
+        return new ReferenceDataModule("planned-availability", plannedAvailabilityService);
     }
 
     @Scheduled(cron = CRON_PLANNED_AVAILABILITY)
@@ -176,7 +175,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule currencyModule() {
-        return new ReferenceDataModule("currency", ScheduleSpec.of(CRON_CURRENCY), currencyService);
+        return new ReferenceDataModule("currency", currencyService);
     }
 
     @Scheduled(cron = CRON_CURRENCY)
@@ -186,7 +185,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule licenceModule() {
-        return new ReferenceDataModule("licence", ScheduleSpec.of(CRON_LICENCE), licenceService);
+        return new ReferenceDataModule("licence", licenceService);
     }
 
     @Scheduled(cron = CRON_LICENCE)
@@ -196,7 +195,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule highValueCategoryModule() {
-        return new ReferenceDataModule("high-value-category", ScheduleSpec.of(CRON_HIGH_VALUE_CATEGORY), highValueCategoryService);
+        return new ReferenceDataModule("high-value-category", highValueCategoryService);
     }
 
     @Scheduled(cron = CRON_HIGH_VALUE_CATEGORY)
@@ -206,7 +205,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule continentModule() {
-        return new ReferenceDataModule("continent", ScheduleSpec.of(CRON_CONTINENT), continentService);
+        return new ReferenceDataModule("continent", continentService);
     }
 
     @Scheduled(cron = CRON_CONTINENT)
@@ -216,7 +215,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule countryModule() {
-        return new ReferenceDataModule("country", ScheduleSpec.of(CRON_COUNTRY), countryService);
+        return new ReferenceDataModule("country", countryService);
     }
 
     @Scheduled(cron = CRON_COUNTRY)
@@ -226,7 +225,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule languageModule() {
-        return new ReferenceDataModule("language", ScheduleSpec.of(CRON_LANGUAGE), languageService);
+        return new ReferenceDataModule("language", languageService);
     }
 
     @Scheduled(cron = CRON_LANGUAGE)
