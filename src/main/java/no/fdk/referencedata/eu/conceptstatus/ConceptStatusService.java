@@ -7,11 +7,6 @@ import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 public class ConceptStatusService implements HarvestableReferenceData {
     private final String dbSourceID = "concept-status-source";
@@ -35,17 +30,6 @@ public class ConceptStatusService implements HarvestableReferenceData {
     @Override
     public boolean firstTime() {
         return support.firstTime(conceptStatusRepository);
-    }
-
-    public Optional<ConceptStatus> getConceptStatus(String code) {
-        return conceptStatusRepository.findByCode(code);
-    }
-
-    public ConceptStatuses getConceptStatuses() {
-        return ConceptStatuses.builder().conceptStatuses(
-                conceptStatusRepository.findAll().stream()
-                        .sorted(Comparator.comparing(ConceptStatus::getUri))
-                        .collect(Collectors.toList())).build();
     }
 
     public String getRdf(RDFFormat rdfFormat) {
