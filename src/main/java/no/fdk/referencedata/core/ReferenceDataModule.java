@@ -10,7 +10,15 @@ public record ReferenceDataModule(
         this(id, service, null);
     }
 
+    public ReferenceDataModule(String id, CodeListApi<?> api) {
+        this(id, null, api);
+    }
+
     public boolean hasApi() {
         return api != null;
+    }
+
+    public boolean hasHarvestableService() {
+        return service != null;
     }
 }
