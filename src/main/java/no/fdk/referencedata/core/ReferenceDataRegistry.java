@@ -16,4 +16,10 @@ public class ReferenceDataRegistry {
     public List<ReferenceDataModule> all() {
         return modules;
     }
+
+    public List<ReferenceDataModule> withApi() {
+        return modules.stream()
+                .filter(ReferenceDataModule::hasApi)
+                .toList();
+    }
 }
