@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CodeListApiTest {
 
     record Item(String uri, String code) {}
+    record Items(List<Item> items) {}
 
     @Test
     void findAllSortedAndWrap() {
@@ -22,12 +23,13 @@ class CodeListApiTest {
                         () -> List.of(new Item("c", "C"), new Item("a", "A"), new Item("b", "B")),
                         code -> Optional.of(new Item(code.toLowerCase(), code))),
                 Comparator.comparing(Item::uri),
-                list -> list,
+                Items::new,
                 format -> "turtle",
                 Item.class);
 
         assertEquals(List.of("A", "B", "C"), api.findAllSorted().stream().map(Item::code).toList());
         assertEquals("A", api.findByCode("A").map(Item::code).orElseThrow());
+        assertEquals(Items.class, api.listWrapperType());
         assertTrue(api.supportsRdf());
         assertTrue(api.supportsHarvestPost());
         assertTrue(api.supportsByCode());

@@ -33,6 +33,10 @@ public record CodeListApi<T>(
         return wrapList.apply(findAllSorted());
     }
 
+    public Class<?> listWrapperType() {
+        return wrapList.apply(List.of()).getClass();
+    }
+
     public Optional<T> findByCode(String code) {
         return repository.findByCode(code);
     }
