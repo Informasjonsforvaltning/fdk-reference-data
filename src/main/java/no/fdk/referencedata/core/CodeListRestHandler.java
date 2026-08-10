@@ -1,6 +1,7 @@
 package no.fdk.referencedata.core;
 
 import org.apache.jena.riot.RDFFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.function.ServerRequest;
@@ -29,7 +30,7 @@ public class CodeListRestHandler {
 
     public ServerResponse rdf(ReferenceDataModule module) {
         if (!module.api().supportsRdf()) {
-            return ServerResponse.notFound().build();
+            return ServerResponse.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
         String turtle = module.api().getRdf(RDFFormat.TURTLE);
         return ServerResponse.ok()
