@@ -1,5 +1,6 @@
 package no.fdk.referencedata.iana.mediatype;
 
+import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 

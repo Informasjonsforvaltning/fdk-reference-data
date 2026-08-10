@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.ApplicationSettings;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ public class ConceptSubjectHarvesterTest {
 
     @Test
     public void test_fetch_concept_subjects() {
-        ConceptSubjectHarvester harvester = new LocalConceptSubjectHarvester(new ApplicationSettings());
+        ConceptSubjectHarvester harvester = LocalHarvesters.conceptSubject(new ApplicationSettings());
 
         assertNotNull(harvester.getSource());
         assertEquals("concept-subjects.ttl", harvester.getSource().getFilename());

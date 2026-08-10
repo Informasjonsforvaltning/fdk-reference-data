@@ -1,12 +1,12 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.mobility.theme.LocalMobilityThemeHarvester;
 import no.fdk.referencedata.mobility.theme.MobilityTheme;
 import no.fdk.referencedata.mobility.theme.MobilityThemeRepository;
 import no.fdk.referencedata.mobility.theme.MobilityThemeService;
@@ -48,7 +48,7 @@ class MobilityThemeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
-                new LocalMobilityThemeHarvester(),
+                LocalHarvesters.mobilityTheme(),
                 mobilityThemeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

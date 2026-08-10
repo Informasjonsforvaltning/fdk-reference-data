@@ -1,63 +1,45 @@
 package no.fdk.referencedata;
 
+import no.fdk.referencedata.digdir.audiencetype.AudienceTypeHarvester;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectHarvester;
-import no.fdk.referencedata.digdir.conceptsubjects.LocalConceptSubjectHarvester;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeHarvester;
-import no.fdk.referencedata.digdir.evidencetype.LocalEvidenceTypeHarvester;
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeHarvester;
-import no.fdk.referencedata.digdir.legalresourcetype.LocalLegalResourceTypeHarvester;
-import no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionHarvester;
-import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
+import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeHarvester;
 import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
-import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeHarvester;
 import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
-import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
-import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
 import no.fdk.referencedata.eu.continent.ContinentHarvester;
-import no.fdk.referencedata.eu.continent.LocalContinentHarvester;
 import no.fdk.referencedata.eu.country.CountryHarvester;
-import no.fdk.referencedata.eu.country.LocalCountryHarvester;
+import no.fdk.referencedata.eu.currency.CurrencyHarvester;
+import no.fdk.referencedata.eu.datasettype.DatasetTypeHarvester;
+import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
+import no.fdk.referencedata.eu.distributionstatus.DistributionStatusHarvester;
+import no.fdk.referencedata.eu.distributiontype.DistributionTypeHarvester;
+import no.fdk.referencedata.eu.eurovoc.EuroVocHarvester;
+import no.fdk.referencedata.eu.filetype.FileTypeHarvester;
+import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
+import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoriesHarvester;
+import no.fdk.referencedata.eu.language.LanguageHarvester;
+import no.fdk.referencedata.eu.licence.LicenceHarvester;
+import no.fdk.referencedata.eu.mainactivity.MainActivityHarvester;
+import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityHarvester;
 import no.fdk.referencedata.geonames.GeonamesHarvester;
 import no.fdk.referencedata.geonames.LocalGeonamesHarvester;
-import no.fdk.referencedata.eu.currency.CurrencyHarvester;
-import no.fdk.referencedata.eu.currency.LocalCurrencyHarvester;
-import no.fdk.referencedata.eu.datasettype.DatasetTypeHarvester;
-import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
-import no.fdk.referencedata.eu.datatheme.DataThemeHarvester;
-import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
-import no.fdk.referencedata.eu.distributionstatus.DistributionStatusHarvester;
-import no.fdk.referencedata.eu.distributionstatus.LocalDistributionStatusHarvester;
-import no.fdk.referencedata.eu.distributiontype.DistributionTypeHarvester;
-import no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester;
-import no.fdk.referencedata.eu.eurovoc.EuroVocHarvester;
-import no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester;
-import no.fdk.referencedata.eu.filetype.FileTypeHarvester;
-import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
-import no.fdk.referencedata.eu.frequency.FrequencyHarvester;
-import no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester;
-import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoriesHarvester;
-import no.fdk.referencedata.eu.highvaluecategories.LocalHighValueCategoryHarvester;
-import no.fdk.referencedata.eu.language.LanguageHarvester;
-import no.fdk.referencedata.eu.language.LocalLanguageHarvester;
-import no.fdk.referencedata.eu.licence.LicenceHarvester;
-import no.fdk.referencedata.eu.licence.LocalLicenceHarvester;
-import no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester;
-import no.fdk.referencedata.eu.mainactivity.MainActivityHarvester;
-import no.fdk.referencedata.eu.plannedavailability.LocalPlannedAvailabilityHarvester;
-import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityHarvester;
+import no.fdk.referencedata.geonorge.administrativeenheter.EnhetHarvester;
+import no.fdk.referencedata.geonorge.administrativeenheter.LocalEnhetHarvester;
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.iana.mediatype.MediaTypeHarvester;
 import no.fdk.referencedata.los.LocalLosImporter;
 import no.fdk.referencedata.los.LosImporter;
-import no.fdk.referencedata.mobility.conditions.LocalMobilityConditionHarvester;
 import no.fdk.referencedata.mobility.conditions.MobilityConditionHarvester;
-import no.fdk.referencedata.mobility.datastandard.LocalMobilityDataStandardHarvester;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardHarvester;
-import no.fdk.referencedata.mobility.theme.LocalMobilityThemeHarvester;
 import no.fdk.referencedata.mobility.theme.MobilityThemeHarvester;
+import no.fdk.referencedata.ssb.fylkeorganisasjoner.FylkeOrganisasjonHarvester;
+import no.fdk.referencedata.ssb.fylkeorganisasjoner.LocalFylkeOrganisasjonHarvester;
+import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonHarvester;
+import no.fdk.referencedata.ssb.kommuneorganisasjoner.LocalKommuneOrganisasjonHarvester;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -78,102 +60,112 @@ public class LocalHarvesterConfiguration {
 
     @Bean
     public FileTypeHarvester fileTypeHarvester() {
-        return new LocalFileTypeHarvester();
+        return LocalHarvesters.fileType();
     }
 
     @Bean
     public DataThemeHarvester dataThemeHarvester() {
-        return new LocalDataThemeHarvester();
+        return LocalHarvesters.dataTheme();
     }
 
     @Bean
     public EuroVocHarvester euroVocHarvester() {
-        return new LocalEuroVocHarvester();
+        return LocalHarvesters.euroVoc();
     }
 
     @Bean
     public AccessRightHarvester accessRightHarvester() {
-        return new LocalAccessRightHarvester();
+        return LocalHarvesters.accessRight();
     }
 
     @Bean
     public FrequencyHarvester frequencyHarvester() {
-        return new LocalFrequencyHarvester();
+        return LocalHarvesters.frequency();
     }
 
     @Bean
     public ConceptStatusHarvester conceptStatusHarvester() {
-        return new LocalConceptStatusHarvester();
+        return LocalHarvesters.conceptStatus();
     }
 
     @Bean
     public DistributionStatusHarvester distributionStatusHarvester() {
-        return new LocalDistributionStatusHarvester();
+        return LocalHarvesters.distributionStatus();
     }
 
     @Bean
     public DistributionTypeHarvester distributionTypeHarvester() {
-        return new LocalDistributionTypeHarvester();
+        return LocalHarvesters.distributionType();
     }
 
     @Bean
     public DatasetTypeHarvester datasetTypeHarvester() {
-        return new LocalDatasetTypeHarvester();
+        return LocalHarvesters.datasetType();
     }
 
     @Bean
     public ConceptSubjectHarvester conceptSubjectHarvester(ApplicationSettings applicationSettings) {
-        return new LocalConceptSubjectHarvester(applicationSettings);
+        return LocalHarvesters.conceptSubject(applicationSettings);
     }
 
     @Bean
     public EvidenceTypeHarvester evidenceTypeHarvester() {
-        return new LocalEvidenceTypeHarvester();
+        return LocalHarvesters.evidenceType();
     }
 
     @Bean
     public MainActivityHarvester mainActivityHarvester() {
-        return new LocalMainActivityHarvester();
+        return LocalHarvesters.mainActivity();
     }
 
     @Bean
     public PlannedAvailabilityHarvester plannedAvailabilityHarvester() {
-        return new LocalPlannedAvailabilityHarvester();
+        return LocalHarvesters.plannedAvailability();
+    }
+
+    @Bean
+    public AudienceTypeHarvester audienceTypeHarvester() {
+        return LocalHarvesters.audienceType();
     }
 
     @Bean
     public RoleTypeHarvester roleTypeHarvester() {
-        return new LocalRoleTypeHarvester();
+        return LocalHarvesters.roleType();
+    }
+
+    @Bean
+    public RelationshipWithSourceTypeHarvester relationshipWithSourceTypeHarvester() {
+        return LocalHarvesters.relationshipWithSourceType();
     }
 
     @Bean
     public CurrencyHarvester currencyHarvester() {
-        return new LocalCurrencyHarvester();
+        return LocalHarvesters.currency();
     }
 
     @Bean
     public LanguageHarvester languageHarvester() {
-        return new LocalLanguageHarvester();
+        return LocalHarvesters.language();
     }
 
     @Bean
     public LicenceHarvester licenceHarvester() {
-        return new LocalLicenceHarvester();
+        return LocalHarvesters.licence();
     }
 
     @Bean
     public MobilityThemeHarvester mobilityThemeHarvester() {
-        return new LocalMobilityThemeHarvester();
+        return LocalHarvesters.mobilityTheme();
     }
 
     @Bean
     public MobilityDataStandardHarvester mobilityDataStandardHarvester() {
-        return new LocalMobilityDataStandardHarvester();
+        return LocalHarvesters.mobilityDataStandard();
     }
 
     @Bean
     public MobilityConditionHarvester mobilityConditionHarvester() {
-        return new LocalMobilityConditionHarvester();
+        return LocalHarvesters.mobilityCondition();
     }
 
     @Bean
@@ -183,36 +175,51 @@ public class LocalHarvesterConfiguration {
 
     @Bean
     public ServiceChannelTypeHarvester serviceChannelTypeHarvester() {
-        return new LocalServiceChannelTypeHarvester();
+        return LocalHarvesters.serviceChannelType();
     }
 
     @Bean
     public HighValueCategoriesHarvester highValueCategoriesHarvester() {
-        return new LocalHighValueCategoryHarvester();
+        return LocalHarvesters.highValueCategory();
     }
 
     @Bean
     public QualityDimensionHarvester qualityDimensionHarvester() {
-        return new LocalQualityDimensionHarvester();
+        return LocalHarvesters.qualityDimension();
     }
 
     @Bean
     public LegalResourceTypeHarvester legalResourceTypeHarvester() {
-        return new LocalLegalResourceTypeHarvester();
+        return LocalHarvesters.legalResourceType();
     }
 
     @Bean
     public CountryHarvester countryHarvester() {
-        return new LocalCountryHarvester();
+        return LocalHarvesters.country();
     }
 
     @Bean
     public ContinentHarvester continentHarvester() {
-        return new LocalContinentHarvester();
+        return LocalHarvesters.continent();
     }
 
     @Bean
     public GeonamesHarvester geonamesHarvester() {
         return new LocalGeonamesHarvester(wiremockHost, wiremockPort);
+    }
+
+    @Bean
+    public EnhetHarvester enhetHarvester() {
+        return new LocalEnhetHarvester();
+    }
+
+    @Bean
+    public FylkeOrganisasjonHarvester fylkeOrganisasjonHarvester() {
+        return new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort);
+    }
+
+    @Bean
+    public KommuneOrganisasjonHarvester kommuneOrganisasjonHarvester() {
+        return new LocalKommuneOrganisasjonHarvester(wiremockHost, wiremockPort);
     }
 }

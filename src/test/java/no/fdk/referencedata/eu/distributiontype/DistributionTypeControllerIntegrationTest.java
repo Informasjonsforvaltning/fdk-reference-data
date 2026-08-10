@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -26,7 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester.DISTRIBUTION_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.DISTRIBUTION_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -57,7 +58,7 @@ public class DistributionTypeControllerIntegrationTest extends AbstractContainer
                 .build();
 
         DistributionTypeService distributionTypeService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester(),
+                LocalHarvesters.distributionType(),
                 distributionTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

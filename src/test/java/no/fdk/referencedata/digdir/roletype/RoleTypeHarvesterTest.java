@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.roletype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,7 +15,7 @@ public class RoleTypeHarvesterTest {
 
     @Test
     public void test_fetch_role_types() {
-        RoleTypeHarvester harvester = new LocalRoleTypeHarvester();
+        RoleTypeHarvester harvester = LocalHarvesters.roleType();
 
         assertNotNull(harvester.getSource("role-type"));
         assertEquals("role-type.ttl", harvester.getSource("role-type").getFilename());

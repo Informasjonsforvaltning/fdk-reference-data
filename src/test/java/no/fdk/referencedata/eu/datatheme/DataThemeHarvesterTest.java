@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -7,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.time.LocalDate;
 import java.util.List;
 
-import static no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester.DATA_THEMES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.DATA_THEMES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,7 +17,7 @@ public class DataThemeHarvesterTest {
 
     @Test
     public void test_fetch_datatypes() throws Exception {
-        DataThemeHarvester dataThemeHarvester = new LocalDataThemeHarvester();
+        DataThemeHarvester dataThemeHarvester = LocalHarvesters.dataTheme();
 
         assertNotNull(dataThemeHarvester.getSource());
         assertEquals("data-theme-sparql-result.ttl", dataThemeHarvester.getSource().getFilename());

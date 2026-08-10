@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -26,7 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester.CONCEPT_STATUSES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CONCEPT_STATUSES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -59,7 +60,7 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
                 .build();
 
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
+                LocalHarvesters.conceptStatus(),
                 conceptStatusRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

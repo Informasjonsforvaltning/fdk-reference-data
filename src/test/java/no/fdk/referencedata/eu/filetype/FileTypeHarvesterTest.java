@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.filetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -13,7 +14,7 @@ public class FileTypeHarvesterTest {
 
     @Test
     public void test_fetch_filetypes() throws Exception {
-        FileTypeHarvester fileTypeHarvester = new LocalFileTypeHarvester();
+        FileTypeHarvester fileTypeHarvester = LocalHarvesters.fileType();
 
         assertNotNull(fileTypeHarvester.getSource());
         assertEquals("filetypes-sparql-result.ttl", fileTypeHarvester.getSource().getFilename());

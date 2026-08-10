@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -27,7 +28,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester.DATA_THEMES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.DATA_THEMES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -59,7 +60,7 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         DataThemeService dataThemeService = new DataThemeService(
-                new LocalDataThemeHarvester(),
+                LocalHarvesters.dataTheme(),
                 dataThemeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

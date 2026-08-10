@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.datatheme.DataTheme;
 import no.fdk.referencedata.eu.datatheme.DataThemeRepository;
 import no.fdk.referencedata.eu.datatheme.DataThemeService;
-import no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Assertions;
@@ -47,7 +47,7 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         DataThemeService dataThemeService = new DataThemeService(
-                new LocalDataThemeHarvester(),
+                LocalHarvesters.dataTheme(),
                 dataThemeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

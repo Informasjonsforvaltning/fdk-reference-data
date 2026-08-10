@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.datatheme.LocalDataThemeHarvester.DATA_THEMES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.DATA_THEMES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_datathemes() {
         DataThemeService fileTypeService = new DataThemeService(
-                new LocalDataThemeHarvester(),
+                LocalHarvesters.dataTheme(),
                 dataThemeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -71,7 +72,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         when(dataThemeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new DataThemeService(
-                new LocalDataThemeHarvester(),
+                LocalHarvesters.dataTheme(),
                 dataThemeRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

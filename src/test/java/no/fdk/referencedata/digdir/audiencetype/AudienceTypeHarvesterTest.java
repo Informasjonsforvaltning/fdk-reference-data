@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,7 +15,7 @@ public class AudienceTypeHarvesterTest {
 
     @Test
     public void test_fetch_audience_types() {
-        AudienceTypeHarvester harvester = new LocalAudienceTypeHarvester();
+        AudienceTypeHarvester harvester = LocalHarvesters.audienceType();
 
         assertNotNull(harvester.getSource("audience-type"));
         assertEquals("audience-type.ttl", harvester.getSource("audience-type").getFilename());

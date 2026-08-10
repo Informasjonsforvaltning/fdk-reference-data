@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -7,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Comparator;
 import java.util.List;
 
-import static no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester.CONCEPT_STATUSES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CONCEPT_STATUSES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,7 +17,7 @@ public class ConceptStatusHarvesterTest {
 
     @Test
     public void test_fetch_concept_statuses() {
-        ConceptStatusHarvester harvester = new LocalConceptStatusHarvester();
+        ConceptStatusHarvester harvester = LocalHarvesters.conceptStatus();
 
         assertNotNull(harvester.getSource());
         assertEquals("concept-status.ttl", harvester.getSource().getFilename());

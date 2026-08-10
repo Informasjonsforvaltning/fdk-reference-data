@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.currency.Currency;
 import no.fdk.referencedata.eu.currency.CurrencyRepository;
 import no.fdk.referencedata.eu.currency.CurrencyService;
-import no.fdk.referencedata.eu.currency.LocalCurrencyHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.eu.currency.LocalCurrencyHarvester.CURRENCY_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CURRENCY_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -44,7 +44,7 @@ class CurrencyQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         CurrencyService currencyService = new CurrencyService(
-                new LocalCurrencyHarvester(),
+                LocalHarvesters.currency(),
                 currencyRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

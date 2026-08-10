@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.currency.LocalCurrencyHarvester.CURRENCY_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CURRENCY_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -34,7 +35,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_currencies() {
         CurrencyService currencyService = new CurrencyService(
-                new LocalCurrencyHarvester(),
+                LocalHarvesters.currency(),
                 currencyRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -67,7 +68,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
         when(currencyRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new CurrencyService(
-                new LocalCurrencyHarvester(),
+                LocalHarvesters.currency(),
                 currencyRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

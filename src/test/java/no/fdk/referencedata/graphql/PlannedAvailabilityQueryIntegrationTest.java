@@ -1,12 +1,12 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.eu.plannedavailability.LocalPlannedAvailabilityHarvester;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailability;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityRepository;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
@@ -47,7 +47,7 @@ class PlannedAvailabilityQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester(),
+                LocalHarvesters.plannedAvailability(),
                 plannedAvailabilityRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

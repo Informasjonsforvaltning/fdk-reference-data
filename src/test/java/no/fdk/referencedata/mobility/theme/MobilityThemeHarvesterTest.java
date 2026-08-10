@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.theme;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,7 +15,7 @@ public class MobilityThemeHarvesterTest {
 
     @Test
     public void test_fetch_mobility_themes() {
-        MobilityThemeHarvester harvester = new LocalMobilityThemeHarvester();
+        MobilityThemeHarvester harvester = LocalHarvesters.mobilityTheme();
 
         assertNotNull(harvester.getSource("mobility-themes"));
         assertEquals("mobility-themes.ttl", harvester.getSource("mobility-themes").getFilename());

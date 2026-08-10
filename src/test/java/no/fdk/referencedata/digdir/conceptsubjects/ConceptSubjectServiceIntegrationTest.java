@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +37,7 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
     @Test
     public void test_if_harvest_persists_concept_subjects() {
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
-                new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                LocalHarvesters.conceptSubject(new ApplicationSettings()),
                 conceptSubjectRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -69,7 +70,7 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
         when(conceptSubjectRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new ConceptSubjectService(
-                new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                LocalHarvesters.conceptSubject(new ApplicationSettings()),
                 conceptSubjectRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

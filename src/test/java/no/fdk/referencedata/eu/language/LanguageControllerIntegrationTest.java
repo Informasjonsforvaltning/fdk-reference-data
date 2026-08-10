@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -23,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
-import static no.fdk.referencedata.eu.language.LocalLanguageHarvester.LANGUAGES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LANGUAGES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,7 +57,7 @@ public class LanguageControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         LanguageService languageService = new LanguageService(
-                new LocalLanguageHarvester(),
+                LocalHarvesters.language(),
                 languageRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

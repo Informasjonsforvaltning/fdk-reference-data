@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -9,7 +10,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.distributiontype.DistributionType;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeRepository;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeService;
-import no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         DistributionTypeService distributionTypeService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester(),
+                LocalHarvesters.distributionType(),
                 distributionTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

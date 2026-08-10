@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -56,7 +57,7 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
                 .build();
 
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
-                new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                LocalHarvesters.conceptSubject(new ApplicationSettings()),
                 conceptSubjectRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

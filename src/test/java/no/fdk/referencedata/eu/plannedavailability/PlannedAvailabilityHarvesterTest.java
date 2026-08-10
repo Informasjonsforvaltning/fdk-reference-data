@@ -1,12 +1,13 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.eu.plannedavailability.LocalPlannedAvailabilityHarvester.PLANNED_AVAILABILITY_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.PLANNED_AVAILABILITY_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,7 +16,7 @@ public class PlannedAvailabilityHarvesterTest {
 
     @Test
     public void test_fetch_planned_availabilities() {
-        PlannedAvailabilityHarvester harvester = new LocalPlannedAvailabilityHarvester();
+        PlannedAvailabilityHarvester harvester = LocalHarvesters.plannedAvailability();
 
         assertNotNull(harvester.getSource());
         assertEquals("planned-availability-sparql-result.ttl", harvester.getSource().getFilename());

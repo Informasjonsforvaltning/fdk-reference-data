@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -9,7 +10,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.filetype.FileTypeRepository;
 import no.fdk.referencedata.eu.filetype.FileTypeService;
-import no.fdk.referencedata.eu.filetype.LocalFileTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.FindByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
@@ -54,7 +54,7 @@ class FileTypeSearchableIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         FileTypeService fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester(),
+                LocalHarvesters.fileType(),
                 fileTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

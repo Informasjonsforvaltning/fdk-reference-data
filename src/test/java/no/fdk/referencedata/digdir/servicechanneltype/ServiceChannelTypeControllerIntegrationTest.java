@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -58,7 +59,7 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
                 .build();
 
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester(),
+                LocalHarvesters.serviceChannelType(),
                 serviceChannelTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

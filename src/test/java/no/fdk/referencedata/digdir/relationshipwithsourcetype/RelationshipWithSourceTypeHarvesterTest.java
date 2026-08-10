@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -15,7 +16,7 @@ public class RelationshipWithSourceTypeHarvesterTest {
 
     @Test
     public void test_fetch_relationship_with_source_types() {
-        RelationshipWithSourceTypeHarvester harvester = new LocalRelationshipWithSourceTypeHarvester();
+        RelationshipWithSourceTypeHarvester harvester = LocalHarvesters.relationshipWithSourceType();
 
         assertNotNull(harvester.getSource("relationship-with-source-type"));
         assertEquals("relationship-with-source-type.ttl", harvester.getSource("relationship-with-source-type").getFilename());

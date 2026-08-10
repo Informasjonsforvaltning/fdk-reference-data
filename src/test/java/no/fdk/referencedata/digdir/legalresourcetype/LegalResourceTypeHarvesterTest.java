@@ -1,12 +1,13 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.digdir.legalresourcetype.LocalLegalResourceTypeHarvester.LEGAL_RESOURCE_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LEGAL_RESOURCE_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,7 +16,7 @@ public class LegalResourceTypeHarvesterTest {
 
     @Test
     public void test_fetch_legal_resource_types() {
-        LegalResourceTypeHarvester harvester = new LocalLegalResourceTypeHarvester();
+        LegalResourceTypeHarvester harvester = LocalHarvesters.legalResourceType();
 
         assertNotNull(harvester.getSource("legal-resource-type"));
         assertEquals("legal-resource-type.ttl", harvester.getSource("legal-resource-type").getFilename());

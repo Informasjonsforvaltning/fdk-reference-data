@@ -1,12 +1,13 @@
 package no.fdk.referencedata.eu.currency;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.eu.currency.LocalCurrencyHarvester.CURRENCY_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CURRENCY_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
@@ -14,7 +15,7 @@ public class CurrencyHarvesterTest {
 
     @Test
     public void test_fetch_currencies() {
-        CurrencyHarvester harvester = new LocalCurrencyHarvester();
+        CurrencyHarvester harvester = LocalHarvesters.currency();
 
         assertNotNull(harvester.getSource());
         assertEquals("currency-sparql-result.ttl", harvester.getSource().getFilename());

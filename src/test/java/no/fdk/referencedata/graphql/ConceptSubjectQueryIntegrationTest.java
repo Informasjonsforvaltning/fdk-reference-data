@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -10,7 +11,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubject;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectRepository;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
-import no.fdk.referencedata.digdir.conceptsubjects.LocalConceptSubjectHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class ConceptSubjectQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
-                new LocalConceptSubjectHarvester(new ApplicationSettings()),
+                LocalHarvesters.conceptSubject(new ApplicationSettings()),
                 conceptSubjectRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

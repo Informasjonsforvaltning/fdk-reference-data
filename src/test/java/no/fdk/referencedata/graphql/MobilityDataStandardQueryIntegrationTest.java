@@ -1,12 +1,12 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.mobility.datastandard.LocalMobilityDataStandardHarvester;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandard;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardRepository;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardService;
@@ -48,7 +48,7 @@ class MobilityDataStandardQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester(),
+                LocalHarvesters.mobilityDataStandard(),
                 mobilityDataStandardRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

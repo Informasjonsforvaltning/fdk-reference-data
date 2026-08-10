@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,7 +15,7 @@ public class EvidenceTypeHarvesterTest {
 
     @Test
     public void test_fetch_evidence_types() {
-        EvidenceTypeHarvester harvester = new LocalEvidenceTypeHarvester();
+        EvidenceTypeHarvester harvester = LocalHarvesters.evidenceType();
 
         assertNotNull(harvester.getSource("evidence-type"));
         assertEquals("evidence-type.ttl", harvester.getSource("evidence-type").getFilename());

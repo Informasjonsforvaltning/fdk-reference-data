@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -26,7 +27,7 @@ import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.country.LocalCountryHarvester.COUNTRIES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.COUNTRIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -57,7 +58,7 @@ public class CountryControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester(),
+                LocalHarvesters.country(),
                 countryRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatus;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusRepository;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusService;
-import no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
+                LocalHarvesters.conceptStatus(),
                 conceptStatusRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

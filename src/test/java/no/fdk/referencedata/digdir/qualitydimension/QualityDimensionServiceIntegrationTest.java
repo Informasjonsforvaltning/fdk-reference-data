@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester.QUALITY_DIMENSIONS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,7 +45,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_harvest_persists_quality_dimensions() {
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester(),
+                LocalHarvesters.qualityDimension(),
                 qualityDimensionRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -77,7 +78,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         when(qualityDimensionRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new QualityDimensionService(
-                new LocalQualityDimensionHarvester(),
+                LocalHarvesters.qualityDimension(),
                 qualityDimensionRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

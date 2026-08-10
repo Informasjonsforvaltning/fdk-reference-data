@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.conditions;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -54,7 +55,7 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
                 .build();
 
         MobilityConditionService mobilityConditionService = new MobilityConditionService(
-                new LocalMobilityConditionHarvester(),
+                LocalHarvesters.mobilityCondition(),
                 mobilityConditionRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

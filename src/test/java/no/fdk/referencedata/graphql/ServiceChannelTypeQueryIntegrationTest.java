@@ -1,12 +1,12 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.digdir.servicechanneltype.LocalServiceChannelTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelType;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeRepository;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
@@ -48,7 +48,7 @@ class ServiceChannelTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
-                new LocalServiceChannelTypeHarvester(),
+                LocalHarvesters.serviceChannelType(),
                 serviceChannelTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

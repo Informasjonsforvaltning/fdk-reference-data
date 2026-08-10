@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -9,7 +10,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceType;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeRepository;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
-import no.fdk.referencedata.digdir.evidencetype.LocalEvidenceTypeHarvester;
 import no.fdk.referencedata.eu.eurovoc.EuroVoc;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Assertions;
@@ -50,7 +50,7 @@ class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester(),
+                LocalHarvesters.evidenceType(),
                 evidenceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

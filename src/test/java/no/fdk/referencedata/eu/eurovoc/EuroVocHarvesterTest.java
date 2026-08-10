@@ -1,12 +1,13 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.EUROVOCS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,7 +16,7 @@ public class EuroVocHarvesterTest {
 
     @Test
     public void test_fetch_EuroVoc() {
-        EuroVocHarvester euroVocHarvester = new LocalEuroVocHarvester();
+        EuroVocHarvester euroVocHarvester = LocalHarvesters.euroVoc();
 
         assertNotNull(euroVocHarvester.getSource());
         assertEquals("eurovoc-sparql-result.ttl", euroVocHarvester.getSource().getFilename());

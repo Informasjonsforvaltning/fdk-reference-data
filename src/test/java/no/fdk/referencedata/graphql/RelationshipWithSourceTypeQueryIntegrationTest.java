@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -7,7 +8,6 @@ import no.fdk.referencedata.core.ReferenceDataWriter;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 
-import no.fdk.referencedata.digdir.relationshipwithsourcetype.LocalRelationshipWithSourceTypeHarvester;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceType;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeRepository;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
@@ -49,7 +49,7 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
     @BeforeEach
     public void setup() {
         RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester(),
+                LocalHarvesters.relationshipWithSourceType(),
                 relationshipWithSourceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
