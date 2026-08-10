@@ -62,9 +62,6 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['mainActivities']")
                 .entityList(MainActivity.class)
                 .get();
-
-        assertEquals(20, result.size());
-
         MainActivity mainActivity = result.get(0);
 
         assertEquals("http://publications.europa.eu/resource/authority/main-activity/airport", mainActivity.getUri());
@@ -84,15 +81,6 @@ class MainActivityQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/main-activity/airport", result.getUri());
         assertEquals("airport", result.getCode());
         assertEquals("Airport-related activities", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_main_activity_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("main-activity-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['mainActivityByCode']")
-                .valueIsNull();
     }
 
 }

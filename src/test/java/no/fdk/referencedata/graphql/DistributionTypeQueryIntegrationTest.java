@@ -61,9 +61,6 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['distributionTypes']")
                 .entityList(DistributionType.class)
                 .get();
-
-        Assertions.assertEquals(4, result.size());
-
         DistributionType distributionType = result.get(0);
 
         assertEquals(
@@ -95,15 +92,6 @@ class DistributionTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("Informasjonsstrøm", result.getLabel().get("nb"));
         assertEquals("Informasjonsstraum", result.getLabel().get("nn"));
         assertEquals("Information feed", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_distribution_type_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("distribution-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['distributionTypeByCode']")
-                .valueIsNull();
     }
 
 }

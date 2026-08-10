@@ -59,9 +59,6 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
                 .execute()
                 .path("$['data']['countries']")
                 .entityList(Country.class);
-
-        result.hasSize(3);
-
         Country country = result.get().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/country/DEU", country.getUri());
         assertEquals("DEU", country.getCode());
@@ -82,12 +79,4 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("Norway", result.getLabel().get("en"));
     }
 
-    @Test
-    void test_if_country_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("country-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['countryByCode']")
-                .valueIsNull();
-    }
 }

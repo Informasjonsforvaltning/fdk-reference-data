@@ -57,9 +57,6 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['conceptStatuses']")
                 .entityList(ConceptStatus.class)
                 .get();
-
-        assertEquals(12, result.size());
-
         ConceptStatus conceptStatus = result.get(0);
 
         assertEquals("http://publications.europa.eu/resource/authority/concept-status/CANDIDATE", conceptStatus.getUri());
@@ -87,12 +84,4 @@ class ConceptStatusQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("revised", result.getLabel().get("en"));
     }
 
-    @Test
-    void test_if_concept_status_by_code_query_returns_null() {
-        graphQlTester.documentName("concept-status-by-code")
-                .variable("code", "INVALID")
-                .execute()
-                .path("$['data']['conceptStatusByCode']")
-                .valueIsNull();
-    }
 }

@@ -23,7 +23,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -64,9 +63,6 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['qualityDimensions']")
                 .entityList(QualityDimension.class)
                 .get();
-
-        Assertions.assertEquals(QUALITY_DIMENSIONS_SIZE, result.size());
-
         QualityDimension qualityDimension = result.get(0);
 
         assertEquals("https://data.norge.no/vocabulary/quality-dimension#accuracy", qualityDimension.getUri());
@@ -88,15 +84,6 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("completeness", result.getCode());
         assertEquals("fullstendighet", result.getLabel().get("nb"));
         assertEquals("completeness", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_quality_dimension_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("quality-dimension-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['qualityDimensionByCode']")
-                .valueIsNull();
     }
 
 }

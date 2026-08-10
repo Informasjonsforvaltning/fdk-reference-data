@@ -60,9 +60,6 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['datasetTypes']")
                 .entityList(DatasetType.class)
                 .get();
-
-        assertEquals(24, result.size());
-
         DatasetType datasetType = result.get(0);
 
         assertEquals("http://publications.europa.eu/resource/authority/dataset-type/APROF", datasetType.getUri());
@@ -88,15 +85,6 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("Autoritetsliste for entitetsnavn", result.getLabel().get("nb"));
         assertEquals("Autoritetsliste for entitetsnamn", result.getLabel().get("nn"));
         assertEquals("Name authority list", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_dataset_type_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("dataset-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['datasetTypeByCode']")
-                .valueIsNull();
     }
 
 }

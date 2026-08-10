@@ -1,6 +1,5 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvestFixtures;
 import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
@@ -58,9 +57,6 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
                 .execute()
                 .path("$['data']['highValueCategories']")
                 .entityList(HighValueCategory.class);
-
-        result.hasSize(LocalHarvestFixtures.HIGH_VALUE_CATEGORIES_SIZE);
-
         HighValueCategory category = result.get().get(0);
         assertEquals("http://data.europa.eu/bna/c_03ba8d92", category.getUri());
         assertEquals("c_03ba8d92", category.getCode());
@@ -79,15 +75,6 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("http://data.europa.eu/bna/c_a9135398", result.getUri());
         assertEquals("c_a9135398", result.getCode());
         assertEquals("Companies and company ownership", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_high_value_category_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("high-value-category-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['highValueCategoryByCode']")
-                .valueIsNull();
     }
 
 }

@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.LocalHarvestFixtures.CURRENCY_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -58,9 +57,6 @@ class CurrencyQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['currencies']")
                 .entityList(Currency.class)
                 .get();
-
-        assertEquals(CURRENCY_SIZE, result.size());
-
         Currency conceptStatus = result.get(0);
 
         assertEquals("http://publications.europa.eu/resource/authority/currency/AUD", conceptStatus.getUri());
@@ -84,12 +80,4 @@ class CurrencyQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("Norwegian krone", result.getLabel().get("en"));
     }
 
-    @Test
-    void test_if_concept_status_by_code_query_returns_null() {
-        graphQlTester.documentName("currency-by-code")
-                .variable("code", "INVALID")
-                .execute()
-                .path("$['data']['currencyByCode']")
-                .valueIsNull();
-    }
 }

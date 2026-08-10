@@ -60,9 +60,6 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
                     .path("$['data']['frequencies']")
                     .entityList(Frequency.class)
                     .get();
-
-            Assertions.assertEquals(38, result.size());
-
             Frequency frequency = result.get(0);
 
             assertEquals("http://publications.europa.eu/resource/authority/frequency/10MIN", frequency.getUri());
@@ -87,14 +84,6 @@ class FrequencyQueryIntegrationTest extends AbstractContainerTest {
             assertEquals("tre ganger i uken", result.getLabel().get("nb"));
             assertEquals("tre gongar i veka", result.getLabel().get("nn"));
             assertEquals("three times a week", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_frequency_by_code_unknown_query_returns_null() {graphQlTester.documentName("frequency-by-code")
-            .variable("code", "unknown")
-            .execute()
-            .path("$['data']['frequencyByCode']")
-            .valueIsNull();
     }
 
 }

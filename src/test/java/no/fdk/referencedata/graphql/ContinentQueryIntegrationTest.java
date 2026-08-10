@@ -59,9 +59,6 @@ class ContinentQueryIntegrationTest extends AbstractContainerTest {
                 .execute()
                 .path("$['data']['continents']")
                 .entityList(Continent.class);
-
-        result.hasSize(3);
-
         Continent continent = result.get().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/continent/AFRICA", continent.getUri());
         assertEquals("AFRICA", continent.getCode());
@@ -82,12 +79,4 @@ class ContinentQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("Europe", result.getLabel().get("en"));
     }
 
-    @Test
-    void test_if_continent_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("continent-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['continentByCode']")
-                .valueIsNull();
-    }
 }

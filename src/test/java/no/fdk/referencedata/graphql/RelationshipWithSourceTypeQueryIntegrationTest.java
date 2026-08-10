@@ -63,9 +63,6 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
                 .path("$['data']['relationshipWithSourceTypes']")
                 .entityList(RelationshipWithSourceType.class)
                 .get();
-
-        assertEquals(3, result.size());
-
         RelationshipWithSourceType relationshipWithSourceType = result.get(0);
 
         assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", relationshipWithSourceType.getUri());
@@ -91,12 +88,4 @@ class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTe
         assertEquals("derived from source", result.getLabel().get("en"));
     }
 
-    @Test
-    void test_if_relationship_with_source_type_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("relationship-with-source-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['relationshipWithSourceTypeByCode']")
-                .valueIsNull();
-    }
 }

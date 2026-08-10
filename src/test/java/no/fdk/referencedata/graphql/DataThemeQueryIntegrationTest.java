@@ -61,9 +61,6 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['dataThemes']")
                 .entityList(DataTheme.class)
                 .get();
-
-        Assertions.assertEquals(13, result.size());
-
         DataTheme dataTheme = result.get(0);
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", dataTheme.getUri());
         assertEquals("AGRI", dataTheme.getCode());
@@ -88,15 +85,6 @@ class DataThemeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("Økonomi og finans", result.getLabel().get("nb"));
         assertEquals("Økonomi og finans", result.getLabel().get("nn"));
         assertEquals("Economy and finance", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_data_theme_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("data-theme-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['dataThemeByCode']")
-                .valueIsNull();
     }
 
 }

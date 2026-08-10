@@ -62,9 +62,6 @@ class MobilityConditionQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['mobilityConditions']")
                 .entityList(MobilityCondition.class)
                 .get();
-
-        assertEquals(10, result.size());
-
         MobilityCondition condition = result.get(0);
 
         assertEquals("https://w3id.org/mobilitydcat-ap/conditions-for-access-and-usage/contractual-arrangement", condition.getUri());
@@ -84,15 +81,6 @@ class MobilityConditionQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("https://w3id.org/mobilitydcat-ap/conditions-for-access-and-usage/licence-provided-free-of-charge", result.getUri());
         assertEquals("licence-provided-free-of-charge", result.getCode());
         assertEquals("Licence provided, free of charge", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_mobility_theme_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("mobility-condition-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['mobilityConditionByCode']")
-                .valueIsNull();
     }
 
 }

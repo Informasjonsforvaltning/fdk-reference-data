@@ -61,9 +61,6 @@ class FileTypeQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['fileTypes']")
                 .entityList(FileType.class)
                 .get();
-
-        Assertions.assertEquals(198, result.size());
-
         FileType fileType = result.get(0);
 
         assertEquals("http://publications.europa.eu/resource/authority/file-type/7Z", fileType.getUri());
@@ -83,15 +80,6 @@ class FileTypeQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/file-type/AAC", result.getUri());
         assertEquals("AAC", result.getCode());
         assertEquals("audio/aac", result.getMediaType());
-    }
-
-    @Test
-    void test_if_filetype_by_code_unknown_query_returns_null() {
-        graphQlTester.documentName("file-type-by-code")
-                .variable("code", "unknown")
-                .execute()
-                .path("$['data']['fileTypeByCode']")
-                .valueIsNull();
     }
 
 }

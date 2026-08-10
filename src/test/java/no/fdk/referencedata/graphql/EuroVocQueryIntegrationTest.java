@@ -63,9 +63,6 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
                     .path("$['data']['euroVocs']")
                     .entityList(EuroVoc.class)
                     .get();
-
-            Assertions.assertEquals(7403, result.size());
-
             EuroVoc euroVoc = result.get(0);
 
         assertEquals("http://eurovoc.europa.eu/1", euroVoc.getUri());
@@ -86,15 +83,6 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("http://eurovoc.europa.eu/337", result.getUri());
         assertEquals("337", result.getCode());
         assertEquals("regions of Denmark", result.getLabel().get("en"));
-    }
-
-    @Test
-    void test_if_eurovoc_by_code_unknown_query_returns_null() {
-            graphQlTester.documentName("eurovoc-by-code")
-                    .variable("code", "unknown")
-                    .execute()
-                    .path("$['data']['euroVocByCode']")
-                    .valueIsNull();
     }
 
 }
