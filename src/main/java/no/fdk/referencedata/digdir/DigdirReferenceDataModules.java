@@ -2,7 +2,6 @@ package no.fdk.referencedata.digdir;
 
 import lombok.RequiredArgsConstructor;
 import no.fdk.referencedata.core.ReferenceDataModule;
-import no.fdk.referencedata.core.ScheduleSpec;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectService;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
@@ -39,7 +38,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule conceptSubjectModule() {
-        return new ReferenceDataModule("concept-subject", ScheduleSpec.of(CRON_CONCEPT_SUBJECT), conceptSubjectService);
+        return new ReferenceDataModule("concept-subject", conceptSubjectService);
     }
 
     @Scheduled(cron = CRON_CONCEPT_SUBJECT)
@@ -49,7 +48,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule evidenceTypeModule() {
-        return new ReferenceDataModule("evidence-type", ScheduleSpec.of(CRON_EVIDENCE_TYPE), evidenceTypeService);
+        return new ReferenceDataModule("evidence-type", evidenceTypeService);
     }
 
     @Scheduled(cron = CRON_EVIDENCE_TYPE)
@@ -59,7 +58,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule serviceChannelTypeModule() {
-        return new ReferenceDataModule("service-channel-type", ScheduleSpec.of(CRON_SERVICE_CHANNEL_TYPE), serviceChannelTypeService);
+        return new ReferenceDataModule("service-channel-type", serviceChannelTypeService);
     }
 
     @Scheduled(cron = CRON_SERVICE_CHANNEL_TYPE)
@@ -69,7 +68,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule roleTypeModule() {
-        return new ReferenceDataModule("role-type", ScheduleSpec.of(CRON_ROLE_TYPE), roleTypeService);
+        return new ReferenceDataModule("role-type", roleTypeService);
     }
 
     @Scheduled(cron = CRON_ROLE_TYPE)
@@ -79,7 +78,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule audienceTypeModule() {
-        return new ReferenceDataModule("audience-type", ScheduleSpec.of(CRON_AUDIENCE_TYPE), audienceTypeService);
+        return new ReferenceDataModule("audience-type", audienceTypeService);
     }
 
     @Scheduled(cron = CRON_AUDIENCE_TYPE)
@@ -89,7 +88,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule relationshipWithSourceTypeModule() {
-        return new ReferenceDataModule("relationship-with-source-type", ScheduleSpec.of(CRON_RELATIONSHIP_WITH_SOURCE_TYPE), relationshipWithSourceTypeService);
+        return new ReferenceDataModule("relationship-with-source-type", relationshipWithSourceTypeService);
     }
 
     @Scheduled(cron = CRON_RELATIONSHIP_WITH_SOURCE_TYPE)
@@ -99,7 +98,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule qualityDimensionModule() {
-        return new ReferenceDataModule("quality-dimension", ScheduleSpec.of(CRON_QUALITY_DIMENSION), qualityDimensionService);
+        return new ReferenceDataModule("quality-dimension", qualityDimensionService);
     }
 
     @Scheduled(cron = CRON_QUALITY_DIMENSION)
@@ -109,7 +108,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule legalResourceTypeModule() {
-        return new ReferenceDataModule("legal-resource-type", ScheduleSpec.of(CRON_LEGAL_RESOURCE_TYPE), legalResourceTypeService);
+        return new ReferenceDataModule("legal-resource-type", legalResourceTypeService);
     }
 
     @Scheduled(cron = CRON_LEGAL_RESOURCE_TYPE)

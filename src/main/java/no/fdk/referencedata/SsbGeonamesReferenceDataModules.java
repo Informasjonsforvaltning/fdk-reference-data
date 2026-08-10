@@ -2,7 +2,6 @@ package no.fdk.referencedata;
 
 import lombok.RequiredArgsConstructor;
 import no.fdk.referencedata.core.ReferenceDataModule;
-import no.fdk.referencedata.core.ScheduleSpec;
 import no.fdk.referencedata.geonames.GeonamesService;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetService;
 import no.fdk.referencedata.iana.mediatype.MediaTypeService;
@@ -33,7 +32,7 @@ public class SsbGeonamesReferenceDataModules {
 
     @Bean
     public ReferenceDataModule mediaTypeModule() {
-        return new ReferenceDataModule("media-type", ScheduleSpec.of(CRON_MEDIA_TYPE), mediaTypeService);
+        return new ReferenceDataModule("media-type", mediaTypeService);
     }
 
     @Scheduled(cron = CRON_MEDIA_TYPE)
@@ -43,7 +42,7 @@ public class SsbGeonamesReferenceDataModules {
 
     @Bean
     public ReferenceDataModule losModule() {
-        return new ReferenceDataModule("los", ScheduleSpec.of(CRON_LOS), losService);
+        return new ReferenceDataModule("los", losService);
     }
 
     @Scheduled(cron = CRON_LOS)
@@ -53,7 +52,7 @@ public class SsbGeonamesReferenceDataModules {
 
     @Bean
     public ReferenceDataModule fylkeOrganisasjonModule() {
-        return new ReferenceDataModule("fylke-organisasjon", ScheduleSpec.of(CRON_FYLKE_ORGANISASJON), fylkeOrganisasjonService);
+        return new ReferenceDataModule("fylke-organisasjon", fylkeOrganisasjonService);
     }
 
     @Scheduled(cron = CRON_FYLKE_ORGANISASJON)
@@ -63,7 +62,7 @@ public class SsbGeonamesReferenceDataModules {
 
     @Bean
     public ReferenceDataModule kommuneOrganisasjonModule() {
-        return new ReferenceDataModule("kommune-organisasjon", ScheduleSpec.of(CRON_KOMMUNE_ORGANISASJON), kommuneOrganisasjonService);
+        return new ReferenceDataModule("kommune-organisasjon", kommuneOrganisasjonService);
     }
 
     @Scheduled(cron = CRON_KOMMUNE_ORGANISASJON)
@@ -73,7 +72,7 @@ public class SsbGeonamesReferenceDataModules {
 
     @Bean
     public ReferenceDataModule enhetModule() {
-        return new ReferenceDataModule("administrative-enhet", ScheduleSpec.of(CRON_ENHET), enhetService);
+        return new ReferenceDataModule("administrative-enhet", enhetService);
     }
 
     @Scheduled(cron = CRON_ENHET)
@@ -83,7 +82,7 @@ public class SsbGeonamesReferenceDataModules {
 
     @Bean
     public ReferenceDataModule geonamesModule() {
-        return new ReferenceDataModule("geonames", ScheduleSpec.of(CRON_GEONAMES), geonamesService);
+        return new ReferenceDataModule("geonames", geonamesService);
     }
 
     @Scheduled(cron = CRON_GEONAMES)
