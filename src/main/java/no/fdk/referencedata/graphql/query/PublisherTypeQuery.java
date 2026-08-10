@@ -1,35 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.adms.publishertype.PublisherType;
 import no.fdk.referencedata.adms.publishertype.PublisherTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
+@RequiredArgsConstructor
 public class PublisherTypeQuery {
 
     private final PublisherTypeService publisherTypeService;
-
-    @Autowired
-    public PublisherTypeQuery(PublisherTypeService publisherTypeService) {
-        this.publisherTypeService = publisherTypeService;
-    }
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<PublisherType> publisherTypes() {
-        return publisherTypeService.getAll().stream()
-                .sorted(Comparator.comparing(PublisherType::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(publisherTypeService.getAll(), PublisherType::getUri);
     }
 
     @QueryMapping
     public PublisherType publisherTypeByCode(@Argument String code) {
-        return publisherTypeService.getByCode(code).orElse(null);
+        return support.byCode(publisherTypeService::getByCode, code);
     }
 }

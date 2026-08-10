@@ -1,26 +1,24 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubject;
 import no.fdk.referencedata.digdir.conceptsubjects.ConceptSubjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class ConceptSubjectQuery {
 
-    @Autowired
-    private ConceptSubjectRepository conceptSubjectRepository;
+    private final ConceptSubjectRepository conceptSubjectRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<ConceptSubject> conceptSubjects() {
-        return StreamSupport.stream(conceptSubjectRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(ConceptSubject::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(conceptSubjectRepository, ConceptSubject::getUri);
     }
+
 }

@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.mainactivity.MainActivity;
 import no.fdk.referencedata.eu.mainactivity.MainActivityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class MainActivityQuery {
 
-    @Autowired
-    private MainActivityRepository mainActivityRepository;
+    private final MainActivityRepository mainActivityRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<MainActivity> mainActivities() {
-        return StreamSupport.stream(mainActivityRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(MainActivity::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(mainActivityRepository, MainActivity::getUri);
     }
 
     @QueryMapping
     public MainActivity mainActivityByCode(@Argument String code) {
-        return mainActivityRepository.findByCode(code).orElse(null);
+        return support.byCode(mainActivityRepository::findByCode, code);
     }
 }

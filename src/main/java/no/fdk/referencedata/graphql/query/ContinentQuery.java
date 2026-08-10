@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.continent.Continent;
 import no.fdk.referencedata.eu.continent.ContinentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class ContinentQuery {
 
-    @Autowired
-    private ContinentRepository continentRepository;
+    private final ContinentRepository continentRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<Continent> continents() {
-        return StreamSupport.stream(continentRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(Continent::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(continentRepository, Continent::getUri);
     }
 
     @QueryMapping
     public Continent continentByCode(@Argument String code) {
-        return continentRepository.findByCode(code).orElse(null);
+        return support.byCode(continentRepository::findByCode, code);
     }
 }

@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimension;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class QualityDimensionQuery {
 
-    @Autowired
-    private QualityDimensionRepository qualityDimensionRepository;
+    private final QualityDimensionRepository qualityDimensionRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<QualityDimension> qualityDimensions() {
-        return StreamSupport.stream(qualityDimensionRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(QualityDimension::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(qualityDimensionRepository, QualityDimension::getUri);
     }
 
     @QueryMapping
     public QualityDimension qualityDimensionByCode(@Argument String code) {
-        return qualityDimensionRepository.findByCode(code).orElse(null);
+        return support.byCode(qualityDimensionRepository::findByCode, code);
     }
 }

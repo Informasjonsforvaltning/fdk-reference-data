@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.distributiontype.DistributionType;
 import no.fdk.referencedata.eu.distributiontype.DistributionTypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class DistributionTypeQuery {
 
-    @Autowired
-    private DistributionTypeRepository distributionTypeRepository;
+    private final DistributionTypeRepository distributionTypeRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<DistributionType> distributionTypes() {
-        return StreamSupport.stream(distributionTypeRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(DistributionType::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(distributionTypeRepository, DistributionType::getUri);
     }
 
     @QueryMapping
     public DistributionType distributionTypeByCode(@Argument String code) {
-        return distributionTypeRepository.findByCode(code).orElse(null);
+        return support.byCode(distributionTypeRepository::findByCode, code);
     }
 }

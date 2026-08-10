@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatus;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class ConceptStatusQuery {
 
-    @Autowired
-    private ConceptStatusRepository conceptStatusRepository;
+    private final ConceptStatusRepository conceptStatusRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<ConceptStatus> conceptStatuses() {
-        return StreamSupport.stream(conceptStatusRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(ConceptStatus::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(conceptStatusRepository, ConceptStatus::getUri);
     }
 
     @QueryMapping
     public ConceptStatus conceptStatusByCode(@Argument String code) {
-        return conceptStatusRepository.findByCode(code).orElse(null);
+        return support.byCode(conceptStatusRepository::findByCode, code);
     }
 }

@@ -1,35 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.apispecification.ApiSpecification;
 import no.fdk.referencedata.apispecification.ApiSpecificationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
+@RequiredArgsConstructor
 public class ApiSpecificationQuery {
 
     private final ApiSpecificationService apiSpecificationService;
-
-    @Autowired
-    public ApiSpecificationQuery(ApiSpecificationService apiSpecificationService) {
-        this.apiSpecificationService = apiSpecificationService;
-    }
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<ApiSpecification> apiSpecifications() {
-        return apiSpecificationService.getAll().stream()
-                .sorted(Comparator.comparing(ApiSpecification::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(apiSpecificationService.getAll(), ApiSpecification::getUri);
     }
 
     @QueryMapping
     public ApiSpecification apiSpecificationByCode(@Argument String code) {
-        return apiSpecificationService.getByCode(code).orElse(null);
+        return support.byCode(apiSpecificationService::getByCode, code);
     }
 }
