@@ -47,4 +47,22 @@ class CodeListApiTest {
         assertFalse(api.supportsByCode());
         assertTrue(api.findByCode("A").isEmpty());
     }
+
+    @Test
+    void readOnlyPreservesOrderAndDisablesHarvest() {
+        CodeListApi<Item> api = CodeListApis.readOnly(
+                "/test/items",
+                CodeListRepository.of(
+                        () -> List.of(new Item("c", "C"), new Item("a", "A")),
+                        code -> Optional.empty()),
+                null,
+                list -> list,
+                null,
+                Item.class);
+
+        assertEquals(List.of("C", "A"), api.findAllSorted().stream().map(Item::code).toList());
+        assertFalse(api.supportsHarvestPost());
+        assertFalse(api.supportsRdf());
+        assertTrue(api.supportsByCode());
+    }
 }

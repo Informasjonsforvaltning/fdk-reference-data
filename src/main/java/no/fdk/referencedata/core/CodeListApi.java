@@ -22,9 +22,11 @@ public record CodeListApi<T>(
 ) {
 
     public List<T> findAllSorted() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false)
-                .sorted(listSort)
-                .collect(Collectors.toList());
+        var stream = StreamSupport.stream(repository.findAll().spliterator(), false);
+        if (listSort != null) {
+            stream = stream.sorted(listSort);
+        }
+        return stream.collect(Collectors.toList());
     }
 
     public Object wrapAllSorted() {

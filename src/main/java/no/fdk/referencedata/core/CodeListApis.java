@@ -68,6 +68,25 @@ public final class CodeListApis {
                 byCodePathVariable);
     }
 
+    public static <T> CodeListApi<T> readOnly(
+            String restPath,
+            CodeListRepository<T> repository,
+            Comparator<T> listSort,
+            Function<List<T>, Object> wrapList,
+            Function<RDFFormat, String> rdfProvider,
+            Class<T> itemType) {
+        return new CodeListApi<>(
+                restPath,
+                repository,
+                listSort,
+                wrapList,
+                itemType,
+                rdfProvider,
+                false,
+                true,
+                "code");
+    }
+
     public static <T> Comparator<T> sortByUri(Function<T, String> uriExtractor) {
         return Comparator.comparing(uriExtractor);
     }
