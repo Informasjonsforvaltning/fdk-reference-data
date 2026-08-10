@@ -7,11 +7,6 @@ import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 public class CurrencyService implements HarvestableReferenceData {
     private final String dbSourceID = "currency-source";
@@ -35,17 +30,6 @@ public class CurrencyService implements HarvestableReferenceData {
     @Override
     public boolean firstTime() {
         return support.firstTime(currencyRepository);
-    }
-
-    public Optional<Currency> getCurrency(String code) {
-        return currencyRepository.findByCode(code);
-    }
-
-    public Currencies getCurrencies() {
-        return Currencies.builder().currencies(
-                currencyRepository.findAll().stream()
-                        .sorted(Comparator.comparing(Currency::getUri))
-                        .collect(Collectors.toList())).build();
     }
 
     public String getRdf(RDFFormat rdfFormat) {
