@@ -38,7 +38,7 @@ public class CodeListRestHandler {
     }
 
     public ServerResponse harvest(ReferenceDataModule module) {
-        if (!module.api().supportsHarvestPost()) {
+        if (!module.api().supportsHarvestPost() || !module.hasHarvestableService()) {
             return ServerResponse.notFound().build();
         }
         module.service().harvestAndSave();

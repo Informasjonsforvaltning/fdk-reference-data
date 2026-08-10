@@ -18,7 +18,7 @@ public class Scheduler {
 
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
-        registry.all().stream()
+        registry.harvestable().stream()
                 .filter(module -> module.service().firstTime())
                 .forEach(module -> module.service().harvestAndSave());
     }

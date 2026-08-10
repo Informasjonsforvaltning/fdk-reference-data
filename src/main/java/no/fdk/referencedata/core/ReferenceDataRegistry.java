@@ -22,4 +22,10 @@ public class ReferenceDataRegistry {
                 .filter(ReferenceDataModule::hasApi)
                 .toList();
     }
+
+    public List<ReferenceDataModule> harvestable() {
+        return modules.stream()
+                .filter(ReferenceDataModule::hasHarvestableService)
+                .toList();
+    }
 }
