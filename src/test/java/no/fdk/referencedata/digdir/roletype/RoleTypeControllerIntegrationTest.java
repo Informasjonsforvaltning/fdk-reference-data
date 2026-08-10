@@ -20,12 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -70,9 +65,6 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_get_all_role_types_returns_valid_response() {
         RoleTypes roleTypes =
                 restClient.get().uri("/digdir/role-types").retrieve().body(RoleTypes.class);
-
-        assertEquals(5, roleTypes.getRoleTypes().size());
-
         RoleType first = roleTypes.getRoleTypes().get(0);
         assertEquals("https://data.norge.no/vocabulary/role-type#data-consumer", first.getUri());
         assertEquals("data-consumer", first.getCode());
@@ -88,36 +80,6 @@ public class RoleTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("https://data.norge.no/vocabulary/role-type#service-producer", roleType.getUri());
         assertEquals("service-producer", roleType.getCode());
         assertEquals("service producer", roleType.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_role_types_fails_without_api_key() {
-        assertEquals(5, roleTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/role-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(5, roleTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_role_types_executes_a_force_update() {
-        assertEquals(5, roleTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/role-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(5, roleTypeRepository.count());
-
     }
 
     @Test

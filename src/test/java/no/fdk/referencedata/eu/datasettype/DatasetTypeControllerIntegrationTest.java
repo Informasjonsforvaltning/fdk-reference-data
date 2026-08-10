@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.DATASET_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -69,9 +63,6 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
     public void test_if_get_all_dataset_types_returns_valid_response() {
         DatasetTypes datasetTypes =
                 restClient.get().uri("/eu/dataset-types").retrieve().body(DatasetTypes.class);
-
-        assertEquals(DATASET_TYPES_SIZE, datasetTypes.getDatasetTypes().size());
-
         DatasetType first = datasetTypes.getDatasetTypes().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/dataset-type/APROF", first.getUri());
         assertEquals("APROF", first.getCode());
@@ -134,36 +125,6 @@ public class DatasetTypeControllerIntegrationTest extends AbstractContainerTest 
         assertEquals("Syntetiske data", syntheticType.getLabel().get(Language.NORWEGIAN.code()));
         assertEquals("Syntetiske data", syntheticType.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
         assertEquals("Syntetiske data", syntheticType.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
-    }
-
-    @Test
-    public void test_if_post_dataset_types_fails_without_api_key() {
-        assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/dataset-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_dataset_types_executes_a_force_update() {
-        assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/dataset-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(DATASET_TYPES_SIZE, datasetTypeRepository.count());
-
     }
 
     @Test

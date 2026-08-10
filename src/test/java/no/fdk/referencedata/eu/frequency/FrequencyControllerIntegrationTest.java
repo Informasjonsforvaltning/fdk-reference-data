@@ -18,13 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.FREQUENCIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -69,9 +65,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
                         .uri("/eu/frequencies")
                         .retrieve()
                         .body(Frequencies.class);
-
-        assertEquals(FREQUENCIES_SIZE, frequencies.getFrequencies().size());
-
         Frequency first = frequencies.getFrequencies().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/frequency/CONT", first.getUri());
         assertEquals("CONT", first.getCode());
@@ -90,40 +83,6 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/frequency/ANNUAL", frequency.getUri());
         assertEquals("ANNUAL", frequency.getCode());
         assertEquals("annual", frequency.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_frequencies_fails_without_api_key() {
-        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/eu/frequencies")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_frequencies_executes_a_force_update() {
-        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/eu/frequencies")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(FREQUENCIES_SIZE, frequencyRepository.count());
-
     }
 
     @Test

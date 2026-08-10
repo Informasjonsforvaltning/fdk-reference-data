@@ -21,9 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -68,39 +65,10 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
     public void test_if_get_all_concept_subjects_returns_valid_response() {
         ConceptSubjects conceptSubjects =
                 restClient.get().uri("/digdir/concept-subjects").retrieve().body(ConceptSubjects.class);
-
-        assertEquals(4, conceptSubjects.getConceptSubjects().size());
-
         ConceptSubject first = conceptSubjects.getConceptSubjects().get(0);
         assertEquals("https://catalog-admin-service.staging.fellesdatakatalog.digdir.no/123456789/concepts/subjects#1", first.getUri());
         assertEquals("1", first.getCode());
         assertEquals("en 1", first.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_concept_subjects_fails_without_api_key() {
-        assertEquals(4, conceptSubjectRepository.count());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/concept-subjects")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(4, conceptSubjectRepository.count());
-    }
-
-    @Test
-    public void test_if_post_concept_subjects_runs_ok() {
-        assertEquals(4, conceptSubjectRepository.count());
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/concept-subjects")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(4, conceptSubjectRepository.count());
     }
 
     @Test

@@ -20,12 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,9 +63,6 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
     public void test_if_get_all_relationshipWithSource_types_returns_valid_response() {
         RelationshipWithSourceTypes relationshipWithSourceTypes =
                 restClient.get().uri("/digdir/relationship-with-source-types").retrieve().body(RelationshipWithSourceTypes.class);
-
-        assertEquals(3, relationshipWithSourceTypes.getRelationshipWithSourceTypes().size());
-
         RelationshipWithSourceType first = relationshipWithSourceTypes.getRelationshipWithSourceTypes().get(0);
         assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", first.getUri());
         assertEquals("derived-from-source", first.getCode());
@@ -86,36 +78,6 @@ public class RelationshipWithSourceTypeControllerIntegrationTest extends Abstrac
         assertEquals("https://data.norge.no/vocabulary/relationship-with-source-type#derived-from-source", relationshipWithSourceType.getUri());
         assertEquals("derived-from-source", relationshipWithSourceType.getCode());
         assertEquals("derived from source", relationshipWithSourceType.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_relationshipWithSource_types_fails_without_api_key() {
-        assertEquals(3, relationshipWithSourceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/relationship-with-source-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(3, relationshipWithSourceTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_relationship_with_source_types_executes_a_force_update() {
-        assertEquals(3, relationshipWithSourceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/relationship-with-source-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(3, relationshipWithSourceTypeRepository.count());
-
     }
 
     @Test

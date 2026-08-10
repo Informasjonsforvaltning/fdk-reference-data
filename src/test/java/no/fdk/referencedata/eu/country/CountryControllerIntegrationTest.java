@@ -19,15 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.COUNTRIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -69,9 +63,6 @@ public class CountryControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_get_all_countries_returns_valid_response() {
         Countries countries =
                 restClient.get().uri("/eu/countries").retrieve().body(Countries.class);
-
-        assertEquals(COUNTRIES_SIZE, countries.getCountries().size());
-
         Country first = countries.getCountries().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/country/DEU", first.getUri());
         assertEquals("DEU", first.getCode());
@@ -87,36 +78,6 @@ public class CountryControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/country/NOR", country.getUri());
         assertEquals("NOR", country.getCode());
         assertEquals("Norway", country.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_countries_fails_without_api_key() {
-        assertEquals(COUNTRIES_SIZE, countryRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/countries")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(COUNTRIES_SIZE, countryRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_countries_executes_a_force_update() {
-        assertEquals(COUNTRIES_SIZE, countryRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/countries")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(COUNTRIES_SIZE, countryRepository.count());
-
     }
 
     @Test

@@ -23,5 +23,15 @@ public final class LocalHarvestFixtures {
     public static final int PLANNED_AVAILABILITY_SIZE = 4;
     public static final int LEGAL_RESOURCE_TYPES_SIZE = 2;
     public static final int QUALITY_DIMENSIONS_SIZE = 11;
+    public static final int AUDIENCE_TYPES_SIZE = 2;
+    public static final int EVIDENCE_TYPES_SIZE = 4;
+    public static final int ROLE_TYPES_SIZE = 5;
+    public static final int SERVICE_CHANNEL_TYPES_SIZE = 11;
+    public static final int RELATIONSHIP_WITH_SOURCE_TYPES_SIZE = 3;
+    public static final int CONCEPT_SUBJECTS_SIZE = 4;
+    public static final int FILE_TYPES_SIZE = 198;
+    public static final int MOBILITY_THEMES_SIZE = 123;
+    public static final int MOBILITY_DATA_STANDARDS_SIZE = 15;
+    public static final int MOBILITY_CONDITIONS_SIZE = 10;
 
 }

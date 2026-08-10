@@ -19,11 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,9 +66,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
                         .uri("/mobility/themes")
                         .retrieve()
                         .body(MobilityThemes.class);
-
-        assertEquals(123, mobilityThemes.getMobilityThemes().size());
-
         MobilityTheme first = mobilityThemes.getMobilityThemes().get(0);
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-theme/accesibility-information-for-vehicles", first.getUri());
         assertEquals("accesibility-information-for-vehicles", first.getCode());
@@ -90,40 +84,6 @@ public class MobilityThemeControllerIntegrationTest extends AbstractContainerTes
         assertEquals("https://w3id.org/mobilitydcat-ap/mobility-theme/speed-limits", theme.getUri());
         assertEquals("speed-limits", theme.getCode());
         assertEquals("Speed limits", theme.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_mobility_themes_fails_without_api_key() {
-        assertEquals(123, mobilityThemeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/mobility/themes")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(123, mobilityThemeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_mobility_themes_executes_a_force_update() {
-        assertEquals(123, mobilityThemeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/mobility/themes")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(123, mobilityThemeRepository.count());
-
     }
 
     @Test

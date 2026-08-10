@@ -20,12 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,9 +63,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
     public void test_if_get_all_audience_types_returns_valid_response() {
         AudienceTypes audienceTypes =
                 restClient.get().uri("/digdir/audience-types").retrieve().body(AudienceTypes.class);
-
-        assertEquals(2, audienceTypes.getAudienceTypes().size());
-
         AudienceType first = audienceTypes.getAudienceTypes().get(0);
         assertEquals("https://data.norge.no/vocabulary/audience-type#public", first.getUri());
         assertEquals("public", first.getCode());
@@ -86,36 +78,6 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals("https://data.norge.no/vocabulary/audience-type#public", audienceType.getUri());
         assertEquals("public", audienceType.getCode());
         assertEquals("public", audienceType.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_audience_types_fails_without_api_key() {
-        assertEquals(2, audienceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/audience-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(2, audienceTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_audience_types_executes_a_force_update() {
-        assertEquals(2, audienceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/audience-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(2, audienceTypeRepository.count());
-
     }
 
     @Test

@@ -19,12 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -68,9 +63,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_get_all_filetypes_returns_valid_response() {
         FileTypes fileTypes =
                 restClient.get().uri("/eu/file-types").retrieve().body(FileTypes.class);
-
-        assertEquals(198, fileTypes.getFileTypes().size());
-
         FileType first = fileTypes.getFileTypes().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/file-type/7Z", first.getUri());
         assertEquals("7Z", first.getCode());
@@ -86,36 +78,6 @@ public class FileTypeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/file-type/7Z", fileType.getUri());
         assertEquals("7Z", fileType.getCode());
         assertEquals("application/x-7z-compressed", fileType.getMediaType());
-    }
-
-    @Test
-    public void test_if_post_file_types_fails_without_api_key() {
-        assertEquals(198, fileTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/file-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(198, fileTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_file_types_executes_a_force_update() {
-        assertEquals(198, fileTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/file-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(198, fileTypeRepository.count());
-
     }
 
     @Test

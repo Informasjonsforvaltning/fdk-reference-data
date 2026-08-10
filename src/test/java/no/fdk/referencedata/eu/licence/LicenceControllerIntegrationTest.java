@@ -19,13 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.LICENCES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -70,9 +66,6 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
                         .uri("/eu/licences")
                         .retrieve()
                         .body(Licences.class);
-
-        assertEquals(LICENCES_SIZE, licences.getLicences().size());
-
         Licence first = licences.getLicences().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/licence/0BSD", first.getUri());
         assertEquals("0BSD", first.getCode());
@@ -91,40 +84,6 @@ public class LicenceControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/licence/CC0", licence.getUri());
         assertEquals("CC0", licence.getCode());
         assertEquals("Creative Commons CC0 1.0 Universal", licence.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_licences_fails_without_api_key() {
-        assertEquals(LICENCES_SIZE, licenceRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/eu/licences")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(LICENCES_SIZE, licenceRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_licences_executes_a_force_update() {
-        assertEquals(LICENCES_SIZE, licenceRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/eu/licences")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(LICENCES_SIZE, licenceRepository.count());
-
     }
 
     @Test

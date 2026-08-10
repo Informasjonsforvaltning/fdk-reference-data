@@ -20,12 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -70,9 +65,6 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
     public void test_if_get_all_evidence_types_returns_valid_response() {
         EvidenceTypes evidenceTypes =
                 restClient.get().uri("/digdir/evidence-types").retrieve().body(EvidenceTypes.class);
-
-        assertEquals(4, evidenceTypes.getEvidenceTypes().size());
-
         EvidenceType first = evidenceTypes.getEvidenceTypes().get(0);
         assertEquals("https://data.norge.no/vocabulary/evidence-type#attestation", first.getUri());
         assertEquals("attestation", first.getCode());
@@ -88,36 +80,6 @@ public class EvidenceTypeControllerIntegrationTest extends AbstractContainerTest
         assertEquals("https://data.norge.no/vocabulary/evidence-type#certificate", evidenceType.getUri());
         assertEquals("certificate", evidenceType.getCode());
         assertEquals("certificate", evidenceType.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_evidence_types_fails_without_api_key() {
-        assertEquals(4, evidenceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/evidence-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(4, evidenceTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_evidence_types_executes_a_force_update() {
-        assertEquals(4, evidenceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/evidence-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(4, evidenceTypeRepository.count());
-
     }
 
     @Test

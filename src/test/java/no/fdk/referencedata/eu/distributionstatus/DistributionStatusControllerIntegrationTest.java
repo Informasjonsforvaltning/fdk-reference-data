@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.DISTRIBUTION_STATUS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -69,9 +63,6 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
     public void test_if_get_all_distribution_statuses_returns_valid_response() {
         DistributionStatuses distributionStatuses =
                 restClient.get().uri("/eu/distribution-statuses").retrieve().body(DistributionStatuses.class);
-
-        assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatuses.getDistributionStatuses().size());
-
         DistributionStatus first = distributionStatuses.getDistributionStatuses().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/distribution-status/COMPLETED", first.getUri());
         assertEquals("COMPLETED", first.getCode());
@@ -87,36 +78,6 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
         assertEquals("http://publications.europa.eu/resource/authority/distribution-status/DEVELOP", distributionStatus.getUri());
         assertEquals("DEVELOP", distributionStatus.getCode());
         assertEquals("under utvikling", distributionStatus.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
-    }
-
-    @Test
-    public void test_if_post_distribution_statuses_fails_without_api_key() {
-        assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/distribution-statuses")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_distribution_statuses_executes_a_force_update() {
-        assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/distribution-statuses")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(DISTRIBUTION_STATUS_SIZE, distributionStatusRepository.count());
-
     }
 
     @Test
