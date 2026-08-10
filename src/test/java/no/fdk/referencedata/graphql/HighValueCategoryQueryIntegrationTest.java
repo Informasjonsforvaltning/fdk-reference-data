@@ -1,16 +1,10 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategory;
-import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryRepository;
-import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryService;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +15,6 @@ import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -34,21 +27,14 @@ import static org.mockito.Mockito.mock;
 class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
-    private HighValueCategoryRepository highValueCategoryRepository;
-
-    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+    private ReferenceDataRegistry registry;
 
     @Autowired
     private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
-        HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                LocalHarvesters.highValueCategory(),
-                highValueCategoryRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        highValueCategoryService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "high-value-category");
     }
 
     @Test

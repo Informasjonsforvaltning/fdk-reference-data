@@ -1,15 +1,10 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
+import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.eu.language.LanguageRepository;
-import no.fdk.referencedata.eu.language.LanguageService;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.FindByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchRequest;
@@ -18,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.graphql.test.autoconfigure.tester.AutoConfigureGraphQlTester;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.graphql.test.tester.GraphQlTester;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -27,7 +23,6 @@ import java.util.stream.Stream;
 
 import static no.fdk.referencedata.search.SearchAlternative.EU_LANGUAGES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -35,13 +30,12 @@ import static org.mockito.Mockito.mock;
                 "scheduling.enabled=false",
         })
 @AutoConfigureGraphQlTester
+@Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 class LanguageSearchableIntegrationTest extends AbstractContainerTest {
 
     @Autowired
-    private LanguageRepository languageRepository;
-
-    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+    private ReferenceDataRegistry registry;
 
     @Autowired
     private GraphQlTester graphQlTester;
@@ -50,12 +44,7 @@ class LanguageSearchableIntegrationTest extends AbstractContainerTest {
 
     @BeforeEach
     public void setup() {
-        LanguageService languageService = new LanguageService(
-                LocalHarvesters.language(),
-                languageRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        languageService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "language");
     }
 
     @Test

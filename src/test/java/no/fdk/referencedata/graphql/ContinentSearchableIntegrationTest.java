@@ -1,18 +1,10 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.eu.continent.ContinentRepository;
-import no.fdk.referencedata.eu.continent.ContinentService;
-import no.fdk.referencedata.eu.country.CountryRepository;
-import no.fdk.referencedata.eu.country.CountryService;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.FindByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
 import no.fdk.referencedata.search.SearchRequest;
@@ -31,7 +23,6 @@ import java.util.stream.Stream;
 
 import static no.fdk.referencedata.search.SearchAlternative.EU_LOCATIONS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -44,12 +35,7 @@ import static org.mockito.Mockito.mock;
 class ContinentSearchableIntegrationTest extends AbstractContainerTest {
 
     @Autowired
-    private ContinentRepository continentRepository;
-
-    @Autowired
-    private CountryRepository countryRepository;
-
-    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+    private ReferenceDataRegistry registry;
 
     @Autowired
     private GraphQlTester graphQlTester;
@@ -58,19 +44,7 @@ class ContinentSearchableIntegrationTest extends AbstractContainerTest {
 
     @BeforeEach
     public void setup() {
-        ContinentService continentService = new ContinentService(
-                LocalHarvesters.continent(),
-                continentRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        continentService.harvestAndSave();
-
-        CountryService countryService = new CountryService(
-                LocalHarvesters.country(),
-                countryRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        countryService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "continent", "country");
     }
 
     @Test

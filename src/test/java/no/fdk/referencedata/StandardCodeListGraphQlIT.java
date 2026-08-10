@@ -1,7 +1,6 @@
 package no.fdk.referencedata;
 
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.core.ReferenceDataModule;
 import no.fdk.referencedata.core.ReferenceDataRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInstance;
@@ -103,11 +102,7 @@ public class StandardCodeListGraphQlIT extends AbstractContainerTest {
     @BeforeEach
     void setup() {
         if (!harvested) {
-            for (ReferenceDataModule module : registry.harvestable()) {
-                if (CONTRACT_MODULE_IDS.contains(module.id())) {
-                    module.service().harvestAndSave();
-                }
-            }
+            HarvestTestSupport.harvest(registry, CONTRACT_MODULE_IDS);
             harvested = true;
         }
     }

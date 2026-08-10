@@ -1,17 +1,11 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceType;
-import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeRepository;
-import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeService;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -39,21 +32,14 @@ import static org.mockito.Mockito.mock;
 class RelationshipWithSourceTypeQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
-    private RelationshipWithSourceTypeRepository relationshipWithSourceTypeRepository;
-
-    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+    private ReferenceDataRegistry registry;
 
     @Autowired
     private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
-        RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                LocalHarvesters.relationshipWithSourceType(),
-                relationshipWithSourceTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        relationshipWithSourceTypeService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "relationship-with-source-type");
     }
 
     @Test

@@ -1,17 +1,11 @@
 package no.fdk.referencedata.graphql;
 
-import no.fdk.referencedata.LocalHarvesters;
-import no.fdk.referencedata.core.ReferenceDataServiceSupport;
-
-import no.fdk.referencedata.core.ReferenceDataWriter;
-
+import no.fdk.referencedata.HarvestTestSupport;
+import no.fdk.referencedata.core.ReferenceDataRegistry;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.evidencetype.EvidenceType;
-import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeRepository;
-import no.fdk.referencedata.digdir.evidencetype.EvidenceTypeService;
 import no.fdk.referencedata.eu.eurovoc.EuroVoc;
-import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
@@ -40,21 +33,14 @@ import static org.mockito.Mockito.mock;
 class EvidenceTypeQueryIntegrationTest extends AbstractContainerTest {
 
     @Autowired
-    private EvidenceTypeRepository evidenceTypeRepository;
-
-    private final RDFSourceRepository rdfSourceRepository = mock(RDFSourceRepository.class);
+    private ReferenceDataRegistry registry;
 
     @Autowired
     private GraphQlTester graphQlTester;
 
     @BeforeEach
     public void setup() {
-        EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                LocalHarvesters.evidenceType(),
-                evidenceTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
-
-        evidenceTypeService.harvestAndSave();
+        HarvestTestSupport.harvest(registry, "evidence-type");
     }
 
     @Test
