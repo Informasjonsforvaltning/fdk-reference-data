@@ -34,19 +34,12 @@ public class CodeListRestConfiguration {
         CodeListApi<?> api = module.api();
         String path = api.restPath();
 
-        RouterFunction<ServerResponse> routes;
-        if (api.supportsRdf()) {
-            routes = RouterFunctions.route(
-                            RequestPredicates.GET(path).and(CodeListRestHandler::acceptsTurtle),
-                            request -> handler.rdf(module))
-                    .andRoute(
-                            RequestPredicates.GET(path).and(CodeListRestHandler::acceptsJsonList),
-                            request -> handler.list(module));
-        } else {
-            routes = RouterFunctions.route(
-                    RequestPredicates.GET(path),
-                    request -> handler.list(module));
-        }
+        RouterFunction<ServerResponse> routes = RouterFunctions.route(
+                        RequestPredicates.GET(path).and(CodeListRestHandler::acceptsTurtle),
+                        request -> handler.rdf(module))
+                .andRoute(
+                        RequestPredicates.GET(path).and(CodeListRestHandler::acceptsJsonList),
+                        request -> handler.list(module));
 
         if (api.supportsHarvestPost()) {
             routes = routes.andRoute(RequestPredicates.POST(path), request -> handler.harvest(module));

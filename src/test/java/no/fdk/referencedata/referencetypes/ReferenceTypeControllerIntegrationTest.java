@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
@@ -59,5 +61,15 @@ public class ReferenceTypeControllerIntegrationTest extends AbstractContainerTes
         assertEquals("isRequiredBy", referenceType.getCode());
         assertEquals("Is required by", referenceType.getLabel().get(Language.ENGLISH.code()));
         assertEquals("Requires", referenceType.getInverseLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
+    public void test_if_turtle_accept_returns_not_acceptable() {
+        ResponseEntity<Void> response = restClient.get()
+                .uri("/reference-types")
+                .header("Accept", "text/turtle")
+                .exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
+
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, response.getStatusCode());
     }
 }
