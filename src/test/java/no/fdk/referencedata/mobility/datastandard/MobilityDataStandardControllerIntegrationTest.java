@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -54,7 +55,7 @@ public class MobilityDataStandardControllerIntegrationTest extends AbstractConta
                 .build();
 
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester(),
+                LocalHarvesters.mobilityDataStandard(),
                 mobilityDataStandardRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

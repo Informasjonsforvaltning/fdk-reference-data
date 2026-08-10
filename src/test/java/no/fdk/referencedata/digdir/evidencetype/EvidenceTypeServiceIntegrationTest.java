@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -37,7 +38,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_evidence_types() {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester(),
+                LocalHarvesters.evidenceType(),
                 evidenceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -70,7 +71,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         when(evidenceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new EvidenceTypeService(
-                new LocalEvidenceTypeHarvester(),
+                LocalHarvesters.evidenceType(),
                 evidenceTypeRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

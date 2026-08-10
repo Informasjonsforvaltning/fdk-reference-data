@@ -1,5 +1,7 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvestFixtures;
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +10,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategory;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryRepository;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryService;
-import no.fdk.referencedata.eu.highvaluecategories.LocalHighValueCategoryHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +45,7 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester(),
+                LocalHarvesters.highValueCategory(),
                 highValueCategoryRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -58,7 +59,7 @@ class HighValueCategoryQueryIntegrationTest extends AbstractContainerTest {
                 .path("$['data']['highValueCategories']")
                 .entityList(HighValueCategory.class);
 
-        result.hasSize(LocalHighValueCategoryHarvester.HIGH_VALUE_CATEGORIES_SIZE);
+        result.hasSize(LocalHarvestFixtures.HIGH_VALUE_CATEGORIES_SIZE);
 
         HighValueCategory category = result.get().get(0);
         assertEquals("http://data.europa.eu/bna/c_03ba8d92", category.getUri());

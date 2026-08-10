@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -9,10 +10,8 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.continent.ContinentRepository;
 import no.fdk.referencedata.eu.continent.ContinentService;
-import no.fdk.referencedata.eu.continent.LocalContinentHarvester;
 import no.fdk.referencedata.eu.country.CountryRepository;
 import no.fdk.referencedata.eu.country.CountryService;
-import no.fdk.referencedata.eu.country.LocalCountryHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.FindByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
@@ -60,14 +59,14 @@ class ContinentSearchableIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ContinentService continentService = new ContinentService(
-                new LocalContinentHarvester(),
+                LocalHarvesters.continent(),
                 continentRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
         continentService.harvestAndSave();
 
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester(),
+                LocalHarvesters.country(),
                 countryRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

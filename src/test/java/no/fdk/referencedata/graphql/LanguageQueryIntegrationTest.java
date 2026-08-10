@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.language.Language;
 import no.fdk.referencedata.eu.language.LanguageRepository;
 import no.fdk.referencedata.eu.language.LanguageService;
-import no.fdk.referencedata.eu.language.LocalLanguageHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.eu.language.LocalLanguageHarvester.LANGUAGES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LANGUAGES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -44,7 +44,7 @@ class LanguageQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         LanguageService languageService = new LanguageService(
-                new LocalLanguageHarvester(),
+                LocalHarvesters.language(),
                 languageRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

@@ -1,12 +1,13 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester.DISTRIBUTION_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.DISTRIBUTION_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,7 +16,7 @@ public class DistributionTypeHarvesterTest {
 
     @Test
     public void test_fetch_distribution_types() {
-        DistributionTypeHarvester harvester = new LocalDistributionTypeHarvester();
+        DistributionTypeHarvester harvester = LocalHarvesters.distributionType();
 
         assertNotNull(harvester.getSource());
         assertEquals("distribution-types-sparql-result.ttl", harvester.getSource().getFilename());

@@ -1,12 +1,12 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.digdir.roletype.LocalRoleTypeHarvester;
 import no.fdk.referencedata.digdir.roletype.RoleType;
 import no.fdk.referencedata.digdir.roletype.RoleTypeRepository;
 import no.fdk.referencedata.digdir.roletype.RoleTypeService;
@@ -48,7 +48,7 @@ class RoleTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         RoleTypeService roleTypeService = new RoleTypeService(
-                new LocalRoleTypeHarvester(),
+                LocalHarvesters.roleType(),
                 roleTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

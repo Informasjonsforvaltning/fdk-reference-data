@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -9,7 +10,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceType;
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeRepository;
 import no.fdk.referencedata.digdir.legalresourcetype.LegalResourceTypeService;
-import no.fdk.referencedata.digdir.legalresourcetype.LocalLegalResourceTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.digdir.legalresourcetype.LocalLegalResourceTypeHarvester.LEGAL_RESOURCE_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LEGAL_RESOURCE_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -50,7 +50,7 @@ class LegalResourceTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester(),
+                LocalHarvesters.legalResourceType(),
                 legalResourceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

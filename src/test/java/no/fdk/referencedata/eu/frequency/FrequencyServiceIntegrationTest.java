@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.frequency;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester.FREQUENCIES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.FREQUENCIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         FrequencyService frequencyService = new FrequencyService(
-                new LocalFrequencyHarvester(),
+                LocalHarvesters.frequency(),
                 frequencyRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -46,7 +47,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_frequencies() {
         FrequencyService frequencyService = new FrequencyService(
-                new LocalFrequencyHarvester(),
+                LocalHarvesters.frequency(),
                 frequencyRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -79,7 +80,7 @@ public class FrequencyServiceIntegrationTest extends AbstractContainerTest {
         when(frequencyRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new FrequencyService(
-                new LocalFrequencyHarvester(),
+                LocalHarvesters.frequency(),
                 frequencyRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

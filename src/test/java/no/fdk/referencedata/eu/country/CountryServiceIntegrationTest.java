@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.country.LocalCountryHarvester.COUNTRIES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.COUNTRIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_countries() {
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester(),
+                LocalHarvesters.country(),
                 countryRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -69,7 +70,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
         when(countryRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new CountryService(
-                new LocalCountryHarvester(),
+                LocalHarvesters.country(),
                 countryRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

@@ -1,12 +1,12 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
-import no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimension;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionRepository;
 import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionService;
@@ -23,7 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester.QUALITY_DIMENSIONS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -50,7 +50,7 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
-                new LocalQualityDimensionHarvester(),
+                LocalHarvesters.qualityDimension(),
                 qualityDimensionRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

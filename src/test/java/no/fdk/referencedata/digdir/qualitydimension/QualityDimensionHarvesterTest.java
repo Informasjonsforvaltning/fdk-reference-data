@@ -1,12 +1,13 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static no.fdk.referencedata.digdir.qualitydimension.LocalQualityDimensionHarvester.QUALITY_DIMENSIONS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,7 +16,7 @@ public class QualityDimensionHarvesterTest {
 
     @Test
     public void test_fetch_quality_dimensions() {
-        QualityDimensionHarvester harvester = new LocalQualityDimensionHarvester();
+        QualityDimensionHarvester harvester = LocalHarvesters.qualityDimension();
 
         assertNotNull(harvester.getSource("quality-dimension"));
         assertEquals("quality-dimension.ttl", harvester.getSource("quality-dimension").getFilename());

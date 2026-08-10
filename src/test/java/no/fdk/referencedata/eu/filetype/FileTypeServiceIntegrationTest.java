@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.filetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -33,7 +34,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_filetypes() {
         FileTypeService fileTypeService = new FileTypeService(
-                new LocalFileTypeHarvester(),
+                LocalHarvesters.fileType(),
                 fileTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -65,7 +66,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         when(fileTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new FileTypeService(
-                new LocalFileTypeHarvester(),
+                LocalHarvesters.fileType(),
                 fileTypeRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

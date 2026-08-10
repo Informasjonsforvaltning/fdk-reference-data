@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -26,7 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.EUROVOCS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,7 +59,7 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         EuroVocService EuroVocService = new EuroVocService(
-                new LocalEuroVocHarvester(),
+                LocalHarvesters.euroVoc(),
                 euroVocRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

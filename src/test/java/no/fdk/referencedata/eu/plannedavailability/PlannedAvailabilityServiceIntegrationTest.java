@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.plannedavailability.LocalPlannedAvailabilityHarvester.PLANNED_AVAILABILITY_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.PLANNED_AVAILABILITY_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -34,7 +35,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
     @Test
     public void test_if_harvest_persists_planned_availabilities() {
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester(),
+                LocalHarvesters.plannedAvailability(),
                 plannedAvailabilityRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -67,7 +68,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         when(plannedAvailabilityRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new PlannedAvailabilityService(
-                new LocalPlannedAvailabilityHarvester(),
+                LocalHarvesters.plannedAvailability(),
                 plannedAvailabilityRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

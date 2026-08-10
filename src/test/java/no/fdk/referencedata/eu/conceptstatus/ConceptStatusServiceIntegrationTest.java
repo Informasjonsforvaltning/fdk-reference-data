@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.conceptstatus.LocalConceptStatusHarvester.CONCEPT_STATUSES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CONCEPT_STATUSES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -39,7 +40,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
+                LocalHarvesters.conceptStatus(),
                 conceptStatusRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -49,7 +50,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_concept_statuses() {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
+                LocalHarvesters.conceptStatus(),
                 conceptStatusRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -82,7 +83,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         when(conceptStatusRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new ConceptStatusService(
-                new LocalConceptStatusHarvester(),
+                LocalHarvesters.conceptStatus(),
                 conceptStatusRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

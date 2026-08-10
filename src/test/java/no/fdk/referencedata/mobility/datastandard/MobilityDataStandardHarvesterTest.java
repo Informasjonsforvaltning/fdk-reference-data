@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,7 +15,7 @@ public class MobilityDataStandardHarvesterTest {
 
     @Test
     public void test_fetch_mobility_data_standards() {
-        MobilityDataStandardHarvester harvester = new LocalMobilityDataStandardHarvester();
+        MobilityDataStandardHarvester harvester = LocalHarvesters.mobilityDataStandard();
 
         assertNotNull(harvester.getSource("mobility-data-standards"));
         assertEquals("mobility-data-standards.ttl", harvester.getSource("mobility-data-standards").getFilename());

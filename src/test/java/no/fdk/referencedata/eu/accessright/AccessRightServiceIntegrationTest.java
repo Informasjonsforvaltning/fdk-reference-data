@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.accessright;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester.ACCESS_RIGHTS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.ACCESS_RIGHTS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_datathemes() {
         AccessRightService accessRightService = new AccessRightService(
-                new LocalAccessRightHarvester(),
+                LocalHarvesters.accessRight(),
                 accessRightRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -69,7 +70,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
         when(accessRightRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new AccessRightService(
-                new LocalAccessRightHarvester(),
+                LocalHarvesters.accessRight(),
                 accessRightRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

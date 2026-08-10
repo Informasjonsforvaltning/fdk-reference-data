@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.language.LanguageRepository;
 import no.fdk.referencedata.eu.language.LanguageService;
-import no.fdk.referencedata.eu.language.LocalLanguageHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import no.fdk.referencedata.search.FindByURIsRequest;
 import no.fdk.referencedata.search.SearchHit;
@@ -51,7 +51,7 @@ class LanguageSearchableIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         LanguageService languageService = new LanguageService(
-                new LocalLanguageHarvester(),
+                LocalHarvesters.language(),
                 languageRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

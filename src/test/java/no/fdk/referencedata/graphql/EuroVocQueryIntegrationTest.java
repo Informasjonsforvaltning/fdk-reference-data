@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.eurovoc.EuroVoc;
 import no.fdk.referencedata.eu.eurovoc.EuroVocRepository;
 import no.fdk.referencedata.eu.eurovoc.EuroVocService;
-import no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.Assertions;
@@ -49,7 +49,7 @@ class EuroVocQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         EuroVocService EuroVocService = new EuroVocService(
-                new LocalEuroVocHarvester(),
+                LocalHarvesters.euroVoc(),
                 euroVocRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

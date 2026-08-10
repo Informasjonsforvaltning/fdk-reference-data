@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.country.Country;
 import no.fdk.referencedata.eu.country.CountryRepository;
 import no.fdk.referencedata.eu.country.CountryService;
-import no.fdk.referencedata.eu.country.LocalCountryHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ class CountryQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         CountryService countryService = new CountryService(
-                new LocalCountryHarvester(),
+                LocalHarvesters.country(),
                 countryRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

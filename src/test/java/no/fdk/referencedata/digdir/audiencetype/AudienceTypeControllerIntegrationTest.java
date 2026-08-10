@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -56,7 +57,7 @@ public class AudienceTypeControllerIntegrationTest extends AbstractContainerTest
                 .build();
 
         AudienceTypeService audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester(),
+                LocalHarvesters.audienceType(),
                 audienceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

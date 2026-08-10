@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.digdir.legalresourcetype.LocalLegalResourceTypeHarvester.LEGAL_RESOURCE_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LEGAL_RESOURCE_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,7 +45,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
     @Test
     public void test_if_harvest_persists_legal_resource_types() {
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester(),
+                LocalHarvesters.legalResourceType(),
                 legalResourceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -77,7 +78,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
         when(legalResourceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new LegalResourceTypeService(
-                new LocalLegalResourceTypeHarvester(),
+                LocalHarvesters.legalResourceType(),
                 legalResourceTypeRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

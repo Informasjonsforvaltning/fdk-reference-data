@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.mainactivity;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.mainactivity.LocalMainActivityHarvester.MAIN_ACTIVITIES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.MAIN_ACTIVITIES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,7 +39,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_datathemes() {
         MainActivityService mainActivityService = new MainActivityService(
-                new LocalMainActivityHarvester(),
+                LocalHarvesters.mainActivity(),
                 mainActivityRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -71,7 +72,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         when(mainActivityRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new MainActivityService(
-                new LocalMainActivityHarvester(),
+                LocalHarvesters.mainActivity(),
                 mainActivityRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

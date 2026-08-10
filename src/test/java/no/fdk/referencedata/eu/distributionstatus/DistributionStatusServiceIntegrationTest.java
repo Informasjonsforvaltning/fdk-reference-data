@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.distributionstatus;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.distributionstatus.LocalDistributionStatusHarvester.DISTRIBUTION_STATUS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.DISTRIBUTION_STATUS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.*;
@@ -34,7 +35,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
     @Test
     public void test_if_harvest_persists_distribution_statuses() {
         DistributionStatusService distributionStatusService = new DistributionStatusService(
-                new LocalDistributionStatusHarvester(),
+                LocalHarvesters.distributionStatus(),
                 distributionStatusRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -67,7 +68,7 @@ public class DistributionStatusServiceIntegrationTest extends AbstractContainerT
         when(distributionStatusRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new DistributionStatusService(
-                new LocalDistributionStatusHarvester(),
+                LocalHarvesters.distributionStatus(),
                 distributionStatusRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

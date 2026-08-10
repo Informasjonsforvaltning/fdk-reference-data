@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -8,7 +9,6 @@ import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.eu.accessright.AccessRight;
 import no.fdk.referencedata.eu.accessright.AccessRightRepository;
 import no.fdk.referencedata.eu.accessright.AccessRightService;
-import no.fdk.referencedata.eu.accessright.LocalAccessRightHarvester;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +46,7 @@ class AccessRightQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         AccessRightService accessRightService = new AccessRightService(
-                new LocalAccessRightHarvester(),
+                LocalHarvesters.accessRight(),
                 accessRightRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

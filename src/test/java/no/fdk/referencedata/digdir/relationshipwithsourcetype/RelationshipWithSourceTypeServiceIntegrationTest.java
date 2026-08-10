@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -33,7 +34,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
     @Test
     public void test_if_harvest_persists_relationshipWithSource_types() {
         RelationshipWithSourceTypeService relationshipWithSourceTypeService = new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester(),
+                LocalHarvesters.relationshipWithSourceType(),
                 relationshipWithSourceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -67,7 +68,7 @@ public class RelationshipWithSourceTypeServiceIntegrationTest extends AbstractCo
         when(relationshipWithSourceTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new RelationshipWithSourceTypeService(
-                new LocalRelationshipWithSourceTypeHarvester(),
+                LocalHarvesters.relationshipWithSourceType(),
                 relationshipWithSourceTypeRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

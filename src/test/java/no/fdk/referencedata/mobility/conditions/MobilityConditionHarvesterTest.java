@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.conditions;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,7 +15,7 @@ public class MobilityConditionHarvesterTest {
 
     @Test
     public void test_fetch_mobility_conditions() {
-        MobilityConditionHarvester harvester = new LocalMobilityConditionHarvester();
+        MobilityConditionHarvester harvester = LocalHarvesters.mobilityCondition();
 
         assertNotNull(harvester.getSource("mobility-conditions"));
         assertEquals("mobility-conditions.ttl", harvester.getSource("mobility-conditions").getFilename());

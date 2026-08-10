@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -9,7 +10,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.digdir.audiencetype.AudienceType;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeRepository;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeService;
-import no.fdk.referencedata.digdir.audiencetype.LocalAudienceTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +48,7 @@ class AudienceTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         AudienceTypeService audienceTypeService = new AudienceTypeService(
-                new LocalAudienceTypeHarvester(),
+                LocalHarvesters.audienceType(),
                 audienceTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

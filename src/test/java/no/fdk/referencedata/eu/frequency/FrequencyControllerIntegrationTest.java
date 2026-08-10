@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.frequency;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.LocalHarvesterConfiguration;
@@ -23,7 +24,7 @@ import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.frequency.LocalFrequencyHarvester.FREQUENCIES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.FREQUENCIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -54,7 +55,7 @@ public class FrequencyControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         FrequencyService frequencyService = new FrequencyService(
-                new LocalFrequencyHarvester(),
+                LocalHarvesters.frequency(),
                 frequencyRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

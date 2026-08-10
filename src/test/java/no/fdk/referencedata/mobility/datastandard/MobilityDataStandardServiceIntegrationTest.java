@@ -1,5 +1,6 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -33,7 +34,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
     @Test
     public void test_if_harvest_persists_data_standards() {
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester(),
+                LocalHarvesters.mobilityDataStandard(),
                 mobilityDataStandardRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -66,7 +67,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
         when(mobilityDataStandardRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new MobilityDataStandardService(
-                new LocalMobilityDataStandardHarvester(),
+                LocalHarvesters.mobilityDataStandard(),
                 mobilityDataStandardRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

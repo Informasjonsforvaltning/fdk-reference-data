@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -14,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.language.LocalLanguageHarvester.LANGUAGES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LANGUAGES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyIterable;
@@ -35,7 +36,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_languages() {
         LanguageService languageService = new LanguageService(
-                new LocalLanguageHarvester(),
+                LocalHarvesters.language(),
                 languageRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -70,7 +71,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
         when(languageRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new LanguageService(
-                new LocalLanguageHarvester(),
+                LocalHarvesters.language(),
                 languageRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

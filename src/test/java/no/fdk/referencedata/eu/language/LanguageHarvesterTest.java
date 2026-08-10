@@ -1,12 +1,13 @@
 package no.fdk.referencedata.eu.language;
 
+import no.fdk.referencedata.LocalHarvesters;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Comparator;
 import java.util.List;
 
-import static no.fdk.referencedata.eu.language.LocalLanguageHarvester.LANGUAGES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LANGUAGES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -15,7 +16,7 @@ public class LanguageHarvesterTest {
 
     @Test
     public void test_fetch_languages() {
-        LanguageHarvester harvester = new LocalLanguageHarvester();
+        LanguageHarvester harvester = LocalHarvesters.language();
 
         assertNotNull(harvester.getSource());
         assertEquals("language-sparql-result.ttl", harvester.getSource().getFilename());

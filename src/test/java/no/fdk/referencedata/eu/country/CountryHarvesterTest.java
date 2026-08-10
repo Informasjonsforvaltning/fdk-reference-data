@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.country;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -7,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Comparator;
 import java.util.List;
 
-import static no.fdk.referencedata.eu.country.LocalCountryHarvester.COUNTRIES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.COUNTRIES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,7 +17,7 @@ public class CountryHarvesterTest {
 
     @Test
     public void test_fetch_countries() {
-        CountryHarvester harvester = new LocalCountryHarvester();
+        CountryHarvester harvester = LocalHarvesters.country();
 
         assertNotNull(harvester.getSource());
         assertEquals("country-sparql-result.ttl", harvester.getSource().getFilename());

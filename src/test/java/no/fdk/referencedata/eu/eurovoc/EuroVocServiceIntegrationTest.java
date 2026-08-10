@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.eurovoc;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.eurovoc.LocalEuroVocHarvester.EUROVOCS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.EUROVOCS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -37,7 +38,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_eurovoc() {
         EuroVocService euroVocService = new EuroVocService(
-                new LocalEuroVocHarvester(),
+                LocalHarvesters.euroVoc(),
                 euroVocRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -71,7 +72,7 @@ public class EuroVocServiceIntegrationTest extends AbstractContainerTest {
         when(EuroVocRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new EuroVocService(
-                new LocalEuroVocHarvester(),
+                LocalHarvesters.euroVoc(),
                 EuroVocRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

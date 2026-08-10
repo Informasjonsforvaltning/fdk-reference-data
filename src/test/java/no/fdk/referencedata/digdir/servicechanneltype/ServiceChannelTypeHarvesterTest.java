@@ -1,5 +1,6 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,7 +15,7 @@ public class ServiceChannelTypeHarvesterTest {
 
     @Test
     public void test_fetch_service_channel_types() {
-        ServiceChannelTypeHarvester harvester = new LocalServiceChannelTypeHarvester();
+        ServiceChannelTypeHarvester harvester = LocalHarvesters.serviceChannelType();
 
         assertNotNull(harvester.getSource("service-channel-type"));
         assertEquals("service-channel-type.ttl", harvester.getSource("service-channel-type").getFilename());

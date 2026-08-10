@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -24,7 +25,7 @@ import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.highvaluecategories.LocalHighValueCategoryHarvester.HIGH_VALUE_CATEGORIES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.HIGH_VALUE_CATEGORIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -55,7 +56,7 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
                 .build();
 
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
-                new LocalHighValueCategoryHarvester(),
+                LocalHarvesters.highValueCategory(),
                 highValueCategoryRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

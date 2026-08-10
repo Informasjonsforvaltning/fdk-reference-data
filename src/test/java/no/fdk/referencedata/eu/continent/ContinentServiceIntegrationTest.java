@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.continent;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.continent.LocalContinentHarvester.CONTINENTS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CONTINENTS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_continents() {
         ContinentService continentService = new ContinentService(
-                new LocalContinentHarvester(),
+                LocalHarvesters.continent(),
                 continentRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -69,7 +70,7 @@ public class ContinentServiceIntegrationTest extends AbstractContainerTest {
         when(continentRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new ContinentService(
-                new LocalContinentHarvester(),
+                LocalHarvesters.continent(),
                 continentRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

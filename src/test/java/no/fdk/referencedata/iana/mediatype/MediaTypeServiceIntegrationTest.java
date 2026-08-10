@@ -1,5 +1,6 @@
 package no.fdk.referencedata.iana.mediatype;
 
+import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;

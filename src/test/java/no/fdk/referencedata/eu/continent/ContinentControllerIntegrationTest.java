@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.continent;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -26,7 +27,7 @@ import org.springframework.web.client.RestClient;
 
 import java.time.LocalDateTime;
 
-import static no.fdk.referencedata.eu.continent.LocalContinentHarvester.CONTINENTS_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.CONTINENTS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -57,7 +58,7 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
                 .build();
 
         ContinentService continentService = new ContinentService(
-                new LocalContinentHarvester(),
+                LocalHarvesters.continent(),
                 continentRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

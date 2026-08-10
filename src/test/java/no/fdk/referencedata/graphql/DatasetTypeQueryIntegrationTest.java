@@ -1,5 +1,6 @@
 package no.fdk.referencedata.graphql;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -9,7 +10,6 @@ import no.fdk.referencedata.container.AbstractContainerTest;
 import no.fdk.referencedata.eu.datasettype.DatasetType;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeRepository;
 import no.fdk.referencedata.eu.datasettype.DatasetTypeService;
-import no.fdk.referencedata.eu.datasettype.LocalDatasetTypeHarvester;
 import no.fdk.referencedata.rdf.RDFSourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class DatasetTypeQueryIntegrationTest extends AbstractContainerTest {
     @BeforeEach
     public void setup() {
         DatasetTypeService datasetTypeService = new DatasetTypeService(
-                new LocalDatasetTypeHarvester(),
+                LocalHarvesters.datasetType(),
                 datasetTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

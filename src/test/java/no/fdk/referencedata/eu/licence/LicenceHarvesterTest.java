@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.i18n.Language;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.ActiveProfiles;
@@ -7,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.Comparator;
 import java.util.List;
 
-import static no.fdk.referencedata.eu.licence.LocalLicenceHarvester.LICENCES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LICENCES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,7 +17,7 @@ public class LicenceHarvesterTest {
 
     @Test
     public void test_fetch_licences() {
-        LicenceHarvester harvester = new LocalLicenceHarvester();
+        LicenceHarvester harvester = LocalHarvesters.licence();
 
         assertNotNull(harvester.getSource());
         assertEquals("licences-sparql-result.ttl", harvester.getSource().getFilename());

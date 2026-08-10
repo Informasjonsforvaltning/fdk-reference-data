@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.distributiontype.LocalDistributionTypeHarvester.DISTRIBUTION_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.DISTRIBUTION_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
     @Test
     public void test_if_harvest_persists_distribution_types() {
         DistributionTypeService accessRightService = new DistributionTypeService(
-                new LocalDistributionTypeHarvester(),
+                LocalHarvesters.distributionType(),
                 distributionTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -69,7 +70,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
         when(distrubutionTypeRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new DistributionTypeService(
-                new LocalDistributionTypeHarvester(),
+                LocalHarvesters.distributionType(),
                 distributionTypeRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 

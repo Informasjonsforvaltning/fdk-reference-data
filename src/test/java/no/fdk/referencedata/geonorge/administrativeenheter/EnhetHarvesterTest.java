@@ -1,5 +1,6 @@
 package no.fdk.referencedata.geonorge.administrativeenheter;
 
+import no.fdk.referencedata.geonorge.administrativeenheter.LocalEnhetHarvester;
 import no.fdk.referencedata.LocalHarvesterConfiguration;
 import no.fdk.referencedata.container.AbstractContainerTest;
 import org.junit.jupiter.api.Test;

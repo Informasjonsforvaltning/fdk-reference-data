@@ -1,5 +1,6 @@
 package no.fdk.referencedata.eu.licence;
 
+import no.fdk.referencedata.LocalHarvesters;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static no.fdk.referencedata.eu.licence.LocalLicenceHarvester.LICENCES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.LICENCES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.mock;
@@ -36,7 +37,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
     @Test
     public void test_if_harvest_persists_licences() {
         LicenceService licenceService = new LicenceService(
-                new LocalLicenceHarvester(),
+                LocalHarvesters.licence(),
                 licenceRepository,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
@@ -71,7 +72,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         when(licenceRepositorySpy.saveAll(anyIterable())).thenThrow(new RuntimeException());
 
         new LicenceService(
-                new LocalLicenceHarvester(),
+                LocalHarvesters.licence(),
                 licenceRepositorySpy,
                 new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
 
