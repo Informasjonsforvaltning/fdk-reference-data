@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.currency.Currency;
 import no.fdk.referencedata.eu.currency.CurrencyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class CurrencyQuery {
 
-    @Autowired
-    private CurrencyRepository currencyRepository;
+    private final CurrencyRepository currencyRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<Currency> currencies() {
-        return StreamSupport.stream(currencyRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(Currency::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(currencyRepository, Currency::getUri);
     }
 
     @QueryMapping
     public Currency currencyByCode(@Argument String code) {
-        return currencyRepository.findByCode(code).orElse(null);
+        return support.byCode(currencyRepository::findByCode, code);
     }
 }

@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjon;
 import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class KommuneOrganisasjonerQuery {
 
-    @Autowired
-    private KommuneOrganisasjonRepository kommuneOrganisasjonRepository;
+    private final KommuneOrganisasjonRepository kommuneOrganisasjonRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<KommuneOrganisasjon> kommuneOrganisasjoner() {
-        return StreamSupport.stream(kommuneOrganisasjonRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(KommuneOrganisasjon::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(kommuneOrganisasjonRepository, KommuneOrganisasjon::getUri);
     }
 
     @QueryMapping
     public KommuneOrganisasjon kommuneOrganisasjonByKommunenummer(@Argument String kommunenummer) {
-        return kommuneOrganisasjonRepository.findByKommunenummer(kommunenummer).orElse(null);
+        return support.byCode(kommuneOrganisasjonRepository::findByKommunenummer, kommunenummer);
     }
 }

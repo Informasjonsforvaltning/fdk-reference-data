@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.digdir.audiencetype.AudienceType;
 import no.fdk.referencedata.digdir.audiencetype.AudienceTypeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class AudienceTypeQuery {
 
-    @Autowired
-    private AudienceTypeRepository audienceTypeRepository;
+    private final AudienceTypeRepository audienceTypeRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<AudienceType> audienceTypes() {
-        return StreamSupport.stream(audienceTypeRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(AudienceType::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(audienceTypeRepository, AudienceType::getUri);
     }
 
     @QueryMapping
     public AudienceType audienceTypeByCode(@Argument String code) {
-        return audienceTypeRepository.findByCode(code).orElse(null);
+        return support.byCode(audienceTypeRepository::findByCode, code);
     }
 }

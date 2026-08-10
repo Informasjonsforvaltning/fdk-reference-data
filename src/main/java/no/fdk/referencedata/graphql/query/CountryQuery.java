@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.country.Country;
 import no.fdk.referencedata.eu.country.CountryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class CountryQuery {
 
-    @Autowired
-    private CountryRepository countryRepository;
+    private final CountryRepository countryRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<Country> countries() {
-        return StreamSupport.stream(countryRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(Country::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(countryRepository, Country::getUri);
     }
 
     @QueryMapping
     public Country countryByCode(@Argument String code) {
-        return countryRepository.findByCode(code).orElse(null);
+        return support.byCode(countryRepository::findByCode, code);
     }
 }

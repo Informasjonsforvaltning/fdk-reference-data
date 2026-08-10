@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategory;
 import no.fdk.referencedata.eu.highvaluecategories.HighValueCategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class HighValueCategoryQuery {
 
-    @Autowired
-    private HighValueCategoryRepository highValueCategoryRepository;
+    private final HighValueCategoryRepository highValueCategoryRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<HighValueCategory> highValueCategories() {
-        return StreamSupport.stream(highValueCategoryRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(HighValueCategory::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(highValueCategoryRepository, HighValueCategory::getUri);
     }
 
     @QueryMapping
     public HighValueCategory highValueCategoryByCode(@Argument String code) {
-        return highValueCategoryRepository.findByCode(code).orElse(null);
+        return support.byCode(highValueCategoryRepository::findByCode, code);
     }
 }

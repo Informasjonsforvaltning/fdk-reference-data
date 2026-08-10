@@ -1,32 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.eu.frequency.Frequency;
 import no.fdk.referencedata.eu.frequency.FrequencyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class FrequencyQuery {
 
-    @Autowired
-    private FrequencyRepository frequencyRepository;
+    private final FrequencyRepository frequencyRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<Frequency> frequencies() {
-        return StreamSupport.stream(frequencyRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(Frequency::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(frequencyRepository, Frequency::getUri);
     }
 
     @QueryMapping
     public Frequency frequencyByCode(@Argument String code) {
-        return frequencyRepository.findByCode(code).orElse(null);
+        return support.byCode(frequencyRepository::findByCode, code);
     }
 }

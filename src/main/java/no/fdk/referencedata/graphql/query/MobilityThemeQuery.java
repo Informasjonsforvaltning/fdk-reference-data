@@ -1,35 +1,29 @@
 package no.fdk.referencedata.graphql.query;
 
+import lombok.RequiredArgsConstructor;
+import no.fdk.referencedata.core.CodeListQuerySupport;
 import no.fdk.referencedata.mobility.theme.MobilityTheme;
 import no.fdk.referencedata.mobility.theme.MobilityThemeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Controller
+@RequiredArgsConstructor
 public class MobilityThemeQuery {
-    private final MobilityThemeRepository mobilityThemeRepository;
 
-    @Autowired
-    public MobilityThemeQuery(MobilityThemeRepository mobilityThemeRepository) {
-        this.mobilityThemeRepository = mobilityThemeRepository;
-    }
+    private final MobilityThemeRepository mobilityThemeRepository;
+    private final CodeListQuerySupport support;
 
     @QueryMapping
     public List<MobilityTheme> mobilityThemes() {
-        return StreamSupport.stream(mobilityThemeRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparing(MobilityTheme::getUri))
-                .collect(Collectors.toList());
+        return support.allSortedByUri(mobilityThemeRepository, MobilityTheme::getUri);
     }
 
     @QueryMapping
     public MobilityTheme mobilityThemeByCode(@Argument String code) {
-        return mobilityThemeRepository.findByCode(code).orElse(null);
+        return support.byCode(mobilityThemeRepository::findByCode, code);
     }
 }
