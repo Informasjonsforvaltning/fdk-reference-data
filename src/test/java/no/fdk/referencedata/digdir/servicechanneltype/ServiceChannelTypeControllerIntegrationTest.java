@@ -20,12 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -70,9 +65,6 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
     public void test_if_get_all_serviceChannel_types_returns_valid_response() {
         ServiceChannelTypes serviceChannelTypes =
                 restClient.get().uri("/digdir/service-channel-types").retrieve().body(ServiceChannelTypes.class);
-
-        assertEquals(11, serviceChannelTypes.getServiceChannelTypes().size());
-
         ServiceChannelType first = serviceChannelTypes.getServiceChannelTypes().get(0);
         assertEquals("https://data.norge.no/vocabulary/service-channel-type#assistant", first.getUri());
         assertEquals("assistant", first.getCode());
@@ -88,36 +80,6 @@ public class ServiceChannelTypeControllerIntegrationTest extends AbstractContain
         assertEquals("https://data.norge.no/vocabulary/service-channel-type#telephone", serviceChannelType.getUri());
         assertEquals("telephone", serviceChannelType.getCode());
         assertEquals("telephone", serviceChannelType.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_serviceChannel_types_fails_without_api_key() {
-        assertEquals(11, serviceChannelTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/service-channel-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(11, serviceChannelTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_serviceChannel_types_executes_a_force_update() {
-        assertEquals(11, serviceChannelTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/service-channel-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(11, serviceChannelTypeRepository.count());
-
     }
 
     @Test

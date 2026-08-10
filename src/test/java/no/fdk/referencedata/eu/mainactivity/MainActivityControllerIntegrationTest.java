@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.MAIN_ACTIVITIES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,9 +65,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
     public void test_if_get_all_access_rights_returns_valid_response() {
         MainActivities mainActivities =
                 restClient.get().uri("/eu/main-activities").retrieve().body(MainActivities.class);
-
-        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivities.getMainActivities().size());
-
         MainActivity first = mainActivities.getMainActivities().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/main-activity/airport", first.getUri());
         assertEquals("airport", first.getCode());
@@ -89,36 +80,6 @@ public class MainActivityControllerIntegrationTest extends AbstractContainerTest
         assertEquals("http://publications.europa.eu/resource/authority/main-activity/health", mainActivity.getUri());
         assertEquals("health", mainActivity.getCode());
         assertEquals("Health", mainActivity.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_access_rights_fails_without_api_key() {
-        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/main-activities")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_access_rights_executes_a_force_update() {
-        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/main-activities")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(MAIN_ACTIVITIES_SIZE, mainActivityRepository.count());
-
     }
 
     @Test

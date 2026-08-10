@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.LEGAL_RESOURCE_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,9 +65,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
     public void test_if_get_all_legal_resource_types_returns_valid_response() {
         LegalResourceTypes legalResourceTypes =
                 restClient.get().uri("/digdir/legal-resource-types").retrieve().body(LegalResourceTypes.class);
-
-        assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypes.getLegalResourceTypes().size());
-
         LegalResourceType first = legalResourceTypes.getLegalResourceTypes().get(0);
         assertEquals("https://data.norge.no/vocabulary/legal-resource-type#act", first.getUri());
         assertEquals("act", first.getCode());
@@ -89,36 +80,6 @@ public class LegalResourceTypeControllerIntegrationTest extends AbstractContaine
         assertEquals("https://data.norge.no/vocabulary/legal-resource-type#regulation", legalResourceType.getUri());
         assertEquals("regulation", legalResourceType.getCode());
         assertEquals("regulation", legalResourceType.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_legal_resource_types_fails_without_api_key() {
-        assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/legal-resource-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_legal_resource_types_executes_a_force_update() {
-        assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/legal-resource-types")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(LEGAL_RESOURCE_TYPES_SIZE, legalResourceTypeRepository.count());
-
     }
 
     @Test

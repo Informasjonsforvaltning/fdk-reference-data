@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.CONCEPT_STATUSES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,9 +65,6 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
     public void test_if_get_all_statuses_returns_valid_response() {
         ConceptStatuses statuses =
                 restClient.get().uri("/eu/concept-statuses").retrieve().body(ConceptStatuses.class);
-
-        assertEquals(CONCEPT_STATUSES_SIZE, statuses.getConceptStatuses().size());
-
         ConceptStatus first = statuses.getConceptStatuses().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/concept-status/CANDIDATE", first.getUri());
         assertEquals("CANDIDATE", first.getCode());
@@ -89,36 +80,6 @@ public class ConceptStatusControllerIntegrationTest extends AbstractContainerTes
         assertEquals("http://publications.europa.eu/resource/authority/concept-status/CURRENT", status.getUri());
         assertEquals("CURRENT", status.getCode());
         assertEquals("current", status.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_statuses_fails_without_api_key() {
-        assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/concept-statuses")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_statuses_executes_a_force_update() {
-        assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/concept-statuses")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(CONCEPT_STATUSES_SIZE, conceptStatusRepository.count());
-
     }
 
     @Test

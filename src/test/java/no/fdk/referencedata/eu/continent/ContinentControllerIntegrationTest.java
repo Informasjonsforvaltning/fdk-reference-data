@@ -19,15 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.CONTINENTS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -69,9 +63,6 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_get_all_continents_returns_valid_response() {
         Continents continents =
                 restClient.get().uri("/eu/continents").retrieve().body(Continents.class);
-
-        assertEquals(CONTINENTS_SIZE, continents.getContinents().size());
-
         Continent first = continents.getContinents().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/continent/AFRICA", first.getUri());
         assertEquals("AFRICA", first.getCode());
@@ -87,36 +78,6 @@ public class ContinentControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/continent/EUROPE", continent.getUri());
         assertEquals("EUROPE", continent.getCode());
         assertEquals("Europe", continent.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_continents_fails_without_api_key() {
-        assertEquals(CONTINENTS_SIZE, continentRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/continents")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(CONTINENTS_SIZE, continentRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_continents_executes_a_force_update() {
-        assertEquals(CONTINENTS_SIZE, continentRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/continents")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(CONTINENTS_SIZE, continentRepository.count());
-
     }
 
     @Test

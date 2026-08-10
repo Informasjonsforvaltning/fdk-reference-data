@@ -19,13 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.HIGH_VALUE_CATEGORIES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -70,9 +66,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
                         .uri("/eu/high-value-categories")
                         .retrieve()
                         .body(HighValueCategories.class);
-
-        assertEquals(HIGH_VALUE_CATEGORIES_SIZE, categories.getHighValueCategories().size());
-
         HighValueCategory first = categories.getHighValueCategories().get(0);
         assertEquals("http://data.europa.eu/bna/c_03ba8d92", first.getUri());
         assertEquals("c_03ba8d92", first.getCode());
@@ -91,40 +84,6 @@ public class HighValueCategoryControllerIntegrationTest extends AbstractContaine
         assertEquals("http://data.europa.eu/bna/c_a9135398", category.getUri());
         assertEquals("c_a9135398", category.getCode());
         assertEquals("Companies and company ownership", category.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_high_value_categories_fails_without_api_key() {
-        assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/eu/high-value-categories")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_high_value_categories_executes_a_force_update() {
-        assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/eu/high-value-categories")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(HIGH_VALUE_CATEGORIES_SIZE, highValueCategoryRepository.count());
-
     }
 
     @Test

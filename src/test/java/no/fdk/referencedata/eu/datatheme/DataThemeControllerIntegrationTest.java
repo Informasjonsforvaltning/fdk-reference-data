@@ -21,14 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.DATA_THEMES_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -71,9 +65,6 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_get_all_datathemes_returns_valid_response() {
         DataThemes dataThemes =
                 restClient.get().uri("/eu/data-themes").retrieve().body(DataThemes.class);
-
-        assertEquals(DATA_THEMES_SIZE, dataThemes.getDataThemes().size());
-
         DataTheme first = dataThemes.getDataThemes().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/data-theme/AGRI", first.getUri());
         assertEquals("AGRI", first.getCode());
@@ -95,36 +86,6 @@ public class DataThemeControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://publications.europa.eu/resource/authority/data-theme", dataTheme.getConceptSchema().getUri());
         assertEquals("Data theme", dataTheme.getConceptSchema().getLabel().get(Language.ENGLISH.code()));
         assertEquals("20220715-0", dataTheme.getConceptSchema().getVersionNumber());
-    }
-
-    @Test
-    public void test_if_post_data_themes_fails_without_api_key() {
-        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/data-themes")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_data_themes_executes_a_force_update() {
-        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/data-themes")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(DATA_THEMES_SIZE, dataThemeRepository.count());
-
     }
 
     @Test

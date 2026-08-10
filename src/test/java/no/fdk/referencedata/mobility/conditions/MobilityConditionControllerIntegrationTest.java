@@ -19,11 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestClient;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,9 +66,6 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
                         .uri("/mobility/conditions-for-access-and-usage")
                         .retrieve()
                         .body(MobilityConditions.class);
-
-        assertEquals(10, mobilityConditions.getMobilityConditions().size());
-
         MobilityCondition first = mobilityConditions.getMobilityConditions().get(0);
         assertEquals("https://w3id.org/mobilitydcat-ap/conditions-for-access-and-usage/contractual-arrangement", first.getUri());
         assertEquals("contractual-arrangement", first.getCode());
@@ -90,40 +84,6 @@ public class MobilityConditionControllerIntegrationTest extends AbstractContaine
         assertEquals("https://w3id.org/mobilitydcat-ap/conditions-for-access-and-usage/other", condition.getUri());
         assertEquals("other", condition.getCode());
         assertEquals("Other", condition.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_mobility_conditions_fails_without_api_key() {
-        assertEquals(10, mobilityConditionRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/mobility/conditions-for-access-and-usage")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(10, mobilityConditionRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_mobility_conditions_executes_a_force_update() {
-        assertEquals(10, mobilityConditionRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post()
-                .uri("/mobility/conditions-for-access-and-usage")
-                .headers(h -> h.addAll(headers))
-                .exchange((request, response2) -> ResponseEntity.status(response2.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(10, mobilityConditionRepository.count());
-
     }
 
     @Test

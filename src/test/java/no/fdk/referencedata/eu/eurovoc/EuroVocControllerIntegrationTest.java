@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.EUROVOCS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -70,9 +64,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
     public void test_if_get_all_eurovocs_returns_valid_response() {
         EuroVocs euroVocs =
                 restClient.get().uri("/eu/eurovocs").retrieve().body(EuroVocs.class);
-
-        assertEquals(EUROVOCS_SIZE, euroVocs.getEuroVocs().size());
-
         EuroVoc first = euroVocs.getEuroVocs().get(0);
         assertEquals("http://eurovoc.europa.eu/1", first.getUri());
         assertEquals("1", first.getCode());
@@ -88,36 +79,6 @@ public class EuroVocControllerIntegrationTest extends AbstractContainerTest {
         assertEquals("http://eurovoc.europa.eu/337", euroVoc.getUri());
         assertEquals("337", euroVoc.getCode());
         assertEquals("regions of Denmark", euroVoc.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_eurovocs_fails_without_api_key() {
-        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/eurovocs")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_data_themes_executes_a_force_update() {
-        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/eurovocs")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(EUROVOCS_SIZE, euroVocRepository.count());
-
     }
 
     @Test

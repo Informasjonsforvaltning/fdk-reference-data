@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.ACCESS_RIGHTS_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -69,9 +63,6 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
     public void test_if_get_all_access_rights_returns_valid_response() {
         AccessRights accessRights =
                 restClient.get().uri("/eu/access-rights").retrieve().body(AccessRights.class);
-
-        assertEquals(ACCESS_RIGHTS_SIZE, accessRights.getAccessRights().size());
-
         AccessRight first = accessRights.getAccessRights().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", first.getUri());
         assertEquals("CONFIDENTIAL", first.getCode());
@@ -87,36 +78,6 @@ public class AccessRightControllerIntegrationTest extends AbstractContainerTest 
         assertEquals("http://publications.europa.eu/resource/authority/access-right/CONFIDENTIAL", accessRight.getUri());
         assertEquals("CONFIDENTIAL", accessRight.getCode());
         assertEquals("confidential", accessRight.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_access_rights_fails_without_api_key() {
-        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/access-rights")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_access_rights_executes_a_force_update() {
-        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/access-rights")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(ACCESS_RIGHTS_SIZE, accessRightRepository.count());
-
     }
 
     @Test

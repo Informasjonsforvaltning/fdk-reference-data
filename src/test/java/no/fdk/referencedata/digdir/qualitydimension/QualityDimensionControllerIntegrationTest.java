@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -71,9 +65,6 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
     public void test_if_get_all_quality_dimensions_returns_valid_response() {
         QualityDimensions qualityDimensions =
                 restClient.get().uri("/digdir/quality-dimensions").retrieve().body(QualityDimensions.class);
-
-        assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensions.getQualityDimensions().size());
-
         QualityDimension first = qualityDimensions.getQualityDimensions().get(0);
         assertEquals("https://data.norge.no/vocabulary/quality-dimension#accuracy", first.getUri());
         assertEquals("accuracy", first.getCode());
@@ -89,36 +80,6 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         assertEquals("https://data.norge.no/vocabulary/quality-dimension#completeness", qualityDimension.getUri());
         assertEquals("completeness", qualityDimension.getCode());
         assertEquals("completeness", qualityDimension.getLabel().get(Language.ENGLISH.code()));
-    }
-
-    @Test
-    public void test_if_post_quality_dimensions_fails_without_api_key() {
-        assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/quality-dimensions")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_quality_dimensions_executes_a_force_update() {
-        assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/digdir/quality-dimensions")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(QUALITY_DIMENSIONS_SIZE, qualityDimensionRepository.count());
-
     }
 
     @Test

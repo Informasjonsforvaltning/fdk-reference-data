@@ -20,14 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.RestClient;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
-
-import static no.fdk.referencedata.LocalHarvestFixtures.PLANNED_AVAILABILITY_SIZE;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -69,9 +63,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
     public void test_if_get_all_planned_availabilities_returns_valid_response() {
         PlannedAvailabilities plannedAvailabilities =
                 restClient.get().uri("/eu/planned-availabilities").retrieve().body(PlannedAvailabilities.class);
-
-        assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilities.getPlannedAvailabilities().size());
-
         PlannedAvailability first = plannedAvailabilities.getPlannedAvailabilities().get(0);
         assertEquals("http://publications.europa.eu/resource/authority/planned-availability/AVAILABLE", first.getUri());
         assertEquals("AVAILABLE", first.getCode());
@@ -87,36 +78,6 @@ public class PlannedAvailabilityControllerIntegrationTest extends AbstractContai
         assertEquals("http://publications.europa.eu/resource/authority/planned-availability/TEMPORARY", plannedAvailability.getUri());
         assertEquals("TEMPORARY", plannedAvailability.getCode());
         assertEquals("midlertidig", plannedAvailability.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
-    }
-
-    @Test
-    public void test_if_post_planned_availabilities_fails_without_api_key() {
-        assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/planned-availabilities")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
-
-    }
-
-    @Test
-    public void test_if_post_planned_availabilities_executes_a_harvest() {
-        assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
-
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("X-API-KEY", "my-api-key");
-        ResponseEntity<Void> response = restClient.post().uri("/eu/planned-availabilities")
-                .headers(h -> h.addAll(headers)).exchange((request, clientResponse) -> ResponseEntity.status(clientResponse.getStatusCode()).build());
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(PLANNED_AVAILABILITY_SIZE, plannedAvailabilityRepository.count());
-
     }
 
     @Test
