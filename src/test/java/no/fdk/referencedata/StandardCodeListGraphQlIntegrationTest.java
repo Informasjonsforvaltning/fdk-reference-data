@@ -57,7 +57,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class StandardCodeListGraphQlIT extends AbstractContainerTest {
+public class StandardCodeListGraphQlIntegrationTest extends AbstractContainerTest {
 
     private static final String UNKNOWN_CODE = "__missing-code__";
 
