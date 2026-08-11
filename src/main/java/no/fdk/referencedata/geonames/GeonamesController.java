@@ -78,8 +78,9 @@ public class GeonamesController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping("/fylker")
     public ResponseEntity<Void> updateGeonames() {
-        geonamesService.harvestAndSave();
-        return ResponseEntity.ok().build();
+        return geonamesService.harvestAndSave().isSuccess()
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.internalServerError().build();
     }
 
     @CrossOrigin
