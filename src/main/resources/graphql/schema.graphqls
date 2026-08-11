@@ -24,6 +24,7 @@ type Query {
   conceptStatusByCode(code: String!): ConceptStatus
 
   conceptSubjects: [ConceptSubject!]!
+  conceptSubjectByCode(code: String!): ConceptSubject
 
   currencies: [Currency!]!
   currencyByCode(code: String!): Currency

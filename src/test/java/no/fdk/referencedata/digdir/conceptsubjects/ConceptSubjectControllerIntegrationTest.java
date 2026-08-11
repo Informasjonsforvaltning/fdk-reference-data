@@ -59,6 +59,16 @@ public class ConceptSubjectControllerIntegrationTest extends AbstractContainerTe
     }
 
     @Test
+    public void test_if_get_concept_subject_by_code_returns_valid_response() {
+        ConceptSubject conceptSubject =
+                restClient.get().uri("/digdir/concept-subjects/1").retrieve().body(ConceptSubject.class);
+
+        assertEquals("https://catalog-admin-service.staging.fellesdatakatalog.digdir.no/123456789/concepts/subjects#1", conceptSubject.getUri());
+        assertEquals("1", conceptSubject.getCode());
+        assertEquals("en 1", conceptSubject.getLabel().get(Language.ENGLISH.code()));
+    }
+
+    @Test
     public void test_concept_subjects_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/digdir/concept-subjects", Lang.TURTLE);
         Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(ConceptSubjectControllerIntegrationTest.class.getClassLoader().getResource("concept-subjects.ttl")));

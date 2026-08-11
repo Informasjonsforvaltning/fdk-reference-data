@@ -1,0 +1,11 @@
+query($code: String!) {
+    conceptSubjectByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            en
+        }
+    }
+}
