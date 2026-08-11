@@ -1,6 +1,9 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -39,7 +42,7 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
         ConceptSubjectService conceptSubjectService = new ConceptSubjectService(
                 LocalHarvesters.conceptSubject(new ApplicationSettings()),
                 conceptSubjectRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         conceptSubjectService.harvestAndSave();
 
@@ -72,7 +75,7 @@ public class ConceptSubjectServiceIntegrationTest extends AbstractContainerTest 
         new ConceptSubjectService(
                 LocalHarvesters.conceptSubject(new ApplicationSettings()),
                 conceptSubjectRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, conceptSubjectRepositorySpy.count());
     }

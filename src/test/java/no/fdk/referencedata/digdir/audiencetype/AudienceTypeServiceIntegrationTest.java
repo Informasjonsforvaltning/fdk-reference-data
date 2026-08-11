@@ -1,6 +1,9 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
         AudienceTypeService audienceTypeService = new AudienceTypeService(
                 LocalHarvesters.audienceType(),
                 audienceTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         audienceTypeService.harvestAndSave();
 
@@ -70,7 +73,7 @@ public class AudienceTypeServiceIntegrationTest extends AbstractContainerTest {
         new AudienceTypeService(
                 LocalHarvesters.audienceType(),
                 audienceTypeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, audienceTypeRepositorySpy.count());
     }

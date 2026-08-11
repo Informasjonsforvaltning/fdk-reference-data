@@ -1,6 +1,7 @@
 package no.fdk.referencedata.los;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.HarvestableReferenceData;
 import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
@@ -14,19 +15,24 @@ import java.util.List;
 @Slf4j
 @Service
 public class LosService implements HarvestableReferenceData {
+    private static final String MODULE_ID = "los";
+
     private final String rdfSourceID = "los-source";
     private final LosRepository losRepository;
     private final ReferenceDataServiceSupport support;
+    private final HarvestMetrics harvestMetrics;
     public LosImporter losImporter;
 
     @Autowired
     public LosService(
             LosImporter losImporter,
             LosRepository losRepository,
-            ReferenceDataServiceSupport support) {
+            ReferenceDataServiceSupport support,
+            HarvestMetrics harvestMetrics) {
         this.losImporter = losImporter;
         this.losRepository = losRepository;
         this.support = support;
+        this.harvestMetrics = harvestMetrics;
     }
 
     public List<LosNode> getByURIs(List<String> uris) {
@@ -51,8 +57,23 @@ public class LosService implements HarvestableReferenceData {
     }
 
     public HarvestResult importLosNodes() {
-        final List<LosNode> losList = losImporter.importFromLosSource();
-        return support.persistHarvested("los", losList, losImporter.getModel(), losRepository, rdfSourceID);
+        return harvestMetrics.timed(MODULE_ID, () -> {
+            try {
+                final List<LosNode> losList = losImporter.importFromLosSource();
+
+                if (losList.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", MODULE_ID);
+                    return HarvestResult.skippedEmpty();
+                }
+
+                log.info("Harvest and saving {} {}", losList.size(), MODULE_ID);
+                support.saveAll(losList, losImporter.getModel(), losRepository, rdfSourceID);
+                return HarvestResult.success(losList.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", MODULE_ID, e);
+                return HarvestResult.failure();
+            }
+        });
     }
 
     @Override

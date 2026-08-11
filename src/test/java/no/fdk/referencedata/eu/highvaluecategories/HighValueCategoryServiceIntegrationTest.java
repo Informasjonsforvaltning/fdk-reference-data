@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.highvaluecategories;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -39,7 +42,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         HighValueCategoryService highValueCategoryService = new HighValueCategoryService(
                 LocalHarvesters.highValueCategory(),
                 highValueCategoryRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         highValueCategoryService.harvestAndSave();
 
@@ -72,7 +75,7 @@ public class HighValueCategoryServiceIntegrationTest extends AbstractContainerTe
         new HighValueCategoryService(
                 LocalHarvesters.highValueCategory(),
                 highValueCategoryRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, highValueCategoryRepositorySpy.count());
     }

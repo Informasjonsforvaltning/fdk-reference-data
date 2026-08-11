@@ -1,5 +1,8 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.rdf.RDFSourceRepository;
@@ -39,7 +42,7 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class), new HarvestMetrics(new SimpleMeterRegistry())));
 
         fylkeOrganisasjonService.harvestAndSave();
 
@@ -72,7 +75,7 @@ public class FylkeOrganisasjonServiceIntegrationTest extends AbstractContainerTe
         new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class), new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, fylkeOrganisasjonRepositorySpy.count());
     }

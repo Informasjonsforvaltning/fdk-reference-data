@@ -1,6 +1,7 @@
 package no.fdk.referencedata.geonorge.administrativeenheter;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.HarvestableReferenceData;
 import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
@@ -25,6 +26,8 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class EnhetService implements SearchableReferenceData, HarvestableReferenceData {
+    private static final String MODULE_ID = "administrative-enhet";
+
     private final String rdfSourceID = "administrative-enheter-source";
 
     private final EnhetHarvester enhetHarvester;
@@ -32,6 +35,7 @@ public class EnhetService implements SearchableReferenceData, HarvestableReferen
     private final EnhetRepository enhetRepository;
     private final EnhetVariantRepository enhetVariantRepository;
     private final ReferenceDataServiceSupport support;
+    private final HarvestMetrics harvestMetrics;
 
     @Autowired
     public EnhetService(
@@ -39,12 +43,14 @@ public class EnhetService implements SearchableReferenceData, HarvestableReferen
             EnhetRepository enhetRepository,
             EnhetVariantRepository enhetVariantRepository,
             EnhetWriter enhetWriter,
-            ReferenceDataServiceSupport support) {
+            ReferenceDataServiceSupport support,
+            HarvestMetrics harvestMetrics) {
         this.enhetHarvester = enhetHarvester;
         this.enhetRepository = enhetRepository;
         this.enhetVariantRepository = enhetVariantRepository;
         this.enhetWriter = enhetWriter;
         this.support = support;
+        this.harvestMetrics = harvestMetrics;
     }
 
     @Override
@@ -127,44 +133,46 @@ public class EnhetService implements SearchableReferenceData, HarvestableReferen
 
     @Override
     public HarvestResult harvestAndSave() {
-        try {
-            final List<Enhet> enheter = new ArrayList<>();
-            enhetHarvester.harvest().toIterable().forEach(enheter::add);
+        return harvestMetrics.timed(MODULE_ID, () -> {
+            try {
+                final List<Enhet> enheter = new ArrayList<>();
+                enhetHarvester.harvest().toIterable().forEach(enheter::add);
 
-            if (enheter.isEmpty()) {
-                log.warn("No administrative enheter harvested; skipping replace");
-                return HarvestResult.skippedEmpty();
+                if (enheter.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", MODULE_ID);
+                    return HarvestResult.skippedEmpty();
+                }
+
+                log.info("Harvest and saving {} {}", enheter.size(), MODULE_ID);
+
+                final List<EnhetVariant> docVariants = enheter.stream()
+                        .map(enh -> EnhetVariant.builder()
+                                .uri(enh.getUri().replace("/id/", "/doc/"))
+                                .name(enh.getName())
+                                .code(enh.getCode())
+                                .build())
+                        .toList();
+
+                final List<EnhetVariant> idVariants = enheter.stream()
+                        .flatMap(this::idVariantsOfEnhet)
+                        .toList();
+
+                Model model = ModelFactory.createDefaultModel();
+                model.setNsPrefix("dct", DCTerms.NS);
+                enheter.forEach(item -> addEnhetToModel(item, model));
+                docVariants.forEach(item -> addEnhetVariantToModel(item, model));
+                idVariants.forEach(item -> addEnhetVariantToModel(item, model));
+
+                RDFSource rdfSource = new RDFSource();
+                rdfSource.setId(rdfSourceID);
+                rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
+
+                enhetWriter.replaceAll(enheter, docVariants, idVariants, rdfSource);
+                return HarvestResult.success(enheter.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", MODULE_ID, e);
+                return HarvestResult.failure();
             }
-
-            log.info("Harvest and saving {} administrative enheter", enheter.size());
-
-            final List<EnhetVariant> docVariants = enheter.stream()
-                    .map(enh -> EnhetVariant.builder()
-                            .uri(enh.getUri().replace("/id/", "/doc/"))
-                            .name(enh.getName())
-                            .code(enh.getCode())
-                            .build())
-                    .toList();
-
-            final List<EnhetVariant> idVariants = enheter.stream()
-                    .flatMap(this::idVariantsOfEnhet)
-                    .toList();
-
-            Model model = ModelFactory.createDefaultModel();
-            model.setNsPrefix("dct", DCTerms.NS);
-            enheter.forEach(item -> addEnhetToModel(item, model));
-            docVariants.forEach(item -> addEnhetVariantToModel(item, model));
-            idVariants.forEach(item -> addEnhetVariantToModel(item, model));
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(rdfSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-
-            enhetWriter.replaceAll(enheter, docVariants, idVariants, rdfSource);
-            return HarvestResult.success(enheter.size());
-        } catch (Exception e) {
-            log.error("Unable to harvest administrative enheter", e);
-            return HarvestResult.failure();
-        }
+        });
     }
 }

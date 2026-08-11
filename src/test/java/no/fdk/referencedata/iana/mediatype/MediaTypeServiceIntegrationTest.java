@@ -1,6 +1,9 @@
 package no.fdk.referencedata.iana.mediatype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.iana.mediatype.LocalMediaTypeHarvester;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
         MediaTypeService mediaTypeService = new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())), new HarvestMetrics(new SimpleMeterRegistry()));
 
         mediaTypeService.harvestAndSave();
 
@@ -70,7 +73,7 @@ public class MediaTypeServiceIntegrationTest extends AbstractContainerTest {
         new MediaTypeService(
                 new LocalMediaTypeHarvester(),
                 mediaTypeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())), new HarvestMetrics(new SimpleMeterRegistry()));
 
         assertEquals(count, mediaTypeRepositorySpy.count());
     }

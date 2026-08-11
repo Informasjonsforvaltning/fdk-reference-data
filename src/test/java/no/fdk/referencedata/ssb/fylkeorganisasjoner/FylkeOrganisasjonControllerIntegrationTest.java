@@ -1,5 +1,8 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import static org.mockito.Mockito.mock;
@@ -56,7 +59,7 @@ public class FylkeOrganisasjonControllerIntegrationTest extends AbstractContaine
         FylkeOrganisasjonService fylkeOrganisasjonService = new FylkeOrganisasjonService(
                 new LocalFylkeOrganisasjonHarvester(wiremockHost, wiremockPort),
                 fylkeOrganisasjonRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class), new HarvestMetrics(new SimpleMeterRegistry())));
 
         fylkeOrganisasjonService.harvestAndSave();
     }

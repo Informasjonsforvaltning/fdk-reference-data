@@ -1,6 +1,9 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -40,7 +43,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         EvidenceTypeService evidenceTypeService = new EvidenceTypeService(
                 LocalHarvesters.evidenceType(),
                 evidenceTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         evidenceTypeService.harvestAndSave();
 
@@ -73,7 +76,7 @@ public class EvidenceTypeServiceIntegrationTest extends AbstractContainerTest {
         new EvidenceTypeService(
                 LocalHarvesters.evidenceType(),
                 evidenceTypeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, evidenceTypeRepositorySpy.count());
     }

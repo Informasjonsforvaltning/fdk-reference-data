@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.accessright;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -39,7 +42,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
         AccessRightService accessRightService = new AccessRightService(
                 LocalHarvesters.accessRight(),
                 accessRightRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         accessRightService.harvestAndSave();
 
@@ -72,7 +75,7 @@ public class AccessRightServiceIntegrationTest extends AbstractContainerTest {
         new AccessRightService(
                 LocalHarvesters.accessRight(),
                 accessRightRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, accessRightRepositorySpy.count());
     }

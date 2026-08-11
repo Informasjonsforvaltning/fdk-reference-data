@@ -1,6 +1,9 @@
 package no.fdk.referencedata.digdir.roletype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -40,7 +43,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
         RoleTypeService roleTypeService = new RoleTypeService(
                 LocalHarvesters.roleType(),
                 roleTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         roleTypeService.harvestAndSave();
 
@@ -73,7 +76,7 @@ public class RoleTypeServiceIntegrationTest extends AbstractContainerTest {
         new RoleTypeService(
                 LocalHarvesters.roleType(),
                 roleTypeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, roleTypeRepositorySpy.count());
     }

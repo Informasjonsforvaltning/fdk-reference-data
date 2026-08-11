@@ -1,6 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.HarvestableReferenceData;
 import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
@@ -23,20 +24,25 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class MediaTypeService implements SearchableReferenceData, HarvestableReferenceData {
+    private static final String MODULE_ID = "media-type";
+
     private final String rdfSourceID = "media-types-source";
 
     private final MediaTypeHarvester mediaTypeHarvester;
     private final MediaTypeRepository mediaTypeRepository;
     private final ReferenceDataServiceSupport support;
+    private final HarvestMetrics harvestMetrics;
 
     @Autowired
     public MediaTypeService(
             MediaTypeHarvester mediaTypeHarvester,
             MediaTypeRepository mediaTypeRepository,
-            ReferenceDataServiceSupport support) {
+            ReferenceDataServiceSupport support,
+            HarvestMetrics harvestMetrics) {
         this.mediaTypeHarvester = mediaTypeHarvester;
         this.mediaTypeRepository = mediaTypeRepository;
         this.support = support;
+        this.harvestMetrics = harvestMetrics;
     }
 
     @Override
@@ -79,13 +85,28 @@ public class MediaTypeService implements SearchableReferenceData, HarvestableRef
 
     @Override
     public HarvestResult harvestAndSave() {
-        final List<MediaType> items = new ArrayList<>();
-        mediaTypeHarvester.harvest().toIterable().forEach(items::add);
+        return harvestMetrics.timed(MODULE_ID, () -> {
+            try {
+                final List<MediaType> items = new ArrayList<>();
+                mediaTypeHarvester.harvest().toIterable().forEach(items::add);
 
-        Model model = ModelFactory.createDefaultModel();
-        model.setNsPrefix("dct", DCTerms.NS);
-        items.forEach(item -> addMediaTypeToModel(item, model));
+                if (items.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", MODULE_ID);
+                    return HarvestResult.skippedEmpty();
+                }
 
-        return support.persistHarvested("media-type", items, model, mediaTypeRepository, rdfSourceID);
+                log.info("Harvest and saving {} {}", items.size(), MODULE_ID);
+
+                Model model = ModelFactory.createDefaultModel();
+                model.setNsPrefix("dct", DCTerms.NS);
+                items.forEach(item -> addMediaTypeToModel(item, model));
+
+                support.saveAll(items, model, mediaTypeRepository, rdfSourceID);
+                return HarvestResult.success(items.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", MODULE_ID, e);
+                return HarvestResult.failure();
+            }
+        });
     }
 }

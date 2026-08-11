@@ -1,5 +1,8 @@
 package no.fdk.referencedata.graphql;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import static org.mockito.Mockito.mock;
@@ -56,7 +59,7 @@ class KommuneOrganisasjonQueryIntegrationTest extends AbstractContainerTest {
         KommuneOrganisasjonService kommuneOrganisasjonService = new KommuneOrganisasjonService(
                 new LocalKommuneOrganisasjonHarvester(wiremockHost, wiremockPort),
                 kommuneOrganisasjonRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class)));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(mock(RDFSourceRepository.class)), mock(RDFSourceRepository.class), new HarvestMetrics(new SimpleMeterRegistry())));
 
         kommuneOrganisasjonService.harvestAndSave();
     }

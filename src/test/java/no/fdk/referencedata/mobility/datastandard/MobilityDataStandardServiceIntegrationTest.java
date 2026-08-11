@@ -1,6 +1,9 @@
 package no.fdk.referencedata.mobility.datastandard;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
         MobilityDataStandardService mobilityDataStandardService = new MobilityDataStandardService(
                 LocalHarvesters.mobilityDataStandard(),
                 mobilityDataStandardRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         mobilityDataStandardService.harvestAndSave();
 
@@ -69,7 +72,7 @@ public class MobilityDataStandardServiceIntegrationTest extends AbstractContaine
         new MobilityDataStandardService(
                 LocalHarvesters.mobilityDataStandard(),
                 mobilityDataStandardRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, mobilityDataStandardRepositorySpy.count());
     }

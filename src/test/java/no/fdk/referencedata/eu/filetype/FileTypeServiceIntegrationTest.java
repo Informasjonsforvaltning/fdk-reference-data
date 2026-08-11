@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.filetype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         FileTypeService fileTypeService = new FileTypeService(
                 LocalHarvesters.fileType(),
                 fileTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         fileTypeService.harvestAndSave();
 
@@ -68,7 +71,7 @@ public class FileTypeServiceIntegrationTest extends AbstractContainerTest {
         new FileTypeService(
                 LocalHarvesters.fileType(),
                 fileTypeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, fileTypeRepositorySpy.count());
     }

@@ -1,6 +1,9 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -40,7 +43,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
         ServiceChannelTypeService serviceChannelTypeService = new ServiceChannelTypeService(
                 LocalHarvesters.serviceChannelType(),
                 serviceChannelTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         serviceChannelTypeService.harvestAndSave();
 
@@ -73,7 +76,7 @@ public class ServiceChannelTypeServiceIntegrationTest extends AbstractContainerT
         new ServiceChannelTypeService(
                 LocalHarvesters.serviceChannelType(),
                 serviceChannelTypeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, serviceChannelTypeRepositorySpy.count());
     }

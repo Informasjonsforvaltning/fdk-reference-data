@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -37,7 +40,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         PlannedAvailabilityService plannedAvailabilityService = new PlannedAvailabilityService(
                 LocalHarvesters.plannedAvailability(),
                 plannedAvailabilityRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         plannedAvailabilityService.harvestAndSave();
 
@@ -70,7 +73,7 @@ public class PlannedAvailabilityServiceIntegrationTest extends AbstractContainer
         new PlannedAvailabilityService(
                 LocalHarvesters.plannedAvailability(),
                 plannedAvailabilityRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, plannedAvailabilityRepositorySpy.count());
     }

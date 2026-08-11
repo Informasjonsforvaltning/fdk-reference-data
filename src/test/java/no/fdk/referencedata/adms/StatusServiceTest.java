@@ -1,5 +1,8 @@
 package no.fdk.referencedata.adms;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class StatusServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_returns_all_statuses() {
         ADMSStatusService service = new ADMSStatusService(new ADMSStatusImporter(), admsStatusRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
         service.importADMSStatuses();
 
         List<ADMSStatus> statuses = service.getAll();
@@ -51,7 +54,7 @@ public class StatusServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_status_by_code_returns_correct_status() {
         ADMSStatusService service = new ADMSStatusService(new ADMSStatusImporter(), admsStatusRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
         service.importADMSStatuses();
 
         Optional<ADMSStatus> statusOptional = service.getByCode("Deprecated");
