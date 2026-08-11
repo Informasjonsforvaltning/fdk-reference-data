@@ -1,14 +1,18 @@
 package no.fdk.referencedata.ssb.fylkeorganisasjoner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestParseException;
+import no.fdk.referencedata.core.HarvestSourceException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 
@@ -46,7 +50,13 @@ public class FylkeOrganisasjonHarvester {
             }
 
             return Flux.fromIterable(fylkeskommuner);
-        } catch(Exception e) {
+        } catch (RestClientException e) {
+            log.error("Unable to harvest fylkeskommunale organisasjoner from ssb", e);
+            return Flux.error(new HarvestSourceException("Unable to fetch SSB fylke organisasjoner", e));
+        } catch (JsonProcessingException e) {
+            log.error("Unable to harvest fylkeskommunale organisasjoner from ssb", e);
+            return Flux.error(new HarvestParseException("Unable to parse SSB fylke organisasjoner", e));
+        } catch (Exception e) {
             log.error("Unable to harvest fylkeskommunale organisasjoner from ssb", e);
             return Flux.error(e);
         }

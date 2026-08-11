@@ -1,6 +1,7 @@
 package no.fdk.referencedata.iana.mediatype;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestSourceException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -14,7 +15,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 import static java.lang.String.format;
@@ -40,7 +40,7 @@ public class MediaTypeHarvester implements IanaHarvester {
     public Flux<MediaType> harvest() {
         log.info("Starting harvest of IANA media types");
         return getSources()
-            .flatMap(s -> harvestMediaTypeResource(s));
+            .flatMap(this::harvestMediaTypeResource);
     }
 
     public Flux<IanaSource> getSources()  {
@@ -50,16 +50,14 @@ public class MediaTypeHarvester implements IanaHarvester {
                     try {
                         return new IanaSource(s, new UrlResource(url));
                     } catch (MalformedURLException e) {
-                        log.error("Invalid IANA media type registry URL: {}", url, e);
-                        return null;
+                        throw new HarvestSourceException("Invalid IANA media type registry URL: " + url, e);
                     }
-                })
-                .filter(Objects::nonNull);
+                });
     }
 
     private Flux<MediaType> harvestMediaTypeResource(IanaSource ianaSource) {
         return Mono.justOrEmpty(ianaSource)
-            .flatMapMany(r -> extractMediaTypeRegistryPairs(r))
+            .flatMapMany(this::extractMediaTypeRegistryPairs)
             .map(pair -> buildMediaType(pair.getFirst(), pair.getSecond()));
     }
 
@@ -81,7 +79,8 @@ public class MediaTypeHarvester implements IanaHarvester {
                 .filter(Predicate.not(pair -> pair.getFirst().isEmpty() || pair.getSecond().isEmpty()));
         } catch (IOException e) {
             log.error("Failed to extract media type registry records from: {}", ianaSource.getResource().getFilename(), e);
-            return Flux.error(e);
+            return Flux.error(new HarvestSourceException(
+                    "Failed to extract media type registry records from: " + ianaSource.getResource().getFilename(), e));
         }
     }
 

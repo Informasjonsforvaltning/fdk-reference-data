@@ -24,6 +24,21 @@ public record HarvestResult(Outcome outcome, int itemCount, String reason) {
         return new HarvestResult(Outcome.SKIPPED_EMPTY, 0, "empty");
     }
 
+    public static HarvestResult fromThrowable(Throwable throwable) {
+        for (Throwable current = throwable; current != null; current = current.getCause()) {
+            if (current instanceof HarvestEmptyException) {
+                return skippedEmpty();
+            }
+            if (current instanceof HarvestException harvestException) {
+                return failure(harvestException.reasonTag());
+            }
+            if (current.getCause() == current) {
+                break;
+            }
+        }
+        return failure();
+    }
+
     public boolean isSuccess() {
         return outcome == Outcome.SUCCESS;
     }

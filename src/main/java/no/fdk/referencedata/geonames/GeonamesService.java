@@ -144,7 +144,7 @@ public class GeonamesService implements SearchableReferenceData, HarvestableRefe
                 return HarvestResult.success(fylker.size() + kommuner.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", MODULE_ID, e);
-                return HarvestResult.failure();
+                return HarvestResult.fromThrowable(e);
             }
         });
     }

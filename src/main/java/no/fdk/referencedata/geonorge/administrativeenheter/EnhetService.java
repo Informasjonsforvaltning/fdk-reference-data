@@ -171,7 +171,7 @@ public class EnhetService implements SearchableReferenceData, HarvestableReferen
                 return HarvestResult.success(enheter.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", MODULE_ID, e);
-                return HarvestResult.failure();
+                return HarvestResult.fromThrowable(e);
             }
         });
     }

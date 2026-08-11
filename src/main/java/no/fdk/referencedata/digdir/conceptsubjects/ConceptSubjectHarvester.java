@@ -5,12 +5,15 @@ import no.fdk.referencedata.rdf.SkosMapper;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.ApplicationSettings;
+import no.fdk.referencedata.core.HarvestParseException;
+import no.fdk.referencedata.core.HarvestSourceException;
 import no.fdk.referencedata.core.ModelHarvester;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotException;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
@@ -23,7 +26,6 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 @Slf4j
@@ -31,48 +33,43 @@ public class ConceptSubjectHarvester implements ModelHarvester<ConceptSubject> {
 
     private final ApplicationSettings applicationSettings;
 
-
     @Autowired
     public ConceptSubjectHarvester(ApplicationSettings applicationSettings) {
         this.applicationSettings = applicationSettings;
     }
 
-
     public org.springframework.core.io.Resource getSource() {
         try {
             return new UrlResource(applicationSettings.getCatalogAdminUri() + "/concept-subjects");
         } catch (MalformedURLException e) {
-            log.error("Unable to get source", e);
-            return null;
+            throw new HarvestSourceException("Unable to get concept subjects source", e);
         }
     }
 
     @Getter
     private final Model model = ModelFactory.createDefaultModel();
 
-    private Optional<Model> fetchModel(org.springframework.core.io.Resource resource) {
+    private Model fetchModel(org.springframework.core.io.Resource resource) {
         try {
-            return Optional.of(RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE));
+            return RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE);
         } catch (IOException e) {
-            log.error("Unable to load model", e);
-            return Optional.empty();
+            throw new HarvestSourceException("Unable to load concept subjects model", e);
+        } catch (RiotException e) {
+            throw new HarvestParseException("Unable to parse concept subjects model", e);
+        } catch (RuntimeException e) {
+            throw new HarvestSourceException("Unable to load concept subjects model", e);
         }
     }
 
     private void loadModel(org.springframework.core.io.Resource resource) {
-        Optional<Model> fetched = fetchModel(resource);
-        if (fetched.isPresent()) {
-            model.removeAll();
-            model.add(fetched.get());
-        }
+        Model fetched = fetchModel(resource);
+        model.removeAll();
+        model.add(fetched);
     }
 
     public Flux<ConceptSubject> harvest() {
         log.info("Starting harvest of concept subjects");
         final org.springframework.core.io.Resource rdfSource = getSource();
-        if(rdfSource == null) {
-            return Flux.error(new Exception("Unable to fetch concept subjects"));
-        }
 
         loadModel(rdfSource);
 
