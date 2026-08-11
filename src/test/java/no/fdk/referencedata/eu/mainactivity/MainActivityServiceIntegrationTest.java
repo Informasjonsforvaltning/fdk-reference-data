@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.mainactivity;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -41,7 +44,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         MainActivityService mainActivityService = new MainActivityService(
                 LocalHarvesters.mainActivity(),
                 mainActivityRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         mainActivityService.harvestAndSave();
 
@@ -74,7 +77,7 @@ public class MainActivityServiceIntegrationTest extends AbstractContainerTest {
         new MainActivityService(
                 LocalHarvesters.mainActivity(),
                 mainActivityRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, mainActivityRepositorySpy.count());
     }

@@ -1,6 +1,9 @@
 package no.fdk.referencedata.mobility.conditions;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
         MobilityConditionService mobilityConditionService = new MobilityConditionService(
                 LocalHarvesters.mobilityCondition(),
                 mobilityConditionRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         mobilityConditionService.harvestAndSave();
 
@@ -69,7 +72,7 @@ public class MobilityConditionServiceIntegrationTest extends AbstractContainerTe
         new MobilityConditionService(
                 LocalHarvesters.mobilityCondition(),
                 mobilityConditionRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, mobilityConditionRepositorySpy.count());
     }

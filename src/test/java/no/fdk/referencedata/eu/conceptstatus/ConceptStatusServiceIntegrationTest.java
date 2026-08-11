@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.conceptstatus;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -42,7 +45,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 LocalHarvesters.conceptStatus(),
                 conceptStatusRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         conceptStatusService.harvestAndSave();
     }
@@ -52,7 +55,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         ConceptStatusService conceptStatusService = new ConceptStatusService(
                 LocalHarvesters.conceptStatus(),
                 conceptStatusRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         conceptStatusService.harvestAndSave();
 
@@ -85,7 +88,7 @@ public class ConceptStatusServiceIntegrationTest extends AbstractContainerTest {
         new ConceptStatusService(
                 LocalHarvesters.conceptStatus(),
                 conceptStatusRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, conceptStatusRepositorySpy.count());
     }

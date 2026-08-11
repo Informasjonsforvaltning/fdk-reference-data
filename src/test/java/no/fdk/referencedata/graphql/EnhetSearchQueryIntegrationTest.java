@@ -1,7 +1,10 @@
 package no.fdk.referencedata.graphql;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetWriter;
@@ -61,7 +64,7 @@ class EnhetSearchQueryIntegrationTest extends AbstractContainerTest {
                 enhetRepository,
                 enhetVariantRepository,
                 new EnhetWriter(enhetRepository, enhetVariantRepository, rdfSourceRepository),
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())), new HarvestMetrics(new SimpleMeterRegistry()));
 
         enhetService.harvestAndSave();
     }

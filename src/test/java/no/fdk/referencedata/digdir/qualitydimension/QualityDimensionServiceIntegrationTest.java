@@ -1,6 +1,9 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -47,7 +50,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         QualityDimensionService qualityDimensionService = new QualityDimensionService(
                 LocalHarvesters.qualityDimension(),
                 qualityDimensionRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         qualityDimensionService.harvestAndSave();
 
@@ -80,7 +83,7 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         new QualityDimensionService(
                 LocalHarvesters.qualityDimension(),
                 qualityDimensionRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, qualityDimensionRepositorySpy.count());
     }

@@ -1,7 +1,10 @@
 package no.fdk.referencedata.geonames;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.core.ReferenceDataWriter;
 
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.geonames.GeonamesWriter;
@@ -64,7 +67,7 @@ public class GeonamesControllerIntegrationTest extends AbstractContainerTest {
                 geonamesFylkeRepository,
                 geonamesKommuneRepository,
                 new GeonamesWriter(geonamesFylkeRepository, geonamesKommuneRepository, rdfSourceRepository),
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())), new HarvestMetrics(new SimpleMeterRegistry()));
 
         geonamesService.harvestAndSave();
     }

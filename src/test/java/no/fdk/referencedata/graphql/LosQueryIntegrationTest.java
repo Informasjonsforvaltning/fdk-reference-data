@@ -1,5 +1,8 @@
 package no.fdk.referencedata.graphql;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -49,7 +52,7 @@ class LosQueryIntegrationTest extends AbstractContainerTest {
         LosService losService = new LosService(
                 new LocalLosImporter(),
                 losRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())), new HarvestMetrics(new SimpleMeterRegistry()));
 
         losService.importLosNodes();
     }

@@ -1,6 +1,7 @@
 package no.fdk.referencedata.geonames;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.HarvestableReferenceData;
 import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
@@ -26,6 +27,8 @@ import java.util.stream.Stream;
 @Service
 @Slf4j
 public class GeonamesService implements SearchableReferenceData, HarvestableReferenceData {
+    private static final String MODULE_ID = "geonames";
+
     private final String rdfSourceID = "geonames-source";
 
     private final GeonamesHarvester geonamesHarvester;
@@ -33,6 +36,7 @@ public class GeonamesService implements SearchableReferenceData, HarvestableRefe
     private final GeonamesKommuneRepository geonamesKommuneRepository;
     private final GeonamesWriter geonamesWriter;
     private final ReferenceDataServiceSupport support;
+    private final HarvestMetrics harvestMetrics;
 
     @Autowired
     public GeonamesService(
@@ -40,12 +44,14 @@ public class GeonamesService implements SearchableReferenceData, HarvestableRefe
             GeonamesFylkeRepository geonamesFylkeRepository,
             GeonamesKommuneRepository geonamesKommuneRepository,
             GeonamesWriter geonamesWriter,
-            ReferenceDataServiceSupport support) {
+            ReferenceDataServiceSupport support,
+            HarvestMetrics harvestMetrics) {
         this.geonamesHarvester = geonamesHarvester;
         this.geonamesFylkeRepository = geonamesFylkeRepository;
         this.geonamesKommuneRepository = geonamesKommuneRepository;
         this.geonamesWriter = geonamesWriter;
         this.support = support;
+        this.harvestMetrics = harvestMetrics;
     }
 
     @Override
@@ -99,44 +105,47 @@ public class GeonamesService implements SearchableReferenceData, HarvestableRefe
 
     @Override
     public HarvestResult harvestAndSave() {
-        try {
-            List<GeonamesFylke> fylker = geonamesHarvester.harvestFylker().collectList().block();
-            if (fylker == null || fylker.isEmpty()) {
-                log.warn("No Norwegian counties harvested from GeoNames");
-                return HarvestResult.skippedEmpty();
-            }
-
-            List<GeonamesKommune> kommuner = new ArrayList<>();
-            for (GeonamesFylke fylke : fylker) {
-                try {
-                    List<GeonamesKommune> result = geonamesHarvester
-                            .harvestKommunerForFylke(fylke.getGeonameId())
-                            .collectList()
-                            .block();
-                    if (result != null) {
-                        kommuner.addAll(result);
-                    }
-                } catch (Exception e) {
-                    log.error("Failed to harvest districts for county {} ({})", fylke.getName(), fylke.getGeonameId(), e);
+        return harvestMetrics.timed(MODULE_ID, () -> {
+            try {
+                List<GeonamesFylke> fylker = geonamesHarvester.harvestFylker().collectList().block();
+                if (fylker == null || fylker.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", MODULE_ID);
+                    return HarvestResult.skippedEmpty();
                 }
+
+                List<GeonamesKommune> kommuner = new ArrayList<>();
+                for (GeonamesFylke fylke : fylker) {
+                    try {
+                        List<GeonamesKommune> result = geonamesHarvester
+                                .harvestKommunerForFylke(fylke.getGeonameId())
+                                .collectList()
+                                .block();
+                        if (result != null) {
+                            kommuner.addAll(result);
+                        }
+                    } catch (Exception e) {
+                        harvestMetrics.incrementPartialError(MODULE_ID);
+                        log.error("Failed to harvest districts for county {} ({})", fylke.getName(), fylke.getGeonameId(), e);
+                    }
+                }
+
+                Model model = ModelFactory.createDefaultModel();
+                model.setNsPrefix("dct", DCTerms.NS);
+                fylker.forEach(item -> addLocationToModel(item, model));
+                kommuner.forEach(item -> addLocationToModel(item, model));
+
+                RDFSource rdfSource = new RDFSource();
+                rdfSource.setId(rdfSourceID);
+                rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
+
+                geonamesWriter.replaceAll(fylker, kommuner, rdfSource);
+
+                log.info("Harvest and saving {} {}", fylker.size() + kommuner.size(), MODULE_ID);
+                return HarvestResult.success(fylker.size() + kommuner.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", MODULE_ID, e);
+                return HarvestResult.failure();
             }
-
-            Model model = ModelFactory.createDefaultModel();
-            model.setNsPrefix("dct", DCTerms.NS);
-            fylker.forEach(item -> addLocationToModel(item, model));
-            kommuner.forEach(item -> addLocationToModel(item, model));
-
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(rdfSourceID);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-
-            geonamesWriter.replaceAll(fylker, kommuner, rdfSource);
-
-            log.info("Harvested and saved {} Norwegian counties and {} Norwegian districts from GeoNames", fylker.size(), kommuner.size());
-            return HarvestResult.success(fylker.size() + kommuner.size());
-        } catch (Exception e) {
-            log.error("Unable to harvest GeoNames data", e);
-            return HarvestResult.failure();
-        }
+        });
     }
 }

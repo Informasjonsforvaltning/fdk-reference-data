@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.licence;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -39,7 +42,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         LicenceService licenceService = new LicenceService(
                 LocalHarvesters.licence(),
                 licenceRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         licenceService.harvestAndSave();
 
@@ -74,7 +77,7 @@ public class LicenceServiceIntegrationTest extends AbstractContainerTest {
         new LicenceService(
                 LocalHarvesters.licence(),
                 licenceRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, licenceRepositorySpy.count());
     }

@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.currency;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -37,7 +40,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
         CurrencyService currencyService = new CurrencyService(
                 LocalHarvesters.currency(),
                 currencyRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         currencyService.harvestAndSave();
 
@@ -70,7 +73,7 @@ public class CurrencyServiceIntegrationTest extends AbstractContainerTest {
         new CurrencyService(
                 LocalHarvesters.currency(),
                 currencyRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, currencyRepositorySpy.count());
     }

@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.distributiontype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -39,7 +42,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
         DistributionTypeService accessRightService = new DistributionTypeService(
                 LocalHarvesters.distributionType(),
                 distributionTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         accessRightService.harvestAndSave();
 
@@ -72,7 +75,7 @@ public class DistributionTypeServiceIntegrationTest extends AbstractContainerTes
         new DistributionTypeService(
                 LocalHarvesters.distributionType(),
                 distributionTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, distrubutionTypeRepositorySpy.count());
     }

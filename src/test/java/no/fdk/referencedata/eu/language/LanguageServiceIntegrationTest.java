@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.language;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -38,7 +41,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
         LanguageService languageService = new LanguageService(
                 LocalHarvesters.language(),
                 languageRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         languageService.harvestAndSave();
 
@@ -73,7 +76,7 @@ public class LanguageServiceIntegrationTest extends AbstractContainerTest {
         new LanguageService(
                 LocalHarvesters.language(),
                 languageRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, languageRepositorySpy.count());
     }

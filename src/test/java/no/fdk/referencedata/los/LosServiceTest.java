@@ -1,5 +1,8 @@
 package no.fdk.referencedata.los;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -32,7 +35,7 @@ public class LosServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_returns_all_los_nodes() {
         LosService losService = new LosService(new LocalLosImporter(), losRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())), new HarvestMetrics(new SimpleMeterRegistry()));
         losService.importLosNodes();
 
         List<LosNode> losNodeList = losService.getAll();
@@ -50,7 +53,7 @@ public class LosServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_los_nodes_by_uris_returns_correct_los_nodes() {
         LosService losService = new LosService(new LocalLosImporter(), losRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())), new HarvestMetrics(new SimpleMeterRegistry()));
         losService.importLosNodes();
 
         List<LosNode> losNodeList = losService.getByURIs(List.of(

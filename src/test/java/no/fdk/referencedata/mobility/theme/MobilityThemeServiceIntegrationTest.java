@@ -1,6 +1,9 @@
 package no.fdk.referencedata.mobility.theme;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
         MobilityThemeService mobilityThemeService = new MobilityThemeService(
                 LocalHarvesters.mobilityTheme(),
                 mobilityThemeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         mobilityThemeService.harvestAndSave();
 
@@ -69,7 +72,7 @@ public class MobilityThemeServiceIntegrationTest extends AbstractContainerTest {
         new MobilityThemeService(
                 LocalHarvesters.mobilityTheme(),
                 mobilityThemeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, mobilityThemeRepositorySpy.count());
     }

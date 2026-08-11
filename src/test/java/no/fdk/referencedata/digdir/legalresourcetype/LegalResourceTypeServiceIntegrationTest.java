@@ -1,6 +1,9 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -47,7 +50,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
         LegalResourceTypeService legalResourceTypeService = new LegalResourceTypeService(
                 LocalHarvesters.legalResourceType(),
                 legalResourceTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         legalResourceTypeService.harvestAndSave();
 
@@ -80,7 +83,7 @@ public class LegalResourceTypeServiceIntegrationTest extends AbstractContainerTe
         new LegalResourceTypeService(
                 LocalHarvesters.legalResourceType(),
                 legalResourceTypeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, legalResourceTypeRepositorySpy.count());
     }

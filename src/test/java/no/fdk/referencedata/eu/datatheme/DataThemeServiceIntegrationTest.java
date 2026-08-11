@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.datatheme;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -39,7 +42,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         DataThemeService fileTypeService = new DataThemeService(
                 LocalHarvesters.dataTheme(),
                 dataThemeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         fileTypeService.harvestAndSave();
 
@@ -74,7 +77,7 @@ public class DataThemeServiceIntegrationTest extends AbstractContainerTest {
         new DataThemeService(
                 LocalHarvesters.dataTheme(),
                 dataThemeRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, dataThemeRepositorySpy.count());
     }

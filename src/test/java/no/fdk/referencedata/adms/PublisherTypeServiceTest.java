@@ -1,5 +1,8 @@
 package no.fdk.referencedata.adms;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -36,7 +39,7 @@ public class PublisherTypeServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_all_returns_all_publisher_types() {
         PublisherTypeService service = new PublisherTypeService(new PublisherTypeImporter(), publisherTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
         service.importPublisherTypes();
 
         List<PublisherType> publisherTypes = service.getAll();
@@ -51,7 +54,7 @@ public class PublisherTypeServiceTest extends AbstractContainerTest {
     @Test
     public void test_if_get_by_code_returns_correct_publisher_type() {
         PublisherTypeService service = new PublisherTypeService(new PublisherTypeImporter(), publisherTypeRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
         service.importPublisherTypes();
 
         Optional<PublisherType> publisherTypeOptional = service.getByCode("NonProfitOrganisation");

@@ -1,6 +1,9 @@
 package no.fdk.referencedata.eu.country;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+
 import no.fdk.referencedata.LocalHarvesters;
+import no.fdk.referencedata.core.HarvestMetrics;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.core.ReferenceDataWriter;
@@ -39,7 +42,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
         CountryService countryService = new CountryService(
                 LocalHarvesters.country(),
                 countryRepository,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         countryService.harvestAndSave();
 
@@ -72,7 +75,7 @@ public class CountryServiceIntegrationTest extends AbstractContainerTest {
         new CountryService(
                 LocalHarvesters.country(),
                 countryRepositorySpy,
-                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository));
+                new ReferenceDataServiceSupport(new ReferenceDataWriter(rdfSourceRepository), rdfSourceRepository, new HarvestMetrics(new SimpleMeterRegistry())));
 
         assertEquals(count, countryRepositorySpy.count());
     }
