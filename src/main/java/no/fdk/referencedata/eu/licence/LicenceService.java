@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.licence;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.search.SearchAlternative;
@@ -43,8 +44,8 @@ public class LicenceService implements SearchableReferenceData, HarvestableRefer
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(licenceHarvester, licenceRepository, dbSourceID, "licences");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(licenceHarvester, licenceRepository, dbSourceID, "licence");
     }
 
     @Override

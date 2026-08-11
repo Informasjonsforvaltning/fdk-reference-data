@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.evidencetype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class EvidenceTypeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(evidenceTypeHarvester, evidenceTypeRepository, dbSourceID, "evidence-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(evidenceTypeHarvester, evidenceTypeRepository, dbSourceID, "evidence-type");
     }
 }

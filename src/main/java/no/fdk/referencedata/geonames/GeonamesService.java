@@ -2,6 +2,7 @@ package no.fdk.referencedata.geonames;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import no.fdk.referencedata.i18n.Language;
 import no.fdk.referencedata.rdf.RDFSource;
@@ -97,12 +98,12 @@ public class GeonamesService implements SearchableReferenceData, HarvestableRefe
     }
 
     @Override
-    public void harvestAndSave() {
+    public HarvestResult harvestAndSave() {
         try {
             List<GeonamesFylke> fylker = geonamesHarvester.harvestFylker().collectList().block();
             if (fylker == null || fylker.isEmpty()) {
                 log.warn("No Norwegian counties harvested from GeoNames");
-                return;
+                return HarvestResult.skippedEmpty();
             }
 
             List<GeonamesKommune> kommuner = new ArrayList<>();
@@ -132,8 +133,10 @@ public class GeonamesService implements SearchableReferenceData, HarvestableRefe
             geonamesWriter.replaceAll(fylker, kommuner, rdfSource);
 
             log.info("Harvested and saved {} Norwegian counties and {} Norwegian districts from GeoNames", fylker.size(), kommuner.size());
+            return HarvestResult.success(fylker.size() + kommuner.size());
         } catch (Exception e) {
             log.error("Unable to harvest GeoNames data", e);
+            return HarvestResult.failure();
         }
     }
 }

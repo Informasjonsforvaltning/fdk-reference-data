@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.plannedavailability;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class PlannedAvailabilityService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(plannedAvailabilityHarvester, plannedAvailabilityRepository, dbSourceID, "planned availabilities");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(plannedAvailabilityHarvester, plannedAvailabilityRepository, dbSourceID, "planned-availability");
     }
 }

@@ -1,6 +1,7 @@
 package no.fdk.referencedata.mobility.theme;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class MobilityThemeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(mobilityThemeHarvester, mobilityThemeRepository, dbSourceID, "mobility themes");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(mobilityThemeHarvester, mobilityThemeRepository, dbSourceID, "mobility-theme");
     }
 }

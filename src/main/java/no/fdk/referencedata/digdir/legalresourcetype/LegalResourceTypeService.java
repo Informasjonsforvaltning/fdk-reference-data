@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.legalresourcetype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class LegalResourceTypeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(legalResourceTypeHarvester, legalResourceTypeRepository, dbSourceID, "legal-resource-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(legalResourceTypeHarvester, legalResourceTypeRepository, dbSourceID, "legal-resource-type");
     }
 }

@@ -2,6 +2,7 @@ package no.fdk.referencedata.eu.frequency;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class FrequencyService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(frequencyHarvester, frequencyRepository, dbSourceID, "frequencies");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(frequencyHarvester, frequencyRepository, dbSourceID, "frequency");
     }
 }

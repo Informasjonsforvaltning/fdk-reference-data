@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.filetype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.search.SearchAlternative;
@@ -59,7 +60,7 @@ public class FileTypeService implements SearchableReferenceData, HarvestableRefe
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(fileTypeHarvester, fileTypeRepository, dbSourceID, "file-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(fileTypeHarvester, fileTypeRepository, dbSourceID, "file-type");
     }
 }

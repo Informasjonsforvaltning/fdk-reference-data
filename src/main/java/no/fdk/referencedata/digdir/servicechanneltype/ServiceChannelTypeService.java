@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.servicechanneltype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class ServiceChannelTypeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(serviceChannelTypeHarvester, serviceChannelTypeRepository, dbSourceID, "service-channel-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(serviceChannelTypeHarvester, serviceChannelTypeRepository, dbSourceID, "service-channel-type");
     }
 }

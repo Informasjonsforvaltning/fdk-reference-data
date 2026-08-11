@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.distributionstatus;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class DistributionStatusService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(distributionStatusHarvester, distributionStatusRepository, dbSourceID, "distribution statuses");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(distributionStatusHarvester, distributionStatusRepository, dbSourceID, "distribution-status");
     }
 }

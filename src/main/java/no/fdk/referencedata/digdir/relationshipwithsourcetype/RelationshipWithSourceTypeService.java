@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.relationshipwithsourcetype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class RelationshipWithSourceTypeService implements HarvestableReferenceDa
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(relationshipWithSourceTypeHarvester, relationshipWithSourceTypeRepository, dbSourceID, "relationship-with-source-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(relationshipWithSourceTypeHarvester, relationshipWithSourceTypeRepository, dbSourceID, "relationship-with-source-type");
     }
 }

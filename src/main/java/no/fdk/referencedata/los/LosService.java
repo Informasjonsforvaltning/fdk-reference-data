@@ -2,6 +2,7 @@ package no.fdk.referencedata.los;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,17 +50,13 @@ public class LosService implements HarvestableReferenceData {
         return support.firstTime(losRepository);
     }
 
-    public void importLosNodes() {
-        try {
-            final List<LosNode> losList = losImporter.importFromLosSource();
-            support.saveAll(losList, losImporter.getModel(), losRepository, rdfSourceID);
-        } catch (Exception e) {
-            log.error("Unable to harvest LOS", e);
-        }
+    public HarvestResult importLosNodes() {
+        final List<LosNode> losList = losImporter.importFromLosSource();
+        return support.persistHarvested("los", losList, losImporter.getModel(), losRepository, rdfSourceID);
     }
 
     @Override
-    public void harvestAndSave() {
-        importLosNodes();
+    public HarvestResult harvestAndSave() {
+        return importLosNodes();
     }
 }

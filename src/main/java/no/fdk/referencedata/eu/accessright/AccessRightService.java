@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.accessright;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class AccessRightService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(accessRightHarvester, accessRightRepository, dbSourceID, "access-rights");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(accessRightHarvester, accessRightRepository, dbSourceID, "access-right");
     }
 }

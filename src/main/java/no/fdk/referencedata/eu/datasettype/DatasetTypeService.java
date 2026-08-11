@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.datasettype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class DatasetTypeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(datasetTypeHarvester, datasetTypeRepository, dbSourceID, "dataset-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(datasetTypeHarvester, datasetTypeRepository, dbSourceID, "dataset-type");
     }
 }
