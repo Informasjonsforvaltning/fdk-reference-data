@@ -30,6 +30,7 @@ class HarvestMetricsTest {
                 .tag("module", "access-right")
                 .tag("outcome", "success")
                 .tag("reason", "none")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
                 .counter()
                 .count());
         assertEquals(3.0, meterRegistry.get(HarvestMetrics.METRIC_ITEMS)
@@ -43,6 +44,27 @@ class HarvestMetricsTest {
         assertTrue(meterRegistry.get(HarvestMetrics.METRIC_DURATION)
                 .tag("module", "access-right")
                 .tag("outcome", "success")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
+                .timer()
+                .count() >= 1);
+    }
+
+    @Test
+    void timedUsesTriggerFromHarvestTriggerContext() {
+        HarvestTrigger.call(HarvestTrigger.CRON, () ->
+                harvestMetrics.timed("access-right", () -> HarvestResult.success(1)));
+
+        assertEquals(1.0, meterRegistry.get(HarvestMetrics.METRIC_TOTAL)
+                .tag("module", "access-right")
+                .tag("outcome", "success")
+                .tag("reason", "none")
+                .tag("trigger", HarvestTrigger.CRON)
+                .counter()
+                .count());
+        assertTrue(meterRegistry.get(HarvestMetrics.METRIC_DURATION)
+                .tag("module", "access-right")
+                .tag("outcome", "success")
+                .tag("trigger", HarvestTrigger.CRON)
                 .timer()
                 .count() >= 1);
     }
@@ -55,6 +77,7 @@ class HarvestMetricsTest {
                 .tag("module", "media-type")
                 .tag("outcome", "skipped_empty")
                 .tag("reason", "empty")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
                 .counter()
                 .count());
         assertEquals(0, meterRegistry.find(HarvestMetrics.METRIC_ITEMS)
@@ -72,6 +95,7 @@ class HarvestMetricsTest {
                 .tag("module", "geonames")
                 .tag("outcome", "failure")
                 .tag("reason", "error")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
                 .counter()
                 .count());
     }
@@ -87,6 +111,7 @@ class HarvestMetricsTest {
                 .tag("module", "los")
                 .tag("outcome", "failure")
                 .tag("reason", "error")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
                 .counter()
                 .count());
     }

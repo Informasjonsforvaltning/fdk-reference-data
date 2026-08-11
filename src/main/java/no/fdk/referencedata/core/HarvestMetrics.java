@@ -17,12 +17,14 @@ import java.util.function.Supplier;
  * Harvest-domain Prometheus metrics (scraped via Actuator {@code /actuator/prometheus}).
  *
  * <ul>
- *   <li>{@code reference_data_harvest_total{module,outcome,reason}}</li>
- *   <li>{@code reference_data_harvest_duration_seconds{module,outcome}}</li>
+ *   <li>{@code reference_data_harvest_total{module,outcome,reason,trigger}}</li>
+ *   <li>{@code reference_data_harvest_duration_seconds{module,outcome,trigger}}</li>
  *   <li>{@code reference_data_harvest_items{module}}</li>
  *   <li>{@code reference_data_harvest_last_success_timestamp{module}}</li>
  *   <li>{@code reference_data_harvest_partial_errors_total{module}}</li>
  * </ul>
+ *
+ * Trigger is taken from {@link HarvestTrigger} ({@code cron}, {@code startup}, {@code api}).
  */
 @Component
 public class HarvestMetrics {
@@ -44,28 +46,41 @@ public class HarvestMetrics {
     }
 
     public HarvestResult timed(String moduleId, Supplier<HarvestResult> work) {
+        return timed(moduleId, HarvestTrigger.current(), work);
+    }
+
+    public HarvestResult timed(String moduleId, String trigger, Supplier<HarvestResult> work) {
         Instant start = Instant.now();
         try {
             HarvestResult result = work.get();
-            record(moduleId, result, Duration.between(start, Instant.now()));
+            record(moduleId, trigger, result, Duration.between(start, Instant.now()));
             return result;
         } catch (RuntimeException e) {
-            record(moduleId, HarvestResult.failure(), Duration.between(start, Instant.now()));
+            record(moduleId, trigger, HarvestResult.failure(), Duration.between(start, Instant.now()));
             throw e;
         }
     }
 
     public void record(String moduleId, HarvestResult result, Duration duration) {
+        record(moduleId, HarvestTrigger.current(), result, duration);
+    }
+
+    public void record(String moduleId, String trigger, HarvestResult result, Duration duration) {
         String outcome = outcomeTag(result.outcome());
         String reason = result.reason() != null ? result.reason() : REASON_NONE;
+        String triggerTag = trigger != null ? trigger : HarvestTrigger.UNKNOWN;
 
         meterRegistry.counter(
                         METRIC_TOTAL,
-                        Tags.of("module", moduleId, "outcome", outcome, "reason", reason))
+                        Tags.of(
+                                "module", moduleId,
+                                "outcome", outcome,
+                                "reason", reason,
+                                "trigger", triggerTag))
                 .increment();
 
         Timer.builder(METRIC_DURATION)
-                .tags(Tags.of("module", moduleId, "outcome", outcome))
+                .tags(Tags.of("module", moduleId, "outcome", outcome, "trigger", triggerTag))
                 .register(meterRegistry)
                 .record(duration);
 

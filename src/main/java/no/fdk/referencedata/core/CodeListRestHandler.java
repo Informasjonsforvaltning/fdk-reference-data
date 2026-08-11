@@ -42,7 +42,9 @@ public class CodeListRestHandler {
         if (!module.api().supportsHarvestPost() || !module.hasHarvestableService()) {
             return ServerResponse.notFound().build();
         }
-        HarvestResult result = module.service().harvestAndSave();
+        HarvestResult result = HarvestTrigger.call(
+                HarvestTrigger.API,
+                () -> module.service().harvestAndSave());
         return result.isSuccess()
                 ? ServerResponse.ok().build()
                 : ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

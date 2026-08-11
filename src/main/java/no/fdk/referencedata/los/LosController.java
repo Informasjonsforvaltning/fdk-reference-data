@@ -3,6 +3,7 @@ package no.fdk.referencedata.los;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestTrigger;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +50,7 @@ public class LosController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping(path = "themes-and-words")
     public ResponseEntity<Void> updateLos() {
-        return losService.importLosNodes().isSuccess()
+        return HarvestTrigger.call(HarvestTrigger.API, losService::importLosNodes).isSuccess()
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.internalServerError().build();
     }

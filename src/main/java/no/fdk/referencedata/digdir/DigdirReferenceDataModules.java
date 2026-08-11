@@ -40,7 +40,6 @@ import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
 @RequiredArgsConstructor
@@ -74,7 +73,7 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public ReferenceDataModule conceptSubjectModule() {
-        return module("concept-subject", conceptSubjectService, conceptSubjectApi());
+        return module("concept-subject", conceptSubjectService, conceptSubjectApi(), CRON_CONCEPT_SUBJECT);
     }
 
     @Bean
@@ -88,14 +87,9 @@ public class DigdirReferenceDataModules {
                 ConceptSubject.class);
     }
 
-    @Scheduled(cron = CRON_CONCEPT_SUBJECT)
-    public void updateConceptSubjects() {
-        conceptSubjectService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule evidenceTypeModule() {
-        return module("evidence-type", evidenceTypeService, evidenceTypeApi());
+        return module("evidence-type", evidenceTypeService, evidenceTypeApi(), CRON_EVIDENCE_TYPE);
     }
 
     @Bean
@@ -109,14 +103,9 @@ public class DigdirReferenceDataModules {
                 EvidenceType.class);
     }
 
-    @Scheduled(cron = CRON_EVIDENCE_TYPE)
-    public void updateEvidenceTypes() {
-        evidenceTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule serviceChannelTypeModule() {
-        return module("service-channel-type", serviceChannelTypeService, serviceChannelTypeApi());
+        return module("service-channel-type", serviceChannelTypeService, serviceChannelTypeApi(), CRON_SERVICE_CHANNEL_TYPE);
     }
 
     @Bean
@@ -130,14 +119,9 @@ public class DigdirReferenceDataModules {
                 ServiceChannelType.class);
     }
 
-    @Scheduled(cron = CRON_SERVICE_CHANNEL_TYPE)
-    public void updateServiceChannelTypes() {
-        serviceChannelTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule roleTypeModule() {
-        return module("role-type", roleTypeService, roleTypeApi());
+        return module("role-type", roleTypeService, roleTypeApi(), CRON_ROLE_TYPE);
     }
 
     @Bean
@@ -151,14 +135,9 @@ public class DigdirReferenceDataModules {
                 RoleType.class);
     }
 
-    @Scheduled(cron = CRON_ROLE_TYPE)
-    public void updateRoleTypes() {
-        roleTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule audienceTypeModule() {
-        return module("audience-type", audienceTypeService, audienceTypeApi());
+        return module("audience-type", audienceTypeService, audienceTypeApi(), CRON_AUDIENCE_TYPE);
     }
 
     @Bean
@@ -172,14 +151,9 @@ public class DigdirReferenceDataModules {
                 AudienceType.class);
     }
 
-    @Scheduled(cron = CRON_AUDIENCE_TYPE)
-    public void updateAudienceTypes() {
-        audienceTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule relationshipWithSourceTypeModule() {
-        return module("relationship-with-source-type", relationshipWithSourceTypeService, relationshipWithSourceTypeApi());
+        return module("relationship-with-source-type", relationshipWithSourceTypeService, relationshipWithSourceTypeApi(), CRON_RELATIONSHIP_WITH_SOURCE_TYPE);
     }
 
     @Bean
@@ -195,14 +169,9 @@ public class DigdirReferenceDataModules {
                 RelationshipWithSourceType.class);
     }
 
-    @Scheduled(cron = CRON_RELATIONSHIP_WITH_SOURCE_TYPE)
-    public void updateRelationshipWithSourceTypes() {
-        relationshipWithSourceTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule qualityDimensionModule() {
-        return module("quality-dimension", qualityDimensionService, qualityDimensionApi());
+        return module("quality-dimension", qualityDimensionService, qualityDimensionApi(), CRON_QUALITY_DIMENSION);
     }
 
     @Bean
@@ -216,14 +185,9 @@ public class DigdirReferenceDataModules {
                 QualityDimension.class);
     }
 
-    @Scheduled(cron = CRON_QUALITY_DIMENSION)
-    public void updateQualityDimensions() {
-        qualityDimensionService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule legalResourceTypeModule() {
-        return module("legal-resource-type", legalResourceTypeService, legalResourceTypeApi());
+        return module("legal-resource-type", legalResourceTypeService, legalResourceTypeApi(), CRON_LEGAL_RESOURCE_TYPE);
     }
 
     @Bean
@@ -237,12 +201,7 @@ public class DigdirReferenceDataModules {
                 LegalResourceType.class);
     }
 
-    @Scheduled(cron = CRON_LEGAL_RESOURCE_TYPE)
-    public void updateLegalResourceTypes() {
-        legalResourceTypeService.harvestAndSave();
-    }
-
-    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api) {
-        return new ReferenceDataModule(id, service, api);
+    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api, String cron) {
+        return new ReferenceDataModule(id, service, api, cron);
     }
 }

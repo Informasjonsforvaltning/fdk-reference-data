@@ -76,7 +76,6 @@ import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityRepository
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Comparator;
 
@@ -139,7 +138,7 @@ public class EuReferenceDataModules {
 
     @Bean
     public ReferenceDataModule accessRightModule() {
-        return module("access-right", accessRightService, accessRightApi());
+        return module("access-right", accessRightService, accessRightApi(), CRON_ACCESS_RIGHT);
     }
 
     @Bean
@@ -153,14 +152,9 @@ public class EuReferenceDataModules {
                 AccessRight.class);
     }
 
-    @Scheduled(cron = CRON_ACCESS_RIGHT)
-    public void updateAccessRights() {
-        accessRightService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule fileTypeModule() {
-        return module("file-type", fileTypeService, fileTypeApi());
+        return module("file-type", fileTypeService, fileTypeApi(), CRON_FILE_TYPE);
     }
 
     @Bean
@@ -174,14 +168,9 @@ public class EuReferenceDataModules {
                 FileType.class);
     }
 
-    @Scheduled(cron = CRON_FILE_TYPE)
-    public void updateFileTypes() {
-        fileTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule dataThemeModule() {
-        return module("data-theme", dataThemeService, dataThemeApi());
+        return module("data-theme", dataThemeService, dataThemeApi(), CRON_DATA_THEME);
     }
 
     @Bean
@@ -195,14 +184,9 @@ public class EuReferenceDataModules {
                 DataTheme.class);
     }
 
-    @Scheduled(cron = CRON_DATA_THEME)
-    public void updateDataThemes() {
-        dataThemeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule euroVocModule() {
-        return module("eurovoc", euroVocService, euroVocApi());
+        return module("eurovoc", euroVocService, euroVocApi(), CRON_EUROVOC);
     }
 
     @Bean
@@ -216,14 +200,9 @@ public class EuReferenceDataModules {
                 EuroVoc.class);
     }
 
-    @Scheduled(cron = CRON_EUROVOC)
-    public void updateEuroVoc() {
-        euroVocService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule frequencyModule() {
-        return module("frequency", frequencyService, frequencyApi());
+        return module("frequency", frequencyService, frequencyApi(), CRON_FREQUENCY);
     }
 
     @Bean
@@ -237,14 +216,9 @@ public class EuReferenceDataModules {
                 Frequency.class);
     }
 
-    @Scheduled(cron = CRON_FREQUENCY)
-    public void updateFrequencies() {
-        frequencyService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule distributionStatusModule() {
-        return module("distribution-status", distributionStatusService, distributionStatusApi());
+        return module("distribution-status", distributionStatusService, distributionStatusApi(), CRON_DISTRIBUTION_STATUS);
     }
 
     @Bean
@@ -258,14 +232,9 @@ public class EuReferenceDataModules {
                 DistributionStatus.class);
     }
 
-    @Scheduled(cron = CRON_DISTRIBUTION_STATUS)
-    public void updateDistributionStatuses() {
-        distributionStatusService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule distributionTypeModule() {
-        return module("distribution-type", distributionTypeService, distributionTypeApi());
+        return module("distribution-type", distributionTypeService, distributionTypeApi(), CRON_DISTRIBUTION_TYPE);
     }
 
     @Bean
@@ -279,14 +248,9 @@ public class EuReferenceDataModules {
                 DistributionType.class);
     }
 
-    @Scheduled(cron = CRON_DISTRIBUTION_TYPE)
-    public void updateDistributionTypes() {
-        distributionTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule datasetTypeModule() {
-        return module("dataset-type", datasetTypeService, datasetTypeApi());
+        return module("dataset-type", datasetTypeService, datasetTypeApi(), CRON_DATASET_TYPE);
     }
 
     @Bean
@@ -300,14 +264,9 @@ public class EuReferenceDataModules {
                 DatasetType.class);
     }
 
-    @Scheduled(cron = CRON_DATASET_TYPE)
-    public void updateDatasetTypes() {
-        datasetTypeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule mainActivityModule() {
-        return module("main-activity", mainActivityService, mainActivityApi());
+        return module("main-activity", mainActivityService, mainActivityApi(), CRON_MAIN_ACTIVITY);
     }
 
     @Bean
@@ -321,14 +280,9 @@ public class EuReferenceDataModules {
                 MainActivity.class);
     }
 
-    @Scheduled(cron = CRON_MAIN_ACTIVITY)
-    public void updateMainActivities() {
-        mainActivityService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule conceptStatusModule() {
-        return module("concept-status", conceptStatusService, conceptStatusApi());
+        return module("concept-status", conceptStatusService, conceptStatusApi(), CRON_CONCEPT_STATUS);
     }
 
     @Bean
@@ -342,14 +296,9 @@ public class EuReferenceDataModules {
                 ConceptStatus.class);
     }
 
-    @Scheduled(cron = CRON_CONCEPT_STATUS)
-    public void updateConceptStatuses() {
-        conceptStatusService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule plannedAvailabilityModule() {
-        return module("planned-availability", plannedAvailabilityService, plannedAvailabilityApi());
+        return module("planned-availability", plannedAvailabilityService, plannedAvailabilityApi(), CRON_PLANNED_AVAILABILITY);
     }
 
     @Bean
@@ -363,14 +312,9 @@ public class EuReferenceDataModules {
                 PlannedAvailability.class);
     }
 
-    @Scheduled(cron = CRON_PLANNED_AVAILABILITY)
-    public void updatePlannedAvailability() {
-        plannedAvailabilityService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule currencyModule() {
-        return module("currency", currencyService, currencyApi());
+        return module("currency", currencyService, currencyApi(), CRON_CURRENCY);
     }
 
     @Bean
@@ -384,14 +328,9 @@ public class EuReferenceDataModules {
                 Currency.class);
     }
 
-    @Scheduled(cron = CRON_CURRENCY)
-    public void updateCurrencies() {
-        currencyService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule licenceModule() {
-        return module("licence", licenceService, licenceApi());
+        return module("licence", licenceService, licenceApi(), CRON_LICENCE);
     }
 
     @Bean
@@ -405,14 +344,9 @@ public class EuReferenceDataModules {
                 Licence.class);
     }
 
-    @Scheduled(cron = CRON_LICENCE)
-    public void updateLicences() {
-        licenceService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule highValueCategoryModule() {
-        return module("high-value-category", highValueCategoryService, highValueCategoryApi());
+        return module("high-value-category", highValueCategoryService, highValueCategoryApi(), CRON_HIGH_VALUE_CATEGORY);
     }
 
     @Bean
@@ -426,14 +360,9 @@ public class EuReferenceDataModules {
                 HighValueCategory.class);
     }
 
-    @Scheduled(cron = CRON_HIGH_VALUE_CATEGORY)
-    public void updateHighValueCategories() {
-        highValueCategoryService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule continentModule() {
-        return module("continent", continentService, continentApi());
+        return module("continent", continentService, continentApi(), CRON_CONTINENT);
     }
 
     @Bean
@@ -447,14 +376,9 @@ public class EuReferenceDataModules {
                 Continent.class);
     }
 
-    @Scheduled(cron = CRON_CONTINENT)
-    public void updateContinents() {
-        continentService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule countryModule() {
-        return module("country", countryService, countryApi());
+        return module("country", countryService, countryApi(), CRON_COUNTRY);
     }
 
     @Bean
@@ -468,14 +392,9 @@ public class EuReferenceDataModules {
                 Country.class);
     }
 
-    @Scheduled(cron = CRON_COUNTRY)
-    public void updateCountries() {
-        countryService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule languageModule() {
-        return module("language", languageService, languageApi());
+        return module("language", languageService, languageApi(), CRON_LANGUAGE);
     }
 
     @Bean
@@ -489,12 +408,7 @@ public class EuReferenceDataModules {
                 Language.class);
     }
 
-    @Scheduled(cron = CRON_LANGUAGE)
-    public void updateLanguages() {
-        languageService.harvestAndSave();
-    }
-
-    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api) {
-        return new ReferenceDataModule(id, service, api);
+    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api, String cron) {
+        return new ReferenceDataModule(id, service, api, cron);
     }
 }
