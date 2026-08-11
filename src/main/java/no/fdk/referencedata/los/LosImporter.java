@@ -1,10 +1,13 @@
 package no.fdk.referencedata.los;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestParseException;
+import no.fdk.referencedata.core.HarvestSourceException;
 import no.fdk.referencedata.vocabulary.FDK;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotException;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.core.io.UrlResource;
@@ -38,8 +41,7 @@ public class LosImporter {
         try {
             return new UrlResource(LOS_URI);
         } catch (MalformedURLException e) {
-            log.error("Unable to get LOS source", e);
-            return null;
+            throw new HarvestSourceException("Unable to get LOS source", e);
         }
     }
 
@@ -55,15 +57,16 @@ public class LosImporter {
             addLosPaths(newLosModel);
             model.removeAll().add(newLosModel);
         } catch (IOException e) {
-            log.error("Unable to load LOS model", e);
+            throw new HarvestSourceException("Unable to load LOS model", e);
+        } catch (RiotException e) {
+            throw new HarvestParseException("Unable to parse LOS model", e);
+        } catch (RuntimeException e) {
+            throw new HarvestSourceException("Unable to load LOS model", e);
         }
     }
 
     List<LosNode> importFromLosSource() {
-        final org.springframework.core.io.Resource source = getSource();
-        if (source != null) {
-            loadModel(source);
-        }
+        loadModel(getSource());
 
         List<Resource> concepts = getModel().listResourcesWithProperty(RDF.type, SKOS.Concept).toList();
 
