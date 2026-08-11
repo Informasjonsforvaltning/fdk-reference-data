@@ -70,11 +70,11 @@ public class ReferenceDataServiceSupport {
                 rdfSource.setId(sourceId);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(harvester.getModel(), RDFFormat.TURTLE));
 
-                referenceDataWriter.replaceAll(repository, items, rdfSource);
+                replaceAll(repository, items, rdfSource);
                 return HarvestResult.success(items.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", moduleId, e);
-                return HarvestResult.failure();
+                return HarvestResult.fromThrowable(e);
             }
         });
     }
@@ -94,11 +94,11 @@ public class ReferenceDataServiceSupport {
                 }
 
                 log.info("Harvest and saving {} {}", items.size(), moduleId);
-                referenceDataWriter.replaceAll(repository, items);
+                replaceAll(repository, items);
                 return HarvestResult.success(items.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", moduleId, e);
-                return HarvestResult.failure();
+                return HarvestResult.fromThrowable(e);
             }
         });
     }
@@ -121,11 +121,11 @@ public class ReferenceDataServiceSupport {
                 RDFSource rdfSource = new RDFSource();
                 rdfSource.setId(sourceId);
                 rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-                referenceDataWriter.replaceAll(repository, items, rdfSource);
+                replaceAll(repository, items, rdfSource);
                 return HarvestResult.success(items.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", moduleId, e);
-                return HarvestResult.failure();
+                return HarvestResult.fromThrowable(e);
             }
         });
     }
@@ -138,6 +138,22 @@ public class ReferenceDataServiceSupport {
         RDFSource rdfSource = new RDFSource();
         rdfSource.setId(sourceId);
         rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
-        referenceDataWriter.replaceAll(repository, items, rdfSource);
+        replaceAll(repository, items, rdfSource);
+    }
+
+    private <T> void replaceAll(JpaRepository<T, String> repository, List<T> items, RDFSource rdfSource) {
+        try {
+            referenceDataWriter.replaceAll(repository, items, rdfSource);
+        } catch (RuntimeException e) {
+            throw new HarvestPersistException("Unable to persist harvested data", e);
+        }
+    }
+
+    private <T> void replaceAll(JpaRepository<T, String> repository, List<T> items) {
+        try {
+            referenceDataWriter.replaceAll(repository, items);
+        } catch (RuntimeException e) {
+            throw new HarvestPersistException("Unable to persist harvested data", e);
+        }
     }
 }

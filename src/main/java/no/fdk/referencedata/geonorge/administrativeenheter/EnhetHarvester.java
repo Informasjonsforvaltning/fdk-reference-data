@@ -1,9 +1,13 @@
 package no.fdk.referencedata.geonorge.administrativeenheter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.jena.rdf.model.*;
+import no.fdk.referencedata.core.HarvestParseException;
+import no.fdk.referencedata.core.HarvestSourceException;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotException;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.springframework.core.io.ClassPathResource;
@@ -12,7 +16,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Component
 @Slf4j
@@ -22,7 +25,7 @@ public class EnhetHarvester {
     public Flux<Enhet> harvest() {
         log.info("Starting harvest of administrative enheter");
         try {
-            return Mono.justOrEmpty(loadModel(getSource()))
+            return Mono.just(loadModel(getSource()))
                 .flatMapIterable(m -> m.listResourcesWithProperty(RDF.type, DCTerms.Location).toList())
                 .map(this::mapEnhet);
         } catch (Exception e) {
@@ -35,17 +38,15 @@ public class EnhetHarvester {
         return new ClassPathResource(FILE_PATH);
     }
 
-    protected Optional<Model> loadModel(org.springframework.core.io.Resource resource) {
+    protected Model loadModel(org.springframework.core.io.Resource resource) {
         try {
-            return Optional.of(
-                RDFDataMgr.loadModel(
-                    resource.getURI().toString(),
-                    Lang.TURTLE
-                )
-            );
+            return RDFDataMgr.loadModel(resource.getURI().toString(), Lang.TURTLE);
         } catch (IOException e) {
-            log.error("Unable to load model", e);
-            return Optional.empty();
+            throw new HarvestSourceException("Unable to load administrative enheter model", e);
+        } catch (RiotException e) {
+            throw new HarvestParseException("Unable to parse administrative enheter model", e);
+        } catch (RuntimeException e) {
+            throw new HarvestSourceException("Unable to load administrative enheter model", e);
         }
     }
 

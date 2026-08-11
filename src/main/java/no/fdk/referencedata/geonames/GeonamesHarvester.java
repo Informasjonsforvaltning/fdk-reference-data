@@ -1,8 +1,11 @@
 package no.fdk.referencedata.geonames;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestParseException;
+import no.fdk.referencedata.core.HarvestSourceException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import reactor.core.publisher.Flux;
 
@@ -42,9 +46,12 @@ public class GeonamesHarvester {
                 }
             }
             return Flux.fromIterable(fylker);
-        } catch (Exception e) {
+        } catch (HarvestSourceException | HarvestParseException e) {
             log.error("Unable to harvest Norwegian counties from GeoNames", e);
             return Flux.error(e);
+        } catch (Exception e) {
+            log.error("Unable to harvest Norwegian counties from GeoNames", e);
+            return Flux.error(new HarvestSourceException("Unable to harvest Norwegian counties from GeoNames", e));
         }
     }
 
@@ -65,20 +72,30 @@ public class GeonamesHarvester {
                 }
             }
             return Flux.fromIterable(kommuner);
-        } catch (Exception e) {
+        } catch (HarvestSourceException | HarvestParseException e) {
             log.error("Unable to harvest districts for county geonameId={}", fylkeGeonameId, e);
             return Flux.error(e);
+        } catch (Exception e) {
+            log.error("Unable to harvest districts for county geonameId={}", fylkeGeonameId, e);
+            return Flux.error(new HarvestSourceException(
+                    "Unable to harvest districts for county geonameId=" + fylkeGeonameId, e));
         }
     }
 
-    private JsonNode fetchChildren(String geonameId) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        String url = getApiUrl() + "/childrenJSON?geonameId=" + geonameId + "&username=" + getUsername();
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.readTree(response.getBody()).path("geonames");
+    private JsonNode fetchChildren(String geonameId) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+            String url = getApiUrl() + "/childrenJSON?geonameId=" + geonameId + "&username=" + getUsername();
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readTree(response.getBody()).path("geonames");
+        } catch (RestClientException e) {
+            throw new HarvestSourceException("Unable to fetch GeoNames children for " + geonameId, e);
+        } catch (JsonProcessingException e) {
+            throw new HarvestParseException("Unable to parse GeoNames children for " + geonameId, e);
+        }
     }
 
     public String getApiUrl() {

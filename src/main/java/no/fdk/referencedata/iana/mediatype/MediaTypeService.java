@@ -105,7 +105,7 @@ public class MediaTypeService implements SearchableReferenceData, HarvestableRef
                 return HarvestResult.success(items.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", MODULE_ID, e);
-                return HarvestResult.failure();
+                return HarvestResult.fromThrowable(e);
             }
         });
     }

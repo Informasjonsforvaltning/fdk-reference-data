@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestSourceException;
 import no.fdk.referencedata.eu.vocabulary.EUAuthorityOntology;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
@@ -27,11 +28,9 @@ public abstract class GenericEuSkosHarvester<T> extends AbstractEuHarvester<T> {
     public Flux<T> harvest() {
         log.info("Starting harvest of EU {}", logName());
         final org.springframework.core.io.Resource rdfSource = getSource();
-        if (rdfSource == null) {
-            return Flux.error(new Exception("Unable to fetch " + logName() + " distribution"));
-        }
 
         return Mono.justOrEmpty(loadModel(rdfSource, false))
+                .switchIfEmpty(Mono.error(new HarvestSourceException("Unable to fetch " + logName() + " distribution")))
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, scheme()).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapConcept);

@@ -1,12 +1,15 @@
 package no.fdk.referencedata.eu;
 
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestParseException;
+import no.fdk.referencedata.core.HarvestSourceException;
 import no.fdk.referencedata.core.ModelHarvester;
 import no.fdk.referencedata.vocabulary.FDK;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RiotException;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.core.io.Resource;
@@ -33,8 +36,7 @@ public abstract class AbstractEuHarvester<T> implements ModelHarvester<T> {
         try {
             return new UrlResource(SPARQL_API + "?query=" + sparqlQuery());
         } catch (MalformedURLException e) {
-            log.error("Unable to get source", e);
-            return null;
+            throw new HarvestSourceException("Unable to get EU SPARQL source", e);
         }
     }
 
@@ -57,8 +59,11 @@ public abstract class AbstractEuHarvester<T> implements ModelHarvester<T> {
             model.removeAll().add(newModel);
             return Optional.of(model);
         } catch (IOException e) {
-            log.error("Unable to load model", e);
-            return Optional.empty();
+            throw new HarvestSourceException("Unable to load EU model", e);
+        } catch (RiotException e) {
+            throw new HarvestParseException("Unable to parse EU model", e);
+        } catch (RuntimeException e) {
+            throw new HarvestSourceException("Unable to load EU model", e);
         }
     }
 

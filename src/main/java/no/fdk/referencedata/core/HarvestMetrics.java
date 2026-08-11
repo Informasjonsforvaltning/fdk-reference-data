@@ -56,7 +56,7 @@ public class HarvestMetrics {
             record(moduleId, trigger, result, Duration.between(start, Instant.now()));
             return result;
         } catch (RuntimeException e) {
-            record(moduleId, trigger, HarvestResult.failure(), Duration.between(start, Instant.now()));
+            record(moduleId, trigger, HarvestResult.fromThrowable(e), Duration.between(start, Instant.now()));
             throw e;
         }
     }

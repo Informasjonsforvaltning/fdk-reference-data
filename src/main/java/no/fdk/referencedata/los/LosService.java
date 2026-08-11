@@ -71,7 +71,7 @@ public class LosService implements HarvestableReferenceData {
                 return HarvestResult.success(losList.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", MODULE_ID, e);
-                return HarvestResult.failure();
+                return HarvestResult.fromThrowable(e);
             }
         });
     }
