@@ -60,6 +60,7 @@ class ReferenceDataServiceSupportTest {
                 .tag("module", "access-right")
                 .tag("outcome", "success")
                 .tag("reason", "none")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
                 .counter()
                 .count());
         assertEquals(2.0, meterRegistry.get(HarvestMetrics.METRIC_ITEMS)
@@ -81,6 +82,7 @@ class ReferenceDataServiceSupportTest {
                 .tag("module", "access-right")
                 .tag("outcome", "skipped_empty")
                 .tag("reason", "empty")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
                 .counter()
                 .count());
     }
@@ -97,6 +99,7 @@ class ReferenceDataServiceSupportTest {
                 .tag("module", "access-right")
                 .tag("outcome", "failure")
                 .tag("reason", "error")
+                .tag("trigger", HarvestTrigger.UNKNOWN)
                 .counter()
                 .count());
     }

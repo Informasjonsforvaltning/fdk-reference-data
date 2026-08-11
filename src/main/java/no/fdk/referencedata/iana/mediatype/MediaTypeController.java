@@ -2,6 +2,7 @@ package no.fdk.referencedata.iana.mediatype;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
+import no.fdk.referencedata.core.HarvestTrigger;
 import org.apache.jena.riot.RDFFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class MediaTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateMediaTypes() {
-        return mediaTypeService.harvestAndSave().isSuccess()
+        return HarvestTrigger.call(HarvestTrigger.API, mediaTypeService::harvestAndSave).isSuccess()
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.internalServerError().build();
     }

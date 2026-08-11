@@ -20,7 +20,6 @@ import no.fdk.referencedata.mobility.theme.MobilityThemeService;
 import no.fdk.referencedata.mobility.theme.MobilityThemes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
 
 @Configuration
 @RequiredArgsConstructor
@@ -39,7 +38,7 @@ public class MobilityReferenceDataModules {
 
     @Bean
     public ReferenceDataModule mobilityThemeModule() {
-        return module("mobility-theme", mobilityThemeService, mobilityThemeApi());
+        return module("mobility-theme", mobilityThemeService, mobilityThemeApi(), CRON_MOBILITY_THEME);
     }
 
     @Bean
@@ -53,14 +52,9 @@ public class MobilityReferenceDataModules {
                 MobilityTheme.class);
     }
 
-    @Scheduled(cron = CRON_MOBILITY_THEME)
-    public void updateMobilityThemes() {
-        mobilityThemeService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule mobilityConditionModule() {
-        return module("mobility-condition", mobilityConditionService, mobilityConditionApi());
+        return module("mobility-condition", mobilityConditionService, mobilityConditionApi(), CRON_MOBILITY_CONDITION);
     }
 
     @Bean
@@ -74,14 +68,9 @@ public class MobilityReferenceDataModules {
                 MobilityCondition.class);
     }
 
-    @Scheduled(cron = CRON_MOBILITY_CONDITION)
-    public void updateMobilityCondition() {
-        mobilityConditionService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule mobilityDataStandardModule() {
-        return module("mobility-data-standard", mobilityDataStandardService, mobilityDataStandardApi());
+        return module("mobility-data-standard", mobilityDataStandardService, mobilityDataStandardApi(), CRON_MOBILITY_DATA_STANDARD);
     }
 
     @Bean
@@ -95,12 +84,7 @@ public class MobilityReferenceDataModules {
                 MobilityDataStandard.class);
     }
 
-    @Scheduled(cron = CRON_MOBILITY_DATA_STANDARD)
-    public void updateMobilityDataStandards() {
-        mobilityDataStandardService.harvestAndSave();
-    }
-
-    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api) {
-        return new ReferenceDataModule(id, service, api);
+    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api, String cron) {
+        return new ReferenceDataModule(id, service, api, cron);
     }
 }

@@ -25,7 +25,6 @@ import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjonService
 import no.fdk.referencedata.ssb.kommuneorganisasjoner.KommuneOrganisasjoner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Comparator;
 
@@ -52,17 +51,12 @@ public class SsbGeonamesReferenceDataModules {
 
     @Bean
     public ReferenceDataModule mediaTypeModule() {
-        return new ReferenceDataModule("media-type", mediaTypeService);
-    }
-
-    @Scheduled(cron = CRON_MEDIA_TYPE)
-    public void updateMediaTypes() {
-        mediaTypeService.harvestAndSave();
+        return new ReferenceDataModule("media-type", mediaTypeService, CRON_MEDIA_TYPE);
     }
 
     @Bean
     public ReferenceDataModule losModule() {
-        return module("los", losService, losApi());
+        return module("los", losService, losApi(), CRON_LOS);
     }
 
     @Bean
@@ -76,14 +70,9 @@ public class SsbGeonamesReferenceDataModules {
                 LosNode.class);
     }
 
-    @Scheduled(cron = CRON_LOS)
-    public void updateLos() {
-        losService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule fylkeOrganisasjonModule() {
-        return module("fylke-organisasjon", fylkeOrganisasjonService, fylkeOrganisasjonApi());
+        return module("fylke-organisasjon", fylkeOrganisasjonService, fylkeOrganisasjonApi(), CRON_FYLKE_ORGANISASJON);
     }
 
     @Bean
@@ -100,14 +89,9 @@ public class SsbGeonamesReferenceDataModules {
                 FylkeOrganisasjon.class);
     }
 
-    @Scheduled(cron = CRON_FYLKE_ORGANISASJON)
-    public void updateFylkeskommuner() {
-        fylkeOrganisasjonService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule kommuneOrganisasjonModule() {
-        return module("kommune-organisasjon", kommuneOrganisasjonService, kommuneOrganisasjonApi());
+        return module("kommune-organisasjon", kommuneOrganisasjonService, kommuneOrganisasjonApi(), CRON_KOMMUNE_ORGANISASJON);
     }
 
     @Bean
@@ -124,14 +108,9 @@ public class SsbGeonamesReferenceDataModules {
                 KommuneOrganisasjon.class);
     }
 
-    @Scheduled(cron = CRON_KOMMUNE_ORGANISASJON)
-    public void updateKommuneOrganisasjoner() {
-        kommuneOrganisasjonService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule enhetModule() {
-        return module("administrative-enhet", enhetService, enhetApi());
+        return module("administrative-enhet", enhetService, enhetApi(), CRON_ENHET);
     }
 
     @Bean
@@ -145,22 +124,12 @@ public class SsbGeonamesReferenceDataModules {
                 Enhet.class);
     }
 
-    @Scheduled(cron = CRON_ENHET)
-    public void updateAdministrativeEnheter() {
-        enhetService.harvestAndSave();
-    }
-
     @Bean
     public ReferenceDataModule geonamesModule() {
-        return new ReferenceDataModule("geonames", geonamesService);
+        return new ReferenceDataModule("geonames", geonamesService, CRON_GEONAMES);
     }
 
-    @Scheduled(cron = CRON_GEONAMES)
-    public void updateGeonames() {
-        geonamesService.harvestAndSave();
-    }
-
-    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api) {
-        return new ReferenceDataModule(id, service, api);
+    private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api, String cron) {
+        return new ReferenceDataModule(id, service, api, cron);
     }
 }
