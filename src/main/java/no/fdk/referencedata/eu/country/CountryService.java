@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.country;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.search.SearchAlternative;
@@ -59,7 +60,7 @@ public class CountryService implements SearchableReferenceData, HarvestableRefer
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(countryHarvester, countryRepository, dbSourceID, "countries");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(countryHarvester, countryRepository, dbSourceID, "country");
     }
 }

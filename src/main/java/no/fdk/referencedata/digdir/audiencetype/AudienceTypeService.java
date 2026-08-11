@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.audiencetype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class AudienceTypeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(audienceTypeHarvester, audienceTypeRepository, dbSourceID, "audience-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(audienceTypeHarvester, audienceTypeRepository, dbSourceID, "audience-type");
     }
 }

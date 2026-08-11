@@ -2,6 +2,7 @@ package no.fdk.referencedata.geonorge.administrativeenheter;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import no.fdk.referencedata.rdf.RDFSource;
 import no.fdk.referencedata.rdf.RDFUtils;
@@ -125,11 +126,16 @@ public class EnhetService implements SearchableReferenceData, HarvestableReferen
     }
 
     @Override
-    public void harvestAndSave() {
+    public HarvestResult harvestAndSave() {
         try {
-
             final List<Enhet> enheter = new ArrayList<>();
             enhetHarvester.harvest().toIterable().forEach(enheter::add);
+
+            if (enheter.isEmpty()) {
+                log.warn("No administrative enheter harvested; skipping replace");
+                return HarvestResult.skippedEmpty();
+            }
+
             log.info("Harvest and saving {} administrative enheter", enheter.size());
 
             final List<EnhetVariant> docVariants = enheter.stream()
@@ -154,10 +160,11 @@ public class EnhetService implements SearchableReferenceData, HarvestableReferen
             rdfSource.setId(rdfSourceID);
             rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
 
-
             enhetWriter.replaceAll(enheter, docVariants, idVariants, rdfSource);
+            return HarvestResult.success(enheter.size());
         } catch (Exception e) {
             log.error("Unable to harvest administrative enheter", e);
+            return HarvestResult.failure();
         }
     }
 }

@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.continent;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.search.SearchAlternative;
@@ -59,7 +60,7 @@ public class ContinentService implements SearchableReferenceData, HarvestableRef
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(continentHarvester, continentRepository, dbSourceID, "continents");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(continentHarvester, continentRepository, dbSourceID, "continent");
     }
 }

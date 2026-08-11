@@ -23,13 +23,16 @@ public class ReferenceDataServiceSupport {
 
     private final ReferenceDataWriter referenceDataWriter;
     private final RDFSourceRepository rdfSourceRepository;
+    private final HarvestMetrics harvestMetrics;
 
     @Autowired
     public ReferenceDataServiceSupport(
             ReferenceDataWriter referenceDataWriter,
-            RDFSourceRepository rdfSourceRepository) {
+            RDFSourceRepository rdfSourceRepository,
+            HarvestMetrics harvestMetrics) {
         this.referenceDataWriter = referenceDataWriter;
         this.rdfSourceRepository = rdfSourceRepository;
+        this.harvestMetrics = harvestMetrics;
     }
 
     public boolean firstTime(JpaRepository<?, String> repository) {
@@ -46,38 +49,85 @@ public class ReferenceDataServiceSupport {
                 rdfFormat);
     }
 
-    public <T> void harvestAndSave(
+    public <T> HarvestResult harvestAndSave(
             ModelHarvester<T> harvester,
             JpaRepository<T, String> repository,
             String sourceId,
-            String logName) {
-        try {
-            final List<T> items = new ArrayList<>();
-            harvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} {}", items.size(), logName);
+            String moduleId) {
+        return harvestMetrics.timed(moduleId, () -> {
+            try {
+                final List<T> items = new ArrayList<>();
+                harvester.harvest().toIterable().forEach(items::add);
 
-            RDFSource rdfSource = new RDFSource();
-            rdfSource.setId(sourceId);
-            rdfSource.setTurtle(RDFUtils.modelToResponse(harvester.getModel(), RDFFormat.TURTLE));
+                if (items.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", moduleId);
+                    return HarvestResult.skippedEmpty();
+                }
 
-            referenceDataWriter.replaceAll(repository, items, rdfSource);
-        } catch (Exception e) {
-            log.error("Unable to harvest {}", logName, e);
-        }
+                log.info("Harvest and saving {} {}", items.size(), moduleId);
+
+                RDFSource rdfSource = new RDFSource();
+                rdfSource.setId(sourceId);
+                rdfSource.setTurtle(RDFUtils.modelToResponse(harvester.getModel(), RDFFormat.TURTLE));
+
+                referenceDataWriter.replaceAll(repository, items, rdfSource);
+                return HarvestResult.success(items.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", moduleId, e);
+                return HarvestResult.failure();
+            }
+        });
     }
 
-    public <T> void harvestAndSaveWithoutRdf(
+    public <T> HarvestResult harvestAndSaveWithoutRdf(
             Supplier<Flux<T>> harvest,
             JpaRepository<T, String> repository,
-            String logName) {
-        try {
-            final List<T> items = new ArrayList<>();
-            harvest.get().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} {}", items.size(), logName);
-            referenceDataWriter.replaceAll(repository, items);
-        } catch (Exception e) {
-            log.error("Unable to harvest {}", logName, e);
-        }
+            String moduleId) {
+        return harvestMetrics.timed(moduleId, () -> {
+            try {
+                final List<T> items = new ArrayList<>();
+                harvest.get().toIterable().forEach(items::add);
+
+                if (items.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", moduleId);
+                    return HarvestResult.skippedEmpty();
+                }
+
+                log.info("Harvest and saving {} {}", items.size(), moduleId);
+                referenceDataWriter.replaceAll(repository, items);
+                return HarvestResult.success(items.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", moduleId, e);
+                return HarvestResult.failure();
+            }
+        });
+    }
+
+    public <T> HarvestResult persistHarvested(
+            String moduleId,
+            List<T> items,
+            Model model,
+            JpaRepository<T, String> repository,
+            String sourceId) {
+        return harvestMetrics.timed(moduleId, () -> {
+            try {
+                if (items.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", moduleId);
+                    return HarvestResult.skippedEmpty();
+                }
+
+                log.info("Harvest and saving {} {}", items.size(), moduleId);
+
+                RDFSource rdfSource = new RDFSource();
+                rdfSource.setId(sourceId);
+                rdfSource.setTurtle(RDFUtils.modelToResponse(model, RDFFormat.TURTLE));
+                referenceDataWriter.replaceAll(repository, items, rdfSource);
+                return HarvestResult.success(items.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", moduleId, e);
+                return HarvestResult.failure();
+            }
+        });
     }
 
     public <T> void saveAll(

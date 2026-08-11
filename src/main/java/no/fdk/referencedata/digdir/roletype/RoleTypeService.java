@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.roletype;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class RoleTypeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(roleTypeHarvester, roleTypeRepository, dbSourceID, "role-types");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(roleTypeHarvester, roleTypeRepository, dbSourceID, "role-type");
     }
 }

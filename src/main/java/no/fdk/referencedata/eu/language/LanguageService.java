@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.language;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import no.fdk.referencedata.search.SearchAlternative;
@@ -59,7 +60,7 @@ public class LanguageService implements SearchableReferenceData, HarvestableRefe
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(languageHarvester, languageRepository, dbSourceID, "languages");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(languageHarvester, languageRepository, dbSourceID, "language");
     }
 }

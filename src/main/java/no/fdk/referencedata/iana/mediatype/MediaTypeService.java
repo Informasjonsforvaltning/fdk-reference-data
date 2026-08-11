@@ -2,6 +2,7 @@ package no.fdk.referencedata.iana.mediatype;
 
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import no.fdk.referencedata.search.SearchAlternative;
 import no.fdk.referencedata.search.SearchHit;
@@ -77,19 +78,14 @@ public class MediaTypeService implements SearchableReferenceData, HarvestableRef
     }
 
     @Override
-    public void harvestAndSave() {
-        try {
-            final List<MediaType> items = new ArrayList<>();
-            mediaTypeHarvester.harvest().toIterable().forEach(items::add);
-            log.info("Harvest and saving {} media-types", items.size());
+    public HarvestResult harvestAndSave() {
+        final List<MediaType> items = new ArrayList<>();
+        mediaTypeHarvester.harvest().toIterable().forEach(items::add);
 
-            Model model = ModelFactory.createDefaultModel();
-            model.setNsPrefix("dct", DCTerms.NS);
-            items.forEach(item -> addMediaTypeToModel(item, model));
+        Model model = ModelFactory.createDefaultModel();
+        model.setNsPrefix("dct", DCTerms.NS);
+        items.forEach(item -> addMediaTypeToModel(item, model));
 
-            support.saveAll(items, model, mediaTypeRepository, rdfSourceID);
-        } catch (Exception e) {
-            log.error("Unable to harvest media-types", e);
-        }
+        return support.persistHarvested("media-type", items, model, mediaTypeRepository, rdfSourceID);
     }
 }

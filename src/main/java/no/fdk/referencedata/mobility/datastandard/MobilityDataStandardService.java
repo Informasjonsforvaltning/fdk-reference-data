@@ -1,6 +1,7 @@
 package no.fdk.referencedata.mobility.datastandard;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class MobilityDataStandardService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(mobilityDataStandardHarvester, mobilityDataStandardRepository, dbSourceID, "mobility data standards");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(mobilityDataStandardHarvester, mobilityDataStandardRepository, dbSourceID, "mobility-data-standard");
     }
 }

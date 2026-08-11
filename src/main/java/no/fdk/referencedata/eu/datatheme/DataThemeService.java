@@ -1,6 +1,7 @@
 package no.fdk.referencedata.eu.datatheme;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class DataThemeService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(dataThemeHarvester, dataThemeRepository, dbSourceID, "data-themes");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(dataThemeHarvester, dataThemeRepository, dbSourceID, "data-theme");
     }
 }

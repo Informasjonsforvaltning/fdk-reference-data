@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.conceptsubjects;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class ConceptSubjectService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(conceptSubjectHarvester, conceptSubjectRepository, dbSourceID, "concept subjects");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(conceptSubjectHarvester, conceptSubjectRepository, dbSourceID, "concept-subject");
     }
 }

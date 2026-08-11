@@ -1,6 +1,7 @@
 package no.fdk.referencedata.digdir.qualitydimension;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 
 import org.apache.jena.riot.RDFFormat;
@@ -39,7 +40,7 @@ public class QualityDimensionService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSave(qualityDimensionHarvester, qualityDimensionRepository, dbSourceID, "quality-dimensions");
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSave(qualityDimensionHarvester, qualityDimensionRepository, dbSourceID, "quality-dimension");
     }
 }

@@ -1,6 +1,7 @@
 package no.fdk.referencedata.ssb.kommuneorganisasjoner;
 
 import no.fdk.referencedata.core.HarvestableReferenceData;
+import no.fdk.referencedata.core.HarvestResult;
 import no.fdk.referencedata.core.ReferenceDataServiceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +29,10 @@ public class KommuneOrganisasjonService implements HarvestableReferenceData {
     }
 
     @Override
-    public void harvestAndSave() {
-        support.harvestAndSaveWithoutRdf(
+    public HarvestResult harvestAndSave() {
+        return support.harvestAndSaveWithoutRdf(
                 kommuneOrganisasjonHarvester::harvest,
                 kommuneOrganisasjonRepository,
-                "kommunale organisasjoner");
+                "kommune-organisasjon");
     }
 }
