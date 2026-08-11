@@ -125,7 +125,7 @@ public class StandardCodeListGraphQlIntegrationTest extends AbstractContainerTes
                 caseOf("continent", "continents", "continentByCode", CONTINENTS_SIZE, "EUROPE"),
                 caseOf("country", "countries", "countryByCode", COUNTRIES_SIZE, "NOR"),
                 caseOf("language", "languages", "languageByCode", LANGUAGES_SIZE, "NOB"),
-                caseOf("concept-subject", "conceptSubjects", null, CONCEPT_SUBJECTS_SIZE, null),
+                caseOf("concept-subject", "conceptSubjects", "conceptSubjectByCode", CONCEPT_SUBJECTS_SIZE, "1"),
                 caseOf("evidence-type", "evidenceTypes", "evidenceTypeByCode", EVIDENCE_TYPES_SIZE, "certificate"),
                 caseOf("service-channel-type", "serviceChannelTypes", "serviceChannelTypeByCode", SERVICE_CHANNEL_TYPES_SIZE, "telephone"),
                 caseOf("role-type", "roleTypes", "roleTypeByCode", ROLE_TYPES_SIZE, "service-producer"),

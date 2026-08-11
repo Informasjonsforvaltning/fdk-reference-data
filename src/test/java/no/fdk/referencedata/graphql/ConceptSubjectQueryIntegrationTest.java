@@ -60,4 +60,22 @@ class ConceptSubjectQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("en 1", conceptSubject.getLabel().get("en"));
     }
 
+    @Test
+    void test_if_concept_subject_by_code_query_returns_known_subject() {
+        ConceptSubject conceptSubject = graphQlTester.documentName("concept-subject-by-code")
+                .variable("code", "1")
+                .execute()
+                .path("$['data']['conceptSubjectByCode']")
+                .entity(ConceptSubject.class)
+                .get();
+
+        assertEquals(
+                "https://catalog-admin-service.staging.fellesdatakatalog.digdir.no/123456789/concepts/subjects#1",
+                conceptSubject.getUri()
+        );
+        assertEquals("1", conceptSubject.getCode());
+        assertEquals("nb 1", conceptSubject.getLabel().get("nb"));
+        assertEquals("en 1", conceptSubject.getLabel().get("en"));
+    }
+
 }

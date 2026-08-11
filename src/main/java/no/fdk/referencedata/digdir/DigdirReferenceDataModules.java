@@ -78,9 +78,9 @@ public class DigdirReferenceDataModules {
 
     @Bean
     public CodeListApi<ConceptSubject> conceptSubjectApi() {
-        return CodeListApis.listWithRdf(
+        return CodeListApis.standard(
                 "/digdir/concept-subjects",
-                CodeListRepository.listOnly(conceptSubjectRepository::findAll),
+                CodeListRepository.of(conceptSubjectRepository::findAll, conceptSubjectRepository::findByCode),
                 CodeListApis.sortByUri(ConceptSubject::getUri),
                 list -> ConceptSubjects.builder().conceptSubjects(list).build(),
                 conceptSubjectService::getRdf,

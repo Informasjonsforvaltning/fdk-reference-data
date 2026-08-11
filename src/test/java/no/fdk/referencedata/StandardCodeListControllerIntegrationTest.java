@@ -142,7 +142,7 @@ public class StandardCodeListControllerIntegrationTest extends AbstractContainer
                 caseOf("continent", "/eu/continents", "continents", CONTINENTS_SIZE, "EUROPE"),
                 caseOf("country", "/eu/countries", "countries", COUNTRIES_SIZE, "NOR"),
                 caseOf("language", "/eu/languages", "languages", LANGUAGES_SIZE, "NOB"),
-                caseOf("concept-subject", "/digdir/concept-subjects", "conceptSubjects", CONCEPT_SUBJECTS_SIZE, null),
+                caseOf("concept-subject", "/digdir/concept-subjects", "conceptSubjects", CONCEPT_SUBJECTS_SIZE, "1"),
                 caseOf("evidence-type", "/digdir/evidence-types", "evidenceTypes", EVIDENCE_TYPES_SIZE, "certificate"),
                 caseOf("service-channel-type", "/digdir/service-channel-types", "serviceChannelTypes", SERVICE_CHANNEL_TYPES_SIZE, "telephone"),
                 caseOf("role-type", "/digdir/role-types", "roleTypes", ROLE_TYPES_SIZE, "service-producer"),
