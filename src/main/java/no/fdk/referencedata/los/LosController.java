@@ -49,7 +49,8 @@ public class LosController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping(path = "themes-and-words")
     public ResponseEntity<Void> updateLos() {
-        losService.importLosNodes();
-        return ResponseEntity.ok().build();
+        return losService.importLosNodes().isSuccess()
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.internalServerError().build();
     }
 }

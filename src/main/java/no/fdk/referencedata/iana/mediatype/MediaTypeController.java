@@ -35,8 +35,9 @@ public class MediaTypeController {
     @SecurityRequirement(name = "apiKey")
     @PostMapping
     public ResponseEntity<Void> updateMediaTypes() {
-        mediaTypeService.harvestAndSave();
-        return ResponseEntity.ok().build();
+        return mediaTypeService.harvestAndSave().isSuccess()
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.internalServerError().build();
     }
 
     @CrossOrigin

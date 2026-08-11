@@ -23,4 +23,8 @@ public record HarvestResult(Outcome outcome, int itemCount, String reason) {
     public static HarvestResult skippedEmpty() {
         return new HarvestResult(Outcome.SKIPPED_EMPTY, 0, "empty");
     }
+
+    public boolean isSuccess() {
+        return outcome == Outcome.SUCCESS;
+    }
 }
