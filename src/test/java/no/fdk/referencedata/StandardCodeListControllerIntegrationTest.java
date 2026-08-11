@@ -64,7 +64,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 @Import(LocalHarvesterConfiguration.class)
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class StandardCodeListControllerIT extends AbstractContainerTest {
+public class StandardCodeListControllerIntegrationTest extends AbstractContainerTest {
 
     private static final String UNKNOWN_CODE = "__missing-code__";
     private static final MediaType TURTLE = MediaType.parseMediaType("text/turtle");
