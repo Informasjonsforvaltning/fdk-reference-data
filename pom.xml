@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.5</version>
+        <version>4.1.0</version>
         <relativePath/>
     </parent>
 
@@ -28,6 +28,9 @@
         <!--end standard properties-->
 
         <jena.version>6.0.0</jena.version>
+
+        <!-- Overrides Spring Boot 4.1.0 (42.7.11), which is still affected by CVE-2026-54291 -->
+        <postgresql.version>42.7.13</postgresql.version>
     </properties>
 
     <dependencies>
