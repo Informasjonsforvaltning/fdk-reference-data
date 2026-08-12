@@ -16,6 +16,9 @@ spec:
     metadata:
       labels:
         fdk.service: reference-data
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/reference-data/actuator/prometheus"
     spec:
       containers:
         - name: reference-data
