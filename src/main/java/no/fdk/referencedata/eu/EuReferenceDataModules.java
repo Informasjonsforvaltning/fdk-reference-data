@@ -79,27 +79,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Comparator;
 
+import static no.fdk.referencedata.core.HarvestCron.*;
+
 @Configuration
 @RequiredArgsConstructor
 public class EuReferenceDataModules {
-
-    static final String CRON_ACCESS_RIGHT = "0 30 1 1 * ?";
-    static final String CRON_FILE_TYPE = "0 50 1 1 * ?";
-    static final String CRON_DATA_THEME = "0 0 2 1 * ?";
-    static final String CRON_EUROVOC = "0 10 2 1 * ?";
-    static final String CRON_FREQUENCY = "0 20 2 1 * ?";
-    static final String CRON_DISTRIBUTION_STATUS = "0 25 2 1 * ?";
-    static final String CRON_DISTRIBUTION_TYPE = "0 30 2 1 * ?";
-    static final String CRON_DATASET_TYPE = "0 35 2 1 * ?";
-    static final String CRON_MAIN_ACTIVITY = "0 40 2 1 * ?";
-    static final String CRON_CONCEPT_STATUS = "0 40 3 1 * ?";
-    static final String CRON_PLANNED_AVAILABILITY = "0 20 4 1 * ?";
-    static final String CRON_CURRENCY = "0 30 4 1 * ?";
-    static final String CRON_LICENCE = "0 40 4 1 * ?";
-    static final String CRON_HIGH_VALUE_CATEGORY = "0 5 5 1 * ?";
-    static final String CRON_CONTINENT = "0 20 5 1 * ?";
-    static final String CRON_COUNTRY = "0 25 5 1 * ?";
-    static final String CRON_LANGUAGE = "0 35 5 1 * ?";
 
     private final AccessRightService accessRightService;
     private final AccessRightRepository accessRightRepository;

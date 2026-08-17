@@ -21,13 +21,11 @@ import no.fdk.referencedata.mobility.theme.MobilityThemes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.fdk.referencedata.core.HarvestCron.*;
+
 @Configuration
 @RequiredArgsConstructor
 public class MobilityReferenceDataModules {
-
-    static final String CRON_MOBILITY_THEME = "0 50 4 1 * ?";
-    static final String CRON_MOBILITY_CONDITION = "0 55 4 1 * ?";
-    static final String CRON_MOBILITY_DATA_STANDARD = "0 0 5 1 * ?";
 
     private final MobilityThemeService mobilityThemeService;
     private final MobilityThemeRepository mobilityThemeRepository;
