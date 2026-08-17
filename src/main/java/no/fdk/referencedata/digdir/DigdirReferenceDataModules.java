@@ -41,18 +41,11 @@ import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.fdk.referencedata.core.HarvestCron.*;
+
 @Configuration
 @RequiredArgsConstructor
 public class DigdirReferenceDataModules {
-
-    static final String CRON_CONCEPT_SUBJECT = "0 45 * * * ?";
-    static final String CRON_EVIDENCE_TYPE = "0 0 1 1 * ?";
-    static final String CRON_SERVICE_CHANNEL_TYPE = "0 10 1 1 * ?";
-    static final String CRON_ROLE_TYPE = "0 20 1 1 * ?";
-    static final String CRON_AUDIENCE_TYPE = "0 50 3 1 * ?";
-    static final String CRON_RELATIONSHIP_WITH_SOURCE_TYPE = "0 10 4 1 * ?";
-    static final String CRON_QUALITY_DIMENSION = "0 10 5 1 * ?";
-    static final String CRON_LEGAL_RESOURCE_TYPE = "0 15 5 1 * ?";
 
     private final ConceptSubjectService conceptSubjectService;
     private final ConceptSubjectRepository conceptSubjectRepository;

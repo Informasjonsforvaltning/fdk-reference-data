@@ -28,16 +28,11 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Comparator;
 
+import static no.fdk.referencedata.core.HarvestCron.*;
+
 @Configuration
 @RequiredArgsConstructor
-public class SsbGeonamesReferenceDataModules {
-
-    static final String CRON_MEDIA_TYPE = "0 40 1 1 * ?";
-    static final String CRON_LOS = "0 50 2 1 * ?";
-    static final String CRON_FYLKE_ORGANISASJON = "0 10 3 1 * ?";
-    static final String CRON_KOMMUNE_ORGANISASJON = "0 20 3 1 * ?";
-    static final String CRON_ENHET = "0 0 4 1 * ?";
-    static final String CRON_GEONAMES = "0 30 5 1 * ?";
+public class OtherReferenceDataModules {
 
     private final MediaTypeService mediaTypeService;
     private final LosService losService;
