@@ -29,6 +29,38 @@ public class DistributionStatusHarvesterTest {
         assertEquals("http://publications.europa.eu/resource/authority/distribution-status/DEPRECATED", first.getUri());
         assertEquals("DEPRECATED", first.getCode());
         assertEquals("deprecated", first.getLabel().get(Language.ENGLISH.code()));
+
+        DistributionStatus ongoing = distributionStatuses.stream()
+                .filter(status -> "ONGOING".equals(status.getCode()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals("ongoing", ongoing.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("pågående", ongoing.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+        assertEquals("pågåande", ongoing.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+
+        DistributionStatus required = distributionStatuses.stream()
+                .filter(status -> "REQUIRED".equals(status.getCode()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals("required", required.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("påkrevd", required.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+        assertEquals("påkravd", required.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+
+        DistributionStatus archive = distributionStatuses.stream()
+                .filter(status -> "ARCHIVE".equals(status.getCode()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals("historical archive", archive.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("arkivert", archive.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+        assertEquals("arkivert", archive.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
+
+        DistributionStatus planned = distributionStatuses.stream()
+                .filter(status -> "PLANNED".equals(status.getCode()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals("planned", planned.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("planlagt", planned.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+        assertEquals("planlagt", planned.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
     }
 
 }

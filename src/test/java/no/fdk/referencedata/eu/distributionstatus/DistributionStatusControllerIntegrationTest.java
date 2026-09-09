@@ -52,9 +52,11 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
         DistributionStatuses distributionStatuses =
                 restClient.get().uri("/eu/distribution-statuses").retrieve().body(DistributionStatuses.class);
         DistributionStatus first = distributionStatuses.getDistributionStatuses().get(0);
-        assertEquals("http://publications.europa.eu/resource/authority/distribution-status/COMPLETED", first.getUri());
-        assertEquals("COMPLETED", first.getCode());
-        assertEquals("completed", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("http://publications.europa.eu/resource/authority/distribution-status/ARCHIVE", first.getUri());
+        assertEquals("ARCHIVE", first.getCode());
+        assertEquals("historical archive", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals("arkivert", first.getLabel().get(Language.NORWEGIAN_BOKMAAL.code()));
+        assertEquals("arkivert", first.getLabel().get(Language.NORWEGIAN_NYNORSK.code()));
     }
 
     @Test
@@ -71,7 +73,7 @@ public class DistributionStatusControllerIntegrationTest extends AbstractContain
     @Test
     public void test_distribution_statuses_rdf_response() {
         Model rdfResponse = RDFDataMgr.loadModel("http://localhost:" + port + "/eu/distribution-statuses", Lang.TURTLE);
-        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(DistributionStatusControllerIntegrationTest.class.getClassLoader().getResource("distribution-status-sparql-result.ttl")));
+        Model expectedResponse = ModelFactory.createDefaultModel().read(String.valueOf(DistributionStatusControllerIntegrationTest.class.getClassLoader().getResource("distribution-status-translated.ttl")));
 
         assertTrue(rdfResponse.isIsomorphicWith(expectedResponse));
     }

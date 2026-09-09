@@ -38,22 +38,30 @@ ns3:DEVELOP	skos:inScheme	ns1:distribution-status ;
 	dc:identifier	"DEVELOP" ;
 	<http://publications.europa.eu/ontology/authority/start.use>	"2015-10-23" .
 
-ns3:REQUIRED skos:inScheme	ns1:distribution-status ;
-    skos:prefLabel	"required"@en ;
+ns3:REQUIRED	skos:inScheme	ns1:distribution-status ;
+	skos:prefLabel	"required"@en ,
+		"p\u00E5krevd"@nb ,
+		"p\u00E5kravd"@nn ;
 	dc:identifier	"REQUIRED" ;
 	<http://publications.europa.eu/ontology/authority/start.use>	"2026-05-29" .
 
 ns3:ARCHIVE	skos:inScheme	ns1:distribution-status ;
-    skos:prefLabel	"historical archive"@en ;
+	skos:prefLabel	"historical archive"@en ,
+		"arkivert"@nb ,
+		"arkivert"@nn ;
 	dc:identifier	"ARCHIVE" ;
 	<http://publications.europa.eu/ontology/authority/start.use>	"2026-05-29" .
 
 ns3:ONGOING	skos:inScheme	ns1:distribution-status ;
-    skos:prefLabel	"ongoing"@en ;
+	skos:prefLabel	"ongoing"@en ,
+		"p\u00E5g\u00E5ende"@nb ,
+		"p\u00E5g\u00E5ande"@nn ;
 	dc:identifier	"ONGOING" ;
 	<http://publications.europa.eu/ontology/authority/start.use>	"2026-05-29" .
 
 ns3:PLANNED	skos:inScheme	ns1:distribution-status ;
-    skos:prefLabel	"planned"@en ;
+	skos:prefLabel	"planned"@en ,
+		"planlagt"@nb ,
+		"planlagt"@nn ;
 	dc:identifier	"PLANNED" ;
 	<http://publications.europa.eu/ontology/authority/start.use>	"2026-05-29" .

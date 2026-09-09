@@ -12,7 +12,7 @@ public final class LocalHarvestFixtures {
     public static final int CURRENCY_SIZE = 14;
     public static final int DATASET_TYPES_SIZE = 24;
     public static final int DATA_THEMES_SIZE = 13;
-    public static final int DISTRIBUTION_STATUS_SIZE = 4;
+    public static final int DISTRIBUTION_STATUS_SIZE = 8;
     public static final int DISTRIBUTION_TYPES_SIZE = 4;
     public static final int EUROVOCS_SIZE = 7403;
     public static final int FREQUENCIES_SIZE = 38;
