@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -73,47 +72,29 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
             ))
     );
 
-    public Model translateDatasetTypes(Model model) {
-        Model translated = ModelFactory.createDefaultModel();
+    @Override
+    protected Model translate(Model model) {
+        Model overridden = ModelFactory.createDefaultModel();
 
         model.listStatements().forEach(stmt -> {
             if (stmt.getSubject().isURIResource() && overrideTranslations.containsKey(stmt.getSubject().getURI())) {
                 Map<String, String> subjectTranslations = overrideTranslations.get(stmt.getSubject().getURI());
                 if (stmt.getPredicate().hasURI(SKOS.prefLabel.getURI()) && subjectTranslations.containsKey(stmt.getLanguage())) {
-                    translated.add(
+                    overridden.add(
                             stmt.getSubject(),
                             stmt.getPredicate(),
                             subjectTranslations.get(stmt.getLanguage()),
                             stmt.getLanguage()
                     );
                 } else {
-                    translated.add(stmt);
+                    overridden.add(stmt);
                 }
             } else {
-                translated.add(stmt);
+                overridden.add(stmt);
             }
         });
 
-        for (String subject : missingTranslations.keySet()) {
-            Resource subjectResource = model.getResource(subject);
-            Map<String, String> subjectTranslations = overrideTranslations.get(subject);
-            for (String language : subjectTranslations.keySet()) {
-                translated.add(
-                        subjectResource,
-                        SKOS.prefLabel,
-                        subjectTranslations.get(language),
-                        language
-                );
-            }
-        }
-
-        updateModel(translated);
-        return translated;
-    }
-
-    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource datasetTypeRdfSource) {
-        return loadModel(datasetTypeRdfSource, false)
-                .map(this::translateDatasetTypes);
+        return addMissingTranslations(overridden, SKOS.prefLabel, missingTranslations);
     }
 
     public Flux<DatasetType> harvest() {
@@ -123,7 +104,8 @@ public class DatasetTypeHarvester extends AbstractEuHarvester<DatasetType> {
             return Flux.error(new Exception("Unable to fetch dataset-types dataset"));
         }
 
-        return Mono.justOrEmpty(loadAndTranslateModel(datasetTypeRdfSource))
+        return Mono.justOrEmpty(loadModel(datasetTypeRdfSource, false))
+                .map(this::translate)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUDatasetType.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapDatasetType);

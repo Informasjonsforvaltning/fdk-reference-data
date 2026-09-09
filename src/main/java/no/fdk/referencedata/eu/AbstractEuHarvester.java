@@ -7,6 +7,7 @@ import no.fdk.referencedata.core.ModelHarvester;
 import no.fdk.referencedata.vocabulary.FDK;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RiotException;
@@ -20,6 +21,7 @@ import reactor.core.publisher.Flux;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Map;
 import java.util.Optional;
 
 import static no.fdk.referencedata.rdf.RDFUtils.generateThemePaths;
@@ -48,6 +50,27 @@ public abstract class AbstractEuHarvester<T> implements ModelHarvester<T> {
         m.listResourcesWithProperty(RDF.type, SKOS.Concept).toList().stream()
                 .flatMap(concept -> generateThemePaths(m, concept).stream().map(path -> Pair.of(concept, path)))
                 .forEach(themeWithPath -> m.add(themeWithPath.getFirst(), FDK.themePath, themeWithPath.getSecond()));
+    }
+
+    protected Model translate(Model model) {
+        return model;
+    }
+
+    protected Model addMissingTranslations(
+            Model model,
+            Property labelProperty,
+            Map<String, Map<String, String>> missingTranslations) {
+        Model translated = ModelFactory.createDefaultModel();
+        model.listStatements().forEach(translated::add);
+
+        missingTranslations.forEach((subject, translations) -> {
+            org.apache.jena.rdf.model.Resource subjectResource = model.getResource(subject);
+            translations.forEach((language, label) ->
+                    translated.add(subjectResource, labelProperty, label, language));
+        });
+
+        updateModel(translated);
+        return translated;
     }
 
     protected Optional<Model> loadModel(Resource resource, boolean addEurovocPaths) {
