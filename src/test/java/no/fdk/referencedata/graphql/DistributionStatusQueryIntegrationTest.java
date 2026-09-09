@@ -50,14 +50,32 @@ class DistributionStatusQueryIntegrationTest extends AbstractContainerTest {
         DistributionStatus distributionStatus = result.get(0);
 
         assertEquals(
-                "http://publications.europa.eu/resource/authority/distribution-status/COMPLETED",
+                "http://publications.europa.eu/resource/authority/distribution-status/ARCHIVE",
                 distributionStatus.getUri()
         );
-        assertEquals("COMPLETED", distributionStatus.getCode());
-        assertEquals("ferdigstilt", distributionStatus.getLabel().get("no"));
-        assertEquals("ferdigstilt", distributionStatus.getLabel().get("nb"));
-        assertEquals("ferdigstilt", distributionStatus.getLabel().get("nn"));
-        assertEquals("completed", distributionStatus.getLabel().get("en"));
+        assertEquals("ARCHIVE", distributionStatus.getCode());
+        assertEquals("arkivert", distributionStatus.getLabel().get("nb"));
+        assertEquals("arkivert", distributionStatus.getLabel().get("nn"));
+        assertEquals("historical archive", distributionStatus.getLabel().get("en"));
+    }
+
+    @Test
+    void test_if_distribution_status_by_code_returns_translated_labels() {
+        DistributionStatus result = graphQlTester.documentName("distribution-status-by-code")
+                .variable("code", "ONGOING")
+                .execute()
+                .path("$['data']['distributionStatusByCode']")
+                .entity(DistributionStatus.class)
+                .get();
+
+        assertEquals(
+                "http://publications.europa.eu/resource/authority/distribution-status/ONGOING",
+                result.getUri()
+        );
+        assertEquals("ONGOING", result.getCode());
+        assertEquals("pågående", result.getLabel().get("nb"));
+        assertEquals("pågåande", result.getLabel().get("nn"));
+        assertEquals("ongoing", result.getLabel().get("en"));
     }
 
     @Test
