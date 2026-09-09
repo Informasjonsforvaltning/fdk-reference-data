@@ -9,7 +9,6 @@ import no.fdk.referencedata.eu.vocabulary.EUCurrency;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.OWL;
@@ -24,7 +23,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -71,30 +69,9 @@ public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
         super();
     }
 
-    public Model translateCurrencies(Model model) {
-        Model translated = ModelFactory.createDefaultModel();
-        model.listStatements().forEach(translated::add);
-
-        for (String subject : missingTranslations.keySet()) {
-            Resource subjectResource = model.getResource(subject);
-            Map<String, String> subjectTranslations = missingTranslations.get(subject);
-            for (Map.Entry<String, String> entry : subjectTranslations.entrySet()) {
-                translated.add(
-                        subjectResource,
-                        SKOS.prefLabel,
-                        entry.getValue(),
-                        entry.getKey()
-                );
-            }
-        }
-
-        updateModel(translated);
-        return translated;
-    }
-
-    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource rdfSource) {
-        return loadModel(rdfSource, false)
-                .map(this::translateCurrencies);
+    @Override
+    protected Model translate(Model model) {
+        return addMissingTranslations(model, SKOS.prefLabel, missingTranslations);
     }
 
     public Flux<Currency> harvest() {
@@ -104,7 +81,8 @@ public class CurrencyHarvester extends AbstractEuHarvester<Currency> {
             return Flux.error(new Exception("Unable to fetch EU currencies"));
         }
 
-        return Mono.justOrEmpty(loadAndTranslateModel(rdfSource))
+        return Mono.justOrEmpty(loadModel(rdfSource, false))
+                .map(this::translate)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme, EUCurrency.SCHEME).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapCurrency);

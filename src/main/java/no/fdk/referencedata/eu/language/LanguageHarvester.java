@@ -7,7 +7,6 @@ import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.eu.vocabulary.EULanguage;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.SKOS;
@@ -20,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,30 +45,9 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
         super();
     }
 
-    public Model translateLanguages(Model model) {
-        Model translated = ModelFactory.createDefaultModel();
-        model.listStatements().forEach(translated::add);
-
-        for (String subject : missingTranslations.keySet()) {
-            Resource subjectResource = model.getResource(subject);
-            Map<String, String> subjectTranslations = missingTranslations.get(subject);
-            for (Map.Entry<String, String> entry : subjectTranslations.entrySet()) {
-                translated.add(
-                        subjectResource,
-                        SKOS.prefLabel,
-                        entry.getValue(),
-                        entry.getKey()
-                );
-            }
-        }
-
-        updateModel(translated);
-        return translated;
-    }
-
-    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource rdfSource) {
-        return loadModel(rdfSource, false)
-                .map(this::translateLanguages);
+    @Override
+    protected Model translate(Model model) {
+        return addMissingTranslations(model, SKOS.prefLabel, missingTranslations);
     }
 
     public Flux<Language> harvest() {
@@ -80,7 +57,8 @@ public class LanguageHarvester extends AbstractEuHarvester<Language> {
             return Flux.error(new Exception("Unable to fetch language distribution"));
         }
 
-        return Mono.justOrEmpty(loadAndTranslateModel(rdfSource))
+        return Mono.justOrEmpty(loadModel(rdfSource, false))
+                .map(this::translate)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(SKOS.inScheme,
                         EULanguage.SCHEME).toList())
                 .filter(Resource::isURIResource)

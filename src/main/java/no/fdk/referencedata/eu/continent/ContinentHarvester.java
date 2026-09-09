@@ -7,7 +7,6 @@ import no.fdk.referencedata.eu.AbstractEuHarvester;
 import no.fdk.referencedata.i18n.Language;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
@@ -20,7 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -42,30 +40,9 @@ public class ContinentHarvester extends AbstractEuHarvester<Continent> {
         super();
     }
 
-    public Model translateContinents(Model model) {
-        Model translated = ModelFactory.createDefaultModel();
-        model.listStatements().forEach(translated::add);
-
-        for (String subject : missingTranslations.keySet()) {
-            Resource subjectResource = model.getResource(subject);
-            Map<String, String> subjectTranslations = missingTranslations.get(subject);
-            for (Map.Entry<String, String> entry : subjectTranslations.entrySet()) {
-                translated.add(
-                        subjectResource,
-                        DCTerms.title,
-                        entry.getValue(),
-                        entry.getKey()
-                );
-            }
-        }
-
-        updateModel(translated);
-        return translated;
-    }
-
-    private Optional<Model> loadAndTranslateModel(org.springframework.core.io.Resource continentsRdfSource) {
-        return loadModel(continentsRdfSource, false)
-                .map(this::translateContinents);
+    @Override
+    protected Model translate(Model model) {
+        return addMissingTranslations(model, DCTerms.title, missingTranslations);
     }
 
     public Flux<Continent> harvest() {
@@ -75,7 +52,8 @@ public class ContinentHarvester extends AbstractEuHarvester<Continent> {
             return Flux.error(new Exception("Unable to fetch continents distribution"));
         }
 
-        return Mono.justOrEmpty(loadAndTranslateModel(continentsRdfSource))
+        return Mono.justOrEmpty(loadModel(continentsRdfSource, false))
+                .map(this::translate)
                 .flatMapIterable(m -> m.listSubjectsWithProperty(RDF.type, DCTerms.Location).toList())
                 .filter(Resource::isURIResource)
                 .map(this::mapContinent);
