@@ -45,6 +45,7 @@ import static no.fdk.referencedata.LocalHarvestFixtures.MOBILITY_CONDITIONS_SIZE
 import static no.fdk.referencedata.LocalHarvestFixtures.MOBILITY_DATA_STANDARDS_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.MOBILITY_THEMES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.PLANNED_AVAILABILITY_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.PRODUCT_STATUS_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.RELATIONSHIP_WITH_SOURCE_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.ROLE_TYPES_SIZE;
@@ -81,6 +82,7 @@ public class StandardCodeListControllerIntegrationTest extends AbstractContainer
             "main-activity",
             "concept-status",
             "planned-availability",
+            "product-status",
             "currency",
             "licence",
             "high-value-category",
@@ -136,6 +138,7 @@ public class StandardCodeListControllerIntegrationTest extends AbstractContainer
                 caseOf("main-activity", "/eu/main-activities", "mainActivities", MAIN_ACTIVITIES_SIZE, "health"),
                 caseOf("concept-status", "/eu/concept-statuses", "conceptStatuses", CONCEPT_STATUSES_SIZE, "CURRENT"),
                 caseOf("planned-availability", "/eu/planned-availabilities", "plannedAvailabilities", PLANNED_AVAILABILITY_SIZE, "TEMPORARY"),
+                caseOf("product-status", "/eu/product-statuses", "productStatuses", PRODUCT_STATUS_SIZE, "PRODUCTION"),
                 caseOf("currency", "/eu/currencies", "currencies", CURRENCY_SIZE, "ISK"),
                 caseOf("licence", "/eu/licences", "licences", LICENCES_SIZE, "CC0"),
                 caseOf("high-value-category", "/eu/high-value-categories", "highValueCategories", HIGH_VALUE_CATEGORIES_SIZE, "c_a9135398"),

@@ -74,6 +74,10 @@ import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilities;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailability;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityRepository;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityService;
+import no.fdk.referencedata.eu.productstatus.ProductStatus;
+import no.fdk.referencedata.eu.productstatus.ProductStatusRepository;
+import no.fdk.referencedata.eu.productstatus.ProductStatusService;
+import no.fdk.referencedata.eu.productstatus.ProductStatuses;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -107,6 +111,8 @@ public class EuReferenceDataModules {
     private final ConceptStatusRepository conceptStatusRepository;
     private final PlannedAvailabilityService plannedAvailabilityService;
     private final PlannedAvailabilityRepository plannedAvailabilityRepository;
+    private final ProductStatusService productStatusService;
+    private final ProductStatusRepository productStatusRepository;
     private final CurrencyService currencyService;
     private final CurrencyRepository currencyRepository;
     private final LicenceService licenceService;
@@ -294,6 +300,22 @@ public class EuReferenceDataModules {
                 list -> PlannedAvailabilities.builder().plannedAvailabilities(list).build(),
                 plannedAvailabilityService::getRdf,
                 PlannedAvailability.class);
+    }
+
+    @Bean
+    public ReferenceDataModule productStatusModule() {
+        return module("product-status", productStatusService, productStatusApi(), CRON_PRODUCT_STATUS);
+    }
+
+    @Bean
+    public CodeListApi<ProductStatus> productStatusApi() {
+        return CodeListApis.standard(
+                "/eu/product-statuses",
+                CodeListRepository.of(productStatusRepository::findAll, productStatusRepository::findByCode),
+                CodeListApis.sortByUri(ProductStatus::getUri),
+                list -> ProductStatuses.builder().productStatuses(list).build(),
+                productStatusService::getRdf,
+                ProductStatus.class);
     }
 
     @Bean

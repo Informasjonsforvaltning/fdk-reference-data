@@ -1,0 +1,13 @@
+query GetProductStatusByCode($code: String!) {
+    productStatusByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            nn
+            no
+            en
+        },
+        startUse
+    }
+}

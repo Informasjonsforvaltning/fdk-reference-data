@@ -21,6 +21,7 @@ public final class LocalHarvestFixtures {
     public static final int LICENCES_SIZE = 173;
     public static final int MAIN_ACTIVITIES_SIZE = 20;
     public static final int PLANNED_AVAILABILITY_SIZE = 4;
+    public static final int PRODUCT_STATUS_SIZE = 7;
     public static final int LEGAL_RESOURCE_TYPES_SIZE = 2;
     public static final int QUALITY_DIMENSIONS_SIZE = 11;
     public static final int AUDIENCE_TYPES_SIZE = 2;

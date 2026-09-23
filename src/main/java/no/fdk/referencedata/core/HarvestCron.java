@@ -33,6 +33,7 @@ public final class HarvestCron {
     public static final String CRON_CONTINENT = "0 20 5 22 * ?";
     public static final String CRON_COUNTRY = "0 25 5 23 * ?";
     public static final String CRON_LANGUAGE = "0 35 5 24 * ?";
+    public static final String CRON_PRODUCT_STATUS = "0 45 5 29 * ?";
 
     // Mobility
     public static final String CRON_MOBILITY_THEME = "0 50 4 25 * ?";
