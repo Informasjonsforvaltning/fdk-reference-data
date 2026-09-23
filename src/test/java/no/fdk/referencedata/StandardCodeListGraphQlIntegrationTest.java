@@ -41,6 +41,7 @@ import static no.fdk.referencedata.LocalHarvestFixtures.MOBILITY_CONDITIONS_SIZE
 import static no.fdk.referencedata.LocalHarvestFixtures.MOBILITY_DATA_STANDARDS_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.MOBILITY_THEMES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.PLANNED_AVAILABILITY_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.PRODUCT_STATUS_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.RELATIONSHIP_WITH_SOURCE_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.ROLE_TYPES_SIZE;
@@ -73,6 +74,7 @@ public class StandardCodeListGraphQlIntegrationTest extends AbstractContainerTes
             "main-activity",
             "concept-status",
             "planned-availability",
+            "product-status",
             "currency",
             "high-value-category",
             "continent",
@@ -120,6 +122,7 @@ public class StandardCodeListGraphQlIntegrationTest extends AbstractContainerTes
                 caseOf("main-activity", "mainActivities", "mainActivityByCode", MAIN_ACTIVITIES_SIZE, "health"),
                 caseOf("concept-status", "conceptStatuses", "conceptStatusByCode", CONCEPT_STATUSES_SIZE, "CURRENT"),
                 caseOf("planned-availability", "plannedAvailabilities", "plannedAvailabilityByCode", PLANNED_AVAILABILITY_SIZE, "TEMPORARY"),
+                caseOf("product-status", "productStatuses", "productStatusByCode", PRODUCT_STATUS_SIZE, "PRODUCTION"),
                 caseOf("currency", "currencies", "currencyByCode", CURRENCY_SIZE, "ISK"),
                 caseOf("high-value-category", "highValueCategories", "highValueCategoryByCode", HIGH_VALUE_CATEGORIES_SIZE, "c_a9135398"),
                 caseOf("continent", "continents", "continentByCode", CONTINENTS_SIZE, "EUROPE"),

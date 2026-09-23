@@ -26,6 +26,7 @@ import no.fdk.referencedata.eu.language.LanguageHarvester;
 import no.fdk.referencedata.eu.licence.LicenceHarvester;
 import no.fdk.referencedata.eu.mainactivity.MainActivityHarvester;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityHarvester;
+import no.fdk.referencedata.eu.productstatus.ProductStatusHarvester;
 import no.fdk.referencedata.mobility.conditions.MobilityConditionHarvester;
 import no.fdk.referencedata.mobility.datastandard.MobilityDataStandardHarvester;
 import no.fdk.referencedata.mobility.theme.MobilityThemeHarvester;
@@ -190,6 +191,15 @@ public final class LocalHarvesters {
             @Override
             public Resource getSource() {
                 return classpath("planned-availability-sparql-result.ttl");
+            }
+        };
+    }
+
+    public static ProductStatusHarvester productStatus() {
+        return new ProductStatusHarvester() {
+            @Override
+            public Resource getSource() {
+                return classpath("product-status-sparql-result.ttl");
             }
         };
     }

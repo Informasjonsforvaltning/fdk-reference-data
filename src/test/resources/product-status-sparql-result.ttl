@@ -1,0 +1,63 @@
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix ns1:	<http://publications.europa.eu/resource/authority/> .
+@prefix skos:	<http://www.w3.org/2004/02/skos/core#> .
+@prefix ns3:	<http://publications.europa.eu/resource/authority/product-status/> .
+@prefix dc:	<http://purl.org/dc/elements/1.1/> .
+
+ns1:product-status	owl:versionInfo	"20220715-0" .
+
+ns3:DEVELOPMENT	skos:inScheme	ns1:product-status ;
+	skos:prefLabel	"under utvikling"@no ,
+		"under utvikling"@nb ,
+		"under utvikling"@nn ,
+		"in development"@en ;
+	dc:identifier	"DEVELOPMENT" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-08-30" .
+
+ns3:MVP	skos:inScheme	ns1:product-status ;
+	skos:prefLabel	"enkleste brukbare produkt"@nb ,
+		"enklaste brukbare produkt"@nn ,
+		"enkleste brukbare produkt"@no ,
+		"minimum viable product"@en ;
+	dc:identifier	"MVP" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-08-30" .
+
+ns3:PHASED_OUT	skos:inScheme	ns1:product-status ;
+	skos:prefLabel	"utfasa"@nb ,
+		"phased out"@en ,
+		"utfasa"@no ,
+		"utfasa"@nn ;
+	dc:identifier	"PHASED_OUT" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-08-30" .
+
+ns3:PRODUCTION	skos:inScheme	ns1:product-status ;
+	skos:prefLabel	"i produksjon"@no ,
+		"i produksjon"@nb ,
+		"in production"@en ,
+		"i produksjon"@nn ;
+	dc:identifier	"PRODUCTION" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-08-30" .
+
+ns3:PRODUCT_CONCEPT	skos:inScheme	ns1:product-status ;
+	skos:prefLabel	"produktkonsept"@nb ,
+		"produktkonsept"@nn ,
+		"produktkonsept"@no ,
+		"product concept"@en ;
+	dc:identifier	"PRODUCT_CONCEPT" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-08-30" .
+
+ns3:PROTOTYPE	skos:inScheme	ns1:product-status ;
+	skos:prefLabel	"prototype"@nn ,
+		"prototype"@no ,
+		"prototype"@nb ,
+		"prototype"@en ;
+	dc:identifier	"PROTOTYPE" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-08-30" .
+
+ns3:TESTING	skos:inScheme	ns1:product-status ;
+	skos:prefLabel	"i test"@no ,
+		"in test"@en ,
+		"i test"@nn ,
+		"i test"@nb ;
+	dc:identifier	"TESTING" ;
+	<http://publications.europa.eu/ontology/authority/start.use>	"2021-08-30" .

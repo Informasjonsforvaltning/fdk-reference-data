@@ -25,6 +25,7 @@ import no.fdk.referencedata.eu.language.LanguageHarvester;
 import no.fdk.referencedata.eu.licence.LicenceHarvester;
 import no.fdk.referencedata.eu.mainactivity.MainActivityHarvester;
 import no.fdk.referencedata.eu.plannedavailability.PlannedAvailabilityHarvester;
+import no.fdk.referencedata.eu.productstatus.ProductStatusHarvester;
 import no.fdk.referencedata.geonames.GeonamesHarvester;
 import no.fdk.referencedata.geonames.LocalGeonamesHarvester;
 import no.fdk.referencedata.geonorge.administrativeenheter.EnhetHarvester;
@@ -121,6 +122,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public PlannedAvailabilityHarvester plannedAvailabilityHarvester() {
         return LocalHarvesters.plannedAvailability();
+    }
+
+    @Bean
+    public ProductStatusHarvester productStatusHarvester() {
+        return LocalHarvesters.productStatus();
     }
 
     @Bean
