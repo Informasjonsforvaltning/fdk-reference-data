@@ -316,7 +316,6 @@ type ProductStatus {
   uri: ID!
   code: String
   label: LocalizedStrings
-  startUse: String
 }
 
 type QualityDimension {
