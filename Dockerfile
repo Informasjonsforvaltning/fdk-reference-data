@@ -8,6 +8,7 @@ RUN mvn versions:display-dependency-updates --no-transfer-progress
 FROM eclipse-temurin:21-jre-noble
 ENV TZ=Europe/Oslo
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 RUN addgroup --gid 1001 --system app && \
   adduser --uid 1001 --system app --gid 1001 && \
