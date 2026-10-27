@@ -24,9 +24,8 @@ server:
     context-path: /reference-data
   compression:
     enabled: true
-    mime-types: application/json
-    tomcat:
-      compression: on
+    min-response-size: 1024
+    additional-mime-types: text/turtle
 
 management:
   endpoints:
