@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -57,6 +58,10 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         assertEquals("https://data.norge.no/vocabulary/quality-dimension#accuracy", first.getUri());
         assertEquals("accuracy", first.getCode());
         assertEquals("accuracy", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals(2, first.getHasParts().size());
+        assertTrue(first.getHasParts().contains("https://data.norge.no/vocabulary/quality-dimension#classification-correctness"));
+        assertTrue(first.getHasParts().contains("https://data.norge.no/vocabulary/quality-dimension#identifier-correctness"));
+        assertNull(first.getIsPartOf());
     }
 
     @Test
@@ -68,6 +73,8 @@ public class QualityDimensionControllerIntegrationTest extends AbstractContainer
         assertEquals("https://data.norge.no/vocabulary/quality-dimension#completeness", qualityDimension.getUri());
         assertEquals("completeness", qualityDimension.getCode());
         assertEquals("completeness", qualityDimension.getLabel().get(Language.ENGLISH.code()));
+        assertEquals(3, qualityDimension.getHasParts().size());
+        assertNull(qualityDimension.getIsPartOf());
     }
 
     @Test

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -30,4 +31,11 @@ public class QualityDimension {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "label", columnDefinition = "jsonb")
     Map<String, String> label;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "has_parts", columnDefinition = "jsonb")
+    List<String> hasParts;
+
+    @Column(name = "is_part_of")
+    String isPartOf;
 }
