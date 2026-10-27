@@ -5,20 +5,17 @@ import no.fdk.referencedata.rdf.SkosMapper;
 import lombok.extern.slf4j.Slf4j;
 import no.fdk.referencedata.digdir.AbstractDataNorgeHarvester;
 import no.fdk.referencedata.digdir.vocabulary.QualityDimensionVocabulary;
-import no.fdk.referencedata.i18n.Language;
-import org.apache.jena.rdf.model.Model;
+import no.fdk.referencedata.vocabulary.XKOS;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.SKOS;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -51,10 +48,16 @@ public class QualityDimensionHarvester extends AbstractDataNorgeHarvester<Qualit
     private QualityDimension mapQualityDimension(Resource qualityDimension) {
         Map<String, String> label = SkosMapper.extractLabels(qualityDimension);
 
+        Statement isPartOfStmt = qualityDimension.getProperty(XKOS.isPartOf);
+
         return QualityDimension.builder()
                 .uri(qualityDimension.getURI())
                 .code(qualityDimension.getProperty(DCTerms.identifier).getString().split("#")[1])
                 .label(label)
+                .hasParts(qualityDimension.listProperties(XKOS.hasPart)
+                        .mapWith(stmt -> stmt.getResource().getURI())
+                        .toList())
+                .isPartOf(isPartOfStmt != null ? isPartOfStmt.getResource().getURI() : null)
                 .build();
     }
 }

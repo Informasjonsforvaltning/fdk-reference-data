@@ -322,6 +322,8 @@ type QualityDimension {
   uri: ID!
   code: String
   label: LocalizedStrings
+  hasParts: [String!]
+  isPartOf: String
 }
 
 type MediaType {

@@ -10,6 +10,8 @@ import java.util.List;
 import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 public class QualityDimensionHarvesterTest {
@@ -29,6 +31,15 @@ public class QualityDimensionHarvesterTest {
         assertEquals("https://data.norge.no/vocabulary/quality-dimension#currentness", first.getUri());
         assertEquals("currentness", first.getCode());
         assertEquals("currentness", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals(List.of("https://data.norge.no/vocabulary/quality-dimension#delay"), first.getHasParts());
+        assertNull(first.getIsPartOf());
+
+        QualityDimension delay = qualityDimensions.stream()
+                .filter(qd -> "delay".equals(qd.getCode()))
+                .findFirst()
+                .orElseThrow();
+        assertEquals("https://data.norge.no/vocabulary/quality-dimension#currentness", delay.getIsPartOf());
+        assertTrue(delay.getHasParts().isEmpty());
     }
 
 }

@@ -55,6 +55,8 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("accuracy", qualityDimension.getCode());
         assertEquals("nøyaktighet", qualityDimension.getLabel().get("nb"));
         assertEquals("accuracy", qualityDimension.getLabel().get("en"));
+        assertEquals(2, qualityDimension.getHasParts().size());
+        Assertions.assertNull(qualityDimension.getIsPartOf());
     }
 
     @Test
@@ -70,6 +72,8 @@ class QualityDimensionQueryIntegrationTest extends AbstractContainerTest {
         assertEquals("completeness", result.getCode());
         assertEquals("fullstendighet", result.getLabel().get("nb"));
         assertEquals("completeness", result.getLabel().get("en"));
+        assertEquals(3, result.getHasParts().size());
+        Assertions.assertNull(result.getIsPartOf());
     }
 
 }

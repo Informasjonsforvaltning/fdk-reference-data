@@ -62,6 +62,12 @@ public class QualityDimensionServiceIntegrationTest extends AbstractContainerTes
         assertEquals("https://data.norge.no/vocabulary/quality-dimension#accuracy", first.getUri());
         assertEquals("accuracy", first.getCode());
         assertEquals("accuracy", first.getLabel().get(Language.ENGLISH.code()));
+        assertEquals(2, first.getHasParts().size());
+        assertTrue(first.getHasParts().contains("https://data.norge.no/vocabulary/quality-dimension#classification-correctness"));
+        assertTrue(first.getHasParts().contains("https://data.norge.no/vocabulary/quality-dimension#identifier-correctness"));
+
+        final QualityDimension delay = qualityDimensionRepository.findById("https://data.norge.no/vocabulary/quality-dimension#delay").orElseThrow();
+        assertEquals("https://data.norge.no/vocabulary/quality-dimension#currentness", delay.getIsPartOf());
     }
 
     @Test
