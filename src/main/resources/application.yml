@@ -24,9 +24,9 @@ server:
     context-path: /reference-data
   compression:
     enabled: true
-    mime-types: application/json
-    tomcat:
-      compression: on
+    min-response-size: 1024
+    # Extends Spring Boot’s default list with Turtle, which the service serves.
+    additional-mime-types: text/turtle
 
 management:
   endpoints:
