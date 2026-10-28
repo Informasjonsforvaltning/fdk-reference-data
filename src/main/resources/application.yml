@@ -25,7 +25,7 @@ server:
   compression:
     enabled: true
     min-response-size: 1024
-    # Utvider Spring Boots standardliste med turtle, som tjenesten serverer.
+    # Extends Spring Boot’s default list with Turtle, which the service serves.
     additional-mime-types: text/turtle
 
 management:
