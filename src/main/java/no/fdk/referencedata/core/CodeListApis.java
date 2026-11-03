@@ -68,6 +68,25 @@ public final class CodeListApis {
                 byCodePathVariable);
     }
 
+    public static <T> CodeListApi<T> harvestableList(
+            String restPath,
+            CodeListRepository<T> repository,
+            Comparator<T> listSort,
+            Function<List<T>, Object> wrapList,
+            Function<RDFFormat, String> rdfProvider,
+            Class<T> itemType) {
+        return new CodeListApi<>(
+                restPath,
+                repository,
+                listSort,
+                wrapList,
+                itemType,
+                rdfProvider,
+                true,
+                false,
+                null);
+    }
+
     public static <T> CodeListApi<T> readOnly(
             String restPath,
             CodeListRepository<T> repository,

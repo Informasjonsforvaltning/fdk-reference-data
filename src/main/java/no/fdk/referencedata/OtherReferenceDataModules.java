@@ -2,6 +2,10 @@ package no.fdk.referencedata;
 
 import lombok.RequiredArgsConstructor;
 import no.fdk.referencedata.core.CodeListApi;
+import no.fdk.referencedata.lovdata.LovdataService;
+import no.fdk.referencedata.lovdata.LegalResources;
+import no.fdk.referencedata.lovdata.LegalResourceRepository;
+import no.fdk.referencedata.lovdata.LegalResource;
 import no.fdk.referencedata.core.CodeListApis;
 import no.fdk.referencedata.core.CodeListRepository;
 import no.fdk.referencedata.core.HarvestableReferenceData;
@@ -43,6 +47,8 @@ public class OtherReferenceDataModules {
     private final EnhetService enhetService;
     private final EnhetRepository enhetRepository;
     private final GeonamesService geonamesService;
+    private final LovdataService lovdataService;
+    private final LegalResourceRepository legalResourceRepository;
 
     @Bean
     public ReferenceDataModule mediaTypeModule() {
@@ -82,6 +88,22 @@ public class OtherReferenceDataModules {
                 null,
                 "fylkesnummer",
                 FylkeOrganisasjon.class);
+    }
+
+    @Bean
+    public ReferenceDataModule legalResourceModule() {
+        return module("legal-resource", lovdataService, legalResourceApi(), CRON_LEGAL_RESOURCE);
+    }
+
+    @Bean
+    public CodeListApi<LegalResource> legalResourceApi() {
+        return CodeListApis.harvestableList(
+                "/lovdata/legal-resources",
+                CodeListRepository.listOnly(legalResourceRepository::findAll),
+                CodeListApis.sortByUri(LegalResource::getUri),
+                list -> LegalResources.builder().legalResources(list).build(),
+                null,
+                LegalResource.class);
     }
 
     @Bean
