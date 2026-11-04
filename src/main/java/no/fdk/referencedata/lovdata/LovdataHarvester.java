@@ -13,6 +13,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,6 +26,8 @@ public class LovdataHarvester {
 
     private static final String BASE_URI = "https://lovdata.no";
     private static final int HEADER_BYTES = 9000;
+    private static final int CONNECT_TIMEOUT_MS = 10_000;
+    private static final int READ_TIMEOUT_MS = 60_000;
 
     // A lower share means Lovdata changed their document structure
     private static final double MINIMUM_PARSED_SHARE = 0.95;
@@ -67,7 +70,7 @@ public class LovdataHarvester {
     private void collect(String url, String type, Map<String, LegalResource> byUri) throws IOException {
         int documents = 0;
         int parsed = 0;
-        try (InputStream in = URI.create(url).toURL().openStream();
+        try (InputStream in = open(url);
              TarArchiveInputStream tar =
                      new TarArchiveInputStream(new BZip2CompressorInputStream(new BufferedInputStream(in)))) {
             TarArchiveEntry entry;
@@ -95,6 +98,13 @@ public class LovdataHarvester {
                             .formatted(parsed, documents, type, MINIMUM_PARSED_SHARE * 100));
         }
         log.info("Parsed {} of {} {} documents", parsed, documents, type);
+    }
+
+    private InputStream open(String url) throws IOException {
+        URLConnection connection = URI.create(url).toURL().openConnection();
+        connection.setConnectTimeout(CONNECT_TIMEOUT_MS);
+        connection.setReadTimeout(READ_TIMEOUT_MS);
+        return connection.getInputStream();
     }
 
     private String read(TarArchiveInputStream tar) throws IOException {
