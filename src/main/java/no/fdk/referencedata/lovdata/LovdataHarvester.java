@@ -36,20 +36,21 @@ public class LovdataHarvester {
             "lov", "https://api.lovdata.no/v1/publicData/get/gjeldende-lover.tar.bz2",
             "forskrift", "https://api.lovdata.no/v1/publicData/get/gjeldende-sentrale-forskrifter.tar.bz2"));
 
-    private static final Pattern ELI_FIELD = fieldPattern("eli");
-    private static final Pattern DOKID_FIELD = fieldPattern("dokid");
-    private static final Pattern TITLE_FIELD = fieldPattern("title");
-    private static final Pattern LEGACY_ID_FIELD = fieldPattern("legacyID");
+    private static final String ELI_FIELD = fieldTag("eli");
+    private static final String DOKID_FIELD = fieldTag("dokid");
+    private static final String TITLE_FIELD = fieldTag("title");
+    private static final String LEGACY_ID_FIELD = fieldTag("legacyID");
+    private static final String FIELD_END = "</dd>";
+    private static final String TITLE_START = "<title>";
+    private static final String TITLE_END = "</title>";
 
     private static final Pattern DOKID_FORMAT =
             Pattern.compile("^\\w+/(\\w+)/(\\d{4})-(\\d{2})-(\\d{2})(?:-(\\d+))?$");
     private static final Pattern LANGUAGE = Pattern.compile("<html lang=\"(\\w+)\"");
-    private static final Pattern DOCUMENT_TITLE = Pattern.compile("<title>(.*?)</title>", Pattern.DOTALL);
-    private static final Pattern TAGS = Pattern.compile("<[^>]+>");
     private static final Pattern ENTITY = Pattern.compile("&(?:#(\\d+)|#[xX]([0-9a-fA-F]+)|(\\w+));");
 
-    private static Pattern fieldPattern(String name) {
-        return Pattern.compile("<dd class=\"" + name + "\">(.*?)</dd>", Pattern.DOTALL);
+    private static String fieldTag(String name) {
+        return "<dd class=\"" + name + "\">";
     }
 
     public Flux<LegalResource> harvest() {
@@ -114,13 +115,13 @@ public class LovdataHarvester {
     }
 
     LegalResource parse(String header, String type) {
-        String eli = match(ELI_FIELD, header);
+        String eli = between(header, ELI_FIELD, FIELD_END);
         if (eli == null) {
-            eli = deriveEli(match(DOKID_FIELD, header));
+            eli = deriveEli(between(header, DOKID_FIELD, FIELD_END));
         }
-        String title = match(TITLE_FIELD, header);
+        String title = between(header, TITLE_FIELD, FIELD_END);
         if (title == null) {
-            title = match(DOCUMENT_TITLE, header);
+            title = between(header, TITLE_START, TITLE_END);
         }
         if (eli == null || title == null) {
             return null;
@@ -130,7 +131,7 @@ public class LovdataHarvester {
         label.put(language(header), title);
         return LegalResource.builder()
                 .uri(BASE_URI + eli)
-                .identifier(match(LEGACY_ID_FIELD, header))
+                .identifier(between(header, LEGACY_ID_FIELD, FIELD_END))
                 .label(label)
                 .type(type)
                 .build();
@@ -152,7 +153,8 @@ public class LovdataHarvester {
     }
 
     private String language(String header) {
-        String language = match(LANGUAGE, header);
+        Matcher matcher = LANGUAGE.matcher(header);
+        String language = matcher.find() ? matcher.group(1) : null;
         if (language == null || "no".equals(language)) {
             return "nb";
         }
@@ -174,13 +176,39 @@ public class LovdataHarvester {
                 matcher.group(1), matcher.group(2), matcher.group(3), matcher.group(4), number);
     }
 
-    private String match(Pattern pattern, String text) {
-        Matcher matcher = pattern.matcher(text);
-        if (!matcher.find()) {
+    private String between(String text, String start, String end) {
+        int from = text.indexOf(start);
+        if (from < 0) {
             return null;
         }
-        String value = decodeEntities(TAGS.matcher(matcher.group(1)).replaceAll("")).trim();
+        from += start.length();
+        int to = text.indexOf(end, from);
+        if (to < 0) {
+            return null;
+        }
+        String value = decodeEntities(stripTags(text.substring(from, to))).trim();
         return value.isEmpty() ? null : value;
+    }
+
+    private String stripTags(String text) {
+        StringBuilder stripped = new StringBuilder(text.length());
+        boolean closingExists = true;
+        int i = 0;
+        while (i < text.length()) {
+            char character = text.charAt(i);
+            if (character == '<' && closingExists) {
+                int end = text.indexOf('>', i + 1);
+                if (end < 0) {
+                    closingExists = false;
+                } else if (end > i + 1) {
+                    i = end + 1;
+                    continue;
+                }
+            }
+            stripped.append(character);
+            i++;
+        }
+        return stripped.toString();
     }
 
     String decodeEntities(String text) {

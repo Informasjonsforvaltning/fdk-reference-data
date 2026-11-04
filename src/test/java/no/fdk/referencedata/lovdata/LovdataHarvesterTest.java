@@ -4,12 +4,14 @@ import no.fdk.referencedata.core.HarvestParseException;
 import no.fdk.referencedata.core.HarvestSourceException;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 
 class LovdataHarvesterTest {
 
@@ -140,5 +142,23 @@ class LovdataHarvesterTest {
     @Test
     void leavesUnknownEntitiesUntouched() {
         assertEquals("100 &unknown; verdi", harvester.decodeEntities("100 &unknown; verdi"));
+    }
+
+    @Test
+    void stripsNestedMarkupFromTitle() {
+        LegalResource resource = harvester.parse(header("nb",
+                "eli", "/eli/lov/1990/12/21/72",
+                "title", "Lov om avgift på utslipp av CO<sub>2</sub> i petroleumsvirksomhet"), "lov");
+
+        assertEquals("Lov om avgift på utslipp av CO2 i petroleumsvirksomhet",
+                resource.getLabel().get("nb"));
+    }
+
+    @Test
+    void doesNotBacktrackOnMalformedDocument() {
+        String malformed = "<html lang=\"nb\"><title>" + "<title>a".repeat(20000);
+
+        assertTimeoutPreemptively(Duration.ofSeconds(2),
+                () -> assertNull(harvester.parse(malformed, "lov")));
     }
 }
