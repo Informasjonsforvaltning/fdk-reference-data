@@ -102,7 +102,7 @@ public class OtherReferenceDataModules {
                 CodeListRepository.listOnly(legalResourceRepository::findAll),
                 CodeListApis.sortByUri(LegalResource::getUri),
                 list -> LegalResources.builder().legalResources(list).build(),
-                null,
+                lovdataService::getRdf,
                 LegalResource.class);
     }
 

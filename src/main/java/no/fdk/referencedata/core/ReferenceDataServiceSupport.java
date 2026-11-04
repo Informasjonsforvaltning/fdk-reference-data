@@ -15,6 +15,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Component
@@ -71,6 +72,32 @@ public class ReferenceDataServiceSupport {
                 rdfSource.setTurtle(RDFUtils.modelToResponse(harvester.getModel(), RDFFormat.TURTLE));
 
                 replaceAll(repository, items, rdfSource);
+                return HarvestResult.success(items.size());
+            } catch (Exception e) {
+                log.error("Unable to harvest {}", moduleId, e);
+                return HarvestResult.fromThrowable(e);
+            }
+        });
+    }
+
+    public <T> HarvestResult harvestAndSave(
+            Supplier<Flux<T>> harvest,
+            Function<List<T>, Model> toModel,
+            JpaRepository<T, String> repository,
+            String sourceId,
+            String moduleId) {
+        return harvestMetrics.timed(moduleId, () -> {
+            try {
+                final List<T> items = new ArrayList<>();
+                harvest.get().toIterable().forEach(items::add);
+
+                if (items.isEmpty()) {
+                    log.warn("Harvest for {} returned no items; skipping replace", moduleId);
+                    return HarvestResult.skippedEmpty();
+                }
+
+                log.info("Harvest and saving {} {}", items.size(), moduleId);
+                saveAll(items, toModel.apply(items), repository, sourceId);
                 return HarvestResult.success(items.size());
             } catch (Exception e) {
                 log.error("Unable to harvest {}", moduleId, e);
