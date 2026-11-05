@@ -5,3 +5,5 @@ CREATE TABLE legal_resources
     label      JSONB,
     type       VARCHAR(50)
 );
+
+CREATE INDEX legal_resources_type_idx ON legal_resources (type);
