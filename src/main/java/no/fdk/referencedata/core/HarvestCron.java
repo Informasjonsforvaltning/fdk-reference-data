@@ -47,6 +47,7 @@ public final class HarvestCron {
     public static final String CRON_KOMMUNE_ORGANISASJON = "0 20 3 3 * ?";
     public static final String CRON_ENHET = "0 0 4 4 * ?";
     public static final String CRON_GEONAMES = "0 30 5 5 * ?";
+    public static final String CRON_LEGAL_RESOURCE = "0 40 5 6 * ?";
 
     private HarvestCron() {
     }
