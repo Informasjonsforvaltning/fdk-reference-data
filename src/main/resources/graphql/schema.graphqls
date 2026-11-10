@@ -60,6 +60,9 @@ type Query {
   legalResourceTypes: [LegalResourceType!]!
   legalResourceTypeByCode(code: String!): LegalResourceType
 
+  serviceOutputTypes: [ServiceOutputType!]!
+  serviceOutputTypeByCode(code: String!): ServiceOutputType
+
   languages: [Language!]!
   languageByCode(code: String!): Language
 
@@ -247,6 +250,12 @@ type EuroVoc {
 }
 
 type EvidenceType {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type ServiceOutputType {
   uri: ID!
   code: String
   label: LocalizedStrings

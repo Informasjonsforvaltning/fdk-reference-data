@@ -50,6 +50,7 @@ import static no.fdk.referencedata.LocalHarvestFixtures.QUALITY_DIMENSIONS_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.RELATIONSHIP_WITH_SOURCE_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.ROLE_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.SERVICE_CHANNEL_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.SERVICE_OUTPUT_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -97,6 +98,7 @@ public class StandardCodeListControllerIntegrationTest extends AbstractContainer
             "relationship-with-source-type",
             "quality-dimension",
             "legal-resource-type",
+            "service-output-type",
             "mobility-theme",
             "mobility-condition",
             "mobility-data-standard"
@@ -153,6 +155,7 @@ public class StandardCodeListControllerIntegrationTest extends AbstractContainer
                 caseOf("relationship-with-source-type", "/digdir/relationship-with-source-types", "relationshipWithSourceTypes", RELATIONSHIP_WITH_SOURCE_TYPES_SIZE, "derived-from-source"),
                 caseOf("quality-dimension", "/digdir/quality-dimensions", "qualityDimensions", QUALITY_DIMENSIONS_SIZE, "completeness"),
                 caseOf("legal-resource-type", "/digdir/legal-resource-types", "legalResourceTypes", LEGAL_RESOURCE_TYPES_SIZE, "regulation"),
+                caseOf("service-output-type", "/digdir/service-output-types", "serviceOutputTypes", SERVICE_OUTPUT_TYPES_SIZE, "permit"),
                 caseOf("mobility-theme", "/mobility/themes", "mobilityThemes", MOBILITY_THEMES_SIZE, "speed-limits"),
                 caseOf("mobility-condition", "/mobility/conditions-for-access-and-usage", "mobilityConditions", MOBILITY_CONDITIONS_SIZE, "other"),
                 caseOf("mobility-data-standard", "/mobility/data-standards", "mobilityDataStandards", MOBILITY_DATA_STANDARDS_SIZE, "gml")

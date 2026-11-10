@@ -1,0 +1,10 @@
+query ServiceOutputTypeByCode($code: String!) {
+    serviceOutputTypeByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

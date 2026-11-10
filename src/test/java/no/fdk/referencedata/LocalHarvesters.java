@@ -9,6 +9,7 @@ import no.fdk.referencedata.digdir.qualitydimension.QualityDimensionHarvester;
 import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSourceTypeHarvester;
 import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeHarvester;
+import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypeHarvester;
 import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
 import no.fdk.referencedata.eu.continent.ContinentHarvester;
@@ -218,6 +219,15 @@ public final class LocalHarvesters {
             @Override
             public Resource getSource(final String path) {
                 return classpath("evidence-type.ttl");
+            }
+        };
+    }
+
+    public static ServiceOutputTypeHarvester serviceOutputType() {
+        return new ServiceOutputTypeHarvester() {
+            @Override
+            public Resource getSource(final String path) {
+                return classpath("service-output-type.ttl");
             }
         };
     }
