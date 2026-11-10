@@ -1,0 +1,10 @@
+query {
+    serviceOutputTypes {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

@@ -38,6 +38,10 @@ import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelType;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeRepository;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeService;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypes;
+import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputType;
+import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypeRepository;
+import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypeService;
+import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -63,6 +67,8 @@ public class DigdirReferenceDataModules {
     private final QualityDimensionRepository qualityDimensionRepository;
     private final LegalResourceTypeService legalResourceTypeService;
     private final LegalResourceTypeRepository legalResourceTypeRepository;
+    private final ServiceOutputTypeService serviceOutputTypeService;
+    private final ServiceOutputTypeRepository serviceOutputTypeRepository;
 
     @Bean
     public ReferenceDataModule conceptSubjectModule() {
@@ -192,6 +198,22 @@ public class DigdirReferenceDataModules {
                 list -> LegalResourceTypes.builder().legalResourceTypes(list).build(),
                 legalResourceTypeService::getRdf,
                 LegalResourceType.class);
+    }
+
+    @Bean
+    public ReferenceDataModule serviceOutputTypeModule() {
+        return module("service-output-type", serviceOutputTypeService, serviceOutputTypeApi(), CRON_SERVICE_OUTPUT_TYPE);
+    }
+
+    @Bean
+    public CodeListApi<ServiceOutputType> serviceOutputTypeApi() {
+        return CodeListApis.standard(
+                "/digdir/service-output-types",
+                CodeListRepository.of(serviceOutputTypeRepository::findAll, serviceOutputTypeRepository::findByCode),
+                CodeListApis.sortByUri(ServiceOutputType::getUri),
+                list -> ServiceOutputTypes.builder().serviceOutputTypes(list).build(),
+                serviceOutputTypeService::getRdf,
+                ServiceOutputType.class);
     }
 
     private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api, String cron) {
