@@ -63,6 +63,9 @@ type Query {
   serviceOutputTypes: [ServiceOutputType!]!
   serviceOutputTypeByCode(code: String!): ServiceOutputType
 
+  highValueDatasetTypes: [HighValueDatasetType!]!
+  highValueDatasetTypeByCode(code: String!): HighValueDatasetType
+
   languages: [Language!]!
   languageByCode(code: String!): Language
 
@@ -256,6 +259,12 @@ type EvidenceType {
 }
 
 type ServiceOutputType {
+  uri: ID!
+  code: String
+  label: LocalizedStrings
+}
+
+type HighValueDatasetType {
   uri: ID!
   code: String
   label: LocalizedStrings

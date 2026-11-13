@@ -9,6 +9,7 @@ import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSo
 import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeHarvester;
 import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypeHarvester;
+import no.fdk.referencedata.digdir.highvaluedatasettype.HighValueDatasetTypeHarvester;
 import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
 import no.fdk.referencedata.eu.continent.ContinentHarvester;
@@ -118,6 +119,11 @@ public class LocalHarvesterConfiguration {
     @Bean
     public ServiceOutputTypeHarvester serviceOutputTypeHarvester() {
         return LocalHarvesters.serviceOutputType();
+    }
+
+    @Bean
+    public HighValueDatasetTypeHarvester highValueDatasetTypeHarvester() {
+        return LocalHarvesters.highValueDatasetType();
     }
 
     @Bean

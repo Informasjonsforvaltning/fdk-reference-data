@@ -1,0 +1,10 @@
+query {
+    highValueDatasetTypes {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

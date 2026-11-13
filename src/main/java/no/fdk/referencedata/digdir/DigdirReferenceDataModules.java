@@ -42,6 +42,10 @@ import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputType;
 import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypeRepository;
 import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypeService;
 import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypes;
+import no.fdk.referencedata.digdir.highvaluedatasettype.HighValueDatasetType;
+import no.fdk.referencedata.digdir.highvaluedatasettype.HighValueDatasetTypeRepository;
+import no.fdk.referencedata.digdir.highvaluedatasettype.HighValueDatasetTypeService;
+import no.fdk.referencedata.digdir.highvaluedatasettype.HighValueDatasetTypes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -69,6 +73,8 @@ public class DigdirReferenceDataModules {
     private final LegalResourceTypeRepository legalResourceTypeRepository;
     private final ServiceOutputTypeService serviceOutputTypeService;
     private final ServiceOutputTypeRepository serviceOutputTypeRepository;
+    private final HighValueDatasetTypeService highValueDatasetTypeService;
+    private final HighValueDatasetTypeRepository highValueDatasetTypeRepository;
 
     @Bean
     public ReferenceDataModule conceptSubjectModule() {
@@ -214,6 +220,22 @@ public class DigdirReferenceDataModules {
                 list -> ServiceOutputTypes.builder().serviceOutputTypes(list).build(),
                 serviceOutputTypeService::getRdf,
                 ServiceOutputType.class);
+    }
+
+    @Bean
+    public ReferenceDataModule highValueDatasetTypeModule() {
+        return module("high-value-dataset-type", highValueDatasetTypeService, highValueDatasetTypeApi(), CRON_HIGH_VALUE_DATASET_TYPE);
+    }
+
+    @Bean
+    public CodeListApi<HighValueDatasetType> highValueDatasetTypeApi() {
+        return CodeListApis.standard(
+                "/digdir/high-value-dataset-types",
+                CodeListRepository.of(highValueDatasetTypeRepository::findAll, highValueDatasetTypeRepository::findByCode),
+                CodeListApis.sortByUri(HighValueDatasetType::getUri),
+                list -> HighValueDatasetTypes.builder().highValueDatasetTypes(list).build(),
+                highValueDatasetTypeService::getRdf,
+                HighValueDatasetType.class);
     }
 
     private static ReferenceDataModule module(String id, HarvestableReferenceData service, CodeListApi<?> api, String cron) {
