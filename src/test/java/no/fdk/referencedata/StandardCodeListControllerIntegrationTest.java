@@ -51,6 +51,7 @@ import static no.fdk.referencedata.LocalHarvestFixtures.RELATIONSHIP_WITH_SOURCE
 import static no.fdk.referencedata.LocalHarvestFixtures.ROLE_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.SERVICE_CHANNEL_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.SERVICE_OUTPUT_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.HIGH_VALUE_DATASET_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -99,6 +100,7 @@ public class StandardCodeListControllerIntegrationTest extends AbstractContainer
             "quality-dimension",
             "legal-resource-type",
             "service-output-type",
+            "high-value-dataset-type",
             "mobility-theme",
             "mobility-condition",
             "mobility-data-standard"
@@ -156,6 +158,7 @@ public class StandardCodeListControllerIntegrationTest extends AbstractContainer
                 caseOf("quality-dimension", "/digdir/quality-dimensions", "qualityDimensions", QUALITY_DIMENSIONS_SIZE, "completeness"),
                 caseOf("legal-resource-type", "/digdir/legal-resource-types", "legalResourceTypes", LEGAL_RESOURCE_TYPES_SIZE, "regulation"),
                 caseOf("service-output-type", "/digdir/service-output-types", "serviceOutputTypes", SERVICE_OUTPUT_TYPES_SIZE, "permit"),
+                caseOf("high-value-dataset-type", "/digdir/high-value-dataset-types", "highValueDatasetTypes", HIGH_VALUE_DATASET_TYPES_SIZE, "national-hvd"),
                 caseOf("mobility-theme", "/mobility/themes", "mobilityThemes", MOBILITY_THEMES_SIZE, "speed-limits"),
                 caseOf("mobility-condition", "/mobility/conditions-for-access-and-usage", "mobilityConditions", MOBILITY_CONDITIONS_SIZE, "other"),
                 caseOf("mobility-data-standard", "/mobility/data-standards", "mobilityDataStandards", MOBILITY_DATA_STANDARDS_SIZE, "gml")

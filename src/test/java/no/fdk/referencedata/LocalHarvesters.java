@@ -10,6 +10,7 @@ import no.fdk.referencedata.digdir.relationshipwithsourcetype.RelationshipWithSo
 import no.fdk.referencedata.digdir.roletype.RoleTypeHarvester;
 import no.fdk.referencedata.digdir.servicechanneltype.ServiceChannelTypeHarvester;
 import no.fdk.referencedata.digdir.serviceoutputtype.ServiceOutputTypeHarvester;
+import no.fdk.referencedata.digdir.highvaluedatasettype.HighValueDatasetTypeHarvester;
 import no.fdk.referencedata.eu.accessright.AccessRightHarvester;
 import no.fdk.referencedata.eu.conceptstatus.ConceptStatusHarvester;
 import no.fdk.referencedata.eu.continent.ContinentHarvester;
@@ -228,6 +229,15 @@ public final class LocalHarvesters {
             @Override
             public Resource getSource(final String path) {
                 return classpath("service-output-type.ttl");
+            }
+        };
+    }
+
+    public static HighValueDatasetTypeHarvester highValueDatasetType() {
+        return new HighValueDatasetTypeHarvester() {
+            @Override
+            public Resource getSource(final String path) {
+                return classpath("high-value-dataset-type.ttl");
             }
         };
     }

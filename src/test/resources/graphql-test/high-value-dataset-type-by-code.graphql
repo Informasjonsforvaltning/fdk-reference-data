@@ -1,0 +1,10 @@
+query HighValueDatasetTypeByCode($code: String!) {
+    highValueDatasetTypeByCode(code: $code) {
+        uri
+        code
+        label {
+            nb
+            en
+        }
+    }
+}

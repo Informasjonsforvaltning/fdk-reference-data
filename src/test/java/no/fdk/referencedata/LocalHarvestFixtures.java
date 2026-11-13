@@ -27,6 +27,7 @@ public final class LocalHarvestFixtures {
     public static final int AUDIENCE_TYPES_SIZE = 2;
     public static final int EVIDENCE_TYPES_SIZE = 4;
     public static final int SERVICE_OUTPUT_TYPES_SIZE = 8;
+    public static final int HIGH_VALUE_DATASET_TYPES_SIZE = 3;
     public static final int ROLE_TYPES_SIZE = 5;
     public static final int SERVICE_CHANNEL_TYPES_SIZE = 11;
     public static final int RELATIONSHIP_WITH_SOURCE_TYPES_SIZE = 3;

@@ -15,6 +15,7 @@ public final class HarvestCron {
     public static final String CRON_QUALITY_DIMENSION = "0 10 5 6 * ?";
     public static final String CRON_LEGAL_RESOURCE_TYPE = "0 15 5 7 * ?";
     public static final String CRON_SERVICE_OUTPUT_TYPE = "0 20 5 8 * ?";
+    public static final String CRON_HIGH_VALUE_DATASET_TYPE = "0 25 5 9 * ?";
 
     // EU
     public static final String CRON_ACCESS_RIGHT = "0 30 1 8 * ?";

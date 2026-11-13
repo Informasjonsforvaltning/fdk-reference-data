@@ -47,6 +47,7 @@ import static no.fdk.referencedata.LocalHarvestFixtures.RELATIONSHIP_WITH_SOURCE
 import static no.fdk.referencedata.LocalHarvestFixtures.ROLE_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.SERVICE_CHANNEL_TYPES_SIZE;
 import static no.fdk.referencedata.LocalHarvestFixtures.SERVICE_OUTPUT_TYPES_SIZE;
+import static no.fdk.referencedata.LocalHarvestFixtures.HIGH_VALUE_DATASET_TYPES_SIZE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -90,6 +91,7 @@ public class StandardCodeListGraphQlIntegrationTest extends AbstractContainerTes
             "quality-dimension",
             "legal-resource-type",
             "service-output-type",
+            "high-value-dataset-type",
             "mobility-theme",
             "mobility-condition",
             "mobility-data-standard"
@@ -139,6 +141,7 @@ public class StandardCodeListGraphQlIntegrationTest extends AbstractContainerTes
                 caseOf("quality-dimension", "qualityDimensions", "qualityDimensionByCode", QUALITY_DIMENSIONS_SIZE, "completeness"),
                 caseOf("legal-resource-type", "legalResourceTypes", "legalResourceTypeByCode", LEGAL_RESOURCE_TYPES_SIZE, "regulation"),
                 caseOf("service-output-type", "serviceOutputTypes", "serviceOutputTypeByCode", SERVICE_OUTPUT_TYPES_SIZE, "permit"),
+                caseOf("high-value-dataset-type", "highValueDatasetTypes", "highValueDatasetTypeByCode", HIGH_VALUE_DATASET_TYPES_SIZE, "national-hvd"),
                 caseOf("mobility-theme", "mobilityThemes", "mobilityThemeByCode", MOBILITY_THEMES_SIZE, "speed-limits"),
                 caseOf("mobility-condition", "mobilityConditions", "mobilityConditionByCode", MOBILITY_CONDITIONS_SIZE, "other"),
                 caseOf("mobility-data-standard", "mobilityDataStandards", "mobilityDataStandardByCode", MOBILITY_DATA_STANDARDS_SIZE, "gml")
